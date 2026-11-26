@@ -114,7 +114,7 @@ pre.sourceCode a{display:none}
 <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
 </head><body>
-<header class="strip"><p class="curso">algolib · Estructuras de Datos y Algoritmos</p><h1>Lección 0 — Prerrequisitos: las herramientas que usaremos todo el curso</h1><p class="desc">Repaso de lógica, inducción, logaritmos, sumas, recurrencias, probabilidad, memoria, C, C++ y Rust.</p><div class="pages"><a href="index.html">Inicio</a><a href="L00.html" aria-current="page">L00 · Prerrequisitos</a><a href="L01.html">L01 · Notas</a><a href="L02.html">L02 · Notas</a><a href="L03.html">L03 · Notas</a><a href="L04.html">L04 · Notas</a><a href="L05.html">L05 · Notas</a><a href="L06.html">L06 · Notas</a><a href="L07.html">L07 · Notas</a><a href="L08.html">L08 · Notas</a><a href="L09.html">L09 · Notas</a><a href="L10.html">L10 · Notas</a><a href="L11.html">L11 · Notas</a><a href="L12.html">L12 · Notas</a><a href="L13.html">L13 · Notas</a></div></header><nav class="toc" aria-label="Secciones"><div class="scroll"><a href="#cómo-funciona-el-curso">0. Cómo funciona el curso</a><a href="#lógica-el-idioma-de-las-definiciones">1. Lógica: el idioma de las defi…</a><a href="#cómo-se-escribe-una-demostración">2. Cómo se escribe una demostrac…</a><a href="#inducción-matemática">3. Inducción matemática</a><a href="#invariantes-de-ciclo-inducción-para-ciclos-for-y-while">4. Invariantes de ciclo: inducci…</a><a href="#potencias-y-logaritmos">5. Potencias y logaritmos</a><a href="#pisos-techos-y-la-división-entera-de-los-lenguajes">6. Pisos, techos y la división e…</a><a href="#sumatorias">7. Sumatorias</a><a href="#recurrencias-el-costo-de-un-algoritmo-recursivo">8. Recurrencias: el costo de un…</a><a href="#contar-y-probabilidad">9. Contar y probabilidad</a><a href="#vocabulario-de-grafos-para-las-lecciones-9-a-11">10. Vocabulario de grafos</a><a href="#cómo-se-guardan-los-datos-la-memoria">11. Cómo se guardan los datos: l…</a><a href="#los-tres-lenguajes-idea-por-idea">12. Los tres lenguajes, idea por…</a><a href="#la-pregunta-que-nos-acompañará-todo-el-curso">13. La pregunta que nos acompaña…</a><a href="#autoevaluación">14. Autoevaluación</a><a href="#bibliografía-de-repaso">Bibliografía de repaso</a></div></nav><main><blockquote>
+<header class="strip"><p class="curso">algolib · Estructuras de Datos y Algoritmos</p><h1>Lección 0 — Prerrequisitos: las herramientas que usaremos todo el curso</h1><p class="desc">Repaso de lógica, inducción, logaritmos, sumas, recurrencias, probabilidad, memoria, C, C++ y Rust.</p><div class="pages"><a href="index.html">Inicio</a><a href="L00.html" aria-current="page">L00 · Prerrequisitos</a><a href="L01.html">L01 · Notas</a><a href="L02.html">L02 · Notas</a><a href="L03.html">L03 · Notas</a><a href="L04.html">L04 · Notas</a><a href="L05.html">L05 · Notas</a><a href="L06.html">L06 · Notas</a><a href="L07.html">L07 · Notas</a><a href="L08.html">L08 · Notas</a><a href="L09.html">L09 · Notas</a><a href="L10.html">L10 · Notas</a><a href="L11.html">L11 · Notas</a><a href="L12.html">L12 · Notas</a><a href="L13.html">L13 · Notas</a></div></header><nav class="toc" aria-label="Secciones"><div class="scroll"><a href="#cómo-funciona-el-curso">0. Cómo funciona el curso</a><a href="#lógica-el-idioma-de-las-definiciones">1. Lógica: el idioma de las defi…</a><a href="#cómo-se-escribe-una-demostración">2. Cómo se escribe una demostrac…</a><a href="#inducción-matemática">3. Inducción matemática</a><a href="#invariantes-de-ciclo-inducción-para-ciclos-for-y-while">4. Invariantes de ciclo: inducci…</a><a href="#potencias-y-logaritmos">5. Potencias y logaritmos</a><a href="#pisos-techos-y-la-división-entera-de-los-lenguajes">6. Pisos, techos y la división e…</a><a href="#sumatorias">7. Sumatorias</a><a href="#recurrencias-el-costo-de-un-algoritmo-recursivo">8. Recurrencias: el costo de un…</a><a href="#contar-y-probabilidad">9. Contar y probabilidad</a><a href="#vocabulario-de-grafos-para-las-lecciones-9-a-11">10. Vocabulario de grafos</a><a href="#cómo-se-guardan-los-datos-la-memoria">11. Cómo se guardan los datos: l…</a><a href="#los-tres-lenguajes-idea-por-idea">12. Los tres lenguajes, idea por…</a><a href="#la-pregunta-que-nos-acompañará-todo-el-curso">13. La pregunta que nos acompaña…</a><a href="#autoevaluación">14. Autoevaluación</a><a href="#tarea-en-papel-inducción-puntos-extra">15. Tarea en papel: inducción</a><a href="#bibliografía-de-repaso">Bibliografía de repaso</a></div></nav><main><blockquote>
 <p><strong>Qué es esta lección.</strong> Antes de estudiar algoritmos necesitamos tres cosas: un <strong>idioma</strong> para escribir afirmaciones precisas (lógica), unas <strong>herramientas</strong> para demostrarlas (inducción, invariantes) y para contar (logaritmos, sumas, recurrencias, probabilidad), y un <strong>modelo mental</strong> de cómo la computadora guarda los datos (memoria, C, C++ y Rust).</p>
 <p><strong>Cómo leerla.</strong> Cada tema sigue el mismo orden: <em>para qué sirve en el curso</em> → <em>la idea con un ejemplo cotidiano</em> → <em>la definición precisa</em> → <em>un ejemplo resuelto paso a paso</em> → <em>un programa que puedes compilar y correr</em> → <em>errores típicos</em> → <em>ejercicios con solución</em>.</p>
 <p><strong>Los programas</strong> vienen en tres pestañas: <strong>C</strong>, <strong>C++</strong> y <strong>Rust</strong>. Los tres hacen exactamente lo mismo e imprimen exactamente la misma salida; elige el lenguaje que conozcas mejor y compara con los otros dos. Todos los programas de esta lección se compilan y ejecutan automáticamente (<code>make ejemplos</code>), así que puedes copiarlos con confianza.</p>
@@ -806,26 +806,33 @@ Solución
 <h3 id="demostración-directa">2.1 Demostración directa</h3>
 <p>Partes de la hipótesis y avanzas con pasos válidos hasta la conclusión.</p>
 <p><strong>Afirmación:</strong> si <span class="math inline">\(n\)</span> es par, entonces <span class="math inline">\(n^2\)</span> es par.</p>
+<p><strong>Meta, traducida.</strong> “Par” significa “el doble de un entero”. Así que tengo que llegar a escribir <span class="math inline">\(n^2\)</span> con la forma <span class="math inline">\(2\cdot(\text{algún entero})\)</span>. Saber a qué forma quiero llegar es lo que guía el álgebra.</p>
 <ol type="1">
-<li>“<span class="math inline">\(n\)</span> es par” significa que existe un entero <span class="math inline">\(k\)</span> con <span class="math inline">\(n=2k\)</span>.</li>
-<li>Entonces <span class="math inline">\(n^2=(2k)^2=4k^2=2\cdot(2k^2)\)</span>.</li>
-<li>Como <span class="math inline">\(2k^2\)</span> es entero, <span class="math inline">\(n^2\)</span> es el doble de un entero, es decir, es par. <span class="math inline">\(\square\)</span></li>
+<li>“<span class="math inline">\(n\)</span> es par” significa que existe un entero <span class="math inline">\(k\)</span> con <span class="math inline">\(n=2k\)</span>. (<span class="math inline">\(k\)</span> es solo el nombre de la mitad de <span class="math inline">\(n\)</span>: si <span class="math inline">\(n=6\)</span>, <span class="math inline">\(k=3\)</span>.)</li>
+<li>Sustituyo <span class="math inline">\(n\)</span> por <span class="math inline">\(2k\)</span> y desarrollo el cuadrado: <span class="math inline">\(n^2=(2k)^2=(2k)\cdot(2k)=4k^2\)</span>.</li>
+<li>Saco un <span class="math inline">\(2\)</span> de factor común para que aparezca la forma que busco: <span class="math inline">\(4k^2=2\cdot(2k^2)\)</span>.</li>
+<li><span class="math inline">\(2k^2\)</span> es entero (es producto de enteros), así que <span class="math inline">\(n^2=2\cdot(\text{entero})\)</span>: es par. <span class="math inline">\(\square\)</span></li>
 </ol>
+<p><em>Con números:</em> <span class="math inline">\(n=6\)</span>, <span class="math inline">\(k=3\)</span>: <span class="math inline">\(n^2=36\)</span> y <span class="math inline">\(2\cdot(2\cdot3^2)=2\cdot18=36\)</span> ✓.</p>
 <h3 id="contrapositiva">2.2 Contrapositiva</h3>
 <p><span class="math inline">\(P\Rightarrow Q\)</span> es <strong>equivalente</strong> a <span class="math inline">\(\neg Q\Rightarrow\neg P\)</span> (si la promesa “si llueve, llevo paraguas” se cumple, entonces “si no llevo paraguas, es que no llovió”). A veces la segunda es más fácil de probar.</p>
-<p><strong>Afirmación:</strong> si <span class="math inline">\(n^2\)</span> es par, entonces <span class="math inline">\(n\)</span> es par. Directamente es incómodo. Probamos la contrapositiva: <strong>si <span class="math inline">\(n\)</span> es impar, entonces <span class="math inline">\(n^2\)</span> es impar.</strong></p>
+<p><strong>Afirmación:</strong> si <span class="math inline">\(n^2\)</span> es par, entonces <span class="math inline">\(n\)</span> es par. Directamente es incómodo. Probamos la contrapositiva: <strong>si <span class="math inline">\(n\)</span> es impar, entonces <span class="math inline">\(n^2\)</span> es impar.</strong> <strong>Meta, traducida.</strong> “Impar” significa “el doble de un entero, más uno”. Tengo que llegar a <span class="math inline">\(n^2=2\cdot(\text{entero})+1\)</span>.</p>
 <ol type="1">
-<li><span class="math inline">\(n\)</span> impar: <span class="math inline">\(n=2k+1\)</span>.</li>
-<li><span class="math inline">\(n^2=4k^2+4k+1=2(2k^2+2k)+1\)</span>, que es impar. <span class="math inline">\(\square\)</span></li>
+<li><span class="math inline">\(n\)</span> impar: existe un entero <span class="math inline">\(k\)</span> con <span class="math inline">\(n=2k+1\)</span>.</li>
+<li>Desarrollo el cuadrado con <span class="math inline">\((a+b)^2=a^2+2ab+b^2\)</span>, usando <span class="math inline">\(a=2k\)</span> y <span class="math inline">\(b=1\)</span>: <span class="math display">\[n^2=(2k+1)^2=(2k)^2+2\cdot(2k)\cdot1+1^2=4k^2+4k+1.\]</span></li>
+<li>Saco un <span class="math inline">\(2\)</span> de factor común de los dos primeros términos; el <span class="math inline">\(+1\)</span> se queda aparte, porque es justo el “más uno” que busco: <span class="math display">\[4k^2+4k+1=2\cdot(2k^2+2k)+1.\]</span></li>
+<li><span class="math inline">\(2k^2+2k\)</span> es entero, así que <span class="math inline">\(n^2\)</span> es impar. <span class="math inline">\(\square\)</span></li>
 </ol>
+<p><em>Con números:</em> <span class="math inline">\(n=7\)</span>, <span class="math inline">\(k=3\)</span>: <span class="math inline">\(n^2=49\)</span> y <span class="math inline">\(2\cdot(2\cdot9+2\cdot3)+1=2\cdot24+1=49\)</span> ✓.</p>
+<p><strong>Por qué esto demuestra la afirmación original.</strong> Probé “<span class="math inline">\(n\)</span> impar <span class="math inline">\(\Rightarrow\)</span> <span class="math inline">\(n^2\)</span> impar”, que es <span class="math inline">\(\neg Q\Rightarrow\neg P\)</span> con <span class="math inline">\(P\)</span>=“<span class="math inline">\(n^2\)</span> es par” y <span class="math inline">\(Q\)</span>=“<span class="math inline">\(n\)</span> es par”. Como es equivalente a <span class="math inline">\(P\Rightarrow Q\)</span>, también quedó probado “<span class="math inline">\(n^2\)</span> par <span class="math inline">\(\Rightarrow\)</span> <span class="math inline">\(n\)</span> par”.</p>
 <h3 id="por-contradicción">2.3 Por contradicción</h3>
 <p>Supones que la conclusión es <strong>falsa</strong> y llegas a algo imposible. Entonces la conclusión tenía que ser verdadera.</p>
 <p><strong>Afirmación (Euclides):</strong> hay infinitos números primos.</p>
 <ol type="1">
 <li>Supongamos lo contrario: hay una cantidad finita, <span class="math inline">\(p_1,p_2,\dots,p_k\)</span>.</li>
 <li>Consideremos <span class="math inline">\(N=p_1\cdot p_2\cdots p_k+1\)</span>.</li>
-<li><span class="math inline">\(N\)</span> deja residuo 1 al dividirlo entre cualquier <span class="math inline">\(p_i\)</span>, así que ningún <span class="math inline">\(p_i\)</span> lo divide.</li>
-<li>Pero todo entero <span class="math inline">\(\ge2\)</span> tiene algún divisor primo (lo demostramos en §3.5), y ese primo no está en la lista. Contradicción con el paso 1. <span class="math inline">\(\square\)</span></li>
+<li>Tomo cualquier primo <span class="math inline">\(p_i\)</span> de la lista. Puedo escribir <span class="math inline">\(N=p_i\cdot(\text{el producto de los demás primos})+1\)</span>: es un múltiplo de <span class="math inline">\(p_i\)</span> <strong>más uno</strong>. Por eso, al dividir <span class="math inline">\(N\)</span> entre <span class="math inline">\(p_i\)</span>, el residuo es <span class="math inline">\(1\)</span>, no <span class="math inline">\(0\)</span>: <span class="math inline">\(p_i\)</span> no divide a <span class="math inline">\(N\)</span>. Como <span class="math inline">\(p_i\)</span> era cualquiera, <strong>ningún</strong> primo de la lista divide a <span class="math inline">\(N\)</span>. <em>Con números:</em> si la lista fuera <span class="math inline">\(2,3,5\)</span>, <span class="math inline">\(N=31=2\cdot15+1=3\cdot10+1=5\cdot6+1\)</span>.</li>
+<li>Cada primo es <span class="math inline">\(\ge2\)</span>, así que <span class="math inline">\(N\ge2+1\ge2\)</span>. Todo entero <span class="math inline">\(\ge2\)</span> tiene algún divisor primo (lo demostramos en §3.5). Ese primo divide a <span class="math inline">\(N\)</span>, así que, por el paso 3, <strong>no</strong> está en la lista. Pero el paso 1 decía que la lista tenía <strong>todos</strong> los primos. Contradicción: la suposición del paso 1 es falsa, y los primos son infinitos. <span class="math inline">\(\square\)</span></li>
 </ol>
 <h3 id="contraejemplo-para-refutar-un-para-todo">2.4 Contraejemplo: para refutar un “para todo”</h3>
 <p>Para demostrar que una afirmación “<strong>para todo</strong> <span class="math inline">\(n\)</span>…” es <strong>falsa</strong>, basta <strong>un</strong> caso donde falle (§1.3).</p>
@@ -909,11 +916,55 @@ Solución
 <blockquote>
 <p><strong>Afirmación <span class="math inline">\(P(n)\)</span>:</strong> … (escríbela explícitamente, con <span class="math inline">\(n\)</span>) <strong>Base:</strong> demuestro <span class="math inline">\(P(n_0)\)</span> (normalmente <span class="math inline">\(n_0=0\)</span> o <span class="math inline">\(1\)</span>) sustituyendo y calculando. <strong>Hipótesis de inducción (HI):</strong> supongo que <span class="math inline">\(P(k)\)</span> es verdadera para un <span class="math inline">\(k\ge n_0\)</span> <strong>cualquiera</strong>. <strong>Paso:</strong> usando la HI, demuestro <span class="math inline">\(P(k+1)\)</span>. <em>(Señala en qué renglón usas la HI.)</em> <strong>Conclusión:</strong> por inducción, <span class="math inline">\(P(n)\)</span> vale para todo <span class="math inline">\(n\ge n_0\)</span>. <span class="math inline">\(\square\)</span></p>
 </blockquote>
+<p><strong>Qué es cada letra, y por qué aparece <span class="math inline">\(k\)</span>.</strong> Esta es la parte que más confunde, así que vamos despacio.</p>
+<ul>
+<li><strong><span class="math inline">\(P(n)\)</span> es una frase con un hueco.</strong> El hueco es <span class="math inline">\(n\)</span>; cada número que pongas en el hueco da una frase que es verdadera o falsa. Con la afirmación de §3.2, <span class="math inline">\(P(n)\)</span>: “<span class="math inline">\(1+2+\dots+n=\frac{n(n+1)}{2}\)</span>”. Entonces <span class="math inline">\(P(3)\)</span> es la frase “<span class="math inline">\(1+2+3=\frac{3\cdot4}{2}\)</span>”, que es verdadera (<span class="math inline">\(6=6\)</span>).</li>
+<li><strong><span class="math inline">\(n\)</span> es la variable de la meta.</strong> Lo que quiero al final es “<span class="math inline">\(P(n)\)</span> para <strong>toda</strong> <span class="math inline">\(n\ge n_0\)</span>”.</li>
+<li><strong><span class="math inline">\(k\)</span> es un número fijo pero cualquiera.</strong> En el paso <strong>no</strong> puedo escribir “supongo <span class="math inline">\(P(n)\)</span>”: eso sería suponer justo lo que quiero demostrar (el error 2 de §3.6). Lo que el paso demuestra es la <strong>implicación</strong> “si <span class="math inline">\(P(k)\)</span>, entonces <span class="math inline">\(P(k+1)\)</span>”: si el dominó <span class="math inline">\(k\)</span> cae, tumba al <span class="math inline">\(k+1\)</span>. Uso otra letra para dejar claro que <span class="math inline">\(k\)</span> es <strong>un</strong> dominó concreto, del que solo sé que <span class="math inline">\(k\ge n_0\)</span> y que cae. No elijo cuál es; por eso lo que demuestre vale para todos a la vez.</li>
+<li><strong><span class="math inline">\(P(k+1)\)</span> se obtiene sustituyendo.</strong> Es la misma frase con <span class="math inline">\(k+1\)</span> en el hueco: <strong>cada <span class="math inline">\(n\)</span> se reemplaza por <span class="math inline">\((k+1)\)</span>, con paréntesis</strong>. En §3.2, el lado derecho <span class="math inline">\(\frac{n(n+1)}{2}\)</span> se vuelve <span class="math inline">\(\frac{(k+1)\big((k+1)+1\big)}{2}=\frac{(k+1)(k+2)}{2}\)</span>.</li>
+</ul>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Símbolo</th>
+<th>Qué es</th>
+<th>En el ejemplo de §3.2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math inline">\(P(n)\)</span></td>
+<td>la afirmación; la meta es probarla para toda <span class="math inline">\(n\)</span></td>
+<td><span class="math inline">\(1+\dots+n=\frac{n(n+1)}{2}\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(P(k)\)</span> = HI</td>
+<td>la frase con <span class="math inline">\(k\)</span> en el hueco: lo que <strong>supongo</strong></td>
+<td><span class="math inline">\(1+\dots+k=\frac{k(k+1)}{2}\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(P(k+1)\)</span></td>
+<td>la frase con <span class="math inline">\(k+1\)</span> en el hueco: lo que <strong>quiero demostrar</strong></td>
+<td><span class="math inline">\(1+\dots+k+(k+1)=\frac{(k+1)(k+2)}{2}\)</span></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Qué se intenta con el álgebra del paso.</strong> Siempre lo mismo, en tres movimientos:</p>
+<ol type="1">
+<li><strong>Escribe <span class="math inline">\(P(k+1)\)</span> completa, antes de calcular nada.</strong> Es tu destino; sin ella, no sabes hacia dónde va el álgebra.</li>
+<li><strong>Toma un lado de <span class="math inline">\(P(k+1)\)</span> y transfórmalo hasta que aparezca algo de lo que habla <span class="math inline">\(P(k)\)</span>.</strong> Ese es el renglón donde <strong>usas la HI</strong>: sustituyes ese pedazo por lo que la HI dice que vale.</li>
+<li><strong>Sigue transformando hasta llegar al otro lado de <span class="math inline">\(P(k+1)\)</span>.</strong> Cuando llegas, el paso está demostrado.</li>
+</ol>
 <h3 id="ejemplo-resuelto-la-suma-12dotsn">3.2 Ejemplo resuelto: la suma <span class="math inline">\(1+2+\dots+n\)</span></h3>
 <p><strong>Afirmación <span class="math inline">\(P(n)\)</span>:</strong> <span class="math inline">\(\displaystyle 1+2+\dots+n=\frac{n(n+1)}{2}\)</span>, para todo <span class="math inline">\(n\ge1\)</span>.</p>
 <p><strong>Base (<span class="math inline">\(n=1\)</span>):</strong> el lado izquierdo es <span class="math inline">\(1\)</span>. El derecho es <span class="math inline">\(\frac{1\cdot2}{2}=1\)</span>. Son iguales ✓.</p>
 <p><strong>HI:</strong> para un <span class="math inline">\(k\ge1\)</span> cualquiera, <span class="math inline">\(1+2+\dots+k=\frac{k(k+1)}2\)</span>.</p>
-<p><strong>Paso:</strong> quiero probar <span class="math inline">\(1+2+\dots+k+(k+1)=\frac{(k+1)(k+2)}2\)</span>.</p>
+<p><strong>Paso.</strong> <em>Movimiento 1, la meta:</em> sustituyo <span class="math inline">\(n\)</span> por <span class="math inline">\(k+1\)</span> en la afirmación. El lado izquierdo es la suma hasta <span class="math inline">\(k+1\)</span>, que escribo mostrando su último término; el derecho, <span class="math inline">\(\frac{(k+1)\big((k+1)+1\big)}{2}\)</span>, se simplifica a <span class="math inline">\(\frac{(k+1)(k+2)}{2}\)</span>: <span class="math display">\[P(k+1):\qquad 1+2+\dots+k+(k+1)=\frac{(k+1)(k+2)}{2}.\]</span> <em>El plan:</em> en el lado izquierdo, los primeros <span class="math inline">\(k\)</span> términos, <span class="math inline">\(1+\dots+k\)</span>, son <strong>exactamente</strong> el lado izquierdo de la HI. Los sustituyo por lo que la HI dice que valen (movimiento 2) y simplifico hasta llegar al lado derecho (movimiento 3):</p>
 <div class="scroll"><table>
 <colgroup>
 <col style="width: 33%"/>
@@ -941,7 +992,7 @@ Solución
 <tr>
 <td>3</td>
 <td><span class="math inline">\(=\dfrac{k(k+1)}{2}+\dfrac{2(k+1)}{2}\)</span></td>
-<td>escribo <span class="math inline">\((k+1)\)</span> con denominador 2</td>
+<td>escribo <span class="math inline">\((k+1)\)</span> con denominador 2: <span class="math inline">\((k+1)=\frac{2(k+1)}{2}\)</span>, porque multiplicar y dividir entre 2 no cambia el valor</td>
 </tr>
 <tr>
 <td>4</td>
@@ -956,6 +1007,7 @@ Solución
 </tbody>
 </table></div>
 <p>El renglón 5 es el lado derecho de <span class="math inline">\(P(k+1)\)</span> ✓. Por inducción, la fórmula vale para todo <span class="math inline">\(n\ge1\)</span>. <span class="math inline">\(\square\)</span></p>
+<p><em>Con números</em> (<span class="math inline">\(k=3\)</span>, es decir, pasar de <span class="math inline">\(P(3)\)</span> a <span class="math inline">\(P(4)\)</span>): renglón 1, <span class="math inline">\(1+2+3+4=10\)</span>; renglón 2, <span class="math inline">\(\frac{3\cdot4}{2}+4=6+4=10\)</span>; renglón 5, <span class="math inline">\(\frac{4\cdot5}{2}=10\)</span> ✓.</p>
 <p>Un programa puede <strong>comprobar</strong> la fórmula para muchos valores (y es buena práctica hacerlo antes de intentar demostrarla), pero recuerda §2.4: comprobar no es demostrar.</p>
 <div class="tabs"><div aria-label="Lenguaje" class="tablist" role="tablist"><button aria-controls="t3-0" aria-selected="false" data-lang="c" id="t3-0-b" role="tab" tabindex="-1" type="button">C</button><button aria-controls="t3-1" aria-selected="false" data-lang="cpp" id="t3-1-b" role="tab" tabindex="-1" type="button">C++</button><button aria-controls="t3-2" aria-selected="false" data-lang="rust" id="t3-2-b" role="tab" tabindex="-1" type="button">Rust</button></div><div aria-labelledby="t3-0-b" class="panel" data-lang="c" id="t3-0" role="tabpanel"><div class="sourceCode" id="cb14"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb14-1"><a aria-hidden="true" href="#cb14-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
 <span id="cb14-2"><a aria-hidden="true" href="#cb14-2" tabindex="-1"></a></span>
@@ -1060,9 +1112,10 @@ Solución
 <pre class="text salida"><code>suma(100) = 5050</code></pre>
 <p><strong>Demostración de que <code>suma</code> es correcta</strong>, por inducción sobre <span class="math inline">\(n\)</span>:</p>
 <ul>
-<li><em>Base:</em> <code>suma(0)</code> devuelve 0, que es la suma de cero términos ✓.</li>
-<li><em>HI:</em> <code>suma(k)</code> devuelve <span class="math inline">\(1+\dots+k\)</span>.</li>
-<li><em>Paso:</em> <code>suma(k+1)</code> devuelve <code>(k+1) + suma(k)</code>, que por la HI es <span class="math inline">\((k+1)+(1+\dots+k)=1+\dots+(k+1)\)</span> ✓. <span class="math inline">\(\square\)</span></li>
+<li><em>Afirmación <span class="math inline">\(P(n)\)</span>:</em> <code>suma(n)</code> devuelve <span class="math inline">\(1+\dots+n\)</span> (y <span class="math inline">\(0\)</span> cuando <span class="math inline">\(n=0\)</span>, la suma de cero términos).</li>
+<li><em>Base:</em> con <span class="math inline">\(n=0\)</span> el código entra al <code>if</code> y devuelve 0, que es la suma de cero términos ✓.</li>
+<li><em>HI:</em> para un <span class="math inline">\(k\ge0\)</span> cualquiera, <code>suma(k)</code> devuelve <span class="math inline">\(1+\dots+k\)</span>.</li>
+<li><em>Paso.</em> Meta, <span class="math inline">\(P(k+1)\)</span>: <code>suma(k+1)</code> devuelve <span class="math inline">\(1+\dots+(k+1)\)</span>. Sigo el código con <span class="math inline">\(n=k+1\)</span>: como <span class="math inline">\(k+1\ge1\)</span>, no entra al <code>if</code> y ejecuta <code>return (k+1) + suma(k)</code>. La llamada <code>suma(k)</code> es justo de lo que habla la HI, así que devuelve <span class="math inline">\(1+\dots+k\)</span>. Sustituyo: el resultado es <span class="math inline">\((k+1)+(1+\dots+k)\)</span>, que son los mismos números que <span class="math inline">\(1+\dots+k+(k+1)\)</span> en otro orden, y sumar en otro orden no cambia el resultado ✓. <span class="math inline">\(\square\)</span></li>
 </ul>
 <blockquote>
 <p>Esta forma de razonar (“supongo que la llamada recursiva funciona”) es exactamente cómo se diseñan los algoritmos recursivos del curso: merge sort, quicksort, los recorridos de árboles.</p>
@@ -1076,7 +1129,18 @@ Solución
 <ul>
 <li><em>Base:</em> <span class="math inline">\(n=2\)</span> es primo; es un producto de un solo primo ✓.</li>
 <li><em>HI fuerte:</em> todo <span class="math inline">\(j\)</span> con <span class="math inline">\(2\le j\le k\)</span> es producto de primos.</li>
-<li><em>Paso:</em> considero <span class="math inline">\(k+1\)</span>. Si es primo, listo. Si no, <span class="math inline">\(k+1=a\cdot b\)</span> con <span class="math inline">\(2\le a,b\le k\)</span>. Por la HI fuerte, <span class="math inline">\(a\)</span> y <span class="math inline">\(b\)</span> son productos de primos, así que <span class="math inline">\(a\cdot b\)</span> también ✓. <span class="math inline">\(\square\)</span></li>
+<li><em>Paso.</em> Meta, <span class="math inline">\(P(k+1)\)</span>: <span class="math inline">\(k+1\)</span> es producto de primos. Hay dos casos.
+<ul>
+<li>Si <span class="math inline">\(k+1\)</span> es primo, es un producto de un solo primo ✓.</li>
+<li>Si no es primo, tiene un divisor <span class="math inline">\(a\)</span> con <span class="math inline">\(2\le a&lt;k+1\)</span>. Sea <span class="math inline">\(b=\frac{k+1}{a}\)</span>, de modo que <span class="math inline">\(k+1=a\cdot b\)</span>. Necesito que <span class="math inline">\(a\)</span> y <span class="math inline">\(b\)</span> estén en el rango de la HI, <span class="math inline">\(2\le\,\cdot\,\le k\)</span>:
+<ul>
+<li><span class="math inline">\(a\le k\)</span> porque <span class="math inline">\(a&lt;k+1\)</span> y es entero.</li>
+<li><span class="math inline">\(b\ge2\)</span>: como <span class="math inline">\(a&lt;k+1\)</span>, <span class="math inline">\(b=\frac{k+1}{a}&gt;1\)</span>, y <span class="math inline">\(b\)</span> es entero.</li>
+<li><span class="math inline">\(b\le k\)</span>: como <span class="math inline">\(a\ge2\)</span>, <span class="math inline">\(b=\frac{k+1}{a}\le\frac{k+1}{2}\)</span>, y <span class="math inline">\(\frac{k+1}{2}\le k\)</span> equivale (multiplicando por 2) a <span class="math inline">\(k+1\le 2k\)</span>, es decir, a <span class="math inline">\(1\le k\)</span>, que es cierto.</li>
+</ul>
+Por la HI fuerte, <span class="math inline">\(a\)</span> y <span class="math inline">\(b\)</span> son productos de primos. Juntando las dos listas de primos, <span class="math inline">\(a\cdot b=k+1\)</span> también lo es ✓. <span class="math inline">\(\square\)</span></li>
+</ul>
+<em>Con números:</em> <span class="math inline">\(k+1=12\)</span> no es primo; <span class="math inline">\(12=3\cdot4\)</span>, la HI da <span class="math inline">\(3=3\)</span> y <span class="math inline">\(4=2\cdot2\)</span>, y juntando, <span class="math inline">\(12=3\cdot2\cdot2\)</span>.</li>
 </ul>
 <p>Fíjate en que <span class="math inline">\(a\)</span> y <span class="math inline">\(b\)</span> <strong>no</strong> son <span class="math inline">\(k\)</span>: pueden ser cualquier valor más chico. Por eso hace falta la versión fuerte. Es lo que pasa en divide y vencerás: los subproblemas son “más chicos”, pero no “uno menos”. El programa sigue exactamente la demostración:</p>
 <div class="tabs"><div aria-label="Lenguaje" class="tablist" role="tablist"><button aria-controls="t5-0" aria-selected="false" data-lang="c" id="t5-0-b" role="tab" tabindex="-1" type="button">C</button><button aria-controls="t5-1" aria-selected="false" data-lang="cpp" id="t5-1-b" role="tab" tabindex="-1" type="button">C++</button><button aria-controls="t5-2" aria-selected="false" data-lang="rust" id="t5-2-b" role="tab" tabindex="-1" type="button">Rust</button></div><div aria-labelledby="t5-0-b" class="panel" data-lang="c" id="t5-0" role="tabpanel"><div class="sourceCode" id="cb22"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb22-1"><a aria-hidden="true" href="#cb22-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
@@ -1151,7 +1215,54 @@ Solución
 <summary>
 Solución
 </summary>
-<p><em>Base</em> <span class="math inline">\(k=0\)</span>: <span class="math inline">\(2^0=1=2^1-1\)</span> ✓. <em>HI:</em> <span class="math inline">\(\sum_{i=0}^{k}2^i=2^{k+1}-1\)</span>. <em>Paso:</em> <span class="math inline">\(\sum_{i=0}^{k+1}2^i=\Big(\sum_{i=0}^{k}2^i\Big)+2^{k+1}\overset{\text{HI}}{=}(2^{k+1}-1)+2^{k+1}=2\cdot2^{k+1}-1=2^{k+2}-1\)</span> ✓. <span class="math inline">\(\square\)</span></p>
+<p>Aquí la variable de la afirmación ya se llama <span class="math inline">\(k\)</span>; para no confundir, la renombro <span class="math inline">\(n\)</span>: <span class="math inline">\(P(n)\)</span>: <span class="math inline">\(\sum_{i=0}^{n}2^i=2^{n+1}-1\)</span>, y uso <span class="math inline">\(k\)</span> en la HI como en la plantilla.</p>
+<ul>
+<li><em>Base</em> (<span class="math inline">\(n=0\)</span>): la suma tiene un solo término, <span class="math inline">\(2^0=1\)</span>, y el lado derecho es <span class="math inline">\(2^{0+1}-1=1\)</span> ✓.</li>
+<li><em>HI:</em> para un <span class="math inline">\(k\ge0\)</span> cualquiera, <span class="math inline">\(\sum_{i=0}^{k}2^i=2^{k+1}-1\)</span>.</li>
+<li><em>Paso.</em> Meta, <span class="math inline">\(P(k+1)\)</span> (cada <span class="math inline">\(n\)</span> se vuelve <span class="math inline">\(k+1\)</span>): <span class="math inline">\(\sum_{i=0}^{k+1}2^i=2^{(k+1)+1}-1=2^{k+2}-1\)</span>. <em>Plan:</em> separar el último término para que aparezca la suma de la HI.</li>
+</ul>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Renglón</th>
+<th>Expresión</th>
+<th>Justificación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><span class="math inline">\(\sum_{i=0}^{k+1}2^i\)</span></td>
+<td>lado izquierdo de <span class="math inline">\(P(k+1)\)</span></td>
+</tr>
+<tr>
+<td>2</td>
+<td><span class="math inline">\(=\Big(\sum_{i=0}^{k}2^i\Big)+2^{k+1}\)</span></td>
+<td>separo el último término (<span class="math inline">\(i=k+1\)</span>)</td>
+</tr>
+<tr>
+<td>3</td>
+<td><span class="math inline">\(=(2^{k+1}-1)+2^{k+1}\)</span></td>
+<td><strong>aquí uso la HI</strong></td>
+</tr>
+<tr>
+<td>4</td>
+<td><span class="math inline">\(=2\cdot2^{k+1}-1\)</span></td>
+<td>dos veces lo mismo es el doble: <span class="math inline">\(2^{k+1}+2^{k+1}=2\cdot2^{k+1}\)</span></td>
+</tr>
+<tr>
+<td>5</td>
+<td><span class="math inline">\(=2^{k+2}-1\)</span></td>
+<td>ley de exponentes: <span class="math inline">\(2\cdot2^{k+1}=2^{1+(k+1)}\)</span></td>
+</tr>
+</tbody>
+</table></div>
+<p>El renglón 5 es el lado derecho de <span class="math inline">\(P(k+1)\)</span> ✓. <span class="math inline">\(\square\)</span> <em>Con números</em> (<span class="math inline">\(k=2\)</span>): <span class="math inline">\(1+2+4+8=15\)</span>, <span class="math inline">\((2^3-1)+2^3=7+8=15\)</span>, <span class="math inline">\(2^4-1=15\)</span> ✓.</p>
 </details>
 <hr/>
 <h2 id="invariantes-de-ciclo-inducción-para-ciclos-for-y-while">4. Invariantes de ciclo: inducción para ciclos <code>for</code> y <code>while</code></h2>
@@ -1237,7 +1348,7 @@ Solución
 </table></div>
 <ul>
 <li><strong>Inicialización:</strong> antes de la primera vuelta <span class="math inline">\(i=0\)</span> y <span class="math inline">\(s=0\)</span>, la suma de cero elementos ✓.</li>
-<li><strong>Mantenimiento:</strong> si <span class="math inline">\(s=a[0]+\dots+a[i-1]\)</span> y la vuelta hace <span class="math inline">\(s\gets s+a[i]\)</span>, queda <span class="math inline">\(s=a[0]+\dots+a[i]\)</span>, que es el invariante para <span class="math inline">\(i+1\)</span> ✓.</li>
+<li><strong>Mantenimiento</strong> (el paso de la inducción). Supongo el invariante al inicio de la vuelta con índice <span class="math inline">\(i\)</span>: <span class="math inline">\(s=a[0]+\dots+a[i-1]\)</span>. Meta: el invariante al inicio de la <strong>siguiente</strong> vuelta, que tiene índice <span class="math inline">\(i+1\)</span>; sustituyendo <span class="math inline">\(i\)</span> por <span class="math inline">\(i+1\)</span> en el invariante, eso es <span class="math inline">\(s=a[0]+\dots+a[(i+1)-1]=a[0]+\dots+a[i]\)</span>. La vuelta hace <span class="math inline">\(s\gets s+a[i]\)</span>, así que el nuevo <span class="math inline">\(s\)</span> es <span class="math inline">\(\big(a[0]+\dots+a[i-1]\big)+a[i]=a[0]+\dots+a[i]\)</span>: justo la meta ✓.</li>
 <li><strong>Terminación:</strong> <span class="math inline">\(i\)</span> sube de 1 en 1 y el ciclo para en <span class="math inline">\(i=n\)</span>. El invariante con <span class="math inline">\(i=n\)</span> dice <span class="math inline">\(s=a[0]+\dots+a[n-1]\)</span>, que es lo que queríamos ✓.</li>
 </ul>
 <p>Un invariante también se puede <strong>comprobar en el código</strong> con <code>assert</code>. Es una gran herramienta de depuración: si el invariante se rompe, el programa se detiene justo ahí.</p>
@@ -1419,12 +1530,13 @@ lower_bound(20) = 6</code></pre>
 <p><strong>Demostración de correctitud:</strong></p>
 <ul>
 <li><strong>Inicialización:</strong> <code>lo = 0</code> y <code>hi = n</code>, así que <code>a[0..0)</code> y <code>a[n..n)</code> están vacíos y el invariante se cumple sin nada que revisar ✓.</li>
-<li><strong>Mantenimiento:</strong> sea <code>mid</code> con <code>lo &lt;= mid &lt; hi</code>.
+<li><strong>Mantenimiento:</strong> supongo el invariante al inicio de una vuelta; dentro del ciclo <code>lo &lt; hi</code>.
 <ul>
-<li>Si <code>a[mid] &lt; x</code>, como el arreglo está ordenado, <code>a[lo..mid]</code> también es <span class="math inline">\(&lt;x\)</span> (son <span class="math inline">\(\le\)</span> <code>a[mid]</code>). Junto con <code>a[0..lo) &lt; x</code>, queda <code>a[0..mid+1) &lt; x</code>, y por eso podemos hacer <code>lo = mid + 1</code> ✓.</li>
-<li>Si <code>a[mid] &gt;= x</code>, por el orden, todo <code>a[mid..n)</code> es <span class="math inline">\(\ge x\)</span>, y podemos hacer <code>hi = mid</code> ✓.</li>
+<li><em>Primero, <code>lo &lt;= mid &lt; hi</code>.</em> El código calcula <code>mid = lo + (hi - lo) / 2</code>. Como <code>hi - lo</code> <span class="math inline">\(\ge1\)</span>, la división entera <code>(hi - lo) / 2</code> está entre <span class="math inline">\(0\)</span> y <code>hi - lo - 1</code>: es <span class="math inline">\(\ge0\)</span> y es menor que <code>hi - lo</code> (la mitad de un número <span class="math inline">\(\ge1\)</span>, redondeada hacia abajo, es menor que el número). Sumando <code>lo</code>: <code>lo &lt;= mid &lt; hi</code>.</li>
+<li><em>Si <code>a[mid] &lt; x</code>:</em> como el arreglo está ordenado, todo <code>a[j]</code> con <code>lo &lt;= j &lt;= mid</code> cumple <code>a[j] &lt;= a[mid] &lt; x</code>. Junto con <code>a[0..lo) &lt; x</code> (el invariante), queda <code>a[0..mid+1) &lt; x</code>. El código hace <code>lo = mid + 1</code>; sustituyendo el nuevo <code>lo</code>, la primera mitad del invariante dice <code>a[0..mid+1) &lt; x</code>, que acabo de probar. <code>hi</code> no cambió, así que la segunda mitad sigue igual ✓.</li>
+<li><em>Si <code>a[mid] &gt;= x</code>:</em> por el orden, todo <code>a[j]</code> con <code>j &gt;= mid</code> cumple <code>a[j] &gt;= a[mid] &gt;= x</code>, así que <code>a[mid..n) &gt;= x</code>. El código hace <code>hi = mid</code>, y eso es exactamente la segunda mitad del invariante con el nuevo <code>hi</code>. <code>lo</code> no cambió ✓.</li>
 </ul></li>
-<li><strong>Terminación:</strong> en cada vuelta <code>hi - lo</code> <strong>decrece estrictamente</strong> (porque <code>lo &lt;= mid &lt; hi</code>), y nunca es negativo, así que el ciclo termina. Al salir, <code>lo == hi</code>, y el invariante dice que todo lo anterior a <code>lo</code> es <span class="math inline">\(&lt;x\)</span> y todo desde <code>lo</code> es <span class="math inline">\(\ge x\)</span>: <code>lo</code> es la frontera que buscábamos ✓. <span class="math inline">\(\square\)</span></li>
+<li><strong>Terminación:</strong> en cada vuelta <code>hi - lo</code> <strong>decrece estrictamente</strong>: o <code>lo</code> sube a <code>mid + 1 &gt; lo</code>, o <code>hi</code> baja a <code>mid &lt; hi</code> (por el primer punto del mantenimiento). Un entero que no es negativo y baja al menos 1 en cada vuelta no puede bajar para siempre, así que el ciclo termina. Al salir, <code>lo == hi</code>, y el invariante dice que todo lo anterior a <code>lo</code> es <span class="math inline">\(&lt;x\)</span> y todo desde <code>lo</code> es <span class="math inline">\(\ge x\)</span>: <code>lo</code> es la frontera que buscábamos ✓. <span class="math inline">\(\square\)</span></li>
 <li><strong>Costo:</strong> el rango se reduce a la mitad (o menos) en cada vuelta, así que hay a lo más <span class="math inline">\(\lfloor\lg n\rfloor+1\)</span> vueltas, es decir <span class="math inline">\(O(\lg n)\)</span> (§5).</li>
 </ul>
 <h3 id="un-detalle-que-causa-errores-reales-el-desbordamiento">4.4 Un detalle que causa errores reales: el desbordamiento</h3>
@@ -1701,8 +1813,48 @@ n = 1000000  -&gt;  19 mitades</code></pre>
 <p>Pasar de un algoritmo <span class="math inline">\(O(n^2)\)</span> a uno <span class="math inline">\(O(n\lg n)\)</span> convierte 17 minutos en 0.02 segundos. Ninguna computadora más rápida compensa eso.</p>
 <h3 id="un-resultado-que-usaremos-lgnthetanlg-n">5.5 Un resultado que usaremos: <span class="math inline">\(\lg(n!)=\Theta(n\lg n)\)</span></h3>
 <p>(<span class="math inline">\(n!=1\cdot2\cdots n\)</span>. Este resultado da la cota inferior de ordenamiento en la L05.)</p>
-<p><strong>Cota superior.</strong> Cada uno de los <span class="math inline">\(n\)</span> factores de <span class="math inline">\(n!\)</span> es <span class="math inline">\(\le n\)</span>: <span class="math display">\[n!=1\cdot2\cdots n\ \le\ \underbrace{n\cdot n\cdots n}_{n\text{ veces}}=n^n\quad\Longrightarrow\quad\lg(n!)\le\lg(n^n)=n\lg n.\]</span></p>
-<p><strong>Cota inferior.</strong> Nos quedamos solo con la <strong>mitad superior</strong> de los factores (los que van de <span class="math inline">\(n/2\)</span> a <span class="math inline">\(n\)</span>). Hay al menos <span class="math inline">\(n/2\)</span> de ellos y cada uno es <span class="math inline">\(\ge n/2\)</span>; los factores que tiramos son <span class="math inline">\(\ge1\)</span>, así que tirarlos no aumenta el producto: <span class="math display">\[n!\ \ge\ \underbrace{\tfrac n2\cdot\tfrac n2\cdots\tfrac n2}_{n/2\text{ veces}}=\Big(\frac n2\Big)^{n/2}\quad\Longrightarrow\quad\lg(n!)\ge\frac n2\lg\frac n2=\frac n2(\lg n-1).\]</span> Para <span class="math inline">\(n\ge4\)</span>, <span class="math inline">\(\lg n-1\ge\frac12\lg n\)</span>, así que <span class="math inline">\(\lg(n!)\ge\frac n4\lg n\)</span>. Con las dos cotas, <span class="math inline">\(\lg(n!)=\Theta(n\lg n)\)</span>. <span class="math inline">\(\square\)</span></p>
+<p><strong>Meta, traducida.</strong> <span class="math inline">\(\Theta\)</span> pide dos cotas (§1): una superior, <span class="math inline">\(\lg(n!)\le c_2\,n\lg n\)</span>, y una inferior, <span class="math inline">\(\lg(n!)\ge c_1\,n\lg n\)</span>, ambas a partir de algún <span class="math inline">\(n_0\)</span>. Las busco por separado.</p>
+<p><strong>Cota superior.</strong> Cada uno de los <span class="math inline">\(n\)</span> factores de <span class="math inline">\(n!\)</span> es <span class="math inline">\(\le n\)</span>, así que cambiar cada factor por <span class="math inline">\(n\)</span> no hace más chico el producto: <span class="math display">\[n!=1\cdot2\cdots n\ \le\ \underbrace{n\cdot n\cdots n}_{n\text{ veces}}=n^n.\]</span> <span class="math inline">\(\lg\)</span> es creciente (si <span class="math inline">\(u\le v\)</span>, entonces <span class="math inline">\(\lg u\le\lg v\)</span>), así que puedo aplicarlo a ambos lados sin voltear el signo, y con la regla <span class="math inline">\(\lg(x^k)=k\lg x\)</span> (§5.3): <span class="math display">\[\lg(n!)\le\lg(n^n)=n\lg n.\qquad(c_2=1.)\]</span></p>
+<p><strong>Cota inferior.</strong> Nos quedamos solo con la <strong>mitad superior</strong> de los factores (los que van de <span class="math inline">\(n/2\)</span> a <span class="math inline">\(n\)</span>). Hay al menos <span class="math inline">\(n/2\)</span> de ellos y cada uno es <span class="math inline">\(\ge n/2\)</span>; los factores que tiramos son <span class="math inline">\(\ge1\)</span>, así que tirarlos no aumenta el producto: <span class="math display">\[n!\ \ge\ \underbrace{\tfrac n2\cdot\tfrac n2\cdots\tfrac n2}_{n/2\text{ veces}}=\Big(\frac n2\Big)^{n/2}.\]</span> Aplico <span class="math inline">\(\lg\)</span> (creciente) y las reglas de §5.3, una por renglón:</p>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Renglón</th>
+<th>Expresión</th>
+<th>Justificación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><span class="math inline">\(\lg(n!)\ge\lg\big((\tfrac n2)^{n/2}\big)\)</span></td>
+<td><span class="math inline">\(\lg\)</span> creciente</td>
+</tr>
+<tr>
+<td>2</td>
+<td><span class="math inline">\(=\frac n2\,\lg\frac n2\)</span></td>
+<td><span class="math inline">\(\lg(x^k)=k\lg x\)</span>, con <span class="math inline">\(x=\frac n2\)</span>, <span class="math inline">\(k=\frac n2\)</span></td>
+</tr>
+<tr>
+<td>3</td>
+<td><span class="math inline">\(=\frac n2\,(\lg n-1)\)</span></td>
+<td><span class="math inline">\(\lg\frac n2=\lg n-\lg2=\lg n-1\)</span></td>
+</tr>
+<tr>
+<td>4</td>
+<td><span class="math inline">\(\ge\frac n2\cdot\frac12\lg n=\frac n4\lg n\)</span></td>
+<td>si <span class="math inline">\(n\ge4\)</span> (abajo)</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Por qué el renglón 4 pide <span class="math inline">\(n\ge4\)</span>:</em> quiero <span class="math inline">\(\lg n-1\ge\frac12\lg n\)</span>. Paso <span class="math inline">\(\frac12\lg n\)</span> a la izquierda y el <span class="math inline">\(1\)</span> a la derecha: <span class="math inline">\(\frac12\lg n\ge1\)</span>, es decir, <span class="math inline">\(\lg n\ge2\)</span>, es decir, <span class="math inline">\(n\ge2^2=4\)</span>. Así que la desigualdad vale exactamente desde <span class="math inline">\(n_0=4\)</span>.</p>
+<p>Con las dos cotas, <span class="math inline">\(\frac14\,n\lg n\le\lg(n!)\le 1\cdot n\lg n\)</span> para todo <span class="math inline">\(n\ge4\)</span>: testigos <span class="math inline">\(c_1=\frac14\)</span>, <span class="math inline">\(c_2=1\)</span>, <span class="math inline">\(n_0=4\)</span>. Por lo tanto <span class="math inline">\(\lg(n!)=\Theta(n\lg n)\)</span>. <span class="math inline">\(\square\)</span></p>
+<p><em>Con números</em> (<span class="math inline">\(n=8\)</span>): <span class="math inline">\(8!=40320\)</span> y <span class="math inline">\(\lg 40320\approx15.3\)</span>; las cotas dan <span class="math inline">\(\frac14\cdot8\cdot3=6\le15.3\le8\cdot3=24\)</span> ✓.</p>
 <span class="ejercicio">Resuélvelo</span> <strong>Ejercicio 0.4.</strong> Ordena de menor a mayor crecimiento: <span class="math inline">\(n^{1/2}\)</span>, <span class="math inline">\(\lg^3 n\)</span>, <span class="math inline">\(2^{\lg n}\)</span>, <span class="math inline">\(n\lg n\)</span>, <span class="math inline">\(1.01^n\)</span>, <span class="math inline">\(\lg\lg n\)</span>, <span class="math inline">\(n!\)</span>, <span class="math inline">\(4^{\lg n}\)</span>.
 <details>
 <summary>
@@ -1811,7 +1963,7 @@ S &amp;=&amp; 1 &amp;+&amp; 2 &amp;+\cdots+&amp; n\\
 S &amp;=&amp; n &amp;+&amp; (n-1) &amp;+\cdots+&amp; 1\\\hline
 2S &amp;=&amp; (n+1) &amp;+&amp; (n+1) &amp;+\cdots+&amp; (n+1)
 \end{array}
-\]</span> Cada columna suma <span class="math inline">\(n+1\)</span>, y hay <span class="math inline">\(n\)</span> columnas: <span class="math inline">\(2S=n(n+1)\)</span>, así que <span class="math inline">\(S=\frac{n(n+1)}{2}=\Theta(n^2)\)</span>.</p>
+\]</span> Cada columna suma <span class="math inline">\(n+1\)</span>: en la columna <span class="math inline">\(i\)</span>, arriba está <span class="math inline">\(i\)</span> y abajo <span class="math inline">\(n+1-i\)</span> (la de abajo empieza en <span class="math inline">\(n\)</span> y baja 1 cada vez que la de arriba sube 1), y <span class="math inline">\(i+(n+1-i)=n+1\)</span>. Hay <span class="math inline">\(n\)</span> columnas, así que <span class="math inline">\(2S=n(n+1)\)</span>, y dividiendo entre 2, <span class="math inline">\(S=\frac{n(n+1)}{2}=\Theta(n^2)\)</span>. <em>Con números</em> (<span class="math inline">\(n=4\)</span>): <span class="math inline">\(S=1+2+3+4=10\)</span>; las columnas son <span class="math inline">\(1+4\)</span>, <span class="math inline">\(2+3\)</span>, <span class="math inline">\(3+2\)</span>, <span class="math inline">\(4+1\)</span>, todas <span class="math inline">\(5\)</span>; <span class="math inline">\(2S=4\cdot5=20\)</span> ✓.</p>
 <p><strong>Dónde aparece:</strong> un ciclo doble <code>for i &lt; n: for j &lt; i:</code> hace <span class="math inline">\(0+1+\dots+(n-1)=\frac{n(n-1)}2\)</span> vueltas en total. Es el costo de insertion sort en el peor caso.</p>
 <h3 id="suma-geométrica-el-truco-de-multiplicar-y-restar">7.3 Suma geométrica: el truco de multiplicar y restar</h3>
 <p><span class="math inline">\(S=1+r+r^2+\dots+r^k\)</span>, con <span class="math inline">\(r\ne1\)</span>. Multiplica por <span class="math inline">\(r\)</span> y resta: <span class="math display">\[
@@ -1820,11 +1972,12 @@ rS &amp;=&amp; r+r^2+\dots+r^k+r^{k+1}\\
 S &amp;=&amp; 1+r+r^2+\dots+r^k\\\hline
 rS-S &amp;=&amp; r^{k+1}-1\qquad(\text{todo lo de en medio se cancela})
 \end{array}
-\]</span> Despejando: <span class="math inline">\(S(r-1)=r^{k+1}-1\)</span>, es decir, <span class="math inline">\(\displaystyle S=\frac{r^{k+1}-1}{r-1}\)</span>.</p>
+\]</span> <em>Por qué se cancela lo de en medio:</em> los términos <span class="math inline">\(r, r^2,\dots,r^k\)</span> aparecen en <strong>los dos</strong> renglones, así que al restar se van. Solo sobreviven <span class="math inline">\(r^{k+1}\)</span> (que solo está arriba) y <span class="math inline">\(1\)</span> (que solo está abajo, y por eso entra con signo menos).</p>
+<p><em>Despejar:</em> a la izquierda saco <span class="math inline">\(S\)</span> de factor común, <span class="math inline">\(rS-S=S(r-1)\)</span>, así que <span class="math inline">\(S(r-1)=r^{k+1}-1\)</span>. Divido entre <span class="math inline">\(r-1\)</span>, cosa que puedo hacer porque <span class="math inline">\(r\ne1\)</span> (para eso estaba esa condición): <span class="math display">\[S=\frac{r^{k+1}-1}{r-1}.\]</span> <em>Con números</em> (<span class="math inline">\(r=2\)</span>, <span class="math inline">\(k=3\)</span>): <span class="math inline">\(1+2+4+8=15\)</span> y <span class="math inline">\(\frac{2^4-1}{2-1}=15\)</span> ✓.</p>
 <p><strong>Los dos casos que importan:</strong></p>
 <ul>
 <li><strong><span class="math inline">\(r=2\)</span>:</strong> <span class="math inline">\(1+2+4+\dots+2^k=2^{k+1}-1\)</span>. En binario se ve: <span class="math inline">\(1+2+4+8=1111_2\)</span>, y sumarle 1 da <span class="math inline">\(10000_2=16\)</span>. <strong>La suma es menor que el doble del último término.</strong></li>
-<li><strong><span class="math inline">\(r=\frac12\)</span>:</strong> <span class="math inline">\(1+\frac12+\frac14+\dots&lt;2\)</span>, por muchos términos que sumes. Es como caminar hacia una pared avanzando cada vez la mitad de lo que falta: nunca la alcanzas. <strong>La suma es menor que el doble del primer término.</strong></li>
+<li><strong><span class="math inline">\(r=\frac12\)</span>:</strong> <span class="math inline">\(1+\frac12+\frac14+\dots&lt;2\)</span>, por muchos términos que sumes. Con la fórmula: <span class="math inline">\(S=\frac{(1/2)^{k+1}-1}{\frac12-1}=\frac{1-(1/2)^{k+1}}{1/2}=2-\big(\tfrac12\big)^{k}\)</span>, que es <span class="math inline">\(2\)</span> menos algo positivo. Es como caminar hacia una pared avanzando cada vez la mitad de lo que falta: nunca la alcanzas. <strong>La suma es menor que el doble del primer término.</strong></li>
 </ul>
 <blockquote>
 <p><strong>Regla de oro:</strong> en una suma geométrica, <strong>el término más grande domina</strong>. Si la razón es <span class="math inline">\(&gt;1\)</span>, la suma es <span class="math inline">\(\Theta(\text{último término})\)</span>; si es <span class="math inline">\(&lt;1\)</span>, es <span class="math inline">\(\Theta(\text{primer término})\)</span>. Es <em>la</em> idea detrás del análisis del arreglo dinámico (L01).</p>
@@ -1837,7 +1990,14 @@ S &amp;=&amp; 1x+2x^2+3x^3+4x^4+\cdots\\
 xS &amp;=&amp; \phantom{1x+{}}1x^2+2x^3+3x^4+\cdots\\\hline
 S-xS &amp;=&amp; 1x+1x^2+1x^3+1x^4+\cdots=\dfrac{x}{1-x}
 \end{array}
-\]</span> (la última igualdad es la geométrica de §7.3 empezando en <span class="math inline">\(x\)</span>). Despejando, <span class="math inline">\(S(1-x)=\frac{x}{1-x}\)</span>, así que <span class="math inline">\(S=\frac{x}{(1-x)^2}\)</span>. Con <span class="math inline">\(x=\frac12\)</span>: <span class="math inline">\(S=\frac{1/2}{1/4}=2\)</span>. <span class="math inline">\(\square\)</span></p>
+\]</span> Paso por paso:</p>
+<ol type="1">
+<li><strong>Restar columna por columna.</strong> Cada potencia <span class="math inline">\(x^j\)</span> aparece arriba con coeficiente <span class="math inline">\(j\)</span> y abajo con coeficiente <span class="math inline">\(j-1\)</span> (el renglón de abajo es el de arriba corrido un lugar). Restando: <span class="math inline">\(j\,x^j-(j-1)\,x^j=x^j\)</span>. Por eso queda un <span class="math inline">\(1\)</span> delante de cada potencia.</li>
+<li><strong>Sumar lo que quedó.</strong> <span class="math inline">\(x+x^2+x^3+\cdots\)</span> es una geométrica (§7.3) que empieza en <span class="math inline">\(x\)</span>: saco <span class="math inline">\(x\)</span> de factor común, <span class="math inline">\(x(1+x+x^2+\cdots)\)</span>. Con <span class="math inline">\(0&lt;x&lt;1\)</span>, la fórmula de §7.3 da <span class="math inline">\(1+x+\dots+x^k=\frac{1-x^{k+1}}{1-x}\)</span>, y <span class="math inline">\(x^{k+1}\)</span> se hace tan chico como quieras al crecer <span class="math inline">\(k\)</span>, así que la suma infinita vale <span class="math inline">\(\frac{1}{1-x}\)</span>. Entonces <span class="math inline">\(x+x^2+\cdots=\frac{x}{1-x}\)</span>.</li>
+<li><strong>Despejar <span class="math inline">\(S\)</span>.</strong> A la izquierda, <span class="math inline">\(S-xS=S(1-x)\)</span> (factor común). Queda <span class="math inline">\(S(1-x)=\frac{x}{1-x}\)</span>, y divido entre <span class="math inline">\(1-x\ne0\)</span>: <span class="math inline">\(S=\frac{x}{(1-x)^2}\)</span>.</li>
+<li><strong>Sustituir <span class="math inline">\(x=\frac12\)</span>:</strong> <span class="math inline">\(1-x=\frac12\)</span> y <span class="math inline">\((1-x)^2=\frac14\)</span>, así que <span class="math inline">\(S=\frac{1/2}{1/4}=\frac12\cdot4=2\)</span>. <span class="math inline">\(\square\)</span></li>
+</ol>
+<p>(Restar sumas infinitas término a término se vale aquí porque, con <span class="math inline">\(0&lt;x&lt;1\)</span>, las dos sumas convergen; el programa de abajo lo confirma con números.)</p>
 <p>Veamos cómo se acercan las sumas parciales:</p>
 <div class="tabs"><div aria-label="Lenguaje" class="tablist" role="tablist"><button aria-controls="t12-0" aria-selected="false" data-lang="c" id="t12-0-b" role="tab" tabindex="-1" type="button">C</button><button aria-controls="t12-1" aria-selected="false" data-lang="cpp" id="t12-1-b" role="tab" tabindex="-1" type="button">C++</button><button aria-controls="t12-2" aria-selected="false" data-lang="rust" id="t12-2-b" role="tab" tabindex="-1" type="button">Rust</button></div><div aria-labelledby="t12-0-b" class="panel" data-lang="c" id="t12-0" role="tabpanel"><div class="sourceCode" id="cb51"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb51-1"><a aria-hidden="true" href="#cb51-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
 <span id="cb51-2"><a aria-hidden="true" href="#cb51-2" tabindex="-1"></a></span>
@@ -1876,7 +2036,7 @@ hasta k = 20: 1.999979
 hasta k = 30: 2.000000</code></pre>
 <h3 id="la-suma-armónica-crece-como-el-logaritmo">7.5 La suma armónica crece como el logaritmo</h3>
 <p><span class="math inline">\(H_n=1+\frac12+\frac13+\dots+\frac1n\)</span>. Aparece en el costo esperado de quicksort (L05) y en el hashing (L04).</p>
-<p><strong>Cota superior con un truco de agrupación.</strong> Agrupa los términos en bloques que empiezan en potencias de 2, y reemplaza cada término por el <strong>primero</strong> de su bloque, que es el más grande: <span class="math display">\[H_n\le\underbrace{1}_{1}+\underbrace{\tfrac12+\tfrac13}_{\le\frac12+\frac12=1}+\underbrace{\tfrac14+\tfrac15+\tfrac16+\tfrac17}_{\le4\cdot\frac14=1}+\underbrace{\tfrac18+\dots+\tfrac1{15}}_{\le8\cdot\frac18=1}+\cdots\]</span> Cada bloque aporta a lo más 1, y hay <span class="math inline">\(\lfloor\lg n\rfloor+1\)</span> bloques (§5.2), así que <span class="math inline">\(H_n\le\lg n+1\)</span>.</p>
+<p><strong>Cota superior con un truco de agrupación.</strong> Agrupa los términos en bloques que empiezan en potencias de 2, y reemplaza cada término por el <strong>primero</strong> de su bloque, que es el más grande: <span class="math display">\[H_n\le\underbrace{1}_{1}+\underbrace{\tfrac12+\tfrac13}_{\le\frac12+\frac12=1}+\underbrace{\tfrac14+\tfrac15+\tfrac16+\tfrac17}_{\le4\cdot\frac14=1}+\underbrace{\tfrac18+\dots+\tfrac1{15}}_{\le8\cdot\frac18=1}+\cdots\]</span> Cada bloque aporta a lo más 1: el bloque que empieza en <span class="math inline">\(2^j\)</span> tiene <span class="math inline">\(2^j\)</span> términos (<span class="math inline">\(\frac1{2^j},\dots,\frac1{2^{j+1}-1}\)</span>), cada uno <span class="math inline">\(\le\frac1{2^j}\)</span>, así que suma <span class="math inline">\(\le2^j\cdot\frac1{2^j}=1\)</span>. ¿Cuántos bloques hay? Uno por cada <span class="math inline">\(j\)</span> con <span class="math inline">\(2^j\le n\)</span> (si <span class="math inline">\(2^j&gt;n\)</span>, el bloque ya no tiene términos de <span class="math inline">\(H_n\)</span>), es decir, <span class="math inline">\(j=0,1,\dots,\lfloor\lg n\rfloor\)</span>: son <span class="math inline">\(\lfloor\lg n\rfloor+1\)</span> bloques (§5.2). Por lo tanto <span class="math inline">\(H_n\le\lfloor\lg n\rfloor+1\le\lg n+1\)</span>.</p>
 <p><strong>Cota inferior, igual pero con el último término de cada bloque:</strong> <span class="math inline">\(\frac12\ge\frac12\)</span>, <span class="math inline">\(\frac13+\frac14\ge2\cdot\frac14=\frac12\)</span>, <span class="math inline">\(\frac15+\dots+\frac18\ge4\cdot\frac18=\frac12\)</span>, … Cada bloque aporta al menos <span class="math inline">\(\frac12\)</span>, así que <span class="math inline">\(H_n\ge1+\frac12\lfloor\lg n\rfloor\)</span>.</p>
 <p>Por lo tanto <span class="math inline">\(H_n=\Theta(\lg n)\)</span>. (Con cálculo se obtiene algo más fino: <span class="math inline">\(H_n\approx\ln n+0.5772\)</span>.)</p>
 <div class="tabs"><div aria-label="Lenguaje" class="tablist" role="tablist"><button aria-controls="t13-0" aria-selected="false" data-lang="c" id="t13-0-b" role="tab" tabindex="-1" type="button">C</button><button aria-controls="t13-1" aria-selected="false" data-lang="cpp" id="t13-1-b" role="tab" tabindex="-1" type="button">C++</button><button aria-controls="t13-2" aria-selected="false" data-lang="rust" id="t13-2-b" role="tab" tabindex="-1" type="button">Rust</button></div><div aria-labelledby="t13-0-b" class="panel" data-lang="c" id="t13-0" role="tabpanel"><div class="sourceCode" id="cb55"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb55-1"><a aria-hidden="true" href="#cb55-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;math.h&gt;</span></span>
@@ -1915,13 +2075,13 @@ n =    1000   H_n = 7.4855   ln n = 6.9078
 n = 1000000   H_n = 14.3927   ln n = 13.8155</code></pre>
 <p>La diferencia <span class="math inline">\(H_n-\ln n\)</span> se acerca a <span class="math inline">\(0.5772\ldots\)</span> (la constante de Euler–Mascheroni).</p>
 <h3 id="sumas-telescópicas">7.6 Sumas telescópicas</h3>
-<p>Si cada término es una <strong>diferencia</strong> de dos cosas consecutivas, casi todo se cancela: <span class="math display">\[\sum_{i=0}^{n-1}(a_{i+1}-a_i)=(a_1-a_0)+(a_2-a_1)+\dots+(a_n-a_{n-1})=a_n-a_0.\]</span> <strong>Ejemplo:</strong> <span class="math inline">\(\frac1{i(i+1)}=\frac1i-\frac1{i+1}\)</span>, así que <span class="math inline">\(\sum_{i=1}^{n}\frac1{i(i+1)}=1-\frac1{n+1}\)</span>. Esta es la herramienta del <strong>método del potencial</strong> en la L01.</p>
+<p>Si cada término es una <strong>diferencia</strong> de dos cosas consecutivas, casi todo se cancela: <span class="math display">\[\sum_{i=0}^{n-1}(a_{i+1}-a_i)=(a_1-a_0)+(a_2-a_1)+\dots+(a_n-a_{n-1})=a_n-a_0.\]</span> <strong>Ejemplo:</strong> <span class="math inline">\(\frac1{i(i+1)}=\frac1i-\frac1{i+1}\)</span>. (Compruébalo restando con común denominador: <span class="math inline">\(\frac1i-\frac1{i+1}=\frac{(i+1)-i}{i(i+1)}=\frac1{i(i+1)}\)</span>.) Entonces cada término es una diferencia de dos cosas consecutivas y se cancelan en cadena: <span class="math display">\[\sum_{i=1}^{n}\frac1{i(i+1)}=\Big(1-\tfrac12\Big)+\Big(\tfrac12-\tfrac13\Big)+\dots+\Big(\tfrac1n-\tfrac1{n+1}\Big)=1-\frac1{n+1}.\]</span> <em>Con números</em> (<span class="math inline">\(n=3\)</span>): <span class="math inline">\(\frac12+\frac16+\frac1{12}=\frac{6+2+1}{12}=\frac9{12}=\frac34\)</span>, y <span class="math inline">\(1-\frac14=\frac34\)</span> ✓. Esta es la herramienta del <strong>método del potencial</strong> en la L01.</p>
 <span class="ejercicio">Resuélvelo</span> <strong>Ejercicio 0.5.</strong> Demuestra que <span class="math inline">\(\sum_{i=1}^{n}\lg i=\Theta(n\lg n)\)</span>.
 <details>
 <summary>
 Solución
 </summary>
-<p>Por las reglas de §5.3, <span class="math inline">\(\sum_{i=1}^n\lg i=\lg(1\cdot2\cdots n)=\lg(n!)\)</span>, que es <span class="math inline">\(\Theta(n\lg n)\)</span> por §5.5.</p>
+<p>La regla <span class="math inline">\(\lg(xy)=\lg x+\lg y\)</span> de §5.3, leída de derecha a izquierda, convierte una suma de logaritmos en el logaritmo de un producto. Aplicada una vez por cada término: <span class="math inline">\(\lg1+\lg2+\dots+\lg n=\lg(1\cdot2\cdots n)=\lg(n!)\)</span>, que es <span class="math inline">\(\Theta(n\lg n)\)</span> por §5.5.</p>
 </details>
 <hr/>
 <h2 id="recurrencias-el-costo-de-un-algoritmo-recursivo">8. Recurrencias: el costo de un algoritmo recursivo</h2>
@@ -2057,9 +2217,57 @@ nivel 3:     [1] [1] [1] [1] [1] [1] [1] [1]         → 8 nodos × 1 = 8
 <p>El árbol sirve para <strong>adivinar</strong>; para <strong>demostrar</strong> se usa inducción (§3). Demostremos <span class="math inline">\(T(n)=n(\lg n+1)\)</span> para <span class="math inline">\(n\)</span> potencia de 2:</p>
 <ul>
 <li><em>Base</em> <span class="math inline">\(n=1\)</span>: <span class="math inline">\(T(1)=1\)</span> y <span class="math inline">\(1\cdot(\lg1+1)=1\cdot(0+1)=1\)</span> ✓.</li>
-<li><em>HI:</em> <span class="math inline">\(T(n/2)=\frac n2\big(\lg\frac n2+1\big)\)</span>.</li>
-<li><em>Paso:</em> <span class="math display">\[T(n)=2\,T(n/2)+n\ \overset{\text{HI}}{=}\ 2\cdot\frac n2\Big(\lg\frac n2+1\Big)+n=n(\lg n-1+1)+n=n\lg n+n=n(\lg n+1)\ ✓.\quad\square\]</span> (Usamos <span class="math inline">\(\lg\frac n2=\lg n-\lg2=\lg n-1\)</span>, §5.3.)</li>
+<li><em>Cómo avanza esta inducción:</em> sobre las potencias de 2, <span class="math inline">\(1,2,4,8,\dots\)</span> El “dominó anterior” de <span class="math inline">\(n\)</span> no es <span class="math inline">\(n-1\)</span> sino <span class="math inline">\(n/2\)</span>, porque la recurrencia relaciona <span class="math inline">\(T(n)\)</span> con <span class="math inline">\(T(n/2)\)</span>. La afirmación es <span class="math inline">\(P(m)\)</span>: <span class="math inline">\(T(m)=m(\lg m+1)\)</span>.</li>
+<li><em>HI:</em> para una potencia de 2 <span class="math inline">\(n\ge2\)</span> cualquiera, <span class="math inline">\(P(n/2)\)</span> es verdadera: sustituyendo <span class="math inline">\(m\)</span> por <span class="math inline">\(n/2\)</span>, <span class="math inline">\(T(n/2)=\frac n2\big(\lg\frac n2+1\big)\)</span>.</li>
+<li><em>Paso.</em> Meta, <span class="math inline">\(P(n)\)</span>: <span class="math inline">\(T(n)=n(\lg n+1)\)</span>.</li>
 </ul>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Renglón</th>
+<th>Expresión</th>
+<th>Justificación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><span class="math inline">\(T(n)=2\,T(n/2)+n\)</span></td>
+<td>la recurrencia (<span class="math inline">\(n\ge2\)</span>)</td>
+</tr>
+<tr>
+<td>2</td>
+<td><span class="math inline">\(=2\cdot\frac n2\big(\lg\frac n2+1\big)+n\)</span></td>
+<td><strong>aquí uso la HI</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td><span class="math inline">\(=n\big(\lg\frac n2+1\big)+n\)</span></td>
+<td><span class="math inline">\(2\cdot\frac n2=n\)</span></td>
+</tr>
+<tr>
+<td>4</td>
+<td><span class="math inline">\(=n\big(\lg n-1+1\big)+n\)</span></td>
+<td><span class="math inline">\(\lg\frac n2=\lg n-\lg2=\lg n-1\)</span> (§5.3)</td>
+</tr>
+<tr>
+<td>5</td>
+<td><span class="math inline">\(=n\lg n+n\)</span></td>
+<td><span class="math inline">\(-1+1=0\)</span></td>
+</tr>
+<tr>
+<td>6</td>
+<td><span class="math inline">\(=n(\lg n+1)\)</span></td>
+<td>factor común <span class="math inline">\(n\)</span></td>
+</tr>
+</tbody>
+</table></div>
+<p>El renglón 6 es <span class="math inline">\(P(n)\)</span> ✓. <span class="math inline">\(\square\)</span> <em>Con números</em> (<span class="math inline">\(n=8\)</span>): la HI da <span class="math inline">\(T(4)=4\cdot3=12\)</span>; renglón 1, <span class="math inline">\(2\cdot12+8=32\)</span>; renglón 6, <span class="math inline">\(8\cdot(3+1)=32\)</span> ✓, como en el árbol de §8.2.</p>
 <h3 id="el-teorema-maestro-la-receta-rápida">8.4 El Teorema Maestro: la receta rápida</h3>
 <p>Para recurrencias de la forma <span class="math display">\[T(n)=a\,T(n/b)+f(n)\qquad(a\ge1\ \text{subproblemas, cada uno de tamaño }n/b;\ f(n)=\text{trabajo propio}),\]</span> la receta tiene tres pasos:</p>
 <ol type="1">
@@ -2140,18 +2348,19 @@ nivel 3:     [1] [1] [1] [1] [1] [1] [1] [1]         → 8 nodos × 1 = 8
 <td><span class="math inline">\(T(n)=2T(n/2)+1\)</span></td>
 <td>recorrer un árbol balanceado</td>
 <td><span class="math inline">\(n^{1}=n\)</span></td>
-<td><span class="math inline">\(f=1=O(n^{1-\varepsilon})\)</span></td>
+<td><span class="math inline">\(f=1=n^0=O(n^{1-\varepsilon})\)</span> con <span class="math inline">\(\varepsilon=1\)</span></td>
 <td>caso 1: <span class="math inline">\(\Theta(n)\)</span></td>
 </tr>
 <tr>
 <td><span class="math inline">\(T(n)=3T(n/2)+n\)</span></td>
 <td>multiplicación de Karatsuba</td>
 <td><span class="math inline">\(n^{\lg3}\approx n^{1.585}\)</span></td>
-<td><span class="math inline">\(f=n=O(n^{1.585-\varepsilon})\)</span></td>
+<td><span class="math inline">\(f=n=O(n^{1.585-\varepsilon})\)</span> con <span class="math inline">\(\varepsilon=0.5\)</span></td>
 <td>caso 1: <span class="math inline">\(\Theta(n^{\lg 3})\)</span></td>
 </tr>
 </tbody>
 </table></div>
+<p><em>Qué significa “polinomialmente menor”:</em> que exista un <span class="math inline">\(\varepsilon&gt;0\)</span> fijo con <span class="math inline">\(f(n)=O(n^{\log_b a-\varepsilon})\)</span>, o sea, que <span class="math inline">\(f\)</span> quede por debajo de las hojas por un factor <span class="math inline">\(n^\varepsilon\)</span> entero, no solo por un logaritmo. En la tabla, el <span class="math inline">\(\varepsilon\)</span> que sirve está escrito: sirve cualquier <span class="math inline">\(\varepsilon\)</span> con <span class="math inline">\(0&lt;\varepsilon\le\)</span> la diferencia de exponentes.</p>
 <blockquote>
 <div class="callout atencion"><span class="lbl">Atención</span><strong>Cuándo NO se aplica:</strong> si el problema se reduce <strong>restando</strong> en lugar de dividir, como en <span class="math inline">\(T(n)=T(n-1)+n\)</span> (quicksort en el peor caso), no tiene la forma <span class="math inline">\(aT(n/b)\)</span>. Hay que sumar directamente: <span class="math inline">\(T(n)=n+(n-1)+\dots+1=\Theta(n^2)\)</span> (§7.2).</div>
 </blockquote>
@@ -2372,13 +2581,18 @@ E[suma de dos dados] = 7.000</code></pre>
 <span id="cb74-25"><a aria-hidden="true" href="#cb74-25" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div></div>
 <pre class="text salida"><code>formula:    49.50
 simulacion: 49.51</code></pre>
-<p><strong>Desigualdad de Markov</strong> (la usaremos poco): si <span class="math inline">\(X\ge0\)</span>, entonces <span class="math inline">\(\Pr[X\ge t]\le\frac{E[X]}{t}\)</span>. Por ejemplo, la probabilidad de que haya el doble de choques que el promedio es a lo más <span class="math inline">\(\frac12\)</span>.</p>
+<p><strong>Desigualdad de Markov</strong> (la usaremos poco): si <span class="math inline">\(X\ge0\)</span>, entonces <span class="math inline">\(\Pr[X\ge t]\le\frac{E[X]}{t}\)</span>. Por ejemplo, la probabilidad de que haya el doble de choques que el promedio es a lo más <span class="math inline">\(\frac12\)</span>: con <span class="math inline">\(t=2E[X]\)</span>, la cota es <span class="math inline">\(\frac{E[X]}{2E[X]}=\frac12\)</span>.</p>
 <span class="ejercicio">Resuélvelo</span> <strong>Ejercicio 0.7.</strong> En una permutación al azar de <span class="math inline">\(n\)</span> elementos, ¿cuántos elementos quedan en su lugar original (<span class="math inline">\(\pi(i)=i\)</span>), en promedio?
 <details>
 <summary>
 Solución
 </summary>
-<p>Indicadora <span class="math inline">\(I_i=1\)</span> si <span class="math inline">\(\pi(i)=i\)</span>, con <span class="math inline">\(\Pr=\frac1n\)</span> (el elemento <span class="math inline">\(i\)</span> tiene <span class="math inline">\(n\)</span> lugares posibles). Por linealidad, <span class="math inline">\(E=\sum_{i=1}^n\frac1n=1\)</span>. ¡Siempre 1, sin importar <span class="math inline">\(n\)</span>!</p>
+<p>Sea <span class="math inline">\(X\)</span> el número de elementos que quedan en su lugar. Lo parto en piezas fáciles: para cada <span class="math inline">\(i\)</span>, la <strong>indicadora</strong> <span class="math inline">\(I_i\)</span> vale <span class="math inline">\(1\)</span> si <span class="math inline">\(\pi(i)=i\)</span> y <span class="math inline">\(0\)</span> si no. Entonces <span class="math inline">\(X=I_1+I_2+\dots+I_n\)</span> (cada elemento en su lugar suma 1).</p>
+<ol type="1">
+<li><strong>Esperanza de una pieza.</strong> En una permutación al azar, el elemento <span class="math inline">\(i\)</span> puede terminar en cualquiera de los <span class="math inline">\(n\)</span> lugares con la misma probabilidad, así que <span class="math inline">\(\Pr[\pi(i)=i]=\frac1n\)</span>. Por la definición de esperanza: <span class="math inline">\(E[I_i]=1\cdot\frac1n+0\cdot\big(1-\frac1n\big)=\frac1n\)</span>.</li>
+<li><strong>Linealidad.</strong> Las <span class="math inline">\(I_i\)</span> dependen unas de otras (si <span class="math inline">\(n-1\)</span> elementos están en su lugar, el último también), pero la linealidad vale <strong>siempre</strong>: <span class="math inline">\(E[X]=E[I_1]+\dots+E[I_n]=n\cdot\frac1n=1\)</span>.</li>
+</ol>
+<p>¡Siempre 1, sin importar <span class="math inline">\(n\)</span>! <em>Con números</em> (<span class="math inline">\(n=3\)</span>): de las <span class="math inline">\(6\)</span> permutaciones de <span class="math inline">\((1,2,3)\)</span>, la identidad deja 3 en su lugar, tres permutaciones dejan 1, y dos dejan 0; promedio <span class="math inline">\(\frac{3+1+1+1+0+0}{6}=1\)</span> ✓.</p>
 </details>
 <hr/>
 <h2 id="vocabulario-de-grafos-para-las-lecciones-9-a-11">10. Vocabulario de grafos (para las lecciones 9 a 11)</h2>
@@ -3031,7 +3245,7 @@ Respuestas
 </summary>
 <ol type="1">
 <li>“Existe un alumno que no aprobó ningún examen” (<span class="math inline">\(\neg\forall\exists=\exists\forall\neg\)</span>).</li>
-<li><em>Base</em> <span class="math inline">\(n=1\)</span>: <span class="math inline">\(1=1^2\)</span> ✓. <em>Paso:</em> <span class="math inline">\(\big(1+\dots+(2k-1)\big)+(2k+1)\overset{\text{HI}}{=}k^2+2k+1=(k+1)^2\)</span> ✓.</li>
+<li><em>Base</em> <span class="math inline">\(n=1\)</span>: la suma tiene un solo término, <span class="math inline">\(2\cdot1-1=1\)</span>, y <span class="math inline">\(1^2=1\)</span> ✓. <em>HI:</em> <span class="math inline">\(1+3+\dots+(2k-1)=k^2\)</span> para un <span class="math inline">\(k\ge1\)</span>. <em>Meta,</em> <span class="math inline">\(P(k+1)\)</span>: sustituyo <span class="math inline">\(n\)</span> por <span class="math inline">\(k+1\)</span>; el último término es <span class="math inline">\(2(k+1)-1=2k+1\)</span>, así que la meta es <span class="math inline">\(1+3+\dots+(2k-1)+(2k+1)=(k+1)^2\)</span>. <em>Paso:</em> <span class="math inline">\(\big(1+\dots+(2k-1)\big)+(2k+1)\overset{\text{HI}}{=}k^2+2k+1=(k+1)^2\)</span>, donde el último <span class="math inline">\(=\)</span> es el cuadrado de un binomio, <span class="math inline">\((k+1)^2=k^2+2\cdot k\cdot1+1^2\)</span> ✓.</li>
 <li><span class="math inline">\(i=1,2,4,\dots,512\)</span>: <strong>10</strong> veces. En general, <span class="math inline">\(\lceil\lg n\rceil\)</span> veces para <span class="math inline">\(n\ge1\)</span>.</li>
 <li><span class="math inline">\(n^{\log_2 2}=n\)</span>; <span class="math inline">\(f=n^2=\Omega(n^{1+\varepsilon})\)</span> y <span class="math inline">\(2\cdot(n/2)^2=\frac12n^2\le c\,n^2\)</span> con <span class="math inline">\(c=\frac12\)</span>: caso 3, <span class="math inline">\(\Theta(n^2)\)</span>.</li>
 <li><code>-2</code> (trunca hacia cero). <span class="math inline">\(\lfloor-2.25\rfloor=-3\)</span>.</li>
@@ -3039,6 +3253,34 @@ Respuestas
 <li>Indicadora <span class="math inline">\(I_k\)</span> de “la moneda <span class="math inline">\(k\)</span> cae cara”, con <span class="math inline">\(E[I_k]=\frac12\)</span>. Por linealidad, <span class="math inline">\(E=10\cdot\frac12=5\)</span>.</li>
 </ol>
 </details>
+<hr/>
+<h2 id="tarea-en-papel-inducción-puntos-extra">15. Tarea en papel: inducción (puntos extra)</h2>
+<p><strong>Para qué:</strong> la inducción se aprende escribiéndola a mano, renglón por renglón. Esta tarea es <strong>opcional</strong> y da puntos extra; tu profesor te dirá cómo se suman a la calificación. Vale hasta <strong>10 puntos</strong>.</p>
+<p><strong>Reglas de entrega.</strong></p>
+<ul>
+<li>A mano, en papel. Nada de código: aquí el objetivo es la demostración.</li>
+<li>Usa la plantilla de §3.1 en <strong>cada</strong> inducción, con sus cinco partes rotuladas: afirmación <span class="math inline">\(P(n)\)</span>, base, HI (escrita con <span class="math inline">\(k\)</span>), paso y conclusión.</li>
+<li>En el paso, escribe <strong>primero</strong> <span class="math inline">\(P(k+1)\)</span> completa, sustituyendo cada <span class="math inline">\(n\)</span> por <span class="math inline">\((k+1)\)</span>, y <strong>marca</strong> el renglón donde usas la HI.</li>
+<li>Cada <span class="math inline">\(=\)</span>, <span class="math inline">\(\le\)</span> o <span class="math inline">\(\ge\)</span> lleva su justificación (qué regla, qué sustituiste, por qué no se voltea el signo), como en las tablas de renglones de §3.2.</li>
+<li>Cierra cada ejercicio con una <strong>comprobación con números</strong> para un valor pequeño de <span class="math inline">\(k\)</span>. No demuestra nada, pero atrapa errores de álgebra.</li>
+</ul>
+<p><strong>Ejercicios.</strong></p>
+<ol type="1">
+<li><p><em>(1 punto)</em> Demuestra que <span class="math inline">\(1^2+2^2+\dots+n^2=\dfrac{n(n+1)(2n+1)}{6}\)</span> para todo <span class="math inline">\(n\ge1\)</span>.</p></li>
+<li><p><em>(1 punto)</em> Demuestra que <span class="math inline">\(4^n-1\)</span> es múltiplo de <span class="math inline">\(3\)</span> para todo <span class="math inline">\(n\ge0\)</span>. <em>Pista:</em> “múltiplo de 3” significa “<span class="math inline">\(=3\cdot(\text{entero})\)</span>”; escribe la HI así y busca esa forma en <span class="math inline">\(4^{k+1}-1\)</span>.</p></li>
+<li><p><em>(1 punto)</em> Demuestra que <span class="math inline">\(n!\ge2^n\)</span> para todo <span class="math inline">\(n\ge4\)</span>. Luego comprueba que la desigualdad es <strong>falsa</strong> para <span class="math inline">\(n=1,2,3\)</span>, y explica en una frase por qué eso obliga a que la base sea <span class="math inline">\(n=4\)</span>.</p></li>
+<li><p><em>(1 punto)</em> Demuestra que <span class="math inline">\(\displaystyle\sum_{i=1}^{n}i\cdot2^i=(n-1)\,2^{n+1}+2\)</span> para todo <span class="math inline">\(n\ge1\)</span>.</p></li>
+<li><p><em>(2 puntos, inducción fuerte)</em> Demuestra que cualquier cantidad de <span class="math inline">\(n\ge12\)</span> pesos se puede pagar usando solo monedas de <span class="math inline">\(4\)</span> y de <span class="math inline">\(5\)</span> pesos. <em>Pista:</em> para pagar <span class="math inline">\(k+1\)</span>, paga <span class="math inline">\(k+1-4\)</span> y agrega una moneda de 4. ¿Cuántos casos base necesitas para que <span class="math inline">\(k+1-4\)</span> siempre caiga dentro de la HI?</p></li>
+<li><p><em>(1 punto, inducción y recursión)</em> La función <span class="math inline">\(\text{pot}(x,n)\)</span> se define así: si <span class="math inline">\(n=0\)</span> devuelve <span class="math inline">\(1\)</span>; si no, devuelve <span class="math inline">\(x\cdot\text{pot}(x,n-1)\)</span>. Demuestra, por inducción sobre <span class="math inline">\(n\)</span>, que <span class="math inline">\(\text{pot}(x,n)=x^n\)</span> para todo <span class="math inline">\(n\ge0\)</span>. Señala qué línea de la definición corresponde a la base y cuál a la HI, como en §3.4.</p></li>
+<li><p><em>(2 puntos, encuentra el error)</em> La siguiente “demostración” concluye algo falso. Di <strong>exactamente</strong> en qué renglón falla y para qué valor de <span class="math inline">\(k\)</span>.</p>
+<blockquote>
+<p><strong>Afirmación:</strong> todo entero <span class="math inline">\(n\ge0\)</span> es igual a <span class="math inline">\(0\)</span>.</p>
+<p><strong>Base:</strong> <span class="math inline">\(n=0\)</span> ✓.</p>
+<p><strong>HI fuerte:</strong> <span class="math inline">\(j=0\)</span> para todo <span class="math inline">\(j\)</span> con <span class="math inline">\(0\le j\le k\)</span>.</p>
+<p><strong>Paso:</strong> escribo <span class="math inline">\(k+1=a+b\)</span> con <span class="math inline">\(a=k\)</span> y <span class="math inline">\(b=1\)</span>. Los dos cumplen <span class="math inline">\(0\le a,b\le k\)</span>, así que por la HI fuerte <span class="math inline">\(a=0\)</span> y <span class="math inline">\(b=0\)</span>. Entonces <span class="math inline">\(k+1=a+b=0+0=0\)</span>. <span class="math inline">\(\square\)</span></p>
+</blockquote></li>
+<li><p><em>(1 punto, invariante)</em> El ciclo <code>p = 1; for (i = 0; i &lt; n; i++) p = 2 * p;</code> termina con <span class="math inline">\(p=2^n\)</span>. Escribe el invariante al inicio de la vuelta con índice <span class="math inline">\(i\)</span> y demuestra la inicialización, el mantenimiento (sustituyendo <span class="math inline">\(i\)</span> por <span class="math inline">\(i+1\)</span>, como en §4.2) y la terminación.</p></li>
+</ol>
 <hr/>
 <h2 id="bibliografía-de-repaso">Bibliografía de repaso</h2>
 <ul>
