@@ -995,8 +995,96 @@ def fenwick_diagrama():
     write("fenwick.svg", svg(W, H, "\n".join(b), "Los bloques de un árbol de Fenwick de 16 posiciones"))
 
 
+
+# Gráficas de funciones (L00 §1 y L01 §3.3.8) ------------------------------------------
+def _ejes(b, L, R, T, B, sx, sy, xticks, yticks, ylabel):
+    """Ejes con marcas enteras y cuadrícula tenue."""
+    for v in yticks:
+        b.append(f'<line x1="{L}" y1="{sy(v):.1f}" x2="{R}" y2="{sy(v):.1f}" stroke="#eef0f4" stroke-width="1"/>')
+        b.append(text(L - 8, sy(v) + 4, v, 12, "end", MUTED))
+    for v in xticks:
+        b.append(f'<line x1="{sx(v):.1f}" y1="{B}" x2="{sx(v):.1f}" y2="{B + 5}" stroke="{MUTED}" stroke-width="1"/>')
+        b.append(text(sx(v), B + 20, v, 12, "middle", MUTED))
+    b.append(arrow(L, B, R + 14, B))
+    b.append(arrow(L, B, L, T - 14))
+    b.append(text(R + 22, B + 5, "n", 15, "start", INK, 600, italic=True))
+    b.append(text(L - 10, T - 20, ylabel, 13, "end", MUTED))
+
+
+def _curva(fn, x0, x1, sx, sy, paso=0.05):
+    pts, t = [], x0
+    while t <= x1 + 1e-9:
+        pts.append(f"{sx(t):.1f},{sy(fn(t)):.1f}")
+        t += paso
+    return " ".join(pts)
+
+
+def testigos_3n5():
+    W, H = 800, 420
+    L, R, T, B = 70, 600, 40, 360
+    XM, YM = 12, 100
+    sx = lambda t: L + (R - L) * t / XM
+    sy = lambda v: B - (B - T) * v / YM
+    b = []
+    b.append(f'<rect x="{sx(5):.1f}" y="{T}" width="{R - sx(5):.1f}" height="{B - T}" fill="{PALE}"/>')
+    _ejes(b, L, R, T, B, sx, sy, range(0, XM + 1), range(0, YM + 1, 20), "pasos")
+    b.append(f'<line x1="{sx(5):.1f}" y1="{T}" x2="{sx(5):.1f}" y2="{B}" stroke="{COB}" stroke-width="1.3" stroke-dasharray="5 4"/>')
+    b.append(text(sx(5), T - 8, "n₀ = 5 (para c = 4)", 13, "middle", COB, 700))
+    b.append(f'<polyline points="{_curva(lambda t: 8 * t, 0, 12, sx, sy)}" fill="none" stroke="{OK}" stroke-width="2.4"/>')
+    b.append(f'<polyline points="{_curva(lambda t: 4 * t, 0, 12, sx, sy)}" fill="none" stroke="{COB}" stroke-width="2.4"/>')
+    b.append(f'<polyline points="{_curva(lambda t: 3 * t + 5, 0, 12, sx, sy)}" fill="none" stroke="{ACC}" stroke-width="3"/>')
+    for (x, y, col) in [(5, 20, COB), (1, 8, OK)]:
+        b.append(f'<circle cx="{sx(x):.1f}" cy="{sy(y):.1f}" r="5" fill="#ffffff" stroke="{col}" stroke-width="2.2"/>')
+    b.append(text(sx(5) + 10, sy(20) + 22, "se cruzan en n = 5", 12, "start", COB))
+    b.append(f'<line x1="{sx(1):.1f}" y1="{sy(8) - 6:.1f}" x2="{sx(0.9):.1f}" y2="{sy(31):.1f}" stroke="{OK}" stroke-width="1"/>')
+    b.append(text(sx(0.25), sy(40), "8n tapa a 3n + 5", 12, "start", OK, 600))
+    b.append(text(sx(0.25), sy(40) + 15, "desde n = 1", 12, "start", OK, 600))
+    b.append(text(sx(3), sy(82), "antes de n = 5, 4n queda", 12, "middle", MUTED))
+    b.append(text(sx(3), sy(82) + 15, "por debajo de 3n + 5", 12, "middle", MUTED))
+    # leyenda
+    lx, ly = R + 22, T + 30
+    for i, (t, col, sw) in enumerate([("3n + 5", ACC, 3), ("8n  (c = 8)", OK, 2.4), ("4n  (c = 4)", COB, 2.4)]):
+        y = ly + 26 * i
+        b.append(f'<line x1="{lx}" y1="{y}" x2="{lx + 24}" y2="{y}" stroke="{col}" stroke-width="{sw}"/>')
+        b.append(text(lx + 30, y + 4, t, 13, "start", col, 700))
+    b.append(text(lx, ly + 100, "pocas copias:", 12, "start", MUTED))
+    b.append(text(lx, ly + 116, "hay que esperar", 12, "start", MUTED))
+    b.append(text(lx, ly + 140, "muchas copias:", 12, "start", MUTED))
+    b.append(text(lx, ly + 156, "tapa desde n = 1", 12, "start", MUTED))
+    write("testigos-3n5.svg", svg(W, H, "\n".join(b),
+          "3n+5 contra 4n y 8n: 4n la tapa desde n = 5 y 8n desde n = 1"))
+
+
+def n2_vs_cn():
+    W, H = 800, 420
+    L, R, T, B = 70, 600, 40, 360
+    XM, YM = 14, 160
+    sx = lambda t: L + (R - L) * t / XM
+    sy = lambda v: B - (B - T) * v / YM
+    b = []
+    _ejes(b, L, R, T, B, sx, sy, range(0, XM + 1, 2), range(0, YM + 1, 40), "pasos")
+    tonos = [(2, "#93a8f4"), (5, "#4f6fe8"), (10, COB)]
+    for c, col in tonos:
+        b.append(f'<polyline points="{_curva(lambda t, c=c: c * t, 0, XM, sx, sy)}" fill="none" stroke="{col}" stroke-width="2.2"/>')
+    b.append(f'<polyline points="{_curva(lambda t: t * t, 0, math.sqrt(YM), sx, sy)}" fill="none" stroke="{ACC}" stroke-width="3"/>')
+    for c, col in tonos:
+        b.append(f'<line x1="{sx(c):.1f}" y1="{sy(c * c):.1f}" x2="{sx(c):.1f}" y2="{B}" stroke="{col}" stroke-width="1" stroke-dasharray="4 4"/>')
+        b.append(f'<circle cx="{sx(c):.1f}" cy="{sy(c * c):.1f}" r="5" fill="#ffffff" stroke="{col}" stroke-width="2.2"/>')
+        b.append(text(sx(c), B + 40, f"n = {c}", 12, "middle", col, 700))
+    lx, ly = R + 22, T + 30
+    items = [("n²", ACC, 3)] + [(f"{c}n", col, 2.2) for c, col in reversed(tonos)]
+    for i, (t, col, sw) in enumerate(items):
+        y = ly + 26 * i
+        b.append(f'<line x1="{lx}" y1="{y}" x2="{lx + 24}" y2="{y}" stroke="{col}" stroke-width="{sw}"/>')
+        b.append(text(lx + 30, y + 4, t, 13, "start", col, 700))
+    for j, t in enumerate(["n² cruza a c·n", "justo en n = c,", "y después queda", "arriba para siempre.", "",
+                           "Subir c solo mueve", "el cruce a la derecha."]):
+        b.append(text(lx, ly + 126 + 16 * j, t, 12, "start", MUTED))
+    write("n2-vs-cn.svg", svg(W, H, "\n".join(b),
+          "n² contra 2n, 5n y 10n: la parábola cruza cada recta en n = c y queda arriba"))
+
 if __name__ == "__main__":
-    ciclo_curso(); memoria(); mapa_l01(); big_o(); crecimiento(); costos_push(); contraccion(); seno(); grafos()
+    ciclo_curso(); memoria(); mapa_l01(); big_o(); crecimiento(); costos_push(); contraccion(); seno(); grafos(); testigos_3n5(); n2_vs_cn()
     mapa_l02(); corrimiento()
     mapa_l03(); lista_simple(); ownership_listas()
     mapa_l04(); buffer_circular()

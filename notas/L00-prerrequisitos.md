@@ -128,11 +128,19 @@ Fíjate de dónde salen las $n$: en la opción A, la $n$ extra **es la que puse 
 | 10 | 35 | 40 | sí | 80 | sí |
 | 100 | 305 | 400 | sí | 800 | sí |
 
-La tabla muestra el **intercambio** entre $c$ y $n_0$: con pocas copias ($c=4$) tengo que esperar a que $n$ crezca ($n_0=5$); con muchas copias ($c=8$) funciona desde el principio ($n_0=1$). Los dos testigos son válidos, y basta con **uno** para demostrar que $3n+5\in O(n)$.
+Y en una gráfica: cada recta es un número de copias de $n$, y la línea punteada marca $n_0=5$ para $c=4$.
+
+![3n+5 contra 4n y 8n: 4n la tapa desde n = 5 y 8n desde n = 1](diagramas/testigos-3n5.svg)
+
+La tabla y la gráfica muestran el **intercambio** entre $c$ y $n_0$: con pocas copias ($c=4$) tengo que esperar a que $n$ crezca ($n_0=5$); con muchas copias ($c=8$) funciona desde el principio ($n_0=1$). Los dos testigos son válidos, y basta con **uno** para demostrar que $3n+5\in O(n)$.
 
 > 💡 **La receta, en general.** Para demostrar que una suma de términos está en $O(g)$: acota cada término por un múltiplo de $g$, anotando a partir de qué $n$ vale cada acotación. Entonces $c$ es la suma de los múltiplos y $n_0$ es el **mayor** de los "a partir de qué $n$". En la L01 (§3.3) usaremos exactamente esta receta con funciones más complicadas.
 
 En cambio, $n^2\notin O(n)$. Supón que alguien propone una constante $c$. En cuanto $n>c$, multiplicamos ambos lados de $n>c$ por $n$ (que es positivo, así que la desigualdad se conserva) y obtenemos $n\cdot n>c\cdot n$, es decir, $n^2>c\cdot n$: la cota falla. Como esto pasa para **cualquier** $c$, ninguna constante sirve.
+
+![n² contra 2n, 5n y 10n: la parábola cruza cada recta en n = c y queda arriba](diagramas/n2-vs-cn.svg)
+
+En la gráfica: la parábola $n^2$ cruza a cada recta $c\cdot n$ justo en $n=c$, y de ahí en adelante queda arriba para siempre. Subir $c$ no resuelve nada: solo mueve el cruce más a la derecha.
 
 > 💭 **Para reflexionar.** ¿Por qué la definición deja escoger $c$ y $n_0$, en lugar de exigir simplemente $f(n)\le g(n)$ para toda $n$? Piensa en dos algoritmos: uno hace $100n$ pasos y otro $n^2$. ¿Cuál es mejor para $n=10$? ¿Y para $n=10^6$? La notación $O$ está diseñada para responder la segunda pregunta.
 

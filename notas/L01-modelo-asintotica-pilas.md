@@ -263,6 +263,10 @@ $$
 
 **Paso 5. Verificar la desigualdad.** De $n>c$ y $n>0$, multiplicando por $n$ (R2): $n\cdot n>c\cdot n$, es decir, $n^2>c\,n$. ✓
 
+**Para verlo:** cada recta $c\cdot n$ es una propuesta del adversario. La parábola la cruza en $n=c$ y queda arriba para siempre; por eso, en cuanto $n>c$, la cota falla.
+
+![n² contra 2n, 5n y 10n: la parábola cruza cada recta en n = c y queda arriba](diagramas/n2-vs-cn.svg)
+
 **Ejemplo numérico:** si el adversario dice "$c=100$, $n_0=5$", respondes con $n=\max(5,101)=101$ y $101^2=10201>100\cdot101=10100$. ✓
 
 > Sean $c>0$ y $n_0$ arbitrarios. Tomemos $n=\max(n_0,\lfloor c\rfloor+1)$. Entonces $n\ge n_0$ y $n>c>0$, de donde $n^2>c\,n$. Como esto vale para todos $c$ y $n_0$, $n^2\notin O(n)$. $\square$
