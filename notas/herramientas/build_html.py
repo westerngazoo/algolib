@@ -23,6 +23,8 @@ CURSO = "Estructuras de Datos y Algoritmos"
 PAGES = [  # (archivo md, salida, etiqueta corta, descripción)
     ("L00-prerrequisitos.md", "L00.html", "L00 · Prerrequisitos",
      "Repaso de lógica, inducción, logaritmos, sumas, recurrencias, probabilidad, memoria, C, C++ y Rust."),
+    ("L00-guion-profesor.md", "L00-guion.html", "L00 · Guion del profesor",
+     "Dos clases y una recitación de repaso, con hoja de diagnóstico y criterios para la autoevaluación."),
     ("L01-modelo-asintotica-pilas.md", "L01.html", "L01 · Notas",
      "Modelo de cómputo, notación asintótica con taller de demostraciones, TAD Pila y análisis amortizado."),
     ("L01-guion-profesor.md", "L01-guion.html", "L01 · Guion del profesor",

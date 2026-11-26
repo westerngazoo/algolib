@@ -15,6 +15,7 @@ make c-fugas-lab01  # fugas de memoria en C (LeakSanitizer en Linux, `leaks` en 
 make cpp-lab01      # solo C++  (compila con AddressSanitizer + UBSan)
 make rust-lab01     # solo Rust
 make all-labs       # todo el curso
+make extraer-L00    # los programas de las notas de L00, cada uno en su carpeta de ejemplos/L00/
 ```
 
 Salida típica al empezar:

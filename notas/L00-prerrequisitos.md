@@ -67,14 +67,53 @@ Con la librería del curso todo se hace con `make`:
 
 ```bash
 make lab01        # compila y corre los tests del lab 1 en C, C++ y Rust
+make extraer-L00  # copia cada programa de esta lección a su propia carpeta en ejemplos/L00/
 ```
+
+**Para correr y modificar los programas de las notas** no hace falta copiarlos a mano. `make extraer-L00` crea una carpeta por programa (por ejemplo `ejemplos/L00/08-4-3-ejemplo-importante-busqueda-binaria/`) con `programa.c`, `programa.cpp`, `programa.rs`, la salida esperada y un `Makefile`. Dentro de la carpeta, `make` compila y corre los tres y te dice si la salida coincide con la de las notas; `make c`, `make cpp` o `make rust` corren uno solo. Cambia lo que quieras: es tu copia, git la ignora y volver a extraer no la sobrescribe (`make extraer-L00 FORZAR=1` la regenera). Lo mismo sirve para cualquier lección: `make extraer-L05`.
 
 ---
 
 ## 1. Lógica: el idioma de las definiciones
 
-**¿Para qué la necesitamos?** La definición central del curso, la de $O(\cdot)$, es una frase con tres cuantificadores seguidos:
+**¿Para qué la necesitamos?** Para leer, y sobre todo para **traducir**, la definición central del curso: la de la notación $O$.
+
+**Qué es la notación $O$ ("O grande", *big O notation*).** Cuando decimos que un algoritmo "es $O(n^2)$", queremos decir que su costo **no crece más rápido que $n^2$**, sin importar las constantes ni lo que pase con entradas pequeñas. Formalmente, $O(g)$ no es un número ni una función: es una **familia** (un conjunto) de funciones, **todas las que crecen a lo más como $g$**. Por ejemplo, $O(n^2)$ contiene a $n^2$, a $3n^2+7$, a $5n$ y a $\lg n$, pero no a $n^3$. Por eso se escribe $f\in O(g)$: "$f$ **pertenece** a la familia $O(g)$". La estudiaremos a fondo en la L01; aquí solo aprendemos a leerla.
+
+La definición es una frase con tres cuantificadores seguidos:
 $$f\in O(g)\iff \exists c>0\ \ \exists n_0\ \ \forall n\ge n_0:\ f(n)\le c\,g(n).$$
+
+**Tradúcela pedazo por pedazo** antes de seguir:
+
+| Símbolo | Se lee | Qué significa aquí |
+|---|---|---|
+| $f\in O(g)$ | "$f$ está en $O$ de $g$" | $f$ pertenece a la familia de funciones que crecen a lo más como $g$ |
+| $\iff$ | "si y solo si" | lo que sigue es la definición: las dos frases dicen exactamente lo mismo |
+| $\exists c>0$ | "existe una constante $c$ positiva" | puedo escoger un factor de holgura, tan grande como quiera, pero **fijo** |
+| $\exists n_0$ | "existe un punto de arranque $n_0$" | puedo ignorar las entradas pequeñas, las que están antes de $n_0$ |
+| $\forall n\ge n_0$ | "para toda $n$ desde $n_0$ en adelante" | a partir de ahí, **sin excepciones** |
+| $f(n)\le c\,g(n)$ | "$f$ de $n$ es a lo más $c$ veces $g$ de $n$" | $f$ queda por debajo de $g$ multiplicada por esa constante |
+
+**En una frase:** *"$f$ es $O(g)$ si puedo encontrar una constante $c$ y un punto de arranque $n_0$ tales que, de ahí en adelante, $f$ **nunca** supera a $c$ veces $g$."* Dicho aún más simple: **ignorando constantes y entradas chicas, $f$ no crece más rápido que $g$**.
+
+**Con números.** ¿Es $3n+5\in O(n)$? Hay que encontrar un **testigo**: una pareja concreta $c$, $n_0$ que haga verdadera la frase. Razonamos así:
+
+| Paso | Qué hacemos | Por qué |
+|---|---|---|
+| 1 | Queremos $3n+5\le c\cdot n$ | es lo que pide la definición con $g(n)=n$ |
+| 2 | El $3n$ ya es "3 veces $n$"; lo que estorba es el $+5$ | con $c=3$ no alcanza: $3n+5>3n$ siempre |
+| 3 | Damos una $n$ de holgura: $c=4$, para que $4n=3n+n$ | ahora basta con que el $5$ quepa en esa $n$ extra |
+| 4 | Eso pasa cuando $5\le n$, así que tomamos $n_0=5$ | es justo la condición que hace funcionar el paso 5 |
+| 5 | Para toda $n\ge5$: $\ 3n+5\ \le\ 3n+n\ =\ 4n$ | como $5\le n$, cambiar el $5$ por $n$ no puede hacer más chico el lado derecho |
+
+Así que la frase es verdadera con $c=4$ y $n_0=5$: $3n+5$ está en la familia $O(n)$. El testigo no es único: con $c=8$ y $n_0=1$ también funciona, porque para $n\ge1$ se cumple $5\le5n$ y entonces $3n+5\le3n+5n=8n$.
+
+En cambio, $n^2\notin O(n)$. Supón que alguien propone una constante $c$. En cuanto $n>c$, multiplicamos ambos lados de $n>c$ por $n$ (que es positivo, así que la desigualdad se conserva) y obtenemos $n\cdot n>c\cdot n$, es decir, $n^2>c\cdot n$: la cota falla. Como esto pasa para **cualquier** $c$, ninguna constante sirve.
+
+> 💭 **Para reflexionar.** ¿Por qué la definición deja escoger $c$ y $n_0$, en lugar de exigir simplemente $f(n)\le g(n)$ para toda $n$? Piensa en dos algoritmos: uno hace $100n$ pasos y otro $n^2$. ¿Cuál es mejor para $n=10$? ¿Y para $n=10^6$? La notación $O$ está diseñada para responder la segunda pregunta.
+
+> **Hábito del curso:** cada vez que veas una fórmula con cuantificadores, **tradúcela a palabras** antes de usarla, y vuelve de las palabras a la fórmula para comprobar que no cambiaste el significado. Si no puedes decirla en español, todavía no la entiendes. En esta sección cada fórmula viene con su traducción.
+
 Si no sabes leer, usar y **negar** frases así, no podrás demostrar ni refutar una cota. Esta sección te deja listo para eso.
 
 ### 1.1 Proposiciones y conectivos
@@ -241,6 +280,8 @@ Con números: $\forall x\ \exists y:\ y>x$ es verdadera (dado $x$, toma $y=x+1$)
 
 Paso a paso: $\exists\varepsilon>0\ \forall\delta>0\ \exists x:\ \neg\big(|x|<\delta\Rightarrow|f(x)|<\varepsilon\big)$. Y la negación de una implicación $P\Rightarrow Q$ es $P\land\neg Q$ (la promesa se rompe cuando $P$ ocurre y $Q$ no). Resultado:
 $$\exists\varepsilon>0\ \forall\delta>0\ \exists x:\ |x|<\delta\ \land\ |f(x)|\ge\varepsilon.$$
+
+**En palabras.** La frase original dice: *"por pequeña que sea la tolerancia $\varepsilon$, hay una ventana alrededor de 0 (de radio $\delta$) donde $|f(x)|$ queda por debajo de esa tolerancia"*; es decir, $f(x)$ se acerca a 0 cuando $x$ se acerca a 0. La negación dice: *"hay una tolerancia $\varepsilon$ tal que, por pequeña que hagas la ventana, siempre hay una $x$ dentro de ella donde $|f(x)|$ no baja de $\varepsilon$"*; es decir, $f(x)$ **no** se acerca a 0.
 </details>
 
 ---

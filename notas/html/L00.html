@@ -221,10 +221,113 @@ pre.sourceCode a{display:none}
 <span id="cb3-4"><a aria-hidden="true" href="#cb3-4" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div></div>
 <pre class="text salida"><code>Hola, algolib</code></pre>
 <p>Con la librería del curso todo se hace con <code>make</code>:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a aria-hidden="true" href="#cb5-1" tabindex="-1"></a><span class="fu">make</span> lab01        <span class="co"># compila y corre los tests del lab 1 en C, C++ y Rust</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a aria-hidden="true" href="#cb5-1" tabindex="-1"></a><span class="fu">make</span> lab01        <span class="co"># compila y corre los tests del lab 1 en C, C++ y Rust</span></span>
+<span id="cb5-2"><a aria-hidden="true" href="#cb5-2" tabindex="-1"></a><span class="fu">make</span> extraer-L00  <span class="co"># copia cada programa de esta lección a su propia carpeta en ejemplos/L00/</span></span></code></pre></div>
+<p><strong>Para correr y modificar los programas de las notas</strong> no hace falta copiarlos a mano. <code>make extraer-L00</code> crea una carpeta por programa (por ejemplo <code>ejemplos/L00/08-4-3-ejemplo-importante-busqueda-binaria/</code>) con <code>programa.c</code>, <code>programa.cpp</code>, <code>programa.rs</code>, la salida esperada y un <code>Makefile</code>. Dentro de la carpeta, <code>make</code> compila y corre los tres y te dice si la salida coincide con la de las notas; <code>make c</code>, <code>make cpp</code> o <code>make rust</code> corren uno solo. Cambia lo que quieras: es tu copia, git la ignora y volver a extraer no la sobrescribe (<code>make extraer-L00 FORZAR=1</code> la regenera). Lo mismo sirve para cualquier lección: <code>make extraer-L05</code>.</p>
 <hr/>
 <h2 id="lógica-el-idioma-de-las-definiciones">1. Lógica: el idioma de las definiciones</h2>
-<p><strong>¿Para qué la necesitamos?</strong> La definición central del curso, la de <span class="math inline">\(O(\cdot)\)</span>, es una frase con tres cuantificadores seguidos: <span class="math display">\[f\in O(g)\iff \exists c&gt;0\ \ \exists n_0\ \ \forall n\ge n_0:\ f(n)\le c\,g(n).\]</span> Si no sabes leer, usar y <strong>negar</strong> frases así, no podrás demostrar ni refutar una cota. Esta sección te deja listo para eso.</p>
+<p><strong>¿Para qué la necesitamos?</strong> Para leer, y sobre todo para <strong>traducir</strong>, la definición central del curso: la de la notación <span class="math inline">\(O\)</span>.</p>
+<p><strong>Qué es la notación <span class="math inline">\(O\)</span> (“O grande”, <em>big O notation</em>).</strong> Cuando decimos que un algoritmo “es <span class="math inline">\(O(n^2)\)</span>”, queremos decir que su costo <strong>no crece más rápido que <span class="math inline">\(n^2\)</span></strong>, sin importar las constantes ni lo que pase con entradas pequeñas. Formalmente, <span class="math inline">\(O(g)\)</span> no es un número ni una función: es una <strong>familia</strong> (un conjunto) de funciones, <strong>todas las que crecen a lo más como <span class="math inline">\(g\)</span></strong>. Por ejemplo, <span class="math inline">\(O(n^2)\)</span> contiene a <span class="math inline">\(n^2\)</span>, a <span class="math inline">\(3n^2+7\)</span>, a <span class="math inline">\(5n\)</span> y a <span class="math inline">\(\lg n\)</span>, pero no a <span class="math inline">\(n^3\)</span>. Por eso se escribe <span class="math inline">\(f\in O(g)\)</span>: “<span class="math inline">\(f\)</span> <strong>pertenece</strong> a la familia <span class="math inline">\(O(g)\)</span>”. La estudiaremos a fondo en la L01; aquí solo aprendemos a leerla.</p>
+<p>La definición es una frase con tres cuantificadores seguidos: <span class="math display">\[f\in O(g)\iff \exists c&gt;0\ \ \exists n_0\ \ \forall n\ge n_0:\ f(n)\le c\,g(n).\]</span></p>
+<p><strong>Tradúcela pedazo por pedazo</strong> antes de seguir:</p>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Símbolo</th>
+<th>Se lee</th>
+<th>Qué significa aquí</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math inline">\(f\in O(g)\)</span></td>
+<td>“<span class="math inline">\(f\)</span> está en <span class="math inline">\(O\)</span> de <span class="math inline">\(g\)</span>”</td>
+<td><span class="math inline">\(f\)</span> pertenece a la familia de funciones que crecen a lo más como <span class="math inline">\(g\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(\iff\)</span></td>
+<td>“si y solo si”</td>
+<td>lo que sigue es la definición: las dos frases dicen exactamente lo mismo</td>
+</tr>
+<tr>
+<td><span class="math inline">\(\exists c&gt;0\)</span></td>
+<td>“existe una constante <span class="math inline">\(c\)</span> positiva”</td>
+<td>puedo escoger un factor de holgura, tan grande como quiera, pero <strong>fijo</strong></td>
+</tr>
+<tr>
+<td><span class="math inline">\(\exists n_0\)</span></td>
+<td>“existe un punto de arranque <span class="math inline">\(n_0\)</span>”</td>
+<td>puedo ignorar las entradas pequeñas, las que están antes de <span class="math inline">\(n_0\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(\forall n\ge n_0\)</span></td>
+<td>“para toda <span class="math inline">\(n\)</span> desde <span class="math inline">\(n_0\)</span> en adelante”</td>
+<td>a partir de ahí, <strong>sin excepciones</strong></td>
+</tr>
+<tr>
+<td><span class="math inline">\(f(n)\le c\,g(n)\)</span></td>
+<td>“<span class="math inline">\(f\)</span> de <span class="math inline">\(n\)</span> es a lo más <span class="math inline">\(c\)</span> veces <span class="math inline">\(g\)</span> de <span class="math inline">\(n\)</span>”</td>
+<td><span class="math inline">\(f\)</span> queda por debajo de <span class="math inline">\(g\)</span> multiplicada por esa constante</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>En una frase:</strong> <em>“<span class="math inline">\(f\)</span> es <span class="math inline">\(O(g)\)</span> si puedo encontrar una constante <span class="math inline">\(c\)</span> y un punto de arranque <span class="math inline">\(n_0\)</span> tales que, de ahí en adelante, <span class="math inline">\(f\)</span> <strong>nunca</strong> supera a <span class="math inline">\(c\)</span> veces <span class="math inline">\(g\)</span>.”</em> Dicho aún más simple: <strong>ignorando constantes y entradas chicas, <span class="math inline">\(f\)</span> no crece más rápido que <span class="math inline">\(g\)</span></strong>.</p>
+<p><strong>Con números.</strong> ¿Es <span class="math inline">\(3n+5\in O(n)\)</span>? Hay que encontrar un <strong>testigo</strong>: una pareja concreta <span class="math inline">\(c\)</span>, <span class="math inline">\(n_0\)</span> que haga verdadera la frase. Razonamos así:</p>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Paso</th>
+<th>Qué hacemos</th>
+<th>Por qué</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Queremos <span class="math inline">\(3n+5\le c\cdot n\)</span></td>
+<td>es lo que pide la definición con <span class="math inline">\(g(n)=n\)</span></td>
+</tr>
+<tr>
+<td>2</td>
+<td>El <span class="math inline">\(3n\)</span> ya es “3 veces <span class="math inline">\(n\)</span>”; lo que estorba es el <span class="math inline">\(+5\)</span></td>
+<td>con <span class="math inline">\(c=3\)</span> no alcanza: <span class="math inline">\(3n+5&gt;3n\)</span> siempre</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Damos una <span class="math inline">\(n\)</span> de holgura: <span class="math inline">\(c=4\)</span>, para que <span class="math inline">\(4n=3n+n\)</span></td>
+<td>ahora basta con que el <span class="math inline">\(5\)</span> quepa en esa <span class="math inline">\(n\)</span> extra</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Eso pasa cuando <span class="math inline">\(5\le n\)</span>, así que tomamos <span class="math inline">\(n_0=5\)</span></td>
+<td>es justo la condición que hace funcionar el paso 5</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Para toda <span class="math inline">\(n\ge5\)</span>: <span class="math inline">\(\ 3n+5\ \le\ 3n+n\ =\ 4n\)</span></td>
+<td>como <span class="math inline">\(5\le n\)</span>, cambiar el <span class="math inline">\(5\)</span> por <span class="math inline">\(n\)</span> no puede hacer más chico el lado derecho</td>
+</tr>
+</tbody>
+</table></div>
+<p>Así que la frase es verdadera con <span class="math inline">\(c=4\)</span> y <span class="math inline">\(n_0=5\)</span>: <span class="math inline">\(3n+5\)</span> está en la familia <span class="math inline">\(O(n)\)</span>. El testigo no es único: con <span class="math inline">\(c=8\)</span> y <span class="math inline">\(n_0=1\)</span> también funciona, porque para <span class="math inline">\(n\ge1\)</span> se cumple <span class="math inline">\(5\le5n\)</span> y entonces <span class="math inline">\(3n+5\le3n+5n=8n\)</span>.</p>
+<p>En cambio, <span class="math inline">\(n^2\notin O(n)\)</span>. Supón que alguien propone una constante <span class="math inline">\(c\)</span>. En cuanto <span class="math inline">\(n&gt;c\)</span>, multiplicamos ambos lados de <span class="math inline">\(n&gt;c\)</span> por <span class="math inline">\(n\)</span> (que es positivo, así que la desigualdad se conserva) y obtenemos <span class="math inline">\(n\cdot n&gt;c\cdot n\)</span>, es decir, <span class="math inline">\(n^2&gt;c\cdot n\)</span>: la cota falla. Como esto pasa para <strong>cualquier</strong> <span class="math inline">\(c\)</span>, ninguna constante sirve.</p>
+<blockquote>
+<p>💭 <strong>Para reflexionar.</strong> ¿Por qué la definición deja escoger <span class="math inline">\(c\)</span> y <span class="math inline">\(n_0\)</span>, en lugar de exigir simplemente <span class="math inline">\(f(n)\le g(n)\)</span> para toda <span class="math inline">\(n\)</span>? Piensa en dos algoritmos: uno hace <span class="math inline">\(100n\)</span> pasos y otro <span class="math inline">\(n^2\)</span>. ¿Cuál es mejor para <span class="math inline">\(n=10\)</span>? ¿Y para <span class="math inline">\(n=10^6\)</span>? La notación <span class="math inline">\(O\)</span> está diseñada para responder la segunda pregunta.</p>
+</blockquote>
+<blockquote>
+<p><strong>Hábito del curso:</strong> cada vez que veas una fórmula con cuantificadores, <strong>tradúcela a palabras</strong> antes de usarla, y vuelve de las palabras a la fórmula para comprobar que no cambiaste el significado. Si no puedes decirla en español, todavía no la entiendes. En esta sección cada fórmula viene con su traducción.</p>
+</blockquote>
+<p>Si no sabes leer, usar y <strong>negar</strong> frases así, no podrás demostrar ni refutar una cota. Esta sección te deja listo para eso.</p>
 <h3 id="proposiciones-y-conectivos">1.1 Proposiciones y conectivos</h3>
 <p>Una <strong>proposición</strong> es una afirmación que es verdadera o falsa: “<span class="math inline">\(7\)</span> es primo” (verdadera), “<span class="math inline">\(2+2=5\)</span>” (falsa). Se combinan con <strong>conectivos</strong>:</p>
 <div class="scroll"><table>
@@ -466,6 +569,7 @@ existe negativo: sí</code></pre>
 Solución
 </summary>
 <p>Paso a paso: <span class="math inline">\(\exists\varepsilon&gt;0\ \forall\delta&gt;0\ \exists x:\ \neg\big(|x|&lt;\delta\Rightarrow|f(x)|&lt;\varepsilon\big)\)</span>. Y la negación de una implicación <span class="math inline">\(P\Rightarrow Q\)</span> es <span class="math inline">\(P\land\neg Q\)</span> (la promesa se rompe cuando <span class="math inline">\(P\)</span> ocurre y <span class="math inline">\(Q\)</span> no). Resultado: <span class="math display">\[\exists\varepsilon&gt;0\ \forall\delta&gt;0\ \exists x:\ |x|&lt;\delta\ \land\ |f(x)|\ge\varepsilon.\]</span></p>
+<p><strong>En palabras.</strong> La frase original dice: <em>“por pequeña que sea la tolerancia <span class="math inline">\(\varepsilon\)</span>, hay una ventana alrededor de 0 (de radio <span class="math inline">\(\delta\)</span>) donde <span class="math inline">\(|f(x)|\)</span> queda por debajo de esa tolerancia”</em>; es decir, <span class="math inline">\(f(x)\)</span> se acerca a 0 cuando <span class="math inline">\(x\)</span> se acerca a 0. La negación dice: <em>“hay una tolerancia <span class="math inline">\(\varepsilon\)</span> tal que, por pequeña que hagas la ventana, siempre hay una <span class="math inline">\(x\)</span> dentro de ella donde <span class="math inline">\(|f(x)|\)</span> no baja de <span class="math inline">\(\varepsilon\)</span>”</em>; es decir, <span class="math inline">\(f(x)\)</span> <strong>no</strong> se acerca a 0.</p>
 </details>
 <hr/>
 <h2 id="cómo-se-escribe-una-demostración">2. Cómo se escribe una demostración</h2>

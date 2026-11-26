@@ -11,3 +11,5 @@ rust/target/
 .idea/
 # entorno de python para make html
 .venv/
+# programas extraídos de las notas (make extraer-LNN)
+ejemplos/

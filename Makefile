@@ -6,6 +6,7 @@
 #   make rust-lab01    # solo Rust
 #   make c-fugas-lab01 # busca fugas de memoria en tu C (en macOS usa `leaks`)
 #   make all-labs      # todos los labs, los tres lenguajes
+#   make extraer-L00   # copia los programas de las notas de L00 a ejemplos/L00/
 #   make clean
 
 LABS := $(patsubst cpp/tests/%,%,$(wildcard cpp/tests/lab*))
@@ -14,7 +15,7 @@ CBUILD := c/build
 
 # Nota: las reglas lab%/cpp-lab%/rust-lab% son patrones; no se declaran .PHONY
 # porque make omite la búsqueda de reglas implícitas para objetivos .PHONY.
-.PHONY: all-labs clean configure cconfigure html diagramas ejemplos actualizar
+.PHONY: all-labs clean configure cconfigure html diagramas ejemplos extraer actualizar
 
 configure:
 	@cmake -S cpp -B $(BUILD) > /dev/null
@@ -66,6 +67,14 @@ actualizar:
 
 ejemplos:
 	python3 notas/herramientas/check_ejemplos.py
+
+# Copia los programas de las notas a ejemplos/LNN/ para correrlos y modificarlos.
+# No sobrescribe carpetas existentes; FORZAR=1 las regenera.
+extraer-L%:
+	@cd notas/herramientas && python3 extraer_ejemplos.py L$* $(if $(FORZAR),--forzar)
+
+extraer:
+	@cd notas/herramientas && python3 extraer_ejemplos.py $(if $(FORZAR),--forzar)
 
 html: diagramas
 	python3 notas/herramientas/build_html.py
