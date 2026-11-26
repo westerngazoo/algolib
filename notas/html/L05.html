@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>L05 · Notas · Estructuras de Datos y Algoritmos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: apuntes de curso universitario, sobrios y precisos; el guion habla en voz de profesor.
+   IDEA: cuaderno de clase técnico con pizarrón: hoja limpia, recuadros de pizarra verde para lo que se escribe.
+   PICTURE: diagramas SVG propios de cada lección (cotas, arreglos, costos), sobre placa blanca.
+   COLOUR and TYPE: tira cobalto #1240e0, hoja blanca, zonas #eef2ff, acento naranja quemado; Space Grotesk + Inter + JetBrains Mono.
+   LAYOUT: tira de título a todo el ancho, fila de secciones, columna de lectura de 780px; figuras y tablas hasta 900px. */
+:root{color-scheme:light dark;
+ --bg:light-dark(#ffffff,#0b0e17);--ink:light-dark(#111827,#e6e9f2);--muted:light-dark(#5b6270,#9aa3b5);
+ --cob:#1240e0;--cob-ink:light-dark(#1240e0,#8fa8ff);--pale:light-dark(#eef2ff,#141b33);--line:light-dark(#dfe4f2,#252c44);
+ --acc:light-dark(#c2410c,#fb923c);--acc-pale:light-dark(#fff1e6,#2a1a10);--ok:light-dark(#15803d,#4ade80);
+ --chalk-bg:#1f3a2e;--chalk:#eef3e8;--chalk-dim:#a9c2b2;--wood:#7a5a33}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Inter,system-ui,sans-serif;overflow-x:clip}
+a{color:var(--cob-ink)}
+.strip{background:var(--cob);color:#fff;padding:clamp(22px,3.5vw,44px) max(5vw,16px) clamp(20px,3vw,34px)}
+.strip .curso{font:600 14px/1.3 'Space Grotesk',sans-serif;opacity:.85;margin:0 0 10px}
+.strip h1{font:700 clamp(30px,4.6vw,48px)/1.06 'Space Grotesk',sans-serif;margin:0;text-wrap:balance;max-width:24ch}
+.strip .desc{margin:14px 0 0;max-width:62ch;opacity:.92;font-size:16px}
+.pages{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.pages a{color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.45);border-radius:999px;padding:6px 14px;font-size:14px;line-height:1.3}
+.pages a[aria-current]{background:#fff;color:var(--cob)}
+.pages a:hover{background:rgba(255,255,255,.16)}
+nav.toc{border-bottom:1px solid var(--line);background:var(--bg);z-index:5}
+nav.toc .scroll{display:flex;gap:4px;padding:8px max(5vw,16px);white-space:nowrap}
+nav.toc a{flex:none;text-decoration:none;color:var(--muted);font-size:14px;padding:6px 10px;border-radius:8px}
+nav.toc a:hover{background:var(--pale);color:var(--ink)}
+@media(min-width:900px){nav.toc{position:sticky;top:0}}
+main{max-width:820px;margin:0 auto;padding:28px max(4vw,16px) 80px}
+main h1{font:700 32px/1.1 'Space Grotesk',sans-serif;margin:56px 0 12px;padding-top:18px;border-top:4px solid var(--cob);color:var(--cob-ink)}
+main h2{font:700 26px/1.2 'Space Grotesk',sans-serif;margin:48px 0 10px;text-wrap:balance}
+main h3{font:600 21px/1.25 'Space Grotesk',sans-serif;margin:36px 0 8px}
+main h4{font:600 18px/1.3 'Space Grotesk',sans-serif;margin:28px 0 6px}
+.tiempo{display:inline-block;vertical-align:middle;margin-left:8px;font:500 13px/1 Inter,sans-serif;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:4px 9px}
+p,li{max-width:70ch}
+hr{border:0;border-top:1px solid var(--line);margin:40px 0}
+blockquote{margin:16px 0;padding:12px 18px;border-left:4px solid var(--cob);background:var(--pale);border-radius:0 10px 10px 0}
+blockquote p{margin:6px 0}
+code{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.88em;background:var(--pale);padding:1px 5px;border-radius:5px;overflow-wrap:anywhere}
+pre{position:relative;overflow-x:auto;background:light-dark(#f6f7fb,#11162a);border:1px solid var(--line);border-radius:10px;padding:14px 16px;font:14px/1.55 'JetBrains Mono',ui-monospace,monospace}
+pre code{background:none;padding:0;font-size:inherit;overflow-wrap:normal}
+.copy{position:absolute;top:8px;right:8px;font:600 12px Inter,sans-serif;border:1px solid var(--line);background:var(--bg);color:var(--muted);border-radius:7px;padding:6px 10px;min-height:32px;cursor:pointer}
+.copy:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;margin:16px 0;font-size:15px;width:100%}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-weight:600;background:var(--pale)}
+figure{margin:26px 0;padding:0}
+figure svg{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:12px}
+figcaption{color:var(--muted);font-size:14px;margin-top:8px}
+details{margin:12px 0;border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:var(--bg)}
+summary{cursor:pointer;font-weight:600;color:var(--cob-ink);min-height:28px}
+.callout{margin:16px 0;padding:12px 16px 12px 16px;border-radius:10px;border:1px solid var(--line)}
+.callout>.lbl{display:block;font:700 12px/1.2 Inter,sans-serif;letter-spacing:.02em;margin-bottom:4px}
+.dice{background:light-dark(#f8fafc,#121726);border-left:5px solid var(--ink)}
+.dice>.lbl{color:var(--ink)}
+.pregunta{background:var(--pale);border-left:5px solid var(--cob)}
+.pregunta>.lbl{color:var(--cob-ink)}
+.pregunta+blockquote{margin-top:-10px;border-left-color:var(--ok);background:light-dark(#f0fdf4,#0f1f16)}
+.pregunta+blockquote::before{content:"Respuesta esperada";display:block;font:700 12px Inter,sans-serif;color:var(--ok);margin-bottom:2px}
+.nota{background:light-dark(#fffbea,#211d0c);border-left:5px solid #ca8a04}
+.nota>.lbl{color:light-dark(#a16207,#facc15)}
+.atencion{background:var(--acc-pale);border-left:5px solid var(--acc)}
+.atencion>.lbl{color:var(--acc)}
+.ejercicio{display:inline-block;font:700 12px Inter,sans-serif;color:#fff;background:var(--acc);border-radius:6px;padding:2px 8px;margin-right:6px;vertical-align:2px}
+.moneda{display:inline-block;width:.9em;height:.9em;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fde68a,#d97706);vertical-align:-1px;margin-right:4px}
+.pizarra-label{display:table!important;margin:22px 0 0;font:600 13px/1.3 Inter,sans-serif;color:var(--chalk-dim);background:var(--chalk-bg);display:inline-block;padding:6px 12px;border-radius:8px 8px 0 0;border:6px solid var(--wood);border-bottom:0}
+.pizarra-label b{color:#fff}
+pre.pizarra,div.pizarra{margin-top:0;background:var(--chalk-bg);color:var(--chalk);border:6px solid var(--wood);border-radius:0 10px 10px 10px;box-shadow:inset 0 0 40px rgba(0,0,0,.35);font:15px/1.6 'JetBrains Mono',ui-monospace,monospace;padding:16px 18px;overflow-x:auto;white-space:pre}
+table.pizarra{border:6px solid var(--wood);background:var(--chalk-bg);color:var(--chalk);margin-top:0}
+table.pizarra th{background:#2a4a3c;color:#fff}table.pizarra td,table.pizarra th{border-color:#3d5e4f}
+mjx-container[display=true]{overflow-x:auto;overflow-y:hidden;max-width:100%}
+mjx-container:not([display]){display:inline-block;max-width:100%;overflow-x:auto;overflow-y:hidden;vertical-align:middle}
+.lessons{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px;margin:24px 0}
+.lessons a{display:block;text-decoration:none;color:var(--ink);background:var(--pale);border:1px solid var(--line);border-radius:12px;padding:18px}
+.lessons a:hover{border-color:var(--cob)}
+.lessons b{display:block;font:700 19px/1.2 'Space Grotesk',sans-serif;color:var(--cob-ink);margin-bottom:6px}
+.lessons span{color:var(--muted);font-size:15px}
+footer{color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding:24px max(5vw,16px)}
+@media(max-width:600px){body{font-size:16px}table{font-size:13px}pre.pizarra,div.pizarra{font-size:13px}main h1{font-size:27px}main h2{font-size:23px}}
+
+/* pestañas de código */
+.tabs{margin:20px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:light-dark(#f6f7fb,#11162a)}
+.tablist{display:flex;gap:2px;padding:6px 6px 0;background:var(--pale);border-bottom:1px solid var(--line);overflow-x:auto}
+.tablist button{font:600 14px Inter,sans-serif;color:var(--muted);background:none;border:0;border-radius:8px 8px 0 0;padding:10px 16px;min-height:44px;cursor:pointer;white-space:nowrap}
+.tablist button[aria-selected=true]{background:light-dark(#f6f7fb,#11162a);color:var(--cob-ink);box-shadow:inset 0 3px 0 var(--cob)}
+.tablist button:focus-visible{outline:3px solid var(--acc);outline-offset:-3px}
+.tablist .badge{font:600 11px Inter,sans-serif;color:var(--acc);margin-left:6px}
+.tabs .panel pre{margin:0;border:0;border-radius:0}
+.tabs .panel[hidden]{display:none}
+pre.salida{background:light-dark(#0f172a,#05070d);color:#d1fae5;border-color:#0f172a;margin-top:-8px;padding-top:30px}
+pre.salida::before{content:"Salida";position:absolute;top:8px;left:16px;font:700 11px Inter,sans-serif;color:#6ee7b7;letter-spacing:.03em}
+pre.salida .copy{display:none}
+/* resaltado de sintaxis (clases de pandoc) */
+code span.kw,code span.cf{color:light-dark(#1d4ed8,#93b4ff);font-weight:600}
+code span.dt{color:light-dark(#7c3aed,#c4b5fd)}
+code span.dv,code span.bn,code span.fl,code span.cn{color:light-dark(#b45309,#fbbf24)}
+code span.st,code span.ch,code span.ss,code span.sc{color:light-dark(#047857,#6ee7b7)}
+code span.co,code span.do,code span.cv{color:light-dark(#6b7280,#8b95a7);font-style:italic}
+code span.pp,code span.im,code span.at{color:light-dark(#be185d,#f9a8d4)}
+code span.fu,code span.bu{color:light-dark(#0e7490,#67e8f9)}
+code span.op{color:light-dark(#374151,#cbd5e1)}
+code span.er,code span.al{color:var(--acc)}
+pre.sourceCode a{display:none}
+@media print{nav.toc,.copy,.tablist{display:none}.tabs .panel[hidden]{display:block}.strip{background:none;color:#000}}
+</style>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+</head><body>
+<header class="strip"><p class="curso">algolib · Estructuras de Datos y Algoritmos</p><h1>Lección 5 — Ordenamiento</h1><p class="desc">Inserción e inversiones, mergesort y teorema maestro, cota inferior, quicksort aleatorizado, heapsort, counting y radix.</p><div class="pages"><a href="index.html">Inicio</a><a href="L00.html">L00 · Prerrequisitos</a><a href="L01.html">L01 · Notas</a><a href="L02.html">L02 · Notas</a><a href="L03.html">L03 · Notas</a><a href="L04.html">L04 · Notas</a><a href="L05.html" aria-current="page">L05 · Notas</a><a href="L06.html">L06 · Notas</a><a href="L07.html">L07 · Notas</a><a href="L08.html">L08 · Notas</a><a href="L09.html">L09 · Notas</a><a href="L10.html">L10 · Notas</a><a href="L11.html">L11 · Notas</a><a href="L12.html">L12 · Notas</a><a href="L13.html">L13 · Notas</a></div></header><nav class="toc" aria-label="Secciones"><div class="scroll"><a href="#objetivos-de-aprendizaje">Objetivos de aprendizaje</a><a href="#mapa-de-la-lección">Mapa de la lección</a><a href="#el-problema">1. El problema</a><a href="#ordenamiento-por-inserción">2. Ordenamiento por inserción</a><a href="#divide-y-vencerás-mergesort">3. Divide y vencerás: mergesort</a><a href="#la-cota-inferior">4. La cota inferior</a><a href="#quicksort">5. Quicksort</a><a href="#heapsort">6. Heapsort</a><a href="#ordenar-en-tiempo-lineal">7. Ordenar en tiempo lineal</a><a href="#resumen-de-algoritmos">8. Resumen de algoritmos</a><a href="#resumen-de-paradigmas-en-este-lab">9. Resumen de paradigmas en este…</a><a href="#guía-del-lab-05">10. Guía del Lab 05</a><a href="#comprueba-tu-comprensión">11. Comprueba tu comprensión</a><a href="#problem-set-5">12. Problem Set 5</a><a href="#referencias">Referencias</a></div></nav><main><blockquote>
+<p><strong>Prerrequisitos:</strong> Lección 0 (§1 inducción fuerte, §2 logaritmos, §3 sumas, §4 probabilidad e indicadoras), Lección 1 (§3 asintótica), Lección 3 (§2.3 invariantes de ciclo) y Lección 4 (§4 algoritmos aleatorizados).</p>
+<p><strong>Cómo estudiar esta lección:</strong> es la lección con más demostraciones del curso, y todas usan cuatro herramientas que ya tienes: invariantes de ciclo, inducción, recurrencias y linealidad de la esperanza. Para cada algoritmo, identifica cuál de las cuatro demuestra su corrección y cuál su costo.</p>
+<p><strong>Lab asociado:</strong> <code>lab05</code>: inserción, mezcla, quicksort, heapsort, conteo y radix (C, C++ y Rust).</p>
+</blockquote>
+<h2 id="objetivos-de-aprendizaje">Objetivos de aprendizaje</h2>
+<p>Al terminar esta lección deberías poder:</p>
+<ol type="1">
+<li>Especificar el problema de ordenamiento, y definir <strong>estabilidad</strong> e <strong>in-place</strong>.</li>
+<li>Demostrar la corrección de inserción con un invariante de ciclo y relacionar su costo con el número de <strong>inversiones</strong>.</li>
+<li>Demostrar la corrección de mergesort por inducción y resolver su recurrencia con un <strong>árbol de recursión</strong> y con el <strong>teorema maestro</strong>.</li>
+<li>Demostrar la cota inferior <span class="math inline">\(\Omega(n\lg n)\)</span> para todo ordenamiento por comparaciones (<strong>árboles de decisión</strong>).</li>
+<li>Demostrar que quicksort con pivote aleatorio hace <span class="math inline">\(2n\ln n + O(n)\)</span> comparaciones esperadas, y que con recursión en la parte menor usa <span class="math inline">\(O(\lg n)\)</span> de pila.</li>
+<li>Explicar cómo counting sort y radix sort rompen la cota inferior, y demostrar la corrección de radix por inducción.</li>
+</ol>
+<h2 id="mapa-de-la-lección">Mapa de la lección</h2>
+<figure>
+<svg aria-label="Mapa de la lección 5" fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" role="img" viewbox="0 0 760 300" xmlns="http://www.w3.org/2000/svg">
+<title>Mapa de la lección 5</title>
+<defs>
+<marker id="ar" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#111827"></path></marker>
+<marker id="arc" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#1240e0"></path></marker>
+<marker id="ara" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"></path></marker>
+</defs>
+<rect fill="#ffffff" height="300" rx="12" width="760"></rect>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="40" y="26"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="54" y="50">§1</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="54" y="70">El problema</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="290" y="26"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="304" y="50">§2</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="304" y="70">Inserción</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="540" y="26"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="554" y="50">§3</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="554" y="70">Mergesort</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="40" y="124"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="54" y="148">§6</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="54" y="168">Heapsort</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="290" y="124"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="304" y="148">§5</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="304" y="168">Quicksort</text>
+<rect fill="#1240e0" height="58" rx="10" stroke="#1240e0" stroke-width="2" width="200" x="540" y="124"></rect>
+<text fill="#dbe4ff" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="554" y="148">§4</text>
+<text fill="#ffffff" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="554" y="168">Cota inferior</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="40" y="222"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="54" y="246">§7</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="54" y="266">Ordenar en lineal</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="290" y="222"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="304" y="246">§8–10</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="304" y="266">Resumen y lab</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="540" y="222"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="554" y="246">§11–12</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="554" y="266">Ejercicios</text>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="244" x2="286" y1="55.0" y2="55.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="494" x2="536" y1="55.0" y2="55.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="640.0" x2="640.0" y1="87" y2="120"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="536" x2="494" y1="153.0" y2="153.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="286" x2="244" y1="153.0" y2="153.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="140.0" x2="140.0" y1="185" y2="218"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="244" x2="286" y1="251.0" y2="251.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="494" x2="536" y1="251.0" y2="251.0"></line>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" text-anchor="start" x="650.0" y="204">Ω(n lg n): núcleo de la lección</text>
+</svg>
+<figcaption aria-hidden="true">Mapa de la lección 5</figcaption>
+</figure>
+<hr/>
+<h2 id="el-problema">1. El problema</h2>
+<p><strong>Entrada:</strong> una secuencia <span class="math inline">\(\langle a_0, \dots, a_{n-1}\rangle\)</span> y un orden total <span class="math inline">\(\le\)</span> sobre sus elementos. <strong>Salida:</strong> una <strong>permutación</strong> <span class="math inline">\(\langle a_{\pi(0)}, \dots, a_{\pi(n-1)}\rangle\)</span> de la entrada tal que <span class="math inline">\(a_{\pi(0)} \le a_{\pi(1)} \le \dots \le a_{\pi(n-1)}\)</span>.</p>
+<p>Las dos condiciones importan: un algoritmo que devuelve <span class="math inline">\(\langle 0, 0, \dots, 0\rangle\)</span> produce algo ordenado pero no es permutación. Los tests del lab comparan contra el ordenamiento de la biblioteca estándar, lo que verifica ambas.</p>
+<p><strong>Estable:</strong> elementos con claves iguales conservan su orden relativo de la entrada. Importa cuando se ordena por una clave un registro que tiene más datos (ordenar alumnos por calificación, conservando el orden alfabético previo). Los tests <code>*_estable</code> ordenan pares <code>(clave, id)</code> comparando solo la clave y exigen que los <code>id</code> de claves iguales queden en orden.</p>
+<p><strong>In-place:</strong> usa <span class="math inline">\(O(1)\)</span> memoria extra (a veces se acepta <span class="math inline">\(O(\lg n)\)</span> de pila).</p>
+<p><strong>El contrato del comparador.</strong> Todo el lab usa solo <code>&lt;</code> (o <code>cmp(a, b) &lt; 0</code>). Debe ser un <strong>orden débil estricto</strong>: irreflexivo (<span class="math inline">\(a \not&lt; a\)</span>), transitivo, y con “incomparable” transitivo. Si no lo es (por ejemplo, si usas <code>&lt;=</code>), en C++ <code>std::sort</code> tiene <strong>comportamiento indefinido</strong>: puede leer fuera del arreglo. En Rust, <code>sort</code> con un <code>Ord</code> inconsistente puede producir un orden arbitrario o hacer <code>panic</code>, pero <strong>nunca</strong> UB. En C, <code>qsort</code> con un comparador inconsistente tampoco está definido.</p>
+<hr/>
+<h2 id="ordenamiento-por-inserción">2. Ordenamiento por inserción</h2>
+<pre><code>insertion_sort(a):
+    para i = 1 .. n−1:
+        x ← a[i];  j ← i
+        mientras j &gt; 0 y x &lt; a[j−1]:
+            a[j] ← a[j−1];  j ← j − 1
+        a[j] ← x</code></pre>
+<blockquote>
+<p><strong>Teorema 1.</strong> <code>insertion_sort</code> ordena, es estable y es in-place.</p>
+</blockquote>
+<p><em>Demostración.</em> Invariante de ciclo: <em>al empezar la iteración <span class="math inline">\(i\)</span>, <span class="math inline">\(a[0..i)\)</span> contiene los <span class="math inline">\(i\)</span> primeros elementos originales, ordenados.</em></p>
+<ul>
+<li><em>Inicialización</em> (<span class="math inline">\(i = 1\)</span>): <span class="math inline">\(a[0..1)\)</span> tiene un elemento: ordenado. ✔</li>
+<li><em>Mantenimiento:</em> el ciclo interno corre una posición a la derecha cada elemento de <span class="math inline">\(a[0..i)\)</span> que es <strong>estrictamente mayor</strong> que <span class="math inline">\(x\)</span> y se detiene en el primero que no lo es. Como <span class="math inline">\(a[0..i)\)</span> estaba ordenado, los que se corrieron forman un sufijo de elementos <span class="math inline">\(&gt; x\)</span> y los que quedan antes son <span class="math inline">\(\le x\)</span>. Poner <span class="math inline">\(x\)</span> en el hueco deja <span class="math inline">\(a[0..i+1)\)</span> ordenado. ✔</li>
+<li><em>Terminación:</em> con <span class="math inline">\(i = n\)</span>, el invariante dice que <span class="math inline">\(a[0..n)\)</span> está ordenado. ✔</li>
+</ul>
+<p><em>Estabilidad:</em> <span class="math inline">\(x\)</span> solo rebasa elementos estrictamente mayores, nunca uno igual; así que entre iguales se conserva el orden de llegada. <span class="math inline">\(\blacksquare\)</span></p>
+<h3 id="costo-e-inversiones">2.1 Costo e inversiones</h3>
+<p>Una <strong>inversión</strong> es un par <span class="math inline">\((i, j)\)</span> con <span class="math inline">\(i &lt; j\)</span> y <span class="math inline">\(a_i &gt; a_j\)</span>. Una secuencia ordenada tiene 0; una ordenada al revés, <span class="math inline">\(\binom n2\)</span>.</p>
+<blockquote>
+<p><strong>Teorema 2.</strong> Inserción hace exactamente <span class="math inline">\(I\)</span> movimientos y entre <span class="math inline">\(I\)</span> y <span class="math inline">\(I + n - 1\)</span> comparaciones, donde <span class="math inline">\(I\)</span> es el número de inversiones de la entrada. Su costo es <span class="math inline">\(\Theta(n + I)\)</span>.</p>
+</blockquote>
+<p><em>Demostración.</em> Cada iteración del ciclo interno intercambia (corre) un par adyacente invertido <span class="math inline">\((a[j-1], x)\)</span> y eso elimina <strong>exactamente una</strong> inversión (las demás posiciones relativas no cambian). El algoritmo termina con 0 inversiones, así que hay exactamente <span class="math inline">\(I\)</span> corrimientos. Cada iteración del ciclo externo hace una comparación por corrimiento más, a lo sumo, una que falla: entre <span class="math inline">\(I\)</span> y <span class="math inline">\(I + n - 1\)</span> comparaciones. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Consecuencias.</strong> Peor caso (al revés): <span class="math inline">\(\Theta(n^2)\)</span>. Mejor caso (ordenada): <span class="math inline">\(\Theta(n)\)</span>. En esperanza, sobre una permutación uniforme, cada par está invertido con probabilidad <span class="math inline">\(1/2\)</span>: <span class="math inline">\(\mathbb E[I] = \binom n2/2\)</span>, así que <span class="math inline">\(\Theta(n^2)\)</span> en promedio. Pero en entradas <strong>casi ordenadas</strong> (pocas inversiones) inserción es lineal, y en arreglos pequeños (<span class="math inline">\(n \lesssim 16\)</span>) es el algoritmo más rápido en la práctica por sus constantes diminutas. Por eso las soluciones de quicksort la usan para los subarreglos pequeños.</p>
+<div class="tabs"><div aria-label="Lenguaje" class="tablist" role="tablist"><button aria-controls="t0-0" aria-selected="false" data-lang="c" id="t0-0-b" role="tab" tabindex="-1" type="button">C</button><button aria-controls="t0-1" aria-selected="false" data-lang="cpp" id="t0-1-b" role="tab" tabindex="-1" type="button">C++</button><button aria-controls="t0-2" aria-selected="false" data-lang="rust" id="t0-2-b" role="tab" tabindex="-1" type="button">Rust</button></div><div aria-labelledby="t0-0-b" class="panel" data-lang="c" id="t0-0" role="tabpanel"><div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a aria-hidden="true" href="#cb2-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb2-2"><a aria-hidden="true" href="#cb2-2" tabindex="-1"></a></span>
+<span id="cb2-3"><a aria-hidden="true" href="#cb2-3" tabindex="-1"></a><span class="pp">#define N </span><span class="dv">1000</span></span>
+<span id="cb2-4"><a aria-hidden="true" href="#cb2-4" tabindex="-1"></a><span class="dt">static</span> <span class="dt">long</span> comparaciones<span class="op">;</span></span>
+<span id="cb2-5"><a aria-hidden="true" href="#cb2-5" tabindex="-1"></a></span>
+<span id="cb2-6"><a aria-hidden="true" href="#cb2-6" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> insercion<span class="op">(</span><span class="dt">int</span> <span class="op">*</span>a<span class="op">,</span> <span class="dt">int</span> n<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-7"><a aria-hidden="true" href="#cb2-7" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> i <span class="op">&lt;</span> n<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb2-8"><a aria-hidden="true" href="#cb2-8" tabindex="-1"></a>        <span class="dt">int</span> x <span class="op">=</span> a<span class="op">[</span>i<span class="op">],</span> j <span class="op">=</span> i<span class="op">;</span></span>
+<span id="cb2-9"><a aria-hidden="true" href="#cb2-9" tabindex="-1"></a>        <span class="cf">while</span> <span class="op">(</span>j <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">&amp;&amp;</span> <span class="op">(</span>comparaciones<span class="op">++,</span> x <span class="op">&lt;</span> a<span class="op">[</span>j <span class="op">-</span> <span class="dv">1</span><span class="op">]))</span> <span class="op">{</span> a<span class="op">[</span>j<span class="op">]</span> <span class="op">=</span> a<span class="op">[</span>j <span class="op">-</span> <span class="dv">1</span><span class="op">];</span> j<span class="op">--;</span> <span class="op">}</span></span>
+<span id="cb2-10"><a aria-hidden="true" href="#cb2-10" tabindex="-1"></a>        a<span class="op">[</span>j<span class="op">]</span> <span class="op">=</span> x<span class="op">;</span></span>
+<span id="cb2-11"><a aria-hidden="true" href="#cb2-11" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-12"><a aria-hidden="true" href="#cb2-12" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-13"><a aria-hidden="true" href="#cb2-13" tabindex="-1"></a></span>
+<span id="cb2-14"><a aria-hidden="true" href="#cb2-14" tabindex="-1"></a><span class="dt">static</span> <span class="dt">long</span> inversiones<span class="op">(</span><span class="dt">const</span> <span class="dt">int</span> <span class="op">*</span>a<span class="op">,</span> <span class="dt">int</span> n<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-15"><a aria-hidden="true" href="#cb2-15" tabindex="-1"></a>    <span class="dt">long</span> inv <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb2-16"><a aria-hidden="true" href="#cb2-16" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> n<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb2-17"><a aria-hidden="true" href="#cb2-17" tabindex="-1"></a>        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> i <span class="op">+</span> <span class="dv">1</span><span class="op">;</span> j <span class="op">&lt;</span> n<span class="op">;</span> j<span class="op">++)</span> inv <span class="op">+=</span> a<span class="op">[</span>i<span class="op">]</span> <span class="op">&gt;</span> a<span class="op">[</span>j<span class="op">];</span></span>
+<span id="cb2-18"><a aria-hidden="true" href="#cb2-18" tabindex="-1"></a>    <span class="cf">return</span> inv<span class="op">;</span></span>
+<span id="cb2-19"><a aria-hidden="true" href="#cb2-19" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-20"><a aria-hidden="true" href="#cb2-20" tabindex="-1"></a></span>
+<span id="cb2-21"><a aria-hidden="true" href="#cb2-21" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> probar<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>nombre<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>a<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-22"><a aria-hidden="true" href="#cb2-22" tabindex="-1"></a>    <span class="dt">long</span> inv <span class="op">=</span> inversiones<span class="op">(</span>a<span class="op">,</span> N<span class="op">);</span></span>
+<span id="cb2-23"><a aria-hidden="true" href="#cb2-23" tabindex="-1"></a>    comparaciones <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb2-24"><a aria-hidden="true" href="#cb2-24" tabindex="-1"></a>    insercion<span class="op">(</span>a<span class="op">,</span> N<span class="op">);</span></span>
+<span id="cb2-25"><a aria-hidden="true" href="#cb2-25" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">"</span><span class="sc">%-10s</span><span class="st"> inversiones </span><span class="sc">%6ld</span><span class="st">   comparaciones </span><span class="sc">%6ld\n</span><span class="st">"</span><span class="op">,</span> nombre<span class="op">,</span> inv<span class="op">,</span> comparaciones<span class="op">);</span></span>
+<span id="cb2-26"><a aria-hidden="true" href="#cb2-26" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-27"><a aria-hidden="true" href="#cb2-27" tabindex="-1"></a></span>
+<span id="cb2-28"><a aria-hidden="true" href="#cb2-28" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-29"><a aria-hidden="true" href="#cb2-29" tabindex="-1"></a>    <span class="dt">static</span> <span class="dt">int</span> a<span class="op">[</span>N<span class="op">];</span></span>
+<span id="cb2-30"><a aria-hidden="true" href="#cb2-30" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span> s <span class="op">=</span> <span class="dv">42</span><span class="op">;</span></span>
+<span id="cb2-31"><a aria-hidden="true" href="#cb2-31" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> N<span class="op">;</span> i<span class="op">++)</span> a<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> i<span class="op">;</span></span>
+<span id="cb2-32"><a aria-hidden="true" href="#cb2-32" tabindex="-1"></a>    probar<span class="op">(</span><span class="st">"ordenado"</span><span class="op">,</span> a<span class="op">);</span></span>
+<span id="cb2-33"><a aria-hidden="true" href="#cb2-33" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> N<span class="op">;</span> i<span class="op">++)</span> a<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> N <span class="op">-</span> i<span class="op">;</span></span>
+<span id="cb2-34"><a aria-hidden="true" href="#cb2-34" tabindex="-1"></a>    probar<span class="op">(</span><span class="st">"invertido"</span><span class="op">,</span> a<span class="op">);</span></span>
+<span id="cb2-35"><a aria-hidden="true" href="#cb2-35" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> N<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb2-36"><a aria-hidden="true" href="#cb2-36" tabindex="-1"></a>        s <span class="op">=</span> s <span class="op">*</span> <span class="dv">6364136223846793005</span><span class="bu">ULL</span> <span class="op">+</span> <span class="dv">1442695040888963407</span><span class="bu">ULL</span><span class="op">;</span></span>
+<span id="cb2-37"><a aria-hidden="true" href="#cb2-37" tabindex="-1"></a>        a<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> <span class="op">(</span><span class="dt">int</span><span class="op">)(</span>s <span class="op">&gt;&gt;</span> <span class="dv">33</span><span class="op">)</span> <span class="op">%</span> <span class="dv">1000</span><span class="op">;</span></span>
+<span id="cb2-38"><a aria-hidden="true" href="#cb2-38" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-39"><a aria-hidden="true" href="#cb2-39" tabindex="-1"></a>    probar<span class="op">(</span><span class="st">"aleatorio"</span><span class="op">,</span> a<span class="op">);</span></span>
+<span id="cb2-40"><a aria-hidden="true" href="#cb2-40" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb2-41"><a aria-hidden="true" href="#cb2-41" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div><div aria-labelledby="t0-1-b" class="panel" data-lang="cpp" id="t0-1" role="tabpanel"><div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a aria-hidden="true" href="#cb3-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;cstdint&gt;</span></span>
+<span id="cb3-2"><a aria-hidden="true" href="#cb3-2" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb3-3"><a aria-hidden="true" href="#cb3-3" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;vector&gt;</span></span>
+<span id="cb3-4"><a aria-hidden="true" href="#cb3-4" tabindex="-1"></a></span>
+<span id="cb3-5"><a aria-hidden="true" href="#cb3-5" tabindex="-1"></a><span class="dt">long</span> comparaciones <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb3-6"><a aria-hidden="true" href="#cb3-6" tabindex="-1"></a></span>
+<span id="cb3-7"><a aria-hidden="true" href="#cb3-7" tabindex="-1"></a><span class="dt">void</span> insercion<span class="op">(</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&amp;</span> a<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-8"><a aria-hidden="true" href="#cb3-8" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="bu">std::</span>size_t i <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> i <span class="op">&lt;</span> a<span class="op">.</span>size<span class="op">();</span> <span class="op">++</span>i<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-9"><a aria-hidden="true" href="#cb3-9" tabindex="-1"></a>        <span class="dt">int</span> x <span class="op">=</span> a<span class="op">[</span>i<span class="op">];</span></span>
+<span id="cb3-10"><a aria-hidden="true" href="#cb3-10" tabindex="-1"></a>        <span class="bu">std::</span>size_t j <span class="op">=</span> i<span class="op">;</span></span>
+<span id="cb3-11"><a aria-hidden="true" href="#cb3-11" tabindex="-1"></a>        <span class="cf">while</span> <span class="op">(</span>j <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">&amp;&amp;</span> <span class="op">(++</span>comparaciones<span class="op">,</span> x <span class="op">&lt;</span> a<span class="op">[</span>j <span class="op">-</span> <span class="dv">1</span><span class="op">]))</span> <span class="op">{</span> a<span class="op">[</span>j<span class="op">]</span> <span class="op">=</span> a<span class="op">[</span>j <span class="op">-</span> <span class="dv">1</span><span class="op">];</span> <span class="op">--</span>j<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb3-12"><a aria-hidden="true" href="#cb3-12" tabindex="-1"></a>        a<span class="op">[</span>j<span class="op">]</span> <span class="op">=</span> x<span class="op">;</span></span>
+<span id="cb3-13"><a aria-hidden="true" href="#cb3-13" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb3-14"><a aria-hidden="true" href="#cb3-14" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb3-15"><a aria-hidden="true" href="#cb3-15" tabindex="-1"></a></span>
+<span id="cb3-16"><a aria-hidden="true" href="#cb3-16" tabindex="-1"></a><span class="dt">long</span> inversiones<span class="op">(</span><span class="at">const</span> <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&amp;</span> a<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-17"><a aria-hidden="true" href="#cb3-17" tabindex="-1"></a>    <span class="dt">long</span> inv <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb3-18"><a aria-hidden="true" href="#cb3-18" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="bu">std::</span>size_t i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> a<span class="op">.</span>size<span class="op">();</span> <span class="op">++</span>i<span class="op">)</span></span>
+<span id="cb3-19"><a aria-hidden="true" href="#cb3-19" tabindex="-1"></a>        <span class="cf">for</span> <span class="op">(</span><span class="bu">std::</span>size_t j <span class="op">=</span> i <span class="op">+</span> <span class="dv">1</span><span class="op">;</span> j <span class="op">&lt;</span> a<span class="op">.</span>size<span class="op">();</span> <span class="op">++</span>j<span class="op">)</span> inv <span class="op">+=</span> a<span class="op">[</span>i<span class="op">]</span> <span class="op">&gt;</span> a<span class="op">[</span>j<span class="op">];</span></span>
+<span id="cb3-20"><a aria-hidden="true" href="#cb3-20" tabindex="-1"></a>    <span class="cf">return</span> inv<span class="op">;</span></span>
+<span id="cb3-21"><a aria-hidden="true" href="#cb3-21" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb3-22"><a aria-hidden="true" href="#cb3-22" tabindex="-1"></a></span>
+<span id="cb3-23"><a aria-hidden="true" href="#cb3-23" tabindex="-1"></a><span class="dt">void</span> probar<span class="op">(</span><span class="at">const</span> <span class="dt">char</span><span class="op">*</span> nombre<span class="op">,</span> <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;</span> a<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-24"><a aria-hidden="true" href="#cb3-24" tabindex="-1"></a>    <span class="dt">long</span> inv <span class="op">=</span> inversiones<span class="op">(</span>a<span class="op">);</span></span>
+<span id="cb3-25"><a aria-hidden="true" href="#cb3-25" tabindex="-1"></a>    comparaciones <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb3-26"><a aria-hidden="true" href="#cb3-26" tabindex="-1"></a>    insercion<span class="op">(</span>a<span class="op">);</span></span>
+<span id="cb3-27"><a aria-hidden="true" href="#cb3-27" tabindex="-1"></a>    <span class="bu">std::</span>printf<span class="op">(</span><span class="st">"</span><span class="sc">%-10s</span><span class="st"> inversiones </span><span class="sc">%6ld</span><span class="st">   comparaciones </span><span class="sc">%6ld\n</span><span class="st">"</span><span class="op">,</span> nombre<span class="op">,</span> inv<span class="op">,</span> comparaciones<span class="op">);</span></span>
+<span id="cb3-28"><a aria-hidden="true" href="#cb3-28" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb3-29"><a aria-hidden="true" href="#cb3-29" tabindex="-1"></a></span>
+<span id="cb3-30"><a aria-hidden="true" href="#cb3-30" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb3-31"><a aria-hidden="true" href="#cb3-31" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span> N <span class="op">=</span> <span class="dv">1000</span><span class="op">;</span></span>
+<span id="cb3-32"><a aria-hidden="true" href="#cb3-32" tabindex="-1"></a>    <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;</span> a<span class="op">(</span>N<span class="op">);</span></span>
+<span id="cb3-33"><a aria-hidden="true" href="#cb3-33" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> N<span class="op">;</span> <span class="op">++</span>i<span class="op">)</span> a<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> i<span class="op">;</span></span>
+<span id="cb3-34"><a aria-hidden="true" href="#cb3-34" tabindex="-1"></a>    probar<span class="op">(</span><span class="st">"ordenado"</span><span class="op">,</span> a<span class="op">);</span></span>
+<span id="cb3-35"><a aria-hidden="true" href="#cb3-35" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> N<span class="op">;</span> <span class="op">++</span>i<span class="op">)</span> a<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> N <span class="op">-</span> i<span class="op">;</span></span>
+<span id="cb3-36"><a aria-hidden="true" href="#cb3-36" tabindex="-1"></a>    probar<span class="op">(</span><span class="st">"invertido"</span><span class="op">,</span> a<span class="op">);</span></span>
+<span id="cb3-37"><a aria-hidden="true" href="#cb3-37" tabindex="-1"></a>    <span class="bu">std::</span>uint64_t s <span class="op">=</span> <span class="dv">42</span><span class="op">;</span></span>
+<span id="cb3-38"><a aria-hidden="true" href="#cb3-38" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> N<span class="op">;</span> <span class="op">++</span>i<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-39"><a aria-hidden="true" href="#cb3-39" tabindex="-1"></a>        s <span class="op">=</span> s <span class="op">*</span> <span class="dv">6364136223846793005</span><span class="bu">ULL</span> <span class="op">+</span> <span class="dv">1442695040888963407</span><span class="bu">ULL</span><span class="op">;</span></span>
+<span id="cb3-40"><a aria-hidden="true" href="#cb3-40" tabindex="-1"></a>        a<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> <span class="op">(</span><span class="dt">int</span><span class="op">)(</span>s <span class="op">&gt;&gt;</span> <span class="dv">33</span><span class="op">)</span> <span class="op">%</span> <span class="dv">1000</span><span class="op">;</span></span>
+<span id="cb3-41"><a aria-hidden="true" href="#cb3-41" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb3-42"><a aria-hidden="true" href="#cb3-42" tabindex="-1"></a>    probar<span class="op">(</span><span class="st">"aleatorio"</span><span class="op">,</span> a<span class="op">);</span></span>
+<span id="cb3-43"><a aria-hidden="true" href="#cb3-43" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div><div aria-labelledby="t0-2-b" class="panel" data-lang="rust" id="t0-2" role="tabpanel"><div class="sourceCode" id="cb4"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb4-1"><a aria-hidden="true" href="#cb4-1" tabindex="-1"></a><span class="kw">const</span> N<span class="op">:</span> <span class="dt">usize</span> <span class="op">=</span> <span class="dv">1000</span><span class="op">;</span></span>
+<span id="cb4-2"><a aria-hidden="true" href="#cb4-2" tabindex="-1"></a></span>
+<span id="cb4-3"><a aria-hidden="true" href="#cb4-3" tabindex="-1"></a><span class="kw">fn</span> insercion(a<span class="op">:</span> <span class="op">&amp;</span><span class="kw">mut</span> [<span class="dt">i32</span>]<span class="op">,</span> comparaciones<span class="op">:</span> <span class="op">&amp;</span><span class="kw">mut</span> <span class="dt">u64</span>) <span class="op">{</span></span>
+<span id="cb4-4"><a aria-hidden="true" href="#cb4-4" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="dv">1</span><span class="op">..</span>a<span class="op">.</span>len() <span class="op">{</span></span>
+<span id="cb4-5"><a aria-hidden="true" href="#cb4-5" tabindex="-1"></a>        <span class="kw">let</span> x <span class="op">=</span> a[i]<span class="op">;</span></span>
+<span id="cb4-6"><a aria-hidden="true" href="#cb4-6" tabindex="-1"></a>        <span class="kw">let</span> <span class="kw">mut</span> j <span class="op">=</span> i<span class="op">;</span></span>
+<span id="cb4-7"><a aria-hidden="true" href="#cb4-7" tabindex="-1"></a>        <span class="cf">while</span> j <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">&amp;&amp;</span> <span class="op">{</span> <span class="op">*</span>comparaciones <span class="op">+=</span> <span class="dv">1</span><span class="op">;</span> x <span class="op">&lt;</span> a[j <span class="op">-</span> <span class="dv">1</span>] <span class="op">}</span> <span class="op">{</span></span>
+<span id="cb4-8"><a aria-hidden="true" href="#cb4-8" tabindex="-1"></a>            a[j] <span class="op">=</span> a[j <span class="op">-</span> <span class="dv">1</span>]<span class="op">;</span></span>
+<span id="cb4-9"><a aria-hidden="true" href="#cb4-9" tabindex="-1"></a>            j <span class="op">-=</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb4-10"><a aria-hidden="true" href="#cb4-10" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb4-11"><a aria-hidden="true" href="#cb4-11" tabindex="-1"></a>        a[j] <span class="op">=</span> x<span class="op">;</span></span>
+<span id="cb4-12"><a aria-hidden="true" href="#cb4-12" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-13"><a aria-hidden="true" href="#cb4-13" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-14"><a aria-hidden="true" href="#cb4-14" tabindex="-1"></a></span>
+<span id="cb4-15"><a aria-hidden="true" href="#cb4-15" tabindex="-1"></a><span class="kw">fn</span> inversiones(a<span class="op">:</span> <span class="op">&amp;</span>[<span class="dt">i32</span>]) <span class="op">-&gt;</span> <span class="dt">u64</span> <span class="op">{</span></span>
+<span id="cb4-16"><a aria-hidden="true" href="#cb4-16" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> inv <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb4-17"><a aria-hidden="true" href="#cb4-17" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="dv">0</span><span class="op">..</span>a<span class="op">.</span>len() <span class="op">{</span></span>
+<span id="cb4-18"><a aria-hidden="true" href="#cb4-18" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> i <span class="op">+</span> <span class="dv">1</span><span class="op">..</span>a<span class="op">.</span>len() <span class="op">{</span> inv <span class="op">+=</span> (a[i] <span class="op">&gt;</span> a[j]) <span class="kw">as</span> <span class="dt">u64</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb4-19"><a aria-hidden="true" href="#cb4-19" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-20"><a aria-hidden="true" href="#cb4-20" tabindex="-1"></a>    inv</span>
+<span id="cb4-21"><a aria-hidden="true" href="#cb4-21" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-22"><a aria-hidden="true" href="#cb4-22" tabindex="-1"></a></span>
+<span id="cb4-23"><a aria-hidden="true" href="#cb4-23" tabindex="-1"></a><span class="kw">fn</span> probar(nombre<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span><span class="op">,</span> <span class="kw">mut</span> a<span class="op">:</span> <span class="dt">Vec</span><span class="op">&lt;</span><span class="dt">i32</span><span class="op">&gt;</span>) <span class="op">{</span></span>
+<span id="cb4-24"><a aria-hidden="true" href="#cb4-24" tabindex="-1"></a>    <span class="kw">let</span> inv <span class="op">=</span> inversiones(<span class="op">&amp;</span>a)<span class="op">;</span></span>
+<span id="cb4-25"><a aria-hidden="true" href="#cb4-25" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> c <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb4-26"><a aria-hidden="true" href="#cb4-26" tabindex="-1"></a>    insercion(<span class="op">&amp;</span><span class="kw">mut</span> a<span class="op">,</span> <span class="op">&amp;</span><span class="kw">mut</span> c)<span class="op">;</span></span>
+<span id="cb4-27"><a aria-hidden="true" href="#cb4-27" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">"{:&lt;10} inversiones {:&gt;6}   comparaciones {:&gt;6}"</span><span class="op">,</span> nombre<span class="op">,</span> inv<span class="op">,</span> c)<span class="op">;</span></span>
+<span id="cb4-28"><a aria-hidden="true" href="#cb4-28" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-29"><a aria-hidden="true" href="#cb4-29" tabindex="-1"></a></span>
+<span id="cb4-30"><a aria-hidden="true" href="#cb4-30" tabindex="-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb4-31"><a aria-hidden="true" href="#cb4-31" tabindex="-1"></a>    probar(<span class="st">"ordenado"</span><span class="op">,</span> (<span class="dv">0</span><span class="op">..</span>N <span class="kw">as</span> <span class="dt">i32</span>)<span class="op">.</span>collect())<span class="op">;</span></span>
+<span id="cb4-32"><a aria-hidden="true" href="#cb4-32" tabindex="-1"></a>    probar(<span class="st">"invertido"</span><span class="op">,</span> (<span class="dv">0</span><span class="op">..</span>N <span class="kw">as</span> <span class="dt">i32</span>)<span class="op">.</span>map(<span class="op">|</span>i<span class="op">|</span> N <span class="kw">as</span> <span class="dt">i32</span> <span class="op">-</span> i)<span class="op">.</span>collect())<span class="op">;</span></span>
+<span id="cb4-33"><a aria-hidden="true" href="#cb4-33" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> s<span class="op">:</span> <span class="dt">u64</span> <span class="op">=</span> <span class="dv">42</span><span class="op">;</span></span>
+<span id="cb4-34"><a aria-hidden="true" href="#cb4-34" tabindex="-1"></a>    <span class="kw">let</span> a <span class="op">=</span> (<span class="dv">0</span><span class="op">..</span>N)</span>
+<span id="cb4-35"><a aria-hidden="true" href="#cb4-35" tabindex="-1"></a>        <span class="op">.</span>map(<span class="op">|</span>_<span class="op">|</span> <span class="op">{</span></span>
+<span id="cb4-36"><a aria-hidden="true" href="#cb4-36" tabindex="-1"></a>            s <span class="op">=</span> s<span class="op">.</span>wrapping_mul(<span class="dv">6364136223846793005</span>)<span class="op">.</span>wrapping_add(<span class="dv">1442695040888963407</span>)<span class="op">;</span></span>
+<span id="cb4-37"><a aria-hidden="true" href="#cb4-37" tabindex="-1"></a>            ((s <span class="op">&gt;&gt;</span> <span class="dv">33</span>) <span class="kw">as</span> <span class="dt">i32</span>) <span class="op">%</span> <span class="dv">1000</span></span>
+<span id="cb4-38"><a aria-hidden="true" href="#cb4-38" tabindex="-1"></a>        <span class="op">}</span>)</span>
+<span id="cb4-39"><a aria-hidden="true" href="#cb4-39" tabindex="-1"></a>        <span class="op">.</span>collect()<span class="op">;</span></span>
+<span id="cb4-40"><a aria-hidden="true" href="#cb4-40" tabindex="-1"></a>    probar(<span class="st">"aleatorio"</span><span class="op">,</span> a)<span class="op">;</span></span>
+<span id="cb4-41"><a aria-hidden="true" href="#cb4-41" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div></div>
+<pre class="text salida"><code>ordenado   inversiones      0   comparaciones    999
+invertido  inversiones 499500   comparaciones 499500
+aleatorio  inversiones 238849   comparaciones 239845</code></pre>
+<p>Observa las tres filas contra el Teorema 2: ordenado, 0 inversiones y <span class="math inline">\(n - 1\)</span> comparaciones; invertido, <span class="math inline">\(\binom{n}{2}\)</span> de ambas; aleatorio, muy cerca de <span class="math inline">\(\binom n2/2 = 249\,750\)</span> y entre <span class="math inline">\(I\)</span> e <span class="math inline">\(I + n - 1\)</span>.</p>
+<div class="callout atencion"><span class="lbl">Atención</span>Para alinear columnas, <code>%-10s</code> en C y C++ cuenta <strong>bytes</strong>, mientras que <code>{:&lt;10}</code> en Rust cuenta <strong>caracteres</strong>: con una etiqueta como “al revés” (la <code>é</code> ocupa 2 bytes en UTF-8) las columnas se desalinean distinto en cada lenguaje. Por eso las etiquetas del programa no llevan acentos. Volveremos a UTF-8 en la L12.</div>
+<hr/>
+<h2 id="divide-y-vencerás-mergesort">3. Divide y vencerás: mergesort</h2>
+<h3 id="el-algoritmo">3.1 El algoritmo</h3>
+<p><strong>Divide y vencerás:</strong> partir el problema en subproblemas del mismo tipo, resolverlos recursivamente y <strong>combinar</strong> las soluciones.</p>
+<pre><code>merge_sort(a[0..n)):
+    si n &lt; 2: regresar
+    m ← ⌊n/2⌋
+    merge_sort(a[0..m));  merge_sort(a[m..n))
+    merge(a, m)           -- mezcla las dos mitades ordenadas</code></pre>
+<p><code>merge</code> recorre las dos mitades con dos índices y en cada paso toma el menor de los dos frentes. <strong>En empate toma de la izquierda</strong>: eso, y solo eso, hace al algoritmo estable.</p>
+<blockquote>
+<p><strong>Lema 3.</strong> Si <span class="math inline">\(a[0..m)\)</span> y <span class="math inline">\(a[m..n)\)</span> están ordenados, <code>merge</code> los deja ordenados en <span class="math inline">\(a[0..n)\)</span>, es estable, y hace a lo más <span class="math inline">\(n - 1\)</span> comparaciones.</p>
+</blockquote>
+<p><em>Demostración (esquema).</em> Invariante: el prefijo ya escrito contiene, ordenados, los <span class="math inline">\(k\)</span> menores elementos de la unión, y si dos son iguales el de la izquierda va primero. Cada paso agrega el menor de los dos frentes, que es el menor de lo que falta (cada mitad está ordenada). Cada comparación coloca al menos un elemento y el último no requiere comparación: <span class="math inline">\(\le n - 1\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<blockquote>
+<p><strong>Teorema 4.</strong> <code>merge_sort</code> ordena.</p>
+</blockquote>
+<p><em>Demostración.</em> Inducción fuerte sobre <span class="math inline">\(n\)</span>. Base: <span class="math inline">\(n &lt; 2\)</span> ya está ordenado. Paso: las dos mitades tienen tamaño <span class="math inline">\(&lt; n\)</span>, así que por hipótesis de inducción quedan ordenadas; por el Lema 3, <code>merge</code> produce <span class="math inline">\(a[0..n)\)</span> ordenado. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Detalle de implementación.</strong> La solución de referencia copia solo la <strong>mitad izquierda</strong> a un búfer auxiliar y mezcla de vuelta sobre el arreglo: el índice de escritura <span class="math inline">\(k = i + (j - m)\)</span> nunca rebasa el de lectura <span class="math inline">\(j\)</span> de la derecha, así que no se pisa nada sin leer. Memoria extra: <span class="math inline">\(n/2\)</span>. Además, si <span class="math inline">\(a[m-1] \le a[m]\)</span> las mitades ya están en orden y la mezcla se omite: mergesort cuesta <span class="math inline">\(\Theta(n)\)</span> en entradas ordenadas.</p>
+<h3 id="la-recurrencia">3.2 La recurrencia</h3>
+<p>Sea <span class="math inline">\(T(n)\)</span> el peor costo. Dividir es <span class="math inline">\(O(1)\)</span>, mezclar <span class="math inline">\(\Theta(n)\)</span>: <span class="math display">\[T(n) = T(\lfloor n/2\rfloor) + T(\lceil n/2\rceil) + \Theta(n), \qquad T(1) = \Theta(1).\]</span></p>
+<p><strong>Árbol de recursión.</strong> Para <span class="math inline">\(n\)</span> potencia de 2 y costo <span class="math inline">\(cn\)</span> de la mezcla: el nivel <span class="math inline">\(k\)</span> del árbol tiene <span class="math inline">\(2^k\)</span> nodos de tamaño <span class="math inline">\(n/2^k\)</span>, cada uno con costo <span class="math inline">\(c\,n/2^k\)</span>: <strong><span class="math inline">\(cn\)</span> por nivel</strong>. Hay <span class="math inline">\(\lg n + 1\)</span> niveles. Total: <span class="math inline">\(cn(\lg n + 1) = \Theta(n\lg n)\)</span>.</p>
+<figure>
+<svg aria-label="Árbol de recursión de mergesort: cada nivel cuesta cn" fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" role="img" viewbox="0 0 840 300" xmlns="http://www.w3.org/2000/svg">
+<title>Árbol de recursión de mergesort: cada nivel cuesta cn</title>
+<defs>
+<marker id="ar" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#111827"></path></marker>
+<marker id="arc" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#1240e0"></path></marker>
+<marker id="ara" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"></path></marker>
+</defs>
+<rect fill="#ffffff" height="300" rx="12" width="840"></rect>
+<rect fill="#eef2ff" height="36" rx="6" stroke="#1240e0" stroke-width="1.5" width="552.0" x="44.0" y="30"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="600" text-anchor="middle" x="320.0" y="53">n</text>
+<line stroke="#c7d2fe" stroke-width="1.3" x1="320.0" x2="180.0" y1="66" y2="92"></line>
+<line stroke="#c7d2fe" stroke-width="1.3" x1="320.0" x2="460.0" y1="66" y2="92"></line>
+<text fill="#1240e0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="start" x="630" y="53">1 × c·n = cn</text>
+<rect fill="#eef2ff" height="36" rx="6" stroke="#1240e0" stroke-width="1.5" width="272.0" x="44.0" y="92"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="600" text-anchor="middle" x="180.0" y="115">n/2</text>
+<line stroke="#c7d2fe" stroke-width="1.3" x1="180.0" x2="110.0" y1="128" y2="154"></line>
+<line stroke="#c7d2fe" stroke-width="1.3" x1="180.0" x2="250.0" y1="128" y2="154"></line>
+<rect fill="#eef2ff" height="36" rx="6" stroke="#1240e0" stroke-width="1.5" width="272.0" x="324.0" y="92"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="600" text-anchor="middle" x="460.0" y="115">n/2</text>
+<line stroke="#c7d2fe" stroke-width="1.3" x1="460.0" x2="390.0" y1="128" y2="154"></line>
+<line stroke="#c7d2fe" stroke-width="1.3" x1="460.0" x2="530.0" y1="128" y2="154"></line>
+<text fill="#1240e0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="start" x="630" y="115">2 × c·n/2 = cn</text>
+<rect fill="#eef2ff" height="36" rx="6" stroke="#1240e0" stroke-width="1.5" width="132.0" x="44.0" y="154"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="600" text-anchor="middle" x="110.0" y="177">n/4</text>
+<line stroke="#c7d2fe" stroke-width="1.3" x1="110.0" x2="75.0" y1="190" y2="216"></line>
+<line stroke="#c7d2fe" stroke-width="1.3" x1="110.0" x2="145.0" y1="190" y2="216"></line>
+<rect fill="#eef2ff" height="36" rx="6" stroke="#1240e0" stroke-width="1.5" width="132.0" x="184.0" y="154"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="600" text-anchor="middle" x="250.0" y="177">n/4</text>
+<line stroke="#c7d2fe" stroke-width="1.3" x1="250.0" x2="215.0" y1="190" y2="216"></line>
+<line stroke="#c7d2fe" stroke-width="1.3" x1="250.0" x2="285.0" y1="190" y2="216"></line>
+<rect fill="#eef2ff" height="36" rx="6" stroke="#1240e0" stroke-width="1.5" width="132.0" x="324.0" y="154"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="600" text-anchor="middle" x="390.0" y="177">n/4</text>
+<line stroke="#c7d2fe" stroke-width="1.3" x1="390.0" x2="355.0" y1="190" y2="216"></line>
+<line stroke="#c7d2fe" stroke-width="1.3" x1="390.0" x2="425.0" y1="190" y2="216"></line>
+<rect fill="#eef2ff" height="36" rx="6" stroke="#1240e0" stroke-width="1.5" width="132.0" x="464.0" y="154"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="600" text-anchor="middle" x="530.0" y="177">n/4</text>
+<line stroke="#c7d2fe" stroke-width="1.3" x1="530.0" x2="495.0" y1="190" y2="216"></line>
+<line stroke="#c7d2fe" stroke-width="1.3" x1="530.0" x2="565.0" y1="190" y2="216"></line>
+<text fill="#1240e0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="start" x="630" y="177">4 × c·n/4 = cn</text>
+<rect fill="#eef2ff" height="36" rx="6" stroke="#1240e0" stroke-width="1.5" width="62.0" x="44.0" y="216"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="600" text-anchor="middle" x="75.0" y="239">n/8</text>
+<rect fill="#eef2ff" height="36" rx="6" stroke="#1240e0" stroke-width="1.5" width="62.0" x="114.0" y="216"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="600" text-anchor="middle" x="145.0" y="239">n/8</text>
+<rect fill="#eef2ff" height="36" rx="6" stroke="#1240e0" stroke-width="1.5" width="62.0" x="184.0" y="216"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="600" text-anchor="middle" x="215.0" y="239">n/8</text>
+<rect fill="#eef2ff" height="36" rx="6" stroke="#1240e0" stroke-width="1.5" width="62.0" x="254.0" y="216"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="600" text-anchor="middle" x="285.0" y="239">n/8</text>
+<rect fill="#eef2ff" height="36" rx="6" stroke="#1240e0" stroke-width="1.5" width="62.0" x="324.0" y="216"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="600" text-anchor="middle" x="355.0" y="239">n/8</text>
+<rect fill="#eef2ff" height="36" rx="6" stroke="#1240e0" stroke-width="1.5" width="62.0" x="394.0" y="216"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="600" text-anchor="middle" x="425.0" y="239">n/8</text>
+<rect fill="#eef2ff" height="36" rx="6" stroke="#1240e0" stroke-width="1.5" width="62.0" x="464.0" y="216"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="600" text-anchor="middle" x="495.0" y="239">n/8</text>
+<rect fill="#eef2ff" height="36" rx="6" stroke="#1240e0" stroke-width="1.5" width="62.0" x="534.0" y="216"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="600" text-anchor="middle" x="565.0" y="239">n/8</text>
+<text fill="#1240e0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="start" x="630" y="239">8 × c·n/8 = cn</text>
+<text fill="#6b7280" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" x="320.0" y="288">⋮  (lg n + 1 niveles)</text>
+<text fill="#c2410c" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="start" x="630" y="288">total: cn(lg n + 1)</text>
+</svg>
+<figcaption aria-hidden="true">Árbol de recursión de mergesort</figcaption>
+</figure>
+<p><strong>Verificación por sustitución</strong> (para todo <span class="math inline">\(n\)</span>): supongamos <span class="math inline">\(T(k) \le c\,k\lg k\)</span> para <span class="math inline">\(2 \le k &lt; n\)</span>. Con <span class="math inline">\(m_1 = \lfloor n/2\rfloor\)</span>, <span class="math inline">\(m_2 = \lceil n/2\rceil \le (n+1)/2\)</span>: <span class="math display">\[T(n) \le c\,m_1\lg m_1 + c\,m_2\lg m_2 + dn \le c\,n\lg\tfrac{n+1}{2} + dn = cn\lg(n+1) - cn + dn.\]</span> Para <span class="math inline">\(n \ge 2\)</span>, <span class="math inline">\(\lg(n+1) \le \lg n + 0.59\)</span>, así que <span class="math inline">\(T(n) \le cn\lg n + (0.59c - c + d)n \le cn\lg n\)</span> si <span class="math inline">\(c \ge d/0.41\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<h3 id="el-teorema-maestro">3.3 El teorema maestro</h3>
+<p>Muchas recurrencias de divide y vencerás tienen la forma <span class="math inline">\(T(n) = a\,T(n/b) + f(n)\)</span> con <span class="math inline">\(a \ge 1\)</span>, <span class="math inline">\(b &gt; 1\)</span>. Comparando <span class="math inline">\(f(n)\)</span> con <span class="math inline">\(n^{\log_b a}\)</span> (el número de hojas del árbol):</p>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Caso</th>
+<th>Condición</th>
+<th>Resultado</th>
+<th>Intuición</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><span class="math inline">\(f(n) = O(n^{\log_b a - \varepsilon})\)</span></td>
+<td><span class="math inline">\(T(n) = \Theta(n^{\log_b a})\)</span></td>
+<td>dominan las hojas</td>
+</tr>
+<tr>
+<td>2</td>
+<td><span class="math inline">\(f(n) = \Theta(n^{\log_b a}\lg^k n)\)</span>, <span class="math inline">\(k\ge 0\)</span></td>
+<td><span class="math inline">\(T(n) = \Theta(n^{\log_b a}\lg^{k+1} n)\)</span></td>
+<td>todos los niveles pesan igual</td>
+</tr>
+<tr>
+<td>3</td>
+<td><span class="math inline">\(f(n) = \Omega(n^{\log_b a + \varepsilon})\)</span> y <span class="math inline">\(a f(n/b) \le c f(n)\)</span>, <span class="math inline">\(c&lt;1\)</span></td>
+<td><span class="math inline">\(T(n) = \Theta(f(n))\)</span></td>
+<td>domina la raíz</td>
+</tr>
+</tbody>
+</table></div>
+<p>Mergesort: <span class="math inline">\(a = b = 2\)</span>, <span class="math inline">\(n^{\log_2 2} = n\)</span>, <span class="math inline">\(f(n) = \Theta(n)\)</span>: caso 2 con <span class="math inline">\(k = 0\)</span>, <span class="math inline">\(\Theta(n\lg n)\)</span>. Búsqueda binaria: <span class="math inline">\(a = 1\)</span>, <span class="math inline">\(b = 2\)</span>, <span class="math inline">\(f = \Theta(1) = \Theta(n^0)\)</span>: caso 2, <span class="math inline">\(\Theta(\lg n)\)</span>. (Demostración: CLRS §4.6; es el árbol de recursión hecho en general.)</p>
+<hr/>
+<h2 id="la-cota-inferior">4. La cota inferior</h2>
+<p>¿Se puede ordenar en menos de <span class="math inline">\(\Theta(n\lg n)\)</span>? <strong>No</strong>, si el algoritmo solo obtiene información <strong>comparando</strong> elementos.</p>
+<p><strong>Modelo de árbol de decisión.</strong> Fijemos <span class="math inline">\(n\)</span>. Cualquier algoritmo de comparaciones se puede ver como un árbol binario: cada nodo interno es una comparación “<span class="math inline">\(a_i &lt; a_j\)</span>?”, cada rama una respuesta, y cada hoja la permutación que el algoritmo aplica. Ejecutar el algoritmo sobre una entrada es seguir un camino de la raíz a una hoja; el número de comparaciones es la longitud de ese camino.</p>
+<blockquote>
+<p><strong>Teorema 5.</strong> Todo algoritmo de ordenamiento por comparaciones hace <span class="math inline">\(\Omega(n\lg n)\)</span> comparaciones en el peor caso.</p>
+</blockquote>
+<p><em>Demostración.</em> Para entradas con elementos distintos, cada una de las <span class="math inline">\(n!\)</span> permutaciones de entrada requiere una permutación de salida distinta, así que debe llegar a una hoja distinta: el árbol tiene al menos <span class="math inline">\(n!\)</span> hojas. Un árbol binario de altura <span class="math inline">\(h\)</span> tiene a lo más <span class="math inline">\(2^h\)</span> hojas. Entonces <span class="math inline">\(2^h \ge n!\)</span>, es decir, <span class="math display">\[h \ge \lg(n!) \ge \lg\Big(\big(\tfrac n2\big)^{n/2}\Big) = \tfrac n2\lg\tfrac n2 = \Omega(n\lg n),\]</span> donde usamos que <span class="math inline">\(n!\)</span> tiene al menos <span class="math inline">\(n/2\)</span> factores <span class="math inline">\(\ge n/2\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<p>Más fino: por la aproximación de Stirling, <span class="math inline">\(\lg(n!) = n\lg n - n\lg e + O(\lg n) \approx n\lg n - 1.44n\)</span>. Mergesort hace a lo más <span class="math inline">\(n\lceil\lg n\rceil - 2^{\lceil \lg n\rceil} + 1\)</span> comparaciones: está a un término lineal del óptimo.</p>
+<p>El teorema vale también <strong>en esperanza</strong> (incluso para algoritmos aleatorizados): la profundidad promedio de las <span class="math inline">\(n!\)</span> hojas de un árbol binario es al menos <span class="math inline">\(\lg(n!)\)</span>.</p>
+<div class="tabs"><div aria-label="Lenguaje" class="tablist" role="tablist"><button aria-controls="t1-0" aria-selected="false" data-lang="c" id="t1-0-b" role="tab" tabindex="-1" type="button">C</button><button aria-controls="t1-1" aria-selected="false" data-lang="cpp" id="t1-1-b" role="tab" tabindex="-1" type="button">C++</button><button aria-controls="t1-2" aria-selected="false" data-lang="rust" id="t1-2-b" role="tab" tabindex="-1" type="button">Rust</button></div><div aria-labelledby="t1-0-b" class="panel" data-lang="c" id="t1-0" role="tabpanel"><div class="sourceCode" id="cb7"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb7-1"><a aria-hidden="true" href="#cb7-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;math.h&gt;</span></span>
+<span id="cb7-2"><a aria-hidden="true" href="#cb7-2" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb7-3"><a aria-hidden="true" href="#cb7-3" tabindex="-1"></a></span>
+<span id="cb7-4"><a aria-hidden="true" href="#cb7-4" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb7-5"><a aria-hidden="true" href="#cb7-5" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> n <span class="op">=</span> <span class="dv">10</span><span class="op">;</span> n <span class="op">&lt;=</span> <span class="dv">100000</span><span class="op">;</span> n <span class="op">*=</span> <span class="dv">10</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb7-6"><a aria-hidden="true" href="#cb7-6" tabindex="-1"></a>        <span class="dt">double</span> lg_fact <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb7-7"><a aria-hidden="true" href="#cb7-7" tabindex="-1"></a>        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">2</span><span class="op">;</span> i <span class="op">&lt;=</span> n<span class="op">;</span> i<span class="op">++)</span> lg_fact <span class="op">+=</span> log2<span class="op">((</span><span class="dt">double</span><span class="op">)</span>i<span class="op">);</span></span>
+<span id="cb7-8"><a aria-hidden="true" href="#cb7-8" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">"n = </span><span class="sc">%6d</span><span class="st">   lg(n!) = </span><span class="sc">%10.1f</span><span class="st">   n lg n = </span><span class="sc">%10.1f\n</span><span class="st">"</span><span class="op">,</span> n<span class="op">,</span> lg_fact<span class="op">,</span> n <span class="op">*</span> log2<span class="op">((</span><span class="dt">double</span><span class="op">)</span>n<span class="op">));</span></span>
+<span id="cb7-9"><a aria-hidden="true" href="#cb7-9" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb7-10"><a aria-hidden="true" href="#cb7-10" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb7-11"><a aria-hidden="true" href="#cb7-11" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div><div aria-labelledby="t1-1-b" class="panel" data-lang="cpp" id="t1-1" role="tabpanel"><div class="sourceCode" id="cb8"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb8-1"><a aria-hidden="true" href="#cb8-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;cmath&gt;</span></span>
+<span id="cb8-2"><a aria-hidden="true" href="#cb8-2" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb8-3"><a aria-hidden="true" href="#cb8-3" tabindex="-1"></a></span>
+<span id="cb8-4"><a aria-hidden="true" href="#cb8-4" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb8-5"><a aria-hidden="true" href="#cb8-5" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> n <span class="op">=</span> <span class="dv">10</span><span class="op">;</span> n <span class="op">&lt;=</span> <span class="dv">100000</span><span class="op">;</span> n <span class="op">*=</span> <span class="dv">10</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb8-6"><a aria-hidden="true" href="#cb8-6" tabindex="-1"></a>        <span class="dt">double</span> lg_fact <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb8-7"><a aria-hidden="true" href="#cb8-7" tabindex="-1"></a>        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">2</span><span class="op">;</span> i <span class="op">&lt;=</span> n<span class="op">;</span> <span class="op">++</span>i<span class="op">)</span> lg_fact <span class="op">+=</span> <span class="bu">std::</span>log2<span class="op">((</span><span class="dt">double</span><span class="op">)</span>i<span class="op">);</span></span>
+<span id="cb8-8"><a aria-hidden="true" href="#cb8-8" tabindex="-1"></a>        <span class="bu">std::</span>printf<span class="op">(</span><span class="st">"n = </span><span class="sc">%6d</span><span class="st">   lg(n!) = </span><span class="sc">%10.1f</span><span class="st">   n lg n = </span><span class="sc">%10.1f\n</span><span class="st">"</span><span class="op">,</span> n<span class="op">,</span> lg_fact<span class="op">,</span> n <span class="op">*</span> <span class="bu">std::</span>log2<span class="op">((</span><span class="dt">double</span><span class="op">)</span>n<span class="op">));</span></span>
+<span id="cb8-9"><a aria-hidden="true" href="#cb8-9" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb8-10"><a aria-hidden="true" href="#cb8-10" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div><div aria-labelledby="t1-2-b" class="panel" data-lang="rust" id="t1-2" role="tabpanel"><div class="sourceCode" id="cb9"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb9-1"><a aria-hidden="true" href="#cb9-1" tabindex="-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb9-2"><a aria-hidden="true" href="#cb9-2" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> n <span class="op">=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb9-3"><a aria-hidden="true" href="#cb9-3" tabindex="-1"></a>    <span class="cf">while</span> n <span class="op">&lt;=</span> <span class="dv">100_000</span> <span class="op">{</span></span>
+<span id="cb9-4"><a aria-hidden="true" href="#cb9-4" tabindex="-1"></a>        <span class="kw">let</span> lg_fact<span class="op">:</span> <span class="dt">f64</span> <span class="op">=</span> (<span class="dv">2</span><span class="op">..=</span>n)<span class="op">.</span>map(<span class="op">|</span>i<span class="op">|</span> (i <span class="kw">as</span> <span class="dt">f64</span>)<span class="op">.</span>log2())<span class="op">.</span>sum()<span class="op">;</span></span>
+<span id="cb9-5"><a aria-hidden="true" href="#cb9-5" tabindex="-1"></a>        <span class="pp">println!</span>(<span class="st">"n = {:6}   lg(n!) = {:10.1}   n lg n = {:10.1}"</span><span class="op">,</span> n<span class="op">,</span> lg_fact<span class="op">,</span> n <span class="kw">as</span> <span class="dt">f64</span> <span class="op">*</span> (n <span class="kw">as</span> <span class="dt">f64</span>)<span class="op">.</span>log2())<span class="op">;</span></span>
+<span id="cb9-6"><a aria-hidden="true" href="#cb9-6" tabindex="-1"></a>        n <span class="op">*=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb9-7"><a aria-hidden="true" href="#cb9-7" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb9-8"><a aria-hidden="true" href="#cb9-8" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div></div>
+<pre class="text salida"><code>n =     10   lg(n!) =       21.8   n lg n =       33.2
+n =    100   lg(n!) =      524.8   n lg n =      664.4
+n =   1000   lg(n!) =     8529.4   n lg n =     9965.8
+n =  10000   lg(n!) =   118458.1   n lg n =   132877.1
+n = 100000   lg(n!) =  1516704.2   n lg n =  1660964.0</code></pre>
+<hr/>
+<h2 id="quicksort">5. Quicksort</h2>
+<h3 id="el-algoritmo-1">5.1 El algoritmo</h3>
+<p>Quicksort también es divide y vencerás, pero el trabajo está en <strong>dividir</strong>, no en combinar: se elige un <strong>pivote</strong> <span class="math inline">\(p\)</span>, se <strong>particiona</strong> el arreglo en “menores que <span class="math inline">\(p\)</span>”, “iguales a <span class="math inline">\(p\)</span>” y “mayores que <span class="math inline">\(p\)</span>”, y se ordenan recursivamente las partes de los extremos. No hay que combinar nada.</p>
+<p><strong>Partición en 3 vías</strong> (bandera holandesa, Dijkstra). Tres índices <code>lt</code>, <code>i</code>, <code>gt</code> con el invariante: <span class="math display">\[a[0..\texttt{lt}) &lt; p,\quad a[\texttt{lt}..i) = p,\quad a[i..\texttt{gt})\ \text{sin clasificar},\quad a[\texttt{gt}..n) &gt; p.\]</span> Cada paso clasifica <span class="math inline">\(a[i]\)</span>: si es menor, se intercambia con <span class="math inline">\(a[\texttt{lt}]\)</span> y avanzan ambos; si es mayor, se intercambia con <span class="math inline">\(a[\texttt{gt}-1]\)</span> y retrocede <code>gt</code> (sin avanzar <span class="math inline">\(i\)</span>: el que llegó está sin clasificar); si es igual, avanza <span class="math inline">\(i\)</span>. Termina cuando <span class="math inline">\(i = \texttt{gt}\)</span>, tras exactamente <span class="math inline">\(n\)</span> clasificaciones.</p>
+<p>¿Por qué 3 vías? Con la partición clásica de 2 vías (“<span class="math inline">\(\le p\)</span>” y “<span class="math inline">\(&gt; p\)</span>”), un arreglo de <span class="math inline">\(n\)</span> elementos <strong>iguales</strong> se parte en <span class="math inline">\(n-1\)</span> y <span class="math inline">\(0\)</span> en cada nivel: <span class="math inline">\(\Theta(n^2)\)</span>. Con 3 vías, todos caen en el centro y se termina en una pasada: <span class="math inline">\(\Theta(n)\)</span>. El test <code>quick_sort_adversarial</code> usa 200 000 elementos iguales.</p>
+<h3 id="el-pivote">5.2 El pivote</h3>
+<p>Si el pivote es siempre el primer elemento y la entrada ya está ordenada, cada partición separa 0 y <span class="math inline">\(n - 1\)</span>: <span class="math inline">\(T(n) = T(n-1) + \Theta(n) = \Theta(n^2)\)</span>. Lo mismo para cualquier regla <strong>determinista</strong>: para cada una existe una entrada que la hace cuadrática. La solución es la de L04: <strong>aleatorizar</strong>. Elegir el pivote uniformemente al azar hace que el peor caso dependa de nuestra suerte, no de la entrada.</p>
+<blockquote>
+<p><strong>Teorema 6.</strong> Con pivote uniforme e independiente en cada llamada, quicksort hace en esperanza a lo más <span class="math inline">\(2n\ln n\)</span> comparaciones sobre cualquier entrada de <span class="math inline">\(n\)</span> elementos distintos.</p>
+</blockquote>
+<p><em>Demostración.</em> Sean <span class="math inline">\(z_1 &lt; z_2 &lt; \dots &lt; z_n\)</span> los elementos <strong>en orden</strong>. Sea <span class="math inline">\(X_{ij}\)</span> (<span class="math inline">\(i &lt; j\)</span>) la indicadora de que <span class="math inline">\(z_i\)</span> y <span class="math inline">\(z_j\)</span> se comparan alguna vez. Dos elementos se comparan solo si uno de ellos es el pivote en el momento en que ambos están todavía en el mismo subarreglo, y después de eso el pivote no vuelve a compararse con nadie; así que cada par se compara a lo más una vez y el total de comparaciones es <span class="math inline">\(X = \sum_{i&lt;j} X_{ij}\)</span>.</p>
+<p>Consideremos <span class="math inline">\(Z_{ij} = \{z_i, z_{i+1}, \dots, z_j\}\)</span>. Mientras no se elija como pivote ningún elemento de <span class="math inline">\(Z_{ij}\)</span>, todo <span class="math inline">\(Z_{ij}\)</span> permanece en el mismo subarreglo (un pivote fuera de <span class="math inline">\(Z_{ij}\)</span> es menor o mayor que todos ellos). El <strong>primer</strong> pivote elegido de <span class="math inline">\(Z_{ij}\)</span> decide: si es <span class="math inline">\(z_i\)</span> o <span class="math inline">\(z_j\)</span>, se comparan; si es uno intermedio, los separa y nunca se compararán. Como el pivote es uniforme dentro de su subarreglo, que contiene a todo <span class="math inline">\(Z_{ij}\)</span>, cada uno de los <span class="math inline">\(j - i + 1\)</span> elementos de <span class="math inline">\(Z_{ij}\)</span> tiene la misma probabilidad de ser el primero elegido: <span class="math display">\[\Pr[X_{ij} = 1] = \frac{2}{j - i + 1}.\]</span> Por linealidad de la esperanza, con <span class="math inline">\(k = j - i\)</span>: <span class="math display">\[\mathbb E[X] = \sum_{i=1}^{n-1}\sum_{j=i+1}^{n}\frac{2}{j-i+1} = \sum_{i=1}^{n-1}\sum_{k=1}^{n-i}\frac{2}{k+1} &lt; \sum_{i=1}^{n}2\sum_{k=1}^{n}\frac1k = 2nH_n \le 2n(\ln n + 1).\]</span> Con un análisis exacto, <span class="math inline">\(\mathbb E[X] = 2(n+1)H_n - 4n = 2n\ln n + O(n) \approx 1.39\,n\lg n\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<p>Comparado con el óptimo <span class="math inline">\(\lg(n!) \approx n\lg n\)</span>, quicksort hace 39% más comparaciones en promedio, pero cada una es baratísima (recorre el arreglo secuencialmente, sin búfer auxiliar), y por eso suele ser el más rápido en la práctica.</p>
+<h3 id="la-pila">5.3 La pila</h3>
+<p>En el peor caso (con probabilidad minúscula, pero posible), las particiones son <span class="math inline">\(0\)</span> y <span class="math inline">\(n-1\)</span> y la recursión tiene profundidad <span class="math inline">\(n\)</span>: desborda la pila igual que la destrucción de una lista (L03). La solución de referencia lo evita:</p>
+<blockquote>
+<p><strong>Proposición 7.</strong> Si quicksort hace la llamada recursiva sobre la parte <strong>menor</strong> y continúa con un ciclo sobre la mayor, la profundidad de recursión es a lo más <span class="math inline">\(\lg n\)</span>.</p>
+</blockquote>
+<p><em>Demostración.</em> Cada llamada recursiva recibe la parte menor de una partición de un subarreglo de tamaño <span class="math inline">\(m\)</span>, que tiene tamaño <span class="math inline">\(\le m/2\)</span>. A lo largo de cualquier cadena de llamadas anidadas el tamaño se reduce al menos a la mitad en cada nivel, así que hay a lo más <span class="math inline">\(\lg n\)</span> niveles. El ciclo sobre la parte mayor no agrega marcos de pila. <span class="math inline">\(\blacksquare\)</span></p>
+<p><code>std::sort</code> en C++ es <em>introsort</em>: quicksort que, si la recursión pasa de <span class="math inline">\(2\lg n\)</span> niveles, cambia a heapsort, garantizando <span class="math inline">\(O(n\lg n)\)</span> en el peor caso. El <code>sort_unstable</code> de Rust es <em>pattern-defeating quicksort</em> (pdqsort), una evolución de la misma idea.</p>
+<hr/>
+<h2 id="heapsort">6. Heapsort</h2>
+<p>Un <strong>max-heap</strong> es un arreglo en el que cada <span class="math inline">\(a[i] \ge a[2i+1], a[2i+2]\)</span> (sus “hijos”). La estructura completa es tema de la L06; aquí basta con:</p>
+<ul>
+<li><code>sift_down(i)</code>: si <span class="math inline">\(a[i]\)</span> es menor que algún hijo, intercambiarlo con el mayor de ellos y repetir desde ahí. <span class="math inline">\(O(\text{altura}) = O(\lg n)\)</span>.</li>
+<li><strong>heapify</strong> de abajo hacia arriba: <code>sift_down(i)</code> para <span class="math inline">\(i = \lfloor n/2\rfloor - 1, \dots, 0\)</span>.</li>
+</ul>
+<blockquote>
+<p><strong>Proposición 8.</strong> heapify cuesta <span class="math inline">\(O(n)\)</span>, no <span class="math inline">\(O(n\lg n)\)</span>.</p>
+</blockquote>
+<p><em>Demostración.</em> Un nodo a altura <span class="math inline">\(h\)</span> cuesta <span class="math inline">\(O(h)\)</span>, y hay a lo más <span class="math inline">\(\lceil n/2^{h+1}\rceil\)</span> nodos de altura <span class="math inline">\(h\)</span>. Total: <span class="math inline">\(\sum_{h=0}^{\lg n}\frac{n}{2^{h+1}}O(h) = O\big(n\sum_{h\ge0} h/2^h\big) = O(2n) = O(n)\)</span>, porque <span class="math inline">\(\sum_{h \ge 0} h x^h = x/(1-x)^2\)</span>, que vale 2 en <span class="math inline">\(x = 1/2\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<p>Heapsort: heapify, y luego <span class="math inline">\(n-1\)</span> veces “intercambiar la raíz (el máximo) con el último elemento del heap y hacer <code>sift_down</code> en el heap reducido”. <span class="math inline">\(\Theta(n\lg n)\)</span> en el peor caso, in-place, pero no estable y con mal uso de caché (salta entre <span class="math inline">\(i\)</span> y <span class="math inline">\(2i\)</span>).</p>
+<hr/>
+<h2 id="ordenar-en-tiempo-lineal">7. Ordenar en tiempo lineal</h2>
+<p>El Teorema 5 solo aplica a algoritmos que <strong>comparan</strong>. Si las claves son enteros pequeños, se pueden usar como <strong>índices</strong>.</p>
+<h3 id="counting-sort">7.1 Counting sort</h3>
+<p>Con claves en <span class="math inline">\(\{0, \dots, k-1\}\)</span>:</p>
+<ol type="1">
+<li>Contar: <span class="math inline">\(c[v]\)</span> = número de claves iguales a <span class="math inline">\(v\)</span>. <span class="math inline">\(\Theta(n)\)</span>.</li>
+<li>Sumas prefijas: <span class="math inline">\(c[v] \gets c[0] + \dots + c[v]\)</span> = número de claves <span class="math inline">\(\le v\)</span>. <span class="math inline">\(\Theta(k)\)</span>.</li>
+<li>Recorrer la entrada <strong>de atrás hacia adelante</strong>, colocando cada <span class="math inline">\(x\)</span> en la posición <span class="math inline">\(c[x] - 1\)</span> de la salida y decrementando <span class="math inline">\(c[x]\)</span>. <span class="math inline">\(\Theta(n)\)</span>.</li>
+</ol>
+<p>Costo <span class="math inline">\(\Theta(n + k)\)</span>, lineal si <span class="math inline">\(k = O(n)\)</span>. <strong>Estable</strong>: entre claves iguales, la que aparece última en la entrada se coloca primero en la posición más alta, y así hacia atrás.</p>
+<h3 id="radix-sort">7.2 Radix sort</h3>
+<p>Para claves de <span class="math inline">\(d\)</span> dígitos en base <span class="math inline">\(b\)</span>: ordenar <strong>establemente</strong> por el dígito menos significativo, luego por el siguiente, …, hasta el más significativo (<em>LSD</em>).</p>
+<blockquote>
+<p><strong>Teorema 9.</strong> Radix sort LSD ordena correctamente si cada pasada es estable.</p>
+</blockquote>
+<p><em>Demostración.</em> Inducción sobre el número de pasadas <span class="math inline">\(t\)</span>: <em>tras la pasada <span class="math inline">\(t\)</span>, los elementos están ordenados por sus <span class="math inline">\(t\)</span> dígitos menos significativos.</em> Base <span class="math inline">\(t = 1\)</span>: la pasada ordena por el dígito 0. Paso: tras la pasada <span class="math inline">\(t + 1\)</span> (por el dígito <span class="math inline">\(t\)</span>), dos elementos con dígitos <span class="math inline">\(t\)</span> distintos quedan en el orden de ese dígito, que es el más significativo de los <span class="math inline">\(t+1\)</span> considerados; dos con el mismo dígito <span class="math inline">\(t\)</span> conservan, por <strong>estabilidad</strong>, el orden de la pasada anterior, que por hipótesis es el de sus <span class="math inline">\(t\)</span> dígitos bajos. Así quedan ordenados por los <span class="math inline">\(t+1\)</span> dígitos bajos. Con <span class="math inline">\(t = d\)</span>, ordenados por la clave completa. <span class="math inline">\(\blacksquare\)</span></p>
+<p>Costo: <span class="math inline">\(d\)</span> pasadas de counting sort con <span class="math inline">\(k = b\)</span>: <span class="math inline">\(\Theta(d(n + b))\)</span>. Para enteros de 32 bits, el lab usa <span class="math inline">\(b = 256\)</span> y <span class="math inline">\(d = 4\)</span>: <span class="math inline">\(\Theta(4n + 1024)\)</span>. Con <span class="math inline">\(b = 2^{16}\)</span> serían 2 pasadas, pero con un arreglo de conteo de 64K entradas que no cabe en la caché L1.</p>
+<p><strong>¿Rompe la cota inferior?</strong> Sí, porque no es un algoritmo de comparaciones: usa los bits de la clave como índices. El precio: solo sirve para claves con estructura de “dígitos” (enteros, cadenas de longitud acotada), no para un orden arbitrario dado por un comparador.</p>
+<hr/>
+<h2 id="resumen-de-algoritmos">8. Resumen de algoritmos</h2>
+<div class="scroll"><table style="width:100%;">
+<colgroup>
+<col style="width: 16%"/>
+<col style="width: 16%"/>
+<col style="width: 16%"/>
+<col style="width: 16%"/>
+<col style="width: 16%"/>
+<col style="width: 16%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Algoritmo</th>
+<th>Peor caso</th>
+<th>Esperado</th>
+<th>Memoria extra</th>
+<th>Estable</th>
+<th>Técnica de la demostración</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inserción</td>
+<td><span class="math inline">\(\Theta(n^2)\)</span></td>
+<td><span class="math inline">\(\Theta(n^2)\)</span></td>
+<td><span class="math inline">\(O(1)\)</span></td>
+<td>sí</td>
+<td>invariante de ciclo; inversiones</td>
+</tr>
+<tr>
+<td>Mergesort</td>
+<td><span class="math inline">\(\Theta(n\lg n)\)</span></td>
+<td><span class="math inline">\(\Theta(n\lg n)\)</span></td>
+<td><span class="math inline">\(\Theta(n)\)</span></td>
+<td>sí</td>
+<td>inducción; recurrencia</td>
+</tr>
+<tr>
+<td>Quicksort (aleatorio, 3 vías)</td>
+<td><span class="math inline">\(\Theta(n^2)\)</span></td>
+<td><span class="math inline">\(\Theta(n\lg n)\)</span></td>
+<td><span class="math inline">\(O(\lg n)\)</span></td>
+<td>no</td>
+<td>indicadoras <span class="math inline">\(X_{ij}\)</span></td>
+</tr>
+<tr>
+<td>Heapsort</td>
+<td><span class="math inline">\(\Theta(n\lg n)\)</span></td>
+<td><span class="math inline">\(\Theta(n\lg n)\)</span></td>
+<td><span class="math inline">\(O(1)\)</span></td>
+<td>no</td>
+<td>suma <span class="math inline">\(\sum h/2^h\)</span></td>
+</tr>
+<tr>
+<td>Counting</td>
+<td><span class="math inline">\(\Theta(n+k)\)</span></td>
+<td><span class="math inline">\(\Theta(n+k)\)</span></td>
+<td><span class="math inline">\(\Theta(n+k)\)</span></td>
+<td>sí</td>
+<td>conteo directo</td>
+</tr>
+<tr>
+<td>Radix LSD</td>
+<td><span class="math inline">\(\Theta(d(n+b))\)</span></td>
+<td><span class="math inline">\(\Theta(d(n+b))\)</span></td>
+<td><span class="math inline">\(\Theta(n+b)\)</span></td>
+<td>sí</td>
+<td>inducción + estabilidad</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="resumen-de-paradigmas-en-este-lab">9. Resumen de paradigmas en este lab</h2>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Aspecto</th>
+<th>C</th>
+<th>C++</th>
+<th>Rust</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vista del arreglo</td>
+<td><code>void *base, size_t n, size_t size</code></td>
+<td><code>std::span&lt;T&gt;</code></td>
+<td><code>&amp;mut [T]</code></td>
+</tr>
+<tr>
+<td>Comparación</td>
+<td><code>int (*cmp)(const void*, const void*)</code></td>
+<td><code>operator&lt;</code></td>
+<td>trait <code>Ord</code></td>
+</tr>
+<tr>
+<td>Mover elementos</td>
+<td><code>memcpy</code> de <code>size</code> bytes</td>
+<td><code>std::move</code></td>
+<td><code>swap</code> / <code>clone</code> (o <code>unsafe</code>)</td>
+</tr>
+<tr>
+<td>Dividir el arreglo</td>
+<td>aritmética de punteros</td>
+<td><code>first(m)</code>, <code>subspan(m)</code></td>
+<td><code>split_at_mut(m)</code>: dos <code>&amp;mut</code> disjuntos</td>
+</tr>
+<tr>
+<td>Comparador inconsistente</td>
+<td>UB</td>
+<td>UB en <code>std::sort</code></td>
+<td>resultado arbitrario o <code>panic</code>, nunca UB</td>
+</tr>
+<tr>
+<td>Aleatoriedad</td>
+<td>escrita a mano (xorshift)</td>
+<td>escrita a mano</td>
+<td>escrita a mano (no hay en <code>std</code>)</td>
+</tr>
+</tbody>
+</table></div>
+<hr/>
+<h2 id="guía-del-lab-05">10. Guía del Lab 05</h2>
+<p><strong>Archivos:</strong> <code>c/src/lab05/sorting.c</code>, <code>cpp/include/algolib/lab05/sorting.hpp</code>, <code>rust/src/lab05/mod.rs</code>.</p>
+<p><strong>Orden sugerido:</strong> inserción → mergesort → heapsort → quicksort → counting → radix. Después de cada uno, <code>make labNN</code> y mira que pasen su <code>*_correcto</code> y, si aplica, su <code>*_estable</code>.</p>
+<p><strong>Consejos:</strong></p>
+<ul>
+<li><strong>Mergesort:</strong> escribe <code>merge</code> por separado y pruébalo en papel con empates. Es estable solo si en empate tomas de la izquierda (<code>if (der &lt; izq) tomar der; else tomar izq;</code>).</li>
+<li><strong>Quicksort:</strong> escribe la partición en 3 vías con su invariante en un comentario. Recursión en la parte menor (Prop. 7). Para subarreglos de <span class="math inline">\(\le 16\)</span> elementos, usa inserción.</li>
+<li><strong>Rust:</strong> <code>split_at_mut</code> para recursar sobre las dos mitades; en quicksort, <code>let (izq, resto) = a.split_at_mut(lt); let der = &amp;mut resto[gt - lt..];</code>.</li>
+<li><strong>C:</strong> escribe primero <code>swap_bytes(a, b, size)</code> y la macro <code>AT(base, i, size)</code>; todo lo demás se construye con ellas.</li>
+<li><strong>Radix:</strong> usa un búfer auxiliar y alterna origen y destino entre pasadas; con 4 pasadas el resultado vuelve al arreglo original.</li>
+</ul>
+<p><strong>Errores frecuentes:</strong></p>
+<ul>
+<li>Quicksort con pivote fijo o partición de 2 vías: <code>quick_sort_adversarial</code> no termina.</li>
+<li>Mergesort que en empate toma de la derecha: falla <code>merge_sort_estable</code>.</li>
+<li>heapify recorriendo de <span class="math inline">\(0\)</span> hacia arriba en vez de <span class="math inline">\(\lfloor n/2\rfloor - 1\)</span> hacia abajo: no construye un heap.</li>
+<li>Counting sort recorriendo la entrada hacia adelante en el paso 3: deja de ser estable, y radix (que depende de ello) da resultados incorrectos.</li>
+<li>En C, <code>size_t i = n - 1; i &gt;= 0; i--</code>: un <code>size_t</code> nunca es negativo, el ciclo no termina. Usa <code>for (size_t i = n; i-- &gt; 0;)</code>.</li>
+</ul>
+<hr/>
+<h2 id="comprueba-tu-comprensión">11. Comprueba tu comprensión</h2>
+<ol type="1">
+<li>¿Cuántas inversiones tiene <span class="math inline">\(\langle 3, 1, 2\rangle\)</span>? ¿Cuántos corrimientos hará inserción?</li>
+<li>¿Por qué la cota inferior no contradice que counting sort sea <span class="math inline">\(\Theta(n + k)\)</span>?</li>
+<li>¿Cuál es la probabilidad de que quicksort compare el mínimo con el máximo?</li>
+<li>¿Qué devuelve el teorema maestro para <span class="math inline">\(T(n) = 4T(n/2) + n\)</span>? ¿Y para <span class="math inline">\(T(n) = 2T(n/2) + n^2\)</span>?</li>
+<li>¿Es estable heapsort? Da un contraejemplo de 3 elementos o argumenta por qué sí.</li>
+</ol>
+<details>
+<summary>
+Respuestas
+</summary>
+<ol type="1">
+<li>Dos: <span class="math inline">\((3,1)\)</span> y <span class="math inline">\((3,2)\)</span>. Inserción hace exactamente 2 corrimientos (Teorema 2).</li>
+<li>La cota inferior es para algoritmos que solo <strong>comparan</strong>. Counting sort usa las claves como índices de un arreglo, operación que el modelo de árbol de decisión no permite.</li>
+<li><span class="math inline">\(z_1\)</span> y <span class="math inline">\(z_n\)</span>: <span class="math inline">\(2/(n - 1 + 1) = 2/n\)</span>. Solo se comparan si alguno de los dos es el primer pivote elegido de todo el arreglo.</li>
+<li><span class="math inline">\(n^{\log_2 4} = n^2\)</span> domina a <span class="math inline">\(n\)</span>: caso 1, <span class="math inline">\(\Theta(n^2)\)</span>. Para la segunda, <span class="math inline">\(f(n) = n^2\)</span> domina a <span class="math inline">\(n^{\log_2 2} = n\)</span> y cumple la regularidad (<span class="math inline">\(2(n/2)^2 = n^2/2\)</span>): caso 3, <span class="math inline">\(\Theta(n^2)\)</span>.</li>
+<li>No. Con <span class="math inline">\(\langle 1_a, 1_b, 0\rangle\)</span> (ya es max-heap), el primer intercambio manda <span class="math inline">\(1_a\)</span> al final y deja <span class="math inline">\(\langle 0, 1_b\rangle\)</span>; tras <code>sift_down</code> y el segundo intercambio, <span class="math inline">\(1_b\)</span> queda en la posición 1: resultado <span class="math inline">\(\langle 0, 1_b, 1_a\rangle\)</span>, con <span class="math inline">\(1_a\)</span> y <span class="math inline">\(1_b\)</span> invertidos.</li>
+</ol>
+</details>
+<hr/>
+<h2 id="problem-set-5">12. Problem Set 5</h2>
+<p><strong>Teoría</strong></p>
+<ol type="1">
+<li>Demuestra que el número esperado de inversiones de una permutación uniforme es <span class="math inline">\(n(n-1)/4\)</span>, y concluye que <strong>todo</strong> algoritmo que solo intercambia elementos adyacentes hace <span class="math inline">\(\Omega(n^2)\)</span> intercambios en promedio.</li>
+<li>Demuestra el Lema 3 con todo detalle (invariante de ciclo de <code>merge</code>, incluida la estabilidad).</li>
+<li>Resuelve con el teorema maestro, o explica por qué no aplica: (a) <span class="math inline">\(T(n) = 3T(n/4) + n\lg n\)</span>; (b) <span class="math inline">\(T(n) = 2T(n/2) + n/\lg n\)</span>; (c) <span class="math inline">\(T(n) = 7T(n/2) + n^2\)</span>.</li>
+<li><strong>Selección en tiempo esperado lineal (quickselect).</strong> Modifica quicksort para encontrar el <span class="math inline">\(k\)</span>-ésimo menor recursando solo en la parte que lo contiene. Demuestra que el número esperado de comparaciones es a lo más <span class="math inline">\(4n\)</span>.</li>
+<li>Demuestra que encontrar el máximo <strong>y</strong> el mínimo de <span class="math inline">\(n\)</span> elementos requiere solo <span class="math inline">\(\lceil 3n/2\rceil - 2\)</span> comparaciones, y que eso es óptimo.</li>
+<li>Demuestra que cualquier algoritmo de comparaciones que <strong>combine</strong> dos listas ordenadas de tamaño <span class="math inline">\(n\)</span> cada una hace al menos <span class="math inline">\(2n - 1\)</span> comparaciones en el peor caso.</li>
+</ol>
+<p><strong>Implementación (C, C++ y Rust)</strong></p>
+<ol start="7" type="1">
+<li>Implementa <em>introsort</em>: quicksort que cambia a heapsort si la profundidad pasa de <span class="math inline">\(2\lfloor\lg n\rfloor\)</span>. Construye una entrada que active el cambio con un pivote determinista (mediana de 3) y verifica que se mantiene <span class="math inline">\(O(n\lg n)\)</span>.</li>
+<li>Implementa mergesort de abajo hacia arriba (sin recursión) y compara su tiempo con el recursivo para <span class="math inline">\(n = 10^6\)</span>.</li>
+<li>Instrumenta tus implementaciones para contar comparaciones y verifica empíricamente: inserción <span class="math inline">\(\approx n^2/4\)</span>, mergesort <span class="math inline">\(\le n\lceil\lg n\rceil\)</span>, quicksort <span class="math inline">\(\approx 1.39\,n\lg n\)</span>, heapsort <span class="math inline">\(\approx 2n\lg n\)</span>, para entradas aleatorias de tamaño <span class="math inline">\(2^{10}, \dots, 2^{16}\)</span>.</li>
+<li>Implementa <code>nth_element</code> (quickselect del ej. 4) con la misma interfaz que el lab en los tres lenguajes, con tests contra un oráculo.</li>
+</ol>
+<hr/>
+<h2 id="referencias">Referencias</h2>
+<ul>
+<li>CLRS, <em>Introduction to Algorithms</em>, 4ª ed.: Cap. 2 (inserción, mergesort), Cap. 4 (recurrencias, teorema maestro), Cap. 6 (heapsort), Cap. 7 (quicksort; §7.4 análisis), Cap. 8 (cota inferior, counting, radix), §9.2 (selección).</li>
+<li>MIT 6.006 (Spring 2020), Lectures 3 (<em>Sorting</em>) y 5 (<em>Linear Sorting</em>).</li>
+<li>Sedgewick, R. y Wayne, K. <em>Algorithms</em>, 4ª ed., §2.3 (quicksort de 3 vías, Dijkstra).</li>
+<li>Musser, D. (1997). <em>Introspective Sorting and Selection Algorithms</em>. Software: Practice and Experience.</li>
+<li>Peters, O. (2021). <em>Pattern-defeating Quicksort</em>. arXiv:2106.05123.</li>
+</ul>
+</main><footer>algolib · Estructuras de Datos y Algoritmos. Fuente: <code>notas/L05-ordenamiento.md</code>. Regenerar con <code>make html</code>.</footer><script>{
+
+const KEY='algolib-lang';let pref='cpp';try{pref=localStorage.getItem(KEY)||'cpp'}catch(e){}
+function pick(lang,save){
+  for(const g of document.querySelectorAll('.tabs')){
+    const btns=[...g.querySelectorAll('[role=tab]')];if(!btns.length)continue;
+    const b=btns.find(x=>x.dataset.lang===lang)||btns[0];
+    for(const x of btns){const on=x===b;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;
+      document.getElementById(x.getAttribute('aria-controls')).hidden=!on;}
+  }
+  if(save){try{localStorage.setItem(KEY,lang)}catch(e){}}
+}
+for(const g of document.querySelectorAll('.tablist')){
+  g.addEventListener('click',e=>{const b=e.target.closest('[role=tab]');if(b){const y=b.getBoundingClientRect().top;pick(b.dataset.lang,true);window.scrollBy(0,b.getBoundingClientRect().top-y);}});
+  g.addEventListener('keydown',e=>{const bs=[...g.querySelectorAll('[role=tab]')];const i=bs.indexOf(document.activeElement);
+    if(i<0)return;let j=i;if(e.key==='ArrowRight')j=(i+1)%bs.length;else if(e.key==='ArrowLeft')j=(i-1+bs.length)%bs.length;else return;
+    e.preventDefault();pick(bs[j].dataset.lang,true);bs[j].focus();});
+}
+pick(pref,false);
+for(const p of document.querySelectorAll('main pre:not(.pizarra):not(.salida)')){
+  const b=document.createElement('button');b.className='copy';b.type='button';b.textContent='Copiar';
+  b.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(p.innerText.replace(/Copiar$/,''));b.textContent='Copiado';}catch(e){b.textContent='No se pudo';}setTimeout(()=>b.textContent='Copiar',1600);});
+  p.appendChild(b);}
+}</script></body></html>

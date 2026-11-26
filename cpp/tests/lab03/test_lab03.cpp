@@ -46,6 +46,41 @@ TEST(flist_move) {
     a.push_front(1);
     ForwardList<int> b = std::move(a);
     CHECK_EQ(b.front(), 1);
+    CHECK(a.empty());
+    CHECK_EQ(a.size(), 0u);  // el objeto movido queda vacío y coherente
+    ForwardList<int> grande;
+    for (int i = 0; i < 1'000'000; ++i) grande.push_front(i);
+    grande = std::move(b);   // libera el millón de nodos: debe ser iterativo
+    CHECK_EQ(grande.size(), 1u);
+    CHECK_EQ(grande.front(), 1);
+}
+
+namespace {
+struct Tracked {
+    static inline int alive = 0;
+    int v;
+    Tracked(int x) : v(x) { ++alive; }
+    Tracked(const Tracked& o) : v(o.v) { ++alive; }
+    ~Tracked() { --alive; }
+};
+}  // namespace
+
+TEST(listas_sin_fugas) {
+    Tracked::alive = 0;
+    {
+        ForwardList<Tracked> f;
+        DList<Tracked> d;
+        for (int i = 0; i < 100; ++i) {
+            f.push_front(Tracked(i));
+            if (i % 2) d.push_front(Tracked(i)); else d.push_back(Tracked(i));
+        }
+        f.reverse();
+        f.pop_front();
+        d.pop_front();
+        d.pop_back();
+        CHECK_EQ(Tracked::alive, 99 + 98);
+    }
+    CHECK_EQ(Tracked::alive, 0);  // los destructores liberaron todo
 }
 
 TEST(dlist_deque_basico) {

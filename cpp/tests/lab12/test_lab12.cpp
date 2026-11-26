@@ -98,3 +98,13 @@ TEST(coin_change) {
     CHECK(!coin_change_min({2}, 3).has_value());
     CHECK_EQ(*coin_change_min({186, 419, 83, 408}, 6249), 20u);
 }
+
+TEST(lis_grande_nlgn) {
+    // 1000 bloques de 200 valores DECRECIENTES, con los bloques en orden creciente:
+    // la LIS toma exactamente un valor por bloque ⇒ 1000. n = 200 000: el algoritmo
+    // cuadrático hace ~2·10¹⁰ comparaciones y no termina a tiempo.
+    std::vector<std::int64_t> a;
+    for (std::int64_t b = 0; b < 1000; ++b)
+        for (std::int64_t j = 199; j >= 0; --j) a.push_back(b * 200 + j);
+    CHECK_EQ(lis_length(a), 1000u);
+}

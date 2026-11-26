@@ -115,10 +115,13 @@ inline int run(const char* suite) {
             ::algotest::fail(__FILE__, __LINE__, "CHECK(" #__VA_ARGS__ ")");    \
     } while (0)
 
+// Copia (no referencia) los dos lados: si `a` es `*f()` con f() devolviendo un
+// temporal (p. ej. un std::optional), una referencia quedaría colgando al terminar
+// la expresión; la extensión de vida de los temporales no atraviesa operator*.
 #define CHECK_EQ(a, b)                                                          \
     do {                                                                        \
-        const auto& va_ = (a);                                                  \
-        const auto& vb_ = (b);                                                  \
+        const auto va_ = (a);                                                   \
+        const auto vb_ = (b);                                                   \
         if (!(va_ == vb_))                                                      \
             ::algotest::fail(__FILE__, __LINE__,                                \
                              "CHECK_EQ(" #a ", " #b ")  →  " +                  \

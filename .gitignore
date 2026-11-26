@@ -1,6 +1,7 @@
 # compilación
 cpp/build/
 c/build/
+c/build-fugas/
 rust/target/
 # copias que deja `make actualizar`
 *.nuevo
@@ -8,3 +9,5 @@ rust/target/
 .DS_Store
 .vscode/
 .idea/
+# entorno de python para make html
+.venv/

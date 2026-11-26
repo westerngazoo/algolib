@@ -5,7 +5,7 @@ use common::Lcg;
 fn main() {
     common::run(
         "lab11",
-        cases![dsu_basico, dsu_grande_y_profundo, mst_ejemplo_clrs_23_1, mst_no_conexo, mst_aleatorio_vs_fuerza_bruta],
+        cases![dsu_basico, dsu_grande_y_profundo, mst_ejemplo_clrs_23_1, mst_no_conexo, mst_aleatorio_vs_fuerza_bruta, mst_grande_kruskal_igual_prim],
     );
 }
 
@@ -82,4 +82,19 @@ fn mst_aleatorio_vs_fuerza_bruta() {
         assert_eq!(kruskal(n, &es), o);
         assert_eq!(prim(n, &es), o);
     }
+}
+
+/// 200 000 vértices, ~10⁶ aristas (con un camino que garantiza conexidad).
+/// Kruskal y Prim deben coincidir; un Prim Θ(V²) no termina a tiempo.
+fn mst_grande_kruskal_igual_prim() {
+    let n = 200_000usize;
+    let mut rng = Lcg::new(20);
+    let mut es: Vec<Edge> = (0..n - 1).map(|i| e(i, i + 1, 1_000_000 + rng.range(0, 1000))).collect();
+    for _ in 0..800_000 {
+        let (u, v) = (rng.below(n as u64) as usize, rng.below(n as u64) as usize);
+        es.push(e(u, v, rng.range(-1000, 1_000_000)));
+    }
+    let k = kruskal(n, &es);
+    assert!(k.is_some());
+    assert_eq!(k, prim(n, &es));
 }

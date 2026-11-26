@@ -48,3 +48,17 @@ TEST(ostat_aleatorio_vs_vector_ordenado) {
         }
     }
 }
+
+TEST(ostat_select_rank_logaritmicos) {
+    // 200 000 claves insertadas EN ORDEN (exige balanceo) y 200 000 consultas de
+    // select y de rank. Con select/rank lineales serían ~4·10¹⁰ pasos: no termina.
+    const int n = 200000;
+    OrderStatSet<int> s;
+    for (int i = 0; i < n; ++i) s.insert(2 * i);
+    algotest::Lcg rng(14);
+    for (int q = 0; q < n; ++q) {
+        int k = (int)rng.below(n);
+        CHECK_EQ(*s.select(k), 2 * k);
+        CHECK_EQ(s.rank(2 * k + 1), (std::size_t)k + 1);
+    }
+}

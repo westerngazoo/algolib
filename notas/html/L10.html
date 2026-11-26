@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>L10 · Notas · Estructuras de Datos y Algoritmos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: apuntes de curso universitario, sobrios y precisos; el guion habla en voz de profesor.
+   IDEA: cuaderno de clase técnico con pizarrón: hoja limpia, recuadros de pizarra verde para lo que se escribe.
+   PICTURE: diagramas SVG propios de cada lección (cotas, arreglos, costos), sobre placa blanca.
+   COLOUR and TYPE: tira cobalto #1240e0, hoja blanca, zonas #eef2ff, acento naranja quemado; Space Grotesk + Inter + JetBrains Mono.
+   LAYOUT: tira de título a todo el ancho, fila de secciones, columna de lectura de 780px; figuras y tablas hasta 900px. */
+:root{color-scheme:light dark;
+ --bg:light-dark(#ffffff,#0b0e17);--ink:light-dark(#111827,#e6e9f2);--muted:light-dark(#5b6270,#9aa3b5);
+ --cob:#1240e0;--cob-ink:light-dark(#1240e0,#8fa8ff);--pale:light-dark(#eef2ff,#141b33);--line:light-dark(#dfe4f2,#252c44);
+ --acc:light-dark(#c2410c,#fb923c);--acc-pale:light-dark(#fff1e6,#2a1a10);--ok:light-dark(#15803d,#4ade80);
+ --chalk-bg:#1f3a2e;--chalk:#eef3e8;--chalk-dim:#a9c2b2;--wood:#7a5a33}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Inter,system-ui,sans-serif;overflow-x:clip}
+a{color:var(--cob-ink)}
+.strip{background:var(--cob);color:#fff;padding:clamp(22px,3.5vw,44px) max(5vw,16px) clamp(20px,3vw,34px)}
+.strip .curso{font:600 14px/1.3 'Space Grotesk',sans-serif;opacity:.85;margin:0 0 10px}
+.strip h1{font:700 clamp(30px,4.6vw,48px)/1.06 'Space Grotesk',sans-serif;margin:0;text-wrap:balance;max-width:24ch}
+.strip .desc{margin:14px 0 0;max-width:62ch;opacity:.92;font-size:16px}
+.pages{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.pages a{color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.45);border-radius:999px;padding:6px 14px;font-size:14px;line-height:1.3}
+.pages a[aria-current]{background:#fff;color:var(--cob)}
+.pages a:hover{background:rgba(255,255,255,.16)}
+nav.toc{border-bottom:1px solid var(--line);background:var(--bg);z-index:5}
+nav.toc .scroll{display:flex;gap:4px;padding:8px max(5vw,16px);white-space:nowrap}
+nav.toc a{flex:none;text-decoration:none;color:var(--muted);font-size:14px;padding:6px 10px;border-radius:8px}
+nav.toc a:hover{background:var(--pale);color:var(--ink)}
+@media(min-width:900px){nav.toc{position:sticky;top:0}}
+main{max-width:820px;margin:0 auto;padding:28px max(4vw,16px) 80px}
+main h1{font:700 32px/1.1 'Space Grotesk',sans-serif;margin:56px 0 12px;padding-top:18px;border-top:4px solid var(--cob);color:var(--cob-ink)}
+main h2{font:700 26px/1.2 'Space Grotesk',sans-serif;margin:48px 0 10px;text-wrap:balance}
+main h3{font:600 21px/1.25 'Space Grotesk',sans-serif;margin:36px 0 8px}
+main h4{font:600 18px/1.3 'Space Grotesk',sans-serif;margin:28px 0 6px}
+.tiempo{display:inline-block;vertical-align:middle;margin-left:8px;font:500 13px/1 Inter,sans-serif;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:4px 9px}
+p,li{max-width:70ch}
+hr{border:0;border-top:1px solid var(--line);margin:40px 0}
+blockquote{margin:16px 0;padding:12px 18px;border-left:4px solid var(--cob);background:var(--pale);border-radius:0 10px 10px 0}
+blockquote p{margin:6px 0}
+code{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.88em;background:var(--pale);padding:1px 5px;border-radius:5px;overflow-wrap:anywhere}
+pre{position:relative;overflow-x:auto;background:light-dark(#f6f7fb,#11162a);border:1px solid var(--line);border-radius:10px;padding:14px 16px;font:14px/1.55 'JetBrains Mono',ui-monospace,monospace}
+pre code{background:none;padding:0;font-size:inherit;overflow-wrap:normal}
+.copy{position:absolute;top:8px;right:8px;font:600 12px Inter,sans-serif;border:1px solid var(--line);background:var(--bg);color:var(--muted);border-radius:7px;padding:6px 10px;min-height:32px;cursor:pointer}
+.copy:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;margin:16px 0;font-size:15px;width:100%}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-weight:600;background:var(--pale)}
+figure{margin:26px 0;padding:0}
+figure svg{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:12px}
+figcaption{color:var(--muted);font-size:14px;margin-top:8px}
+details{margin:12px 0;border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:var(--bg)}
+summary{cursor:pointer;font-weight:600;color:var(--cob-ink);min-height:28px}
+.callout{margin:16px 0;padding:12px 16px 12px 16px;border-radius:10px;border:1px solid var(--line)}
+.callout>.lbl{display:block;font:700 12px/1.2 Inter,sans-serif;letter-spacing:.02em;margin-bottom:4px}
+.dice{background:light-dark(#f8fafc,#121726);border-left:5px solid var(--ink)}
+.dice>.lbl{color:var(--ink)}
+.pregunta{background:var(--pale);border-left:5px solid var(--cob)}
+.pregunta>.lbl{color:var(--cob-ink)}
+.pregunta+blockquote{margin-top:-10px;border-left-color:var(--ok);background:light-dark(#f0fdf4,#0f1f16)}
+.pregunta+blockquote::before{content:"Respuesta esperada";display:block;font:700 12px Inter,sans-serif;color:var(--ok);margin-bottom:2px}
+.nota{background:light-dark(#fffbea,#211d0c);border-left:5px solid #ca8a04}
+.nota>.lbl{color:light-dark(#a16207,#facc15)}
+.atencion{background:var(--acc-pale);border-left:5px solid var(--acc)}
+.atencion>.lbl{color:var(--acc)}
+.ejercicio{display:inline-block;font:700 12px Inter,sans-serif;color:#fff;background:var(--acc);border-radius:6px;padding:2px 8px;margin-right:6px;vertical-align:2px}
+.moneda{display:inline-block;width:.9em;height:.9em;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fde68a,#d97706);vertical-align:-1px;margin-right:4px}
+.pizarra-label{display:table!important;margin:22px 0 0;font:600 13px/1.3 Inter,sans-serif;color:var(--chalk-dim);background:var(--chalk-bg);display:inline-block;padding:6px 12px;border-radius:8px 8px 0 0;border:6px solid var(--wood);border-bottom:0}
+.pizarra-label b{color:#fff}
+pre.pizarra,div.pizarra{margin-top:0;background:var(--chalk-bg);color:var(--chalk);border:6px solid var(--wood);border-radius:0 10px 10px 10px;box-shadow:inset 0 0 40px rgba(0,0,0,.35);font:15px/1.6 'JetBrains Mono',ui-monospace,monospace;padding:16px 18px;overflow-x:auto;white-space:pre}
+table.pizarra{border:6px solid var(--wood);background:var(--chalk-bg);color:var(--chalk);margin-top:0}
+table.pizarra th{background:#2a4a3c;color:#fff}table.pizarra td,table.pizarra th{border-color:#3d5e4f}
+mjx-container[display=true]{overflow-x:auto;overflow-y:hidden;max-width:100%}
+mjx-container:not([display]){display:inline-block;max-width:100%;overflow-x:auto;overflow-y:hidden;vertical-align:middle}
+.lessons{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px;margin:24px 0}
+.lessons a{display:block;text-decoration:none;color:var(--ink);background:var(--pale);border:1px solid var(--line);border-radius:12px;padding:18px}
+.lessons a:hover{border-color:var(--cob)}
+.lessons b{display:block;font:700 19px/1.2 'Space Grotesk',sans-serif;color:var(--cob-ink);margin-bottom:6px}
+.lessons span{color:var(--muted);font-size:15px}
+footer{color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding:24px max(5vw,16px)}
+@media(max-width:600px){body{font-size:16px}table{font-size:13px}pre.pizarra,div.pizarra{font-size:13px}main h1{font-size:27px}main h2{font-size:23px}}
+
+/* pestañas de código */
+.tabs{margin:20px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:light-dark(#f6f7fb,#11162a)}
+.tablist{display:flex;gap:2px;padding:6px 6px 0;background:var(--pale);border-bottom:1px solid var(--line);overflow-x:auto}
+.tablist button{font:600 14px Inter,sans-serif;color:var(--muted);background:none;border:0;border-radius:8px 8px 0 0;padding:10px 16px;min-height:44px;cursor:pointer;white-space:nowrap}
+.tablist button[aria-selected=true]{background:light-dark(#f6f7fb,#11162a);color:var(--cob-ink);box-shadow:inset 0 3px 0 var(--cob)}
+.tablist button:focus-visible{outline:3px solid var(--acc);outline-offset:-3px}
+.tablist .badge{font:600 11px Inter,sans-serif;color:var(--acc);margin-left:6px}
+.tabs .panel pre{margin:0;border:0;border-radius:0}
+.tabs .panel[hidden]{display:none}
+pre.salida{background:light-dark(#0f172a,#05070d);color:#d1fae5;border-color:#0f172a;margin-top:-8px;padding-top:30px}
+pre.salida::before{content:"Salida";position:absolute;top:8px;left:16px;font:700 11px Inter,sans-serif;color:#6ee7b7;letter-spacing:.03em}
+pre.salida .copy{display:none}
+/* resaltado de sintaxis (clases de pandoc) */
+code span.kw,code span.cf{color:light-dark(#1d4ed8,#93b4ff);font-weight:600}
+code span.dt{color:light-dark(#7c3aed,#c4b5fd)}
+code span.dv,code span.bn,code span.fl,code span.cn{color:light-dark(#b45309,#fbbf24)}
+code span.st,code span.ch,code span.ss,code span.sc{color:light-dark(#047857,#6ee7b7)}
+code span.co,code span.do,code span.cv{color:light-dark(#6b7280,#8b95a7);font-style:italic}
+code span.pp,code span.im,code span.at{color:light-dark(#be185d,#f9a8d4)}
+code span.fu,code span.bu{color:light-dark(#0e7490,#67e8f9)}
+code span.op{color:light-dark(#374151,#cbd5e1)}
+code span.er,code span.al{color:var(--acc)}
+pre.sourceCode a{display:none}
+@media print{nav.toc,.copy,.tablist{display:none}.tabs .panel[hidden]{display:block}.strip{background:none;color:#000}}
+</style>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+</head><body>
+<header class="strip"><p class="curso">algolib · Estructuras de Datos y Algoritmos</p><h1>Lección 10 — Caminos mínimos con pesos</h1><p class="desc">Relajación, caminos en DAG, Bellman-Ford, Dijkstra con inserción perezosa y Floyd-Warshall.</p><div class="pages"><a href="index.html">Inicio</a><a href="L00.html">L00 · Prerrequisitos</a><a href="L01.html">L01 · Notas</a><a href="L02.html">L02 · Notas</a><a href="L03.html">L03 · Notas</a><a href="L04.html">L04 · Notas</a><a href="L05.html">L05 · Notas</a><a href="L06.html">L06 · Notas</a><a href="L07.html">L07 · Notas</a><a href="L08.html">L08 · Notas</a><a href="L09.html">L09 · Notas</a><a href="L10.html" aria-current="page">L10 · Notas</a><a href="L11.html">L11 · Notas</a><a href="L12.html">L12 · Notas</a><a href="L13.html">L13 · Notas</a></div></header><nav class="toc" aria-label="Secciones"><div class="scroll"><a href="#objetivos-de-aprendizaje">Objetivos de aprendizaje</a><a href="#mapa-de-la-lección">Mapa de la lección</a><a href="#el-problema">1. El problema</a><a href="#relajación">2. Relajación</a><a href="#caminos-mínimos-en-un-dag">3. Caminos mínimos en un DAG</a><a href="#bellman-ford">4. Bellman-Ford</a><a href="#dijkstra">5. Dijkstra</a><a href="#todos-los-pares-floyd-warshall">6. Todos los pares: Floyd-Warshall</a><a href="#infinito-desbordamiento-y-paradigmas">7. Infinito, desbordamiento y pa…</a><a href="#qué-algoritmo-uso">8. ¿Qué algoritmo uso?</a><a href="#guía-del-lab-10">9. Guía del Lab 10</a><a href="#comprueba-tu-comprensión">10. Comprueba tu comprensión</a><a href="#problem-set-10">11. Problem Set 10</a><a href="#referencias">Referencias</a></div></nav><main><blockquote>
+<p><strong>Prerrequisitos:</strong> Lección 6 (heaps; <code>decrease_key</code> e inserción perezosa) y Lección 9 completa (BFS, DFS, orden topológico).</p>
+<p><strong>Cómo estudiar esta lección:</strong> los cuatro algoritmos son variaciones de <strong>una sola operación</strong>, la relajación, aplicada en órdenes distintos. Antes de cada algoritmo, pregúntate: <em>¿en qué orden relaja las aristas, y por qué ese orden garantiza el resultado?</em></p>
+<p><strong>Lab asociado:</strong> <code>lab10</code>: Dijkstra, Bellman-Ford, caminos en DAG y Floyd-Warshall (C, C++ y Rust). Dijkstra reutiliza tu <code>BinaryHeap</code> del lab06.</p>
+</blockquote>
+<h2 id="objetivos-de-aprendizaje">Objetivos de aprendizaje</h2>
+<p>Al terminar esta lección deberías poder:</p>
+<ol type="1">
+<li>Definir el problema de caminos mínimos con pesos, y explicar qué pasa con los pesos y los ciclos negativos.</li>
+<li>Enunciar y demostrar las propiedades de la <strong>relajación</strong>: cota superior y relajación de caminos.</li>
+<li>Demostrar la corrección de los caminos mínimos en un <strong>DAG</strong> (<span class="math inline">\(O(V+E)\)</span>), de <strong>Bellman-Ford</strong> (<span class="math inline">\(O(VE)\)</span>, con detección de ciclos negativos) y de <strong>Dijkstra</strong> (<span class="math inline">\(O((V+E)\lg V)\)</span> con pesos no negativos).</li>
+<li>Formular <strong>Floyd-Warshall</strong> como programación dinámica y demostrar su corrección.</li>
+<li>Elegir el algoritmo correcto según los pesos, la estructura del grafo y la pregunta (un origen o todos los pares).</li>
+<li>Representar “infinito” de forma segura en C, C++ y Rust.</li>
+</ol>
+<h2 id="mapa-de-la-lección">Mapa de la lección</h2>
+<figure>
+<svg aria-label="Mapa de la lección 10" fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" role="img" viewbox="0 0 760 300" xmlns="http://www.w3.org/2000/svg">
+<title>Mapa de la lección 10</title>
+<defs>
+<marker id="ar" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#111827"></path></marker>
+<marker id="arc" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#1240e0"></path></marker>
+<marker id="ara" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"></path></marker>
+</defs>
+<rect fill="#ffffff" height="300" rx="12" width="760"></rect>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="40" y="26"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="54" y="50">§1</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="54" y="70">El problema</text>
+<rect fill="#1240e0" height="58" rx="10" stroke="#1240e0" stroke-width="2" width="200" x="290" y="26"></rect>
+<text fill="#dbe4ff" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="304" y="50">§2</text>
+<text fill="#ffffff" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="304" y="70">Relajación</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="540" y="26"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="554" y="50">§3</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="554" y="70">DAG</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="40" y="124"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="54" y="148">§6</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="54" y="168">Floyd-Warshall</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="290" y="124"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="304" y="148">§5</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="304" y="168">Dijkstra</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="540" y="124"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="554" y="148">§4</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="554" y="168">Bellman-Ford</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="40" y="222"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="54" y="246">§7</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="54" y="266">Infinito y paradigmas</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="290" y="222"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="304" y="246">§8–9</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="304" y="266">¿Cuál uso? y lab</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="540" y="222"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="554" y="246">§10–11</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="554" y="266">Ejercicios</text>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="244" x2="286" y1="55.0" y2="55.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="494" x2="536" y1="55.0" y2="55.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="640.0" x2="640.0" y1="87" y2="120"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="536" x2="494" y1="153.0" y2="153.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="286" x2="244" y1="153.0" y2="153.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="140.0" x2="140.0" y1="185" y2="218"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="244" x2="286" y1="251.0" y2="251.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="494" x2="536" y1="251.0" y2="251.0"></line>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" text-anchor="start" x="400.0" y="106">relajar en el orden correcto: núcleo</text>
+</svg>
+<figcaption aria-hidden="true">Mapa de la lección 10</figcaption>
+</figure>
+<hr/>
+<h2 id="el-problema">1. El problema</h2>
+<p>Un <strong>grafo con pesos</strong> asigna a cada arista <span class="math inline">\((u, v)\)</span> un peso <span class="math inline">\(w(u, v)\)</span> (distancia, tiempo, costo). El peso de un camino es la suma de los pesos de sus aristas, y la <strong>distancia</strong> es <span class="math display">\[\delta(s, v) = \min\{\, w(p) : p \text{ camino de } s \text{ a } v \,\},\]</span> con <span class="math inline">\(\delta(s, v) = \infty\)</span> si <span class="math inline">\(v\)</span> no es alcanzable. Con todos los pesos iguales a 1, es la distancia de BFS (L09).</p>
+<p><strong>Pesos negativos.</strong> Aparecen en problemas reales (arbitraje de divisas con <span class="math inline">\(-\log\)</span> de las tasas de cambio, costos que pueden ser ganancias). Son válidos <strong>mientras no haya un ciclo de peso negativo alcanzable</strong>: si lo hay, se puede recorrer el ciclo tantas veces como se quiera y <span class="math inline">\(\delta = -\infty\)</span> para todo vértice alcanzable desde él.</p>
+<blockquote>
+<p><strong>Lema 1 (subestructura óptima).</strong> Todo subcamino de un camino mínimo es un camino mínimo.</p>
+</blockquote>
+<p><em>Demostración.</em> Si <span class="math inline">\(p = s \leadsto u \leadsto v\)</span> es mínimo y el tramo <span class="math inline">\(u \leadsto v\)</span> no lo fuera, reemplazándolo por uno más ligero obtendríamos un camino de <span class="math inline">\(s\)</span> a <span class="math inline">\(v\)</span> más ligero que <span class="math inline">\(p\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<blockquote>
+<p><strong>Lema 2 (desigualdad del triángulo).</strong> Para toda arista <span class="math inline">\((u, v)\)</span>: <span class="math inline">\(\delta(s, v) \le \delta(s, u) + w(u, v)\)</span>.</p>
+</blockquote>
+<p><em>Demostración.</em> Un camino mínimo a <span class="math inline">\(u\)</span> seguido de la arista <span class="math inline">\((u, v)\)</span> es un camino a <span class="math inline">\(v\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<p>Si no hay ciclos negativos, existe un camino mínimo <strong>simple</strong> (quitar un ciclo de peso <span class="math inline">\(\ge 0\)</span> no lo hace más pesado), así que tiene a lo más <span class="math inline">\(V - 1\)</span> aristas.</p>
+<hr/>
+<h2 id="relajación">2. Relajación</h2>
+<p>Todos los algoritmos de la lección mantienen un arreglo <span class="math inline">\(d\)</span> con estimaciones (<span class="math inline">\(d[s] = 0\)</span>, el resto <span class="math inline">\(\infty\)</span>) y lo mejoran con una sola operación:</p>
+<pre><code>relax(u, v):
+    si d[u] + w(u, v) &lt; d[v]:
+        d[v] ← d[u] + w(u, v);   padre[v] ← u</code></pre>
+<blockquote>
+<p><strong>Lema 3 (cota superior).</strong> En todo momento, <span class="math inline">\(d[v] \ge \delta(s, v)\)</span>, y si <span class="math inline">\(d[v] &lt; \infty\)</span>, es el peso de algún camino de <span class="math inline">\(s\)</span> a <span class="math inline">\(v\)</span>. Una vez que <span class="math inline">\(d[v] = \delta(s, v)\)</span>, no vuelve a cambiar.</p>
+</blockquote>
+<p><em>Demostración.</em> Por inducción sobre las relajaciones: si <span class="math inline">\(d[u]\)</span> es el peso de un camino a <span class="math inline">\(u\)</span>, entonces <span class="math inline">\(d[u] + w(u, v)\)</span> es el peso de un camino a <span class="math inline">\(v\)</span>, que no puede ser menor que <span class="math inline">\(\delta(s, v)\)</span>. Como <span class="math inline">\(d[v]\)</span> solo baja y nunca por debajo de <span class="math inline">\(\delta\)</span>, cuando la alcanza se queda. <span class="math inline">\(\blacksquare\)</span></p>
+<blockquote>
+<p><strong>Lema 4 (relajación de caminos).</strong> Sea <span class="math inline">\(s = v_0, v_1, \dots, v_k\)</span> un camino mínimo. Si se relajan las aristas <span class="math inline">\((v_0, v_1), (v_1, v_2), \dots, (v_{k-1}, v_k)\)</span> <strong>en ese orden</strong> (aunque haya otras relajaciones intercaladas), al final <span class="math inline">\(d[v_k] = \delta(s, v_k)\)</span>.</p>
+</blockquote>
+<p><em>Demostración.</em> Inducción sobre <span class="math inline">\(i\)</span>: tras relajar <span class="math inline">\((v_{i-1}, v_i)\)</span>, <span class="math inline">\(d[v_i] = \delta(s, v_i)\)</span>. Base: <span class="math inline">\(d[v_0] = 0 = \delta(s, s)\)</span> (no hay ciclos negativos). Paso: justo antes de relajar <span class="math inline">\((v_{i-1}, v_i)\)</span>, <span class="math inline">\(d[v_{i-1}] = \delta(s, v_{i-1})\)</span> (hipótesis y Lema 3); tras relajar, <span class="math inline">\(d[v_i] \le \delta(s, v_{i-1}) + w(v_{i-1}, v_i) = \delta(s, v_i)\)</span> (el prefijo de un camino mínimo es mínimo, Lema 1), y por el Lema 3, <span class="math inline">\(d[v_i] \ge \delta(s, v_i)\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<figure>
+<svg aria-label="Relajar la arista u→v baja d[v] de 9 a 7" fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" role="img" viewbox="0 0 760 200" xmlns="http://www.w3.org/2000/svg">
+<title>Relajar la arista u→v baja d[v] de 9 a 7</title>
+<defs>
+<marker id="ar" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#111827"></path></marker>
+<marker id="arc" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#1240e0"></path></marker>
+<marker id="ara" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"></path></marker>
+</defs>
+<rect fill="#ffffff" height="200" rx="12" width="760"></rect>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" x="150" y="30">antes</text>
+<circle cx="60" cy="110" fill="#eef2ff" r="26" stroke="#1240e0" stroke-width="1.6"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="16" font-weight="700" text-anchor="middle" x="60" y="116">u</text>
+<text fill="#1240e0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="60" y="160">d = 5</text>
+<circle cx="240" cy="110" fill="#eef2ff" r="26" stroke="#1240e0" stroke-width="1.6"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="16" font-weight="700" text-anchor="middle" x="240" y="116">v</text>
+<text fill="#1240e0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="240" y="160">d = 9</text>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.8" x1="88" x2="210" y1="110" y2="110"></line>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="600" text-anchor="middle" x="150" y="100">w = 2</text>
+<line marker-end="url(#arc)" stroke="#1240e0" stroke-width="2" x1="320" x2="420" y1="110" y2="110"></line>
+<text fill="#1240e0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="middle" x="370" y="95">relax(u, v)</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="400" text-anchor="middle" x="370" y="140">5 + 2 &lt; 9</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" x="580" y="30">después</text>
+<circle cx="490" cy="110" fill="#eef2ff" r="26" stroke="#1240e0" stroke-width="1.6"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="16" font-weight="700" text-anchor="middle" x="490" y="116">u</text>
+<text fill="#1240e0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="490" y="160">d = 5</text>
+<circle cx="670" cy="110" fill="#ffedd5" r="26" stroke="#c2410c" stroke-width="1.6"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="16" font-weight="700" text-anchor="middle" x="670" y="116">v</text>
+<text fill="#c2410c" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="670" y="160">d = 7</text>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.8" x1="518" x2="640" y1="110" y2="110"></line>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="600" text-anchor="middle" x="580" y="100">w = 2</text>
+</svg>
+<figcaption aria-hidden="true">Relajar una arista</figcaption>
+</figure>
+<p><strong>El Lema 4 es la llave de toda la lección:</strong> cada algoritmo es una estrategia para garantizar que, para todo <span class="math inline">\(v\)</span>, las aristas de <strong>algún</strong> camino mínimo a <span class="math inline">\(v\)</span> se relajen en orden.</p>
+<hr/>
+<h2 id="caminos-mínimos-en-un-dag">3. Caminos mínimos en un DAG</h2>
+<p>Si el grafo es acíclico: tomar un orden topológico (L09 §4) y relajar las aristas salientes de cada vértice <strong>en ese orden</strong>.</p>
+<blockquote>
+<p><strong>Teorema 5.</strong> En un DAG, con pesos arbitrarios (incluso negativos), este algoritmo calcula <span class="math inline">\(\delta(s, \cdot)\)</span> en <span class="math inline">\(O(V + E)\)</span>.</p>
+</blockquote>
+<p><em>Demostración.</em> Todo camino <span class="math inline">\(v_0, \dots, v_k\)</span> visita sus vértices en orden topológico, así que sus aristas se relajan en el orden del camino: Lema 4. Costo: el orden topológico es <span class="math inline">\(O(V+E)\)</span> y cada arista se relaja una vez. <span class="math inline">\(\blacksquare\)</span></p>
+<p>Las soluciones del lab hacen el orden topológico (Kahn) y la relajación <strong>en la misma pasada</strong>: cuando un vértice sale de la lista de listos, todos sus predecesores ya salieron.</p>
+<p><strong>Aplicación: la ruta crítica.</strong> En un proyecto con tareas y dependencias (un DAG), la duración mínima del proyecto es el camino <strong>más largo</strong> desde el inicio. Basta negar los pesos: el camino más largo en un DAG es el camino mínimo con pesos negados. (En un grafo con ciclos, el camino simple más largo es NP-difícil.)</p>
+<hr/>
+<h2 id="bellman-ford">4. Bellman-Ford</h2>
+<p>Pesos arbitrarios, grafo arbitrario. La estrategia más simple posible: relajar <strong>todas</strong> las aristas, <span class="math inline">\(V - 1\)</span> veces.</p>
+<pre><code>Bellman-Ford(G, s):
+    repetir V − 1 veces:
+        para cada arista (u, v):  relax(u, v)
+    para cada arista (u, v):
+        si d[u] + w(u, v) &lt; d[v]:  devolver "hay un ciclo negativo"</code></pre>
+<blockquote>
+<p><strong>Teorema 6.</strong> Si no hay ciclos negativos alcanzables desde <span class="math inline">\(s\)</span>, Bellman-Ford termina con <span class="math inline">\(d = \delta(s, \cdot)\)</span>. Si los hay, lo detecta. Cuesta <span class="math inline">\(O(VE)\)</span>.</p>
+</blockquote>
+<p><em>Demostración.</em> <em>Sin ciclos negativos:</em> todo <span class="math inline">\(v\)</span> alcanzable tiene un camino mínimo simple <span class="math inline">\(v_0, \dots, v_k\)</span> con <span class="math inline">\(k \le V - 1\)</span>. En la ronda <span class="math inline">\(i\)</span> se relajan todas las aristas, en particular <span class="math inline">\((v_{i-1}, v_i)\)</span>: las aristas del camino se relajan en orden (en las rondas <span class="math inline">\(1, 2, \dots, k\)</span>). Lema 4. Y la última pasada no encuentra mejoras por el Lema 2.</p>
+<p><em>Con un ciclo negativo</em> <span class="math inline">\(c = v_0, v_1, \dots, v_k = v_0\)</span> alcanzable: supongamos que la última pasada no encuentra mejoras, es decir, <span class="math inline">\(d[v_i] \le d[v_{i-1}] + w(v_{i-1}, v_i)\)</span> para todo <span class="math inline">\(i\)</span> (con todos los <span class="math inline">\(d[v_i]\)</span> finitos, porque el ciclo es alcanzable). Sumando sobre el ciclo: <span class="math display">\[\sum_{i=1}^k d[v_i] \le \sum_{i=1}^k d[v_{i-1}] + \sum_{i=1}^k w(v_{i-1}, v_i).\]</span> Las dos primeras sumas son iguales (recorren los mismos vértices), así que <span class="math inline">\(0 \le w(c) &lt; 0\)</span>. Contradicción: alguna arista sí mejora. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Detalle del lab.</strong> Las soluciones cortan en cuanto una ronda no cambia nada (ya se llegó al punto fijo), y si la ronda número <span class="math inline">\(V\)</span> todavía cambia algo, reportan ciclo negativo. El test <code>bellman_ford_ciclo_negativo</code> verifica las dos mitades del contrato: un ciclo negativo <strong>alcanzable</strong> da <code>None</code>; uno <strong>no alcanzable</strong> desde <span class="math inline">\(s\)</span> no afecta y se devuelven las distancias.</p>
+<hr/>
+<h2 id="dijkstra">5. Dijkstra</h2>
+<h3 id="el-algoritmo">5.1 El algoritmo</h3>
+<p>Si los pesos son <strong>no negativos</strong>, hay una estrategia mucho más rápida: procesar los vértices <strong>en orden de distancia</strong>, como BFS procesa por capas.</p>
+<pre><code>Dijkstra(G, s):
+    d[s] ← 0;  Q ← cola de prioridad con todos los vértices por d
+    mientras Q no vacía:
+        u ← extraer el de menor d
+        para cada (u, v):  relax(u, v)        -- y actualizar la prioridad de v</code></pre>
+<h3 id="corrección">5.2 Corrección</h3>
+<blockquote>
+<p><strong>Teorema 7.</strong> Con pesos <span class="math inline">\(w \ge 0\)</span>, cuando Dijkstra extrae un vértice <span class="math inline">\(u\)</span>, <span class="math inline">\(d[u] = \delta(s, u)\)</span>.</p>
+</blockquote>
+<p><em>Demostración.</em> Sea <span class="math inline">\(S\)</span> el conjunto de vértices ya extraídos. Supongamos, por contradicción, que <span class="math inline">\(u\)</span> es el <strong>primer</strong> vértice extraído con <span class="math inline">\(d[u] &gt; \delta(s, u)\)</span> (en particular <span class="math inline">\(u\)</span> es alcanzable y <span class="math inline">\(u \ne s\)</span>). Sea <span class="math inline">\(p\)</span> un camino mínimo de <span class="math inline">\(s\)</span> a <span class="math inline">\(u\)</span>, y sea <span class="math inline">\((x, y)\)</span> su primera arista que sale de <span class="math inline">\(S\)</span>: <span class="math inline">\(x \in S\)</span>, <span class="math inline">\(y \notin S\)</span> (existe porque <span class="math inline">\(s \in S\)</span> y <span class="math inline">\(u \notin S\)</span>).</p>
+<ul>
+<li><span class="math inline">\(x\)</span> se extrajo antes, así que <span class="math inline">\(d[x] = \delta(s, x)\)</span> (por la minimalidad de <span class="math inline">\(u\)</span>), y al extraerlo se relajó <span class="math inline">\((x, y)\)</span>: <span class="math inline">\(d[y] \le \delta(s, x) + w(x, y) = \delta(s, y)\)</span> (Lema 1). Con el Lema 3, <span class="math inline">\(d[y] = \delta(s, y)\)</span>.</li>
+<li><span class="math inline">\(y\)</span> está en <span class="math inline">\(p\)</span> antes que <span class="math inline">\(u\)</span> y los pesos son <strong>no negativos</strong>, así que <span class="math inline">\(\delta(s, y) \le \delta(s, u)\)</span>.</li>
+<li>Dijkstra eligió <span class="math inline">\(u\)</span> y no <span class="math inline">\(y\)</span>, así que <span class="math inline">\(d[u] \le d[y]\)</span>.</li>
+</ul>
+<p>Juntando: <span class="math inline">\(d[u] \le d[y] = \delta(s, y) \le \delta(s, u) &lt; d[u]\)</span>. Contradicción. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>¿Dónde falla con pesos negativos?</strong> En el segundo punto: con una arista negativa más adelante, un vértice más lejano en el camino puede tener distancia <strong>menor</strong>. El programa lo muestra con 3 vértices: Dijkstra declara definitivo al vértice 1 con distancia 2, y después aparece un camino más corto que pasa por una arista de peso <span class="math inline">\(-4\)</span>.</p>
+<div class="tabs"><div aria-label="Lenguaje" class="tablist" role="tablist"><button aria-controls="t0-0" aria-selected="false" data-lang="c" id="t0-0-b" role="tab" tabindex="-1" type="button">C</button><button aria-controls="t0-1" aria-selected="false" data-lang="cpp" id="t0-1-b" role="tab" tabindex="-1" type="button">C++</button><button aria-controls="t0-2" aria-selected="false" data-lang="rust" id="t0-2-b" role="tab" tabindex="-1" type="button">Rust</button></div><div aria-labelledby="t0-0-b" class="panel" data-lang="c" id="t0-0" role="tabpanel"><div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a aria-hidden="true" href="#cb4-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdbool.h&gt;</span></span>
+<span id="cb4-2"><a aria-hidden="true" href="#cb4-2" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb4-3"><a aria-hidden="true" href="#cb4-3" tabindex="-1"></a></span>
+<span id="cb4-4"><a aria-hidden="true" href="#cb4-4" tabindex="-1"></a><span class="pp">#define N </span><span class="dv">3</span></span>
+<span id="cb4-5"><a aria-hidden="true" href="#cb4-5" tabindex="-1"></a><span class="pp">#define INF </span><span class="dv">1000000</span></span>
+<span id="cb4-6"><a aria-hidden="true" href="#cb4-6" tabindex="-1"></a><span class="co">/* aristas: 0→1 (2), 0→2 (5), 2→1 (−4).  δ(0, 1) = 5 − 4 = 1 */</span></span>
+<span id="cb4-7"><a aria-hidden="true" href="#cb4-7" tabindex="-1"></a><span class="dt">static</span> <span class="dt">const</span> <span class="dt">int</span> w<span class="op">[</span>N<span class="op">][</span>N<span class="op">]</span> <span class="op">=</span> <span class="op">{{</span>INF<span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">5</span><span class="op">},</span> <span class="op">{</span>INF<span class="op">,</span> INF<span class="op">,</span> INF<span class="op">},</span> <span class="op">{</span>INF<span class="op">,</span> <span class="op">-</span><span class="dv">4</span><span class="op">,</span> INF<span class="op">}};</span></span>
+<span id="cb4-8"><a aria-hidden="true" href="#cb4-8" tabindex="-1"></a></span>
+<span id="cb4-9"><a aria-hidden="true" href="#cb4-9" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-10"><a aria-hidden="true" href="#cb4-10" tabindex="-1"></a>    <span class="dt">int</span> d<span class="op">[</span>N<span class="op">]</span> <span class="op">=</span> <span class="op">{</span><span class="dv">0</span><span class="op">,</span> INF<span class="op">,</span> INF<span class="op">};</span></span>
+<span id="cb4-11"><a aria-hidden="true" href="#cb4-11" tabindex="-1"></a>    <span class="dt">bool</span> listo<span class="op">[</span>N<span class="op">]</span> <span class="op">=</span> <span class="op">{</span><span class="kw">false</span><span class="op">};</span></span>
+<span id="cb4-12"><a aria-hidden="true" href="#cb4-12" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> paso <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> paso <span class="op">&lt;</span> N<span class="op">;</span> paso<span class="op">++)</span> <span class="op">{</span>     <span class="co">/* Dijkstra con arreglo: O(V²) */</span></span>
+<span id="cb4-13"><a aria-hidden="true" href="#cb4-13" tabindex="-1"></a>        <span class="dt">int</span> u <span class="op">=</span> <span class="op">-</span><span class="dv">1</span><span class="op">;</span></span>
+<span id="cb4-14"><a aria-hidden="true" href="#cb4-14" tabindex="-1"></a>        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> v <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> v <span class="op">&lt;</span> N<span class="op">;</span> v<span class="op">++)</span></span>
+<span id="cb4-15"><a aria-hidden="true" href="#cb4-15" tabindex="-1"></a>            <span class="cf">if</span> <span class="op">(!</span>listo<span class="op">[</span>v<span class="op">]</span> <span class="op">&amp;&amp;</span> <span class="op">(</span>u <span class="op">&lt;</span> <span class="dv">0</span> <span class="op">||</span> d<span class="op">[</span>v<span class="op">]</span> <span class="op">&lt;</span> d<span class="op">[</span>u<span class="op">]))</span> u <span class="op">=</span> v<span class="op">;</span></span>
+<span id="cb4-16"><a aria-hidden="true" href="#cb4-16" tabindex="-1"></a>        listo<span class="op">[</span>u<span class="op">]</span> <span class="op">=</span> <span class="kw">true</span><span class="op">;</span>                       <span class="co">/* "d[u] es definitivo" */</span></span>
+<span id="cb4-17"><a aria-hidden="true" href="#cb4-17" tabindex="-1"></a>        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> v <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> v <span class="op">&lt;</span> N<span class="op">;</span> v<span class="op">++)</span></span>
+<span id="cb4-18"><a aria-hidden="true" href="#cb4-18" tabindex="-1"></a>            <span class="cf">if</span> <span class="op">(!</span>listo<span class="op">[</span>v<span class="op">]</span> <span class="op">&amp;&amp;</span> w<span class="op">[</span>u<span class="op">][</span>v<span class="op">]</span> <span class="op">&lt;</span> INF <span class="op">&amp;&amp;</span> d<span class="op">[</span>u<span class="op">]</span> <span class="op">+</span> w<span class="op">[</span>u<span class="op">][</span>v<span class="op">]</span> <span class="op">&lt;</span> d<span class="op">[</span>v<span class="op">])</span> d<span class="op">[</span>v<span class="op">]</span> <span class="op">=</span> d<span class="op">[</span>u<span class="op">]</span> <span class="op">+</span> w<span class="op">[</span>u<span class="op">][</span>v<span class="op">];</span></span>
+<span id="cb4-19"><a aria-hidden="true" href="#cb4-19" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-20"><a aria-hidden="true" href="#cb4-20" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">"Dijkstra:     d[1] = </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span> d<span class="op">[</span><span class="dv">1</span><span class="op">]);</span></span>
+<span id="cb4-21"><a aria-hidden="true" href="#cb4-21" tabindex="-1"></a></span>
+<span id="cb4-22"><a aria-hidden="true" href="#cb4-22" tabindex="-1"></a>    <span class="dt">int</span> b<span class="op">[</span>N<span class="op">]</span> <span class="op">=</span> <span class="op">{</span><span class="dv">0</span><span class="op">,</span> INF<span class="op">,</span> INF<span class="op">};</span>                  <span class="co">/* Bellman-Ford: V − 1 rondas */</span></span>
+<span id="cb4-23"><a aria-hidden="true" href="#cb4-23" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> r <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> r <span class="op">&lt;</span> N <span class="op">-</span> <span class="dv">1</span><span class="op">;</span> r<span class="op">++)</span></span>
+<span id="cb4-24"><a aria-hidden="true" href="#cb4-24" tabindex="-1"></a>        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> u <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> u <span class="op">&lt;</span> N<span class="op">;</span> u<span class="op">++)</span></span>
+<span id="cb4-25"><a aria-hidden="true" href="#cb4-25" tabindex="-1"></a>            <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> v <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> v <span class="op">&lt;</span> N<span class="op">;</span> v<span class="op">++)</span></span>
+<span id="cb4-26"><a aria-hidden="true" href="#cb4-26" tabindex="-1"></a>                <span class="cf">if</span> <span class="op">(</span>b<span class="op">[</span>u<span class="op">]</span> <span class="op">&lt;</span> INF <span class="op">&amp;&amp;</span> w<span class="op">[</span>u<span class="op">][</span>v<span class="op">]</span> <span class="op">&lt;</span> INF <span class="op">&amp;&amp;</span> b<span class="op">[</span>u<span class="op">]</span> <span class="op">+</span> w<span class="op">[</span>u<span class="op">][</span>v<span class="op">]</span> <span class="op">&lt;</span> b<span class="op">[</span>v<span class="op">])</span> b<span class="op">[</span>v<span class="op">]</span> <span class="op">=</span> b<span class="op">[</span>u<span class="op">]</span> <span class="op">+</span> w<span class="op">[</span>u<span class="op">][</span>v<span class="op">];</span></span>
+<span id="cb4-27"><a aria-hidden="true" href="#cb4-27" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">"Bellman-Ford: d[1] = </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span> b<span class="op">[</span><span class="dv">1</span><span class="op">]);</span></span>
+<span id="cb4-28"><a aria-hidden="true" href="#cb4-28" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb4-29"><a aria-hidden="true" href="#cb4-29" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div><div aria-labelledby="t0-1-b" class="panel" data-lang="cpp" id="t0-1" role="tabpanel"><div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a aria-hidden="true" href="#cb5-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;array&gt;</span></span>
+<span id="cb5-2"><a aria-hidden="true" href="#cb5-2" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb5-3"><a aria-hidden="true" href="#cb5-3" tabindex="-1"></a></span>
+<span id="cb5-4"><a aria-hidden="true" href="#cb5-4" tabindex="-1"></a><span class="kw">constexpr</span> <span class="dt">int</span> N <span class="op">=</span> <span class="dv">3</span><span class="op">,</span> INF <span class="op">=</span> <span class="dv">1000000</span><span class="op">;</span></span>
+<span id="cb5-5"><a aria-hidden="true" href="#cb5-5" tabindex="-1"></a><span class="co">// aristas: 0→1 (2), 0→2 (5), 2→1 (−4).  δ(0, 1) = 5 − 4 = 1</span></span>
+<span id="cb5-6"><a aria-hidden="true" href="#cb5-6" tabindex="-1"></a><span class="kw">constexpr</span> <span class="dt">int</span> w<span class="op">[</span>N<span class="op">][</span>N<span class="op">]</span> <span class="op">=</span> <span class="op">{{</span>INF<span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">5</span><span class="op">},</span> <span class="op">{</span>INF<span class="op">,</span> INF<span class="op">,</span> INF<span class="op">},</span> <span class="op">{</span>INF<span class="op">,</span> <span class="op">-</span><span class="dv">4</span><span class="op">,</span> INF<span class="op">}};</span></span>
+<span id="cb5-7"><a aria-hidden="true" href="#cb5-7" tabindex="-1"></a></span>
+<span id="cb5-8"><a aria-hidden="true" href="#cb5-8" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb5-9"><a aria-hidden="true" href="#cb5-9" tabindex="-1"></a>    <span class="bu">std::</span>array<span class="op">&lt;</span><span class="dt">int</span><span class="op">,</span> N<span class="op">&gt;</span> d<span class="op">{</span><span class="dv">0</span><span class="op">,</span> INF<span class="op">,</span> INF<span class="op">};</span></span>
+<span id="cb5-10"><a aria-hidden="true" href="#cb5-10" tabindex="-1"></a>    <span class="bu">std::</span>array<span class="op">&lt;</span><span class="dt">bool</span><span class="op">,</span> N<span class="op">&gt;</span> listo<span class="op">{};</span></span>
+<span id="cb5-11"><a aria-hidden="true" href="#cb5-11" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> paso <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> paso <span class="op">&lt;</span> N<span class="op">;</span> <span class="op">++</span>paso<span class="op">)</span> <span class="op">{</span>     <span class="co">// Dijkstra con arreglo: O(V²)</span></span>
+<span id="cb5-12"><a aria-hidden="true" href="#cb5-12" tabindex="-1"></a>        <span class="dt">int</span> u <span class="op">=</span> <span class="op">-</span><span class="dv">1</span><span class="op">;</span></span>
+<span id="cb5-13"><a aria-hidden="true" href="#cb5-13" tabindex="-1"></a>        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> v <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> v <span class="op">&lt;</span> N<span class="op">;</span> <span class="op">++</span>v<span class="op">)</span></span>
+<span id="cb5-14"><a aria-hidden="true" href="#cb5-14" tabindex="-1"></a>            <span class="cf">if</span> <span class="op">(!</span>listo<span class="op">[</span>v<span class="op">]</span> <span class="op">&amp;&amp;</span> <span class="op">(</span>u <span class="op">&lt;</span> <span class="dv">0</span> <span class="op">||</span> d<span class="op">[</span>v<span class="op">]</span> <span class="op">&lt;</span> d<span class="op">[</span>u<span class="op">]))</span> u <span class="op">=</span> v<span class="op">;</span></span>
+<span id="cb5-15"><a aria-hidden="true" href="#cb5-15" tabindex="-1"></a>        listo<span class="op">[</span>u<span class="op">]</span> <span class="op">=</span> <span class="kw">true</span><span class="op">;</span>                       <span class="co">// "d[u] es definitivo"</span></span>
+<span id="cb5-16"><a aria-hidden="true" href="#cb5-16" tabindex="-1"></a>        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> v <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> v <span class="op">&lt;</span> N<span class="op">;</span> <span class="op">++</span>v<span class="op">)</span></span>
+<span id="cb5-17"><a aria-hidden="true" href="#cb5-17" tabindex="-1"></a>            <span class="cf">if</span> <span class="op">(!</span>listo<span class="op">[</span>v<span class="op">]</span> <span class="op">&amp;&amp;</span> w<span class="op">[</span>u<span class="op">][</span>v<span class="op">]</span> <span class="op">&lt;</span> INF <span class="op">&amp;&amp;</span> d<span class="op">[</span>u<span class="op">]</span> <span class="op">+</span> w<span class="op">[</span>u<span class="op">][</span>v<span class="op">]</span> <span class="op">&lt;</span> d<span class="op">[</span>v<span class="op">])</span> d<span class="op">[</span>v<span class="op">]</span> <span class="op">=</span> d<span class="op">[</span>u<span class="op">]</span> <span class="op">+</span> w<span class="op">[</span>u<span class="op">][</span>v<span class="op">];</span></span>
+<span id="cb5-18"><a aria-hidden="true" href="#cb5-18" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-19"><a aria-hidden="true" href="#cb5-19" tabindex="-1"></a>    <span class="bu">std::</span>printf<span class="op">(</span><span class="st">"Dijkstra:     d[1] = </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span> d<span class="op">[</span><span class="dv">1</span><span class="op">]);</span></span>
+<span id="cb5-20"><a aria-hidden="true" href="#cb5-20" tabindex="-1"></a></span>
+<span id="cb5-21"><a aria-hidden="true" href="#cb5-21" tabindex="-1"></a>    <span class="bu">std::</span>array<span class="op">&lt;</span><span class="dt">int</span><span class="op">,</span> N<span class="op">&gt;</span> b<span class="op">{</span><span class="dv">0</span><span class="op">,</span> INF<span class="op">,</span> INF<span class="op">};</span>         <span class="co">// Bellman-Ford: V − 1 rondas</span></span>
+<span id="cb5-22"><a aria-hidden="true" href="#cb5-22" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> r <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> r <span class="op">&lt;</span> N <span class="op">-</span> <span class="dv">1</span><span class="op">;</span> <span class="op">++</span>r<span class="op">)</span></span>
+<span id="cb5-23"><a aria-hidden="true" href="#cb5-23" tabindex="-1"></a>        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> u <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> u <span class="op">&lt;</span> N<span class="op">;</span> <span class="op">++</span>u<span class="op">)</span></span>
+<span id="cb5-24"><a aria-hidden="true" href="#cb5-24" tabindex="-1"></a>            <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> v <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> v <span class="op">&lt;</span> N<span class="op">;</span> <span class="op">++</span>v<span class="op">)</span></span>
+<span id="cb5-25"><a aria-hidden="true" href="#cb5-25" tabindex="-1"></a>                <span class="cf">if</span> <span class="op">(</span>b<span class="op">[</span>u<span class="op">]</span> <span class="op">&lt;</span> INF <span class="op">&amp;&amp;</span> w<span class="op">[</span>u<span class="op">][</span>v<span class="op">]</span> <span class="op">&lt;</span> INF <span class="op">&amp;&amp;</span> b<span class="op">[</span>u<span class="op">]</span> <span class="op">+</span> w<span class="op">[</span>u<span class="op">][</span>v<span class="op">]</span> <span class="op">&lt;</span> b<span class="op">[</span>v<span class="op">])</span> b<span class="op">[</span>v<span class="op">]</span> <span class="op">=</span> b<span class="op">[</span>u<span class="op">]</span> <span class="op">+</span> w<span class="op">[</span>u<span class="op">][</span>v<span class="op">];</span></span>
+<span id="cb5-26"><a aria-hidden="true" href="#cb5-26" tabindex="-1"></a>    <span class="bu">std::</span>printf<span class="op">(</span><span class="st">"Bellman-Ford: d[1] = </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span> b<span class="op">[</span><span class="dv">1</span><span class="op">]);</span></span>
+<span id="cb5-27"><a aria-hidden="true" href="#cb5-27" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div><div aria-labelledby="t0-2-b" class="panel" data-lang="rust" id="t0-2" role="tabpanel"><div class="sourceCode" id="cb6"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb6-1"><a aria-hidden="true" href="#cb6-1" tabindex="-1"></a><span class="kw">const</span> N<span class="op">:</span> <span class="dt">usize</span> <span class="op">=</span> <span class="dv">3</span><span class="op">;</span></span>
+<span id="cb6-2"><a aria-hidden="true" href="#cb6-2" tabindex="-1"></a><span class="kw">const</span> INF<span class="op">:</span> <span class="dt">i32</span> <span class="op">=</span> <span class="dv">1_000_000</span><span class="op">;</span></span>
+<span id="cb6-3"><a aria-hidden="true" href="#cb6-3" tabindex="-1"></a><span class="co">// aristas: 0→1 (2), 0→2 (5), 2→1 (−4).  δ(0, 1) = 5 − 4 = 1</span></span>
+<span id="cb6-4"><a aria-hidden="true" href="#cb6-4" tabindex="-1"></a><span class="kw">const</span> W<span class="op">:</span> [[<span class="dt">i32</span><span class="op">;</span> N]<span class="op">;</span> N] <span class="op">=</span> [[INF<span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">5</span>]<span class="op">,</span> [INF<span class="op">,</span> INF<span class="op">,</span> INF]<span class="op">,</span> [INF<span class="op">,</span> <span class="op">-</span><span class="dv">4</span><span class="op">,</span> INF]]<span class="op">;</span></span>
+<span id="cb6-5"><a aria-hidden="true" href="#cb6-5" tabindex="-1"></a></span>
+<span id="cb6-6"><a aria-hidden="true" href="#cb6-6" tabindex="-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb6-7"><a aria-hidden="true" href="#cb6-7" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> d <span class="op">=</span> [<span class="dv">0</span><span class="op">,</span> INF<span class="op">,</span> INF]<span class="op">;</span></span>
+<span id="cb6-8"><a aria-hidden="true" href="#cb6-8" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> listo <span class="op">=</span> [<span class="cn">false</span><span class="op">;</span> N]<span class="op">;</span></span>
+<span id="cb6-9"><a aria-hidden="true" href="#cb6-9" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="dv">0</span><span class="op">..</span>N <span class="op">{</span></span>
+<span id="cb6-10"><a aria-hidden="true" href="#cb6-10" tabindex="-1"></a>        <span class="co">// Dijkstra con arreglo: O(V²)</span></span>
+<span id="cb6-11"><a aria-hidden="true" href="#cb6-11" tabindex="-1"></a>        <span class="kw">let</span> u <span class="op">=</span> (<span class="dv">0</span><span class="op">..</span>N)<span class="op">.</span>filter(<span class="op">|&amp;</span>v<span class="op">|</span> <span class="op">!</span>listo[v])<span class="op">.</span>min_by_key(<span class="op">|&amp;</span>v<span class="op">|</span> d[v])<span class="op">.</span>unwrap()<span class="op">;</span></span>
+<span id="cb6-12"><a aria-hidden="true" href="#cb6-12" tabindex="-1"></a>        listo[u] <span class="op">=</span> <span class="cn">true</span><span class="op">;</span> <span class="co">// "d[u] es definitivo"</span></span>
+<span id="cb6-13"><a aria-hidden="true" href="#cb6-13" tabindex="-1"></a>        <span class="cf">for</span> v <span class="kw">in</span> <span class="dv">0</span><span class="op">..</span>N <span class="op">{</span></span>
+<span id="cb6-14"><a aria-hidden="true" href="#cb6-14" tabindex="-1"></a>            <span class="cf">if</span> <span class="op">!</span>listo[v] <span class="op">&amp;&amp;</span> W[u][v] <span class="op">&lt;</span> INF <span class="op">&amp;&amp;</span> d[u] <span class="op">+</span> W[u][v] <span class="op">&lt;</span> d[v] <span class="op">{</span> d[v] <span class="op">=</span> d[u] <span class="op">+</span> W[u][v]<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb6-15"><a aria-hidden="true" href="#cb6-15" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb6-16"><a aria-hidden="true" href="#cb6-16" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-17"><a aria-hidden="true" href="#cb6-17" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">"Dijkstra:     d[1] = {}"</span><span class="op">,</span> d[<span class="dv">1</span>])<span class="op">;</span></span>
+<span id="cb6-18"><a aria-hidden="true" href="#cb6-18" tabindex="-1"></a></span>
+<span id="cb6-19"><a aria-hidden="true" href="#cb6-19" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> b <span class="op">=</span> [<span class="dv">0</span><span class="op">,</span> INF<span class="op">,</span> INF]<span class="op">;</span> <span class="co">// Bellman-Ford: V − 1 rondas</span></span>
+<span id="cb6-20"><a aria-hidden="true" href="#cb6-20" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="dv">0</span><span class="op">..</span>N <span class="op">-</span> <span class="dv">1</span> <span class="op">{</span></span>
+<span id="cb6-21"><a aria-hidden="true" href="#cb6-21" tabindex="-1"></a>        <span class="cf">for</span> u <span class="kw">in</span> <span class="dv">0</span><span class="op">..</span>N <span class="op">{</span></span>
+<span id="cb6-22"><a aria-hidden="true" href="#cb6-22" tabindex="-1"></a>            <span class="cf">for</span> v <span class="kw">in</span> <span class="dv">0</span><span class="op">..</span>N <span class="op">{</span></span>
+<span id="cb6-23"><a aria-hidden="true" href="#cb6-23" tabindex="-1"></a>                <span class="cf">if</span> b[u] <span class="op">&lt;</span> INF <span class="op">&amp;&amp;</span> W[u][v] <span class="op">&lt;</span> INF <span class="op">&amp;&amp;</span> b[u] <span class="op">+</span> W[u][v] <span class="op">&lt;</span> b[v] <span class="op">{</span> b[v] <span class="op">=</span> b[u] <span class="op">+</span> W[u][v]<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb6-24"><a aria-hidden="true" href="#cb6-24" tabindex="-1"></a>            <span class="op">}</span></span>
+<span id="cb6-25"><a aria-hidden="true" href="#cb6-25" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb6-26"><a aria-hidden="true" href="#cb6-26" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-27"><a aria-hidden="true" href="#cb6-27" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">"Bellman-Ford: d[1] = {}"</span><span class="op">,</span> b[<span class="dv">1</span>])<span class="op">;</span></span>
+<span id="cb6-28"><a aria-hidden="true" href="#cb6-28" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div></div>
+<pre class="text salida"><code>Dijkstra:     d[1] = 2
+Bellman-Ford: d[1] = 1</code></pre>
+<h3 id="costo-e-inserción-perezosa">5.3 Costo e inserción perezosa</h3>
+<p>El costo depende de la cola de prioridad: <span class="math inline">\(V\)</span> extracciones y hasta <span class="math inline">\(E\)</span> “bajadas de prioridad”.</p>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Cola de prioridad</th>
+<th>extraer</th>
+<th>bajar prioridad</th>
+<th>Dijkstra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Arreglo (buscar el mínimo)</td>
+<td><span class="math inline">\(O(V)\)</span></td>
+<td><span class="math inline">\(O(1)\)</span></td>
+<td><span class="math inline">\(O(V^2)\)</span>: el mejor en grafos <strong>densos</strong></td>
+</tr>
+<tr>
+<td>Heap binario (L06)</td>
+<td><span class="math inline">\(O(\lg V)\)</span></td>
+<td><span class="math inline">\(O(\lg V)\)</span></td>
+<td><span class="math inline">\(O((V + E)\lg V)\)</span></td>
+</tr>
+<tr>
+<td>Heap de Fibonacci</td>
+<td><span class="math inline">\(O(\lg V)\)</span> amort.</td>
+<td><span class="math inline">\(O(1)\)</span> amort.</td>
+<td><span class="math inline">\(O(E + V\lg V)\)</span></td>
+</tr>
+</tbody>
+</table></div>
+<p>El heap del lab06 no tiene <code>decrease_key</code> (necesitaría saber dónde está cada vértice, L06 §5.4). La alternativa estándar, que usan las soluciones del lab, es la <strong>inserción perezosa</strong>: cada vez que <code>relax</code> mejora <span class="math inline">\(d[v]\)</span>, se mete un par <span class="math inline">\((d[v], v)\)</span> <strong>nuevo</strong> al heap, sin quitar el viejo. Al extraer un par <span class="math inline">\((x, v)\)</span> con <span class="math inline">\(x \ne d[v]\)</span>, es obsoleto (ya se extrajo una versión mejor de <span class="math inline">\(v\)</span>) y se ignora.</p>
+<blockquote>
+<p><strong>Proposición 8.</strong> Dijkstra con inserción perezosa cuesta <span class="math inline">\(O((V + E)\lg V)\)</span>.</p>
+</blockquote>
+<p><em>Demostración.</em> Cada relajación exitosa inserta un par, y hay a lo más una por arista (cuando se extrae <span class="math inline">\(u\)</span> por primera vez con su distancia definitiva; las extracciones obsoletas no relajan): a lo más <span class="math inline">\(E + 1\)</span> pares en total. Cada inserción y extracción cuesta <span class="math inline">\(O(\lg E)\)</span>, y <span class="math inline">\(\lg E \le \lg V^2 = 2\lg V\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<p>El test <code>dijkstra_grande_pesos_unitarios</code> corre Dijkstra con 200 000 vértices y un millón de aristas de peso 1 y lo compara con BFS: la versión <span class="math inline">\(O(V^2)\)</span> con arreglo no termina a tiempo.</p>
+<hr/>
+<h2 id="todos-los-pares-floyd-warshall">6. Todos los pares: Floyd-Warshall</h2>
+<p>Para la distancia entre <strong>todos</strong> los pares de vértices se podría correr Dijkstra <span class="math inline">\(V\)</span> veces (<span class="math inline">\(O(V(V+E)\lg V)\)</span>) o Bellman-Ford <span class="math inline">\(V\)</span> veces (<span class="math inline">\(O(V^2E)\)</span>). Floyd-Warshall da <span class="math inline">\(\Theta(V^3)\)</span> con pesos negativos y un código de cinco líneas.</p>
+<p><strong>Subproblemas.</strong> Numeremos los vértices <span class="math inline">\(0, \dots, V-1\)</span>. Sea <span class="math inline">\(d_k[i][j]\)</span> el peso del camino mínimo de <span class="math inline">\(i\)</span> a <span class="math inline">\(j\)</span> cuyos vértices <strong>intermedios</strong> están todos en <span class="math inline">\(\{0, \dots, k-1\}\)</span>. Entonces <span class="math inline">\(d_0[i][j] = w(i, j)\)</span> (o 0 si <span class="math inline">\(i = j\)</span>, <span class="math inline">\(\infty\)</span> si no hay arista), <span class="math inline">\(d_V[i][j] = \delta(i, j)\)</span>, y</p>
+<blockquote>
+<p><strong>Lema 9.</strong> <span class="math inline">\(d_{k+1}[i][j] = \min\big(d_k[i][j],\; d_k[i][k] + d_k[k][j]\big)\)</span>.</p>
+</blockquote>
+<p><em>Demostración.</em> Un camino mínimo de <span class="math inline">\(i\)</span> a <span class="math inline">\(j\)</span> con intermedios en <span class="math inline">\(\{0..k\}\)</span> (sin ciclos negativos, simple) o no pasa por <span class="math inline">\(k\)</span>, y entonces sus intermedios están en <span class="math inline">\(\{0..k-1\}\)</span>: peso <span class="math inline">\(d_k[i][j]\)</span>; o pasa por <span class="math inline">\(k\)</span> <strong>una sola vez</strong>, y se parte en <span class="math inline">\(i \leadsto k \leadsto j\)</span>, dos caminos con intermedios en <span class="math inline">\(\{0..k-1\}\)</span> que por el Lema 1 son mínimos: peso <span class="math inline">\(d_k[i][k] + d_k[k][j]\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<pre><code>para k = 0 .. V−1:
+    para i, para j:
+        d[i][j] ← min(d[i][j], d[i][k] + d[k][j])</code></pre>
+<p>Basta <strong>una</strong> matriz (no hace falta guardar <span class="math inline">\(d_k\)</span> y <span class="math inline">\(d_{k+1}\)</span> por separado): en la iteración <span class="math inline">\(k\)</span>, la fila <span class="math inline">\(k\)</span> y la columna <span class="math inline">\(k\)</span> no cambian (<span class="math inline">\(d[k][k] = 0\)</span> sin ciclos negativos), así que leer valores ya actualizados no altera nada. Es el primer ejemplo del curso de <strong>programación dinámica</strong>, el tema de la L12.</p>
+<p>Si hay un ciclo negativo, al final algún <span class="math inline">\(d[i][i] &lt; 0\)</span>: Floyd-Warshall también lo detecta.</p>
+<hr/>
+<h2 id="infinito-desbordamiento-y-paradigmas">7. Infinito, desbordamiento y paradigmas</h2>
+<p>¿Cómo se representa <span class="math inline">\(\infty\)</span>? La tentación es usar el entero más grande (<code>INT64_MAX</code>) y comparar con normalidad. El peligro está en la relajación: <code>d[u] + w</code> con <code>d[u] == INT64_MAX</code> y <code>w &gt; 0</code> <strong>desborda</strong>. En C y C++, el desbordamiento de enteros con signo es <strong>comportamiento indefinido</strong> (UBSan lo reporta); en Rust, en modo debug hace <code>panic</code>, y en release da la vuelta en silencio.</p>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>Representación de <span class="math inline">\(\infty\)</span></th>
+<th>Cómo se evita sumar a <span class="math inline">\(\infty\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C (lab)</td>
+<td><code>DIST_INF = INT64_MAX</code></td>
+<td><code>relax</code> comprueba <code>d[u] != DIST_INF</code> antes de sumar</td>
+</tr>
+<tr>
+<td>C++ (lab)</td>
+<td><code>std::optional&lt;int64_t&gt;</code>, <code>nullopt</code></td>
+<td>no se puede sumar un <code>optional</code> sin desempacarlo</td>
+</tr>
+<tr>
+<td>Rust (lab)</td>
+<td><code>Option&lt;i64&gt;</code>, <code>None</code></td>
+<td>el <code>match</code> obliga a tratar el caso <code>None</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>El tipo opcional hace <strong>imposible de escribir</strong> el error: <code>d[u] + w</code> no compila si <code>d[u]</code> es un <code>Option&lt;i64&gt;</code>. Es el mismo argumento que <code>Option</code> contra <code>NULL</code> en la L01: llevar el caso especial al sistema de tipos.</p>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Aspecto</th>
+<th>C</th>
+<th>C++</th>
+<th>Rust</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Heap de Dijkstra</td>
+<td><code>BinaryHeap</code> del lab06 con <code>struct {d, v}</code> y un <code>cmp</code></td>
+<td><code>BinaryHeap&lt;pair&lt;int64_t, size_t&gt;&gt;</code> del lab06</td>
+<td><code>BinaryHeap&lt;(i64, usize)&gt;</code> del lab06; las tuplas son <code>Ord</code></td>
+</tr>
+<tr>
+<td>Matriz de Floyd-Warshall</td>
+<td>un bloque <code>n*n</code>, por filas</td>
+<td><code>vector&lt;vector&lt;Dist&gt;&gt;</code></td>
+<td><code>Vec&lt;Vec&lt;Dist&gt;&gt;</code></td>
+</tr>
+<tr>
+<td>Ciclo negativo</td>
+<td><code>false</code></td>
+<td><code>std::nullopt</code></td>
+<td><code>None</code></td>
+</tr>
+</tbody>
+</table></div>
+<hr/>
+<h2 id="qué-algoritmo-uso">8. ¿Qué algoritmo uso?</h2>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Situación</th>
+<th>Algoritmo</th>
+<th>Costo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sin pesos (o todos iguales)</td>
+<td>BFS (L09)</td>
+<td><span class="math inline">\(O(V + E)\)</span></td>
+</tr>
+<tr>
+<td>DAG, pesos cualesquiera</td>
+<td>orden topológico + relajación</td>
+<td><span class="math inline">\(O(V + E)\)</span></td>
+</tr>
+<tr>
+<td>Pesos <span class="math inline">\(\ge 0\)</span>, un origen, grafo disperso</td>
+<td>Dijkstra con heap</td>
+<td><span class="math inline">\(O((V + E)\lg V)\)</span></td>
+</tr>
+<tr>
+<td>Pesos <span class="math inline">\(\ge 0\)</span>, un origen, grafo denso</td>
+<td>Dijkstra con arreglo</td>
+<td><span class="math inline">\(O(V^2)\)</span></td>
+</tr>
+<tr>
+<td>Pesos negativos, un origen</td>
+<td>Bellman-Ford</td>
+<td><span class="math inline">\(O(VE)\)</span></td>
+</tr>
+<tr>
+<td>Todos los pares, grafo denso o pequeño</td>
+<td>Floyd-Warshall</td>
+<td><span class="math inline">\(\Theta(V^3)\)</span></td>
+</tr>
+<tr>
+<td>Todos los pares, disperso, pesos negativos</td>
+<td>Johnson (repesar + <span class="math inline">\(V\)</span> Dijkstra)</td>
+<td><span class="math inline">\(O(V(V + E)\lg V)\)</span></td>
+</tr>
+</tbody>
+</table></div>
+<hr/>
+<h2 id="guía-del-lab-10">9. Guía del Lab 10</h2>
+<p><strong>Archivos:</strong> <code>c/src/lab10/wgraph.c</code>, <code>cpp/include/algolib/lab10/shortest_paths.hpp</code>, <code>rust/src/lab10/mod.rs</code>. Necesitas tu <code>BinaryHeap</code> del <strong>lab06</strong> funcionando.</p>
+<p><strong>Orden sugerido:</strong> grafo con pesos → una función <code>relax</code> → caminos en DAG (el más simple) → Bellman-Ford → Dijkstra con inserción perezosa → Floyd-Warshall.</p>
+<p><strong>Errores frecuentes:</strong></p>
+<ul>
+<li>Sumar a infinito (<code>INT64_MAX + w</code>): UB en C y C++. Comprobar antes de sumar.</li>
+<li>Dijkstra: no descartar los pares obsoletos. Sigue siendo correcto, pero vuelve a relajar las aristas de un vértice cada vez que sale un par viejo: el costo deja de ser <span class="math inline">\(O((V+E)\lg V)\)</span>.</li>
+<li>Dijkstra: comparar el par extraído con <code>&gt;</code> en vez de <code>!=</code>, o marcar como visitado al <strong>meter</strong> en lugar de al <strong>sacar</strong>.</li>
+<li>Bellman-Ford: reportar ciclo negativo si <strong>cualquier</strong> arista se puede relajar, sin importar si es alcanzable: el test con el ciclo no alcanzable falla. Con <span class="math inline">\(d[u] = \infty\)</span> no hay relajación.</li>
+<li>Floyd-Warshall: poner <code>k</code> en el ciclo <strong>interior</strong> en vez del exterior. Da resultados incorrectos (el orden de los ciclos es parte de la demostración).</li>
+</ul>
+<hr/>
+<h2 id="comprueba-tu-comprensión">10. Comprueba tu comprensión</h2>
+<ol type="1">
+<li>¿Por qué BFS no sirve con pesos distintos de 1?</li>
+<li>¿Sumar una constante <span class="math inline">\(c\)</span> a todos los pesos para quitar los negativos preserva los caminos mínimos?</li>
+<li>En Bellman-Ford, ¿por qué <span class="math inline">\(V - 1\)</span> rondas y no <span class="math inline">\(V\)</span>?</li>
+<li>En Dijkstra con inserción perezosa, ¿cuántos pares puede haber en el heap a la vez, en el peor caso?</li>
+<li>¿Qué detecta Floyd-Warshall si al final <span class="math inline">\(d[3][3] = -2\)</span>?</li>
+</ol>
+<details>
+<summary>
+Respuestas
+</summary>
+<ol type="1">
+<li>Porque procesar por número de aristas no es procesar por peso: un camino de 3 aristas ligeras puede pesar menos que uno de 1 arista pesada.</li>
+<li>No: un camino de <span class="math inline">\(k\)</span> aristas aumenta <span class="math inline">\(kc\)</span>, y favorece a los caminos con menos aristas. (Johnson usa un repesado distinto, con potenciales, que sí los preserva.)</li>
+<li>Porque un camino mínimo simple tiene a lo más <span class="math inline">\(V - 1\)</span> aristas, y la ronda <span class="math inline">\(i\)</span> garantiza la arista <span class="math inline">\(i\)</span> del camino (Lema 4). La ronda <span class="math inline">\(V\)</span> solo sirve para detectar ciclos negativos.</li>
+<li><span class="math inline">\(O(E)\)</span>: un par por cada relajación exitosa.</li>
+<li>Que el vértice 3 está en un ciclo de peso negativo.</li>
+</ol>
+</details>
+<hr/>
+<h2 id="problem-set-10">11. Problem Set 10</h2>
+<p><strong>Teoría</strong></p>
+<ol type="1">
+<li>Demuestra que si se guardan los <code>padre[v]</code> de las relajaciones, al terminar cualquiera de los algoritmos (sin ciclos negativos) forman un <strong>árbol de caminos mínimos</strong> con raíz <span class="math inline">\(s\)</span>.</li>
+<li>Da un grafo con pesos negativos <strong>sin</strong> ciclos negativos en el que Dijkstra da una respuesta incorrecta, y explica en qué paso de la demostración del Teorema 7 falla.</li>
+<li><strong>Johnson.</strong> Con un vértice nuevo <span class="math inline">\(q\)</span> conectado a todos con peso 0, sea <span class="math inline">\(h(v) = \delta(q, v)\)</span> (por Bellman-Ford). Demuestra que <span class="math inline">\(\hat w(u, v) = w(u, v) + h(u) - h(v) \ge 0\)</span> y que los caminos mínimos con <span class="math inline">\(\hat w\)</span> son los mismos que con <span class="math inline">\(w\)</span>.</li>
+<li><strong>Arbitraje.</strong> Dadas las tasas de cambio <span class="math inline">\(r_{ij}\)</span> entre <span class="math inline">\(n\)</span> divisas, demuestra que existe una secuencia de cambios que genera ganancia si y solo si el grafo con pesos <span class="math inline">\(-\log r_{ij}\)</span> tiene un ciclo negativo.</li>
+<li>Demuestra que Dijkstra con un heap <span class="math inline">\(d\)</span>-ario y <span class="math inline">\(d = \max(2, E/V)\)</span> cuesta <span class="math inline">\(O(E\log_{E/V}V)\)</span>.</li>
+</ol>
+<p><strong>Implementación (C, C++ y Rust)</strong></p>
+<ol start="6" type="1">
+<li>Agrega <code>shortest_path(g, s, t)</code> que devuelva el camino (no solo la distancia) con los <code>padre</code>.</li>
+<li>Haz que Bellman-Ford devuelva un <strong>ciclo negativo</strong> concreto como testigo (pista: un vértice relajado en la ronda <span class="math inline">\(V\)</span>, retrocediendo <span class="math inline">\(V\)</span> veces por <code>padre</code>, está en el ciclo).</li>
+<li>Implementa Dijkstra con <strong>heap indexado</strong> y <code>decrease_key</code> (PS6 ej. 6) y compáralo con la inserción perezosa en grafos dispersos y densos.</li>
+<li>Implementa el algoritmo de Johnson del ej. 3 y compáralo con Floyd-Warshall en grafos dispersos de <span class="math inline">\(V = 2000\)</span>.</li>
+</ol>
+<hr/>
+<h2 id="referencias">Referencias</h2>
+<ul>
+<li>CLRS, <em>Introduction to Algorithms</em>, 4ª ed.: Cap. 22 (un origen: relajación, Bellman-Ford, DAG, Dijkstra), Cap. 23 (todos los pares: Floyd-Warshall, Johnson).</li>
+<li>MIT 6.006 (Spring 2020), Lectures 11–14: <em>Weighted Shortest Paths</em>, <em>Bellman-Ford</em>, <em>Dijkstra</em>, <em>APSP and Johnson</em>.</li>
+<li>Dijkstra, E. W. (1959). <em>A note on two problems in connexion with graphs</em>. Numerische Mathematik 1.</li>
+<li>Bellman, R. (1958). <em>On a routing problem</em>. Quarterly of Applied Mathematics 16.</li>
+<li>Floyd, R. W. (1962). <em>Algorithm 97: Shortest path</em>. Communications of the ACM 5(6).</li>
+</ul>
+</main><footer>algolib · Estructuras de Datos y Algoritmos. Fuente: <code>notas/L10-caminos-minimos.md</code>. Regenerar con <code>make html</code>.</footer><script>{
+
+const KEY='algolib-lang';let pref='cpp';try{pref=localStorage.getItem(KEY)||'cpp'}catch(e){}
+function pick(lang,save){
+  for(const g of document.querySelectorAll('.tabs')){
+    const btns=[...g.querySelectorAll('[role=tab]')];if(!btns.length)continue;
+    const b=btns.find(x=>x.dataset.lang===lang)||btns[0];
+    for(const x of btns){const on=x===b;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;
+      document.getElementById(x.getAttribute('aria-controls')).hidden=!on;}
+  }
+  if(save){try{localStorage.setItem(KEY,lang)}catch(e){}}
+}
+for(const g of document.querySelectorAll('.tablist')){
+  g.addEventListener('click',e=>{const b=e.target.closest('[role=tab]');if(b){const y=b.getBoundingClientRect().top;pick(b.dataset.lang,true);window.scrollBy(0,b.getBoundingClientRect().top-y);}});
+  g.addEventListener('keydown',e=>{const bs=[...g.querySelectorAll('[role=tab]')];const i=bs.indexOf(document.activeElement);
+    if(i<0)return;let j=i;if(e.key==='ArrowRight')j=(i+1)%bs.length;else if(e.key==='ArrowLeft')j=(i-1+bs.length)%bs.length;else return;
+    e.preventDefault();pick(bs[j].dataset.lang,true);bs[j].focus();});
+}
+pick(pref,false);
+for(const p of document.querySelectorAll('main pre:not(.pizarra):not(.salida)')){
+  const b=document.createElement('button');b.className='copy';b.type='button';b.textContent='Copiar';
+  b.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(p.innerText.replace(/Copiar$/,''));b.textContent='Copiado';}catch(e){b.textContent='No se pudo';}setTimeout(()=>b.textContent='Copiar',1600);});
+  p.appendChild(b);}
+}</script></body></html>

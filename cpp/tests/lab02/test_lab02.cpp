@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <iterator>
 #include <numeric>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -20,6 +21,23 @@ struct Tracked {
     Tracked& operator=(const Tracked&) = default;
     Tracked& operator=(Tracked&&) noexcept = default;
     ~Tracked() { --alive; }
+};
+
+// Copia que lanza cuando el contador llega a 0, y movimiento que PUEDE lanzar:
+// move_if_noexcept elegirá copiar, así que la garantía fuerte es alcanzable.
+struct Bomba {
+    static inline int alive = 0;
+    static inline int fuse = -1;  // -1: desarmada
+    int v;
+    explicit Bomba(int x) : v(x) { ++alive; }
+    Bomba(const Bomba& o) : v(o.v) {
+        if (fuse >= 0 && fuse-- == 0) throw std::runtime_error("boom");
+        ++alive;
+    }
+    Bomba(Bomba&& o) : v(o.v) { ++alive; }  // sin noexcept a propósito
+    Bomba& operator=(const Bomba&) = default;
+    Bomba& operator=(Bomba&&) = default;
+    ~Bomba() { --alive; }
 };
 
 template <class T>
@@ -65,6 +83,45 @@ TEST(vector_insert_alias) {
     v.insert(0, v[0]);  // referencia a un elemento propio + realojamiento
     CHECK_EQ(v.size(), 2u);
     CHECK(v[0] == v[1]);
+}
+
+TEST(vector_insert_alias_sin_realojar) {
+    Vector<std::string> v;
+    v.reserve(8);
+    for (auto s : {"a", "b", "c", "d"}) v.push_back(std::string(30, s[0]));
+    v.insert(1, v[2]);  // hay espacio: el corrimiento pisa la posición de v[2]
+    CHECK(to_std(v) == (std::vector<std::string>{std::string(30, 'a'), std::string(30, 'c'),
+                                                 std::string(30, 'b'), std::string(30, 'c'),
+                                                 std::string(30, 'd')}));
+}
+
+TEST(vector_garantia_fuerte) {
+    Bomba::alive = 0;
+    {
+        Vector<Bomba> v;
+        for (int i = 0; i < 8; ++i) v.emplace_back(i);  // size == capacity == 8
+        CHECK_EQ(v.capacity(), 8u);
+        Bomba extra(99);
+        Bomba::fuse = 5;  // la 6.ª copia al realojar lanza
+        CHECK_THROWS(v.push_back(extra), std::runtime_error);
+        Bomba::fuse = -1;
+        // Garantía fuerte: nada cambió y no hay objetos huérfanos.
+        CHECK_EQ(v.size(), 8u);
+        CHECK_EQ(v.capacity(), 8u);
+        for (int i = 0; i < 8; ++i) CHECK_EQ(v[i].v, i);
+        CHECK_EQ(Bomba::alive, 9);
+        Bomba::fuse = 3;
+        CHECK_THROWS(v.reserve(100), std::runtime_error);
+        Bomba::fuse = -1;
+        CHECK_EQ(v.capacity(), 8u);
+        CHECK_EQ(Bomba::alive, 9);
+        Bomba::fuse = 0;  // lanza al copiar el elemento nuevo
+        CHECK_THROWS(v.insert(3, extra), std::runtime_error);
+        Bomba::fuse = -1;
+        CHECK_EQ(v.size(), 8u);
+        CHECK_EQ(Bomba::alive, 9);
+    }
+    CHECK_EQ(Bomba::alive, 0);
 }
 
 TEST(vector_reserve_shrink) {

@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>L11 · Notas · Estructuras de Datos y Algoritmos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: apuntes de curso universitario, sobrios y precisos; el guion habla en voz de profesor.
+   IDEA: cuaderno de clase técnico con pizarrón: hoja limpia, recuadros de pizarra verde para lo que se escribe.
+   PICTURE: diagramas SVG propios de cada lección (cotas, arreglos, costos), sobre placa blanca.
+   COLOUR and TYPE: tira cobalto #1240e0, hoja blanca, zonas #eef2ff, acento naranja quemado; Space Grotesk + Inter + JetBrains Mono.
+   LAYOUT: tira de título a todo el ancho, fila de secciones, columna de lectura de 780px; figuras y tablas hasta 900px. */
+:root{color-scheme:light dark;
+ --bg:light-dark(#ffffff,#0b0e17);--ink:light-dark(#111827,#e6e9f2);--muted:light-dark(#5b6270,#9aa3b5);
+ --cob:#1240e0;--cob-ink:light-dark(#1240e0,#8fa8ff);--pale:light-dark(#eef2ff,#141b33);--line:light-dark(#dfe4f2,#252c44);
+ --acc:light-dark(#c2410c,#fb923c);--acc-pale:light-dark(#fff1e6,#2a1a10);--ok:light-dark(#15803d,#4ade80);
+ --chalk-bg:#1f3a2e;--chalk:#eef3e8;--chalk-dim:#a9c2b2;--wood:#7a5a33}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Inter,system-ui,sans-serif;overflow-x:clip}
+a{color:var(--cob-ink)}
+.strip{background:var(--cob);color:#fff;padding:clamp(22px,3.5vw,44px) max(5vw,16px) clamp(20px,3vw,34px)}
+.strip .curso{font:600 14px/1.3 'Space Grotesk',sans-serif;opacity:.85;margin:0 0 10px}
+.strip h1{font:700 clamp(30px,4.6vw,48px)/1.06 'Space Grotesk',sans-serif;margin:0;text-wrap:balance;max-width:24ch}
+.strip .desc{margin:14px 0 0;max-width:62ch;opacity:.92;font-size:16px}
+.pages{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.pages a{color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.45);border-radius:999px;padding:6px 14px;font-size:14px;line-height:1.3}
+.pages a[aria-current]{background:#fff;color:var(--cob)}
+.pages a:hover{background:rgba(255,255,255,.16)}
+nav.toc{border-bottom:1px solid var(--line);background:var(--bg);z-index:5}
+nav.toc .scroll{display:flex;gap:4px;padding:8px max(5vw,16px);white-space:nowrap}
+nav.toc a{flex:none;text-decoration:none;color:var(--muted);font-size:14px;padding:6px 10px;border-radius:8px}
+nav.toc a:hover{background:var(--pale);color:var(--ink)}
+@media(min-width:900px){nav.toc{position:sticky;top:0}}
+main{max-width:820px;margin:0 auto;padding:28px max(4vw,16px) 80px}
+main h1{font:700 32px/1.1 'Space Grotesk',sans-serif;margin:56px 0 12px;padding-top:18px;border-top:4px solid var(--cob);color:var(--cob-ink)}
+main h2{font:700 26px/1.2 'Space Grotesk',sans-serif;margin:48px 0 10px;text-wrap:balance}
+main h3{font:600 21px/1.25 'Space Grotesk',sans-serif;margin:36px 0 8px}
+main h4{font:600 18px/1.3 'Space Grotesk',sans-serif;margin:28px 0 6px}
+.tiempo{display:inline-block;vertical-align:middle;margin-left:8px;font:500 13px/1 Inter,sans-serif;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:4px 9px}
+p,li{max-width:70ch}
+hr{border:0;border-top:1px solid var(--line);margin:40px 0}
+blockquote{margin:16px 0;padding:12px 18px;border-left:4px solid var(--cob);background:var(--pale);border-radius:0 10px 10px 0}
+blockquote p{margin:6px 0}
+code{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.88em;background:var(--pale);padding:1px 5px;border-radius:5px;overflow-wrap:anywhere}
+pre{position:relative;overflow-x:auto;background:light-dark(#f6f7fb,#11162a);border:1px solid var(--line);border-radius:10px;padding:14px 16px;font:14px/1.55 'JetBrains Mono',ui-monospace,monospace}
+pre code{background:none;padding:0;font-size:inherit;overflow-wrap:normal}
+.copy{position:absolute;top:8px;right:8px;font:600 12px Inter,sans-serif;border:1px solid var(--line);background:var(--bg);color:var(--muted);border-radius:7px;padding:6px 10px;min-height:32px;cursor:pointer}
+.copy:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;margin:16px 0;font-size:15px;width:100%}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-weight:600;background:var(--pale)}
+figure{margin:26px 0;padding:0}
+figure svg{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:12px}
+figcaption{color:var(--muted);font-size:14px;margin-top:8px}
+details{margin:12px 0;border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:var(--bg)}
+summary{cursor:pointer;font-weight:600;color:var(--cob-ink);min-height:28px}
+.callout{margin:16px 0;padding:12px 16px 12px 16px;border-radius:10px;border:1px solid var(--line)}
+.callout>.lbl{display:block;font:700 12px/1.2 Inter,sans-serif;letter-spacing:.02em;margin-bottom:4px}
+.dice{background:light-dark(#f8fafc,#121726);border-left:5px solid var(--ink)}
+.dice>.lbl{color:var(--ink)}
+.pregunta{background:var(--pale);border-left:5px solid var(--cob)}
+.pregunta>.lbl{color:var(--cob-ink)}
+.pregunta+blockquote{margin-top:-10px;border-left-color:var(--ok);background:light-dark(#f0fdf4,#0f1f16)}
+.pregunta+blockquote::before{content:"Respuesta esperada";display:block;font:700 12px Inter,sans-serif;color:var(--ok);margin-bottom:2px}
+.nota{background:light-dark(#fffbea,#211d0c);border-left:5px solid #ca8a04}
+.nota>.lbl{color:light-dark(#a16207,#facc15)}
+.atencion{background:var(--acc-pale);border-left:5px solid var(--acc)}
+.atencion>.lbl{color:var(--acc)}
+.ejercicio{display:inline-block;font:700 12px Inter,sans-serif;color:#fff;background:var(--acc);border-radius:6px;padding:2px 8px;margin-right:6px;vertical-align:2px}
+.moneda{display:inline-block;width:.9em;height:.9em;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fde68a,#d97706);vertical-align:-1px;margin-right:4px}
+.pizarra-label{display:table!important;margin:22px 0 0;font:600 13px/1.3 Inter,sans-serif;color:var(--chalk-dim);background:var(--chalk-bg);display:inline-block;padding:6px 12px;border-radius:8px 8px 0 0;border:6px solid var(--wood);border-bottom:0}
+.pizarra-label b{color:#fff}
+pre.pizarra,div.pizarra{margin-top:0;background:var(--chalk-bg);color:var(--chalk);border:6px solid var(--wood);border-radius:0 10px 10px 10px;box-shadow:inset 0 0 40px rgba(0,0,0,.35);font:15px/1.6 'JetBrains Mono',ui-monospace,monospace;padding:16px 18px;overflow-x:auto;white-space:pre}
+table.pizarra{border:6px solid var(--wood);background:var(--chalk-bg);color:var(--chalk);margin-top:0}
+table.pizarra th{background:#2a4a3c;color:#fff}table.pizarra td,table.pizarra th{border-color:#3d5e4f}
+mjx-container[display=true]{overflow-x:auto;overflow-y:hidden;max-width:100%}
+mjx-container:not([display]){display:inline-block;max-width:100%;overflow-x:auto;overflow-y:hidden;vertical-align:middle}
+.lessons{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px;margin:24px 0}
+.lessons a{display:block;text-decoration:none;color:var(--ink);background:var(--pale);border:1px solid var(--line);border-radius:12px;padding:18px}
+.lessons a:hover{border-color:var(--cob)}
+.lessons b{display:block;font:700 19px/1.2 'Space Grotesk',sans-serif;color:var(--cob-ink);margin-bottom:6px}
+.lessons span{color:var(--muted);font-size:15px}
+footer{color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding:24px max(5vw,16px)}
+@media(max-width:600px){body{font-size:16px}table{font-size:13px}pre.pizarra,div.pizarra{font-size:13px}main h1{font-size:27px}main h2{font-size:23px}}
+
+/* pestañas de código */
+.tabs{margin:20px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:light-dark(#f6f7fb,#11162a)}
+.tablist{display:flex;gap:2px;padding:6px 6px 0;background:var(--pale);border-bottom:1px solid var(--line);overflow-x:auto}
+.tablist button{font:600 14px Inter,sans-serif;color:var(--muted);background:none;border:0;border-radius:8px 8px 0 0;padding:10px 16px;min-height:44px;cursor:pointer;white-space:nowrap}
+.tablist button[aria-selected=true]{background:light-dark(#f6f7fb,#11162a);color:var(--cob-ink);box-shadow:inset 0 3px 0 var(--cob)}
+.tablist button:focus-visible{outline:3px solid var(--acc);outline-offset:-3px}
+.tablist .badge{font:600 11px Inter,sans-serif;color:var(--acc);margin-left:6px}
+.tabs .panel pre{margin:0;border:0;border-radius:0}
+.tabs .panel[hidden]{display:none}
+pre.salida{background:light-dark(#0f172a,#05070d);color:#d1fae5;border-color:#0f172a;margin-top:-8px;padding-top:30px}
+pre.salida::before{content:"Salida";position:absolute;top:8px;left:16px;font:700 11px Inter,sans-serif;color:#6ee7b7;letter-spacing:.03em}
+pre.salida .copy{display:none}
+/* resaltado de sintaxis (clases de pandoc) */
+code span.kw,code span.cf{color:light-dark(#1d4ed8,#93b4ff);font-weight:600}
+code span.dt{color:light-dark(#7c3aed,#c4b5fd)}
+code span.dv,code span.bn,code span.fl,code span.cn{color:light-dark(#b45309,#fbbf24)}
+code span.st,code span.ch,code span.ss,code span.sc{color:light-dark(#047857,#6ee7b7)}
+code span.co,code span.do,code span.cv{color:light-dark(#6b7280,#8b95a7);font-style:italic}
+code span.pp,code span.im,code span.at{color:light-dark(#be185d,#f9a8d4)}
+code span.fu,code span.bu{color:light-dark(#0e7490,#67e8f9)}
+code span.op{color:light-dark(#374151,#cbd5e1)}
+code span.er,code span.al{color:var(--acc)}
+pre.sourceCode a{display:none}
+@media print{nav.toc,.copy,.tablist{display:none}.tabs .panel[hidden]{display:block}.strip{background:none;color:#000}}
+</style>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+</head><body>
+<header class="strip"><p class="curso">algolib · Estructuras de Datos y Algoritmos</p><h1>Lección 11 — Union-Find y árboles de expansión mínima</h1><p class="desc">Union-Find con tamaño y compresión, la propiedad del corte, Kruskal, Prim y por qué find muta.</p><div class="pages"><a href="index.html">Inicio</a><a href="L00.html">L00 · Prerrequisitos</a><a href="L01.html">L01 · Notas</a><a href="L02.html">L02 · Notas</a><a href="L03.html">L03 · Notas</a><a href="L04.html">L04 · Notas</a><a href="L05.html">L05 · Notas</a><a href="L06.html">L06 · Notas</a><a href="L07.html">L07 · Notas</a><a href="L08.html">L08 · Notas</a><a href="L09.html">L09 · Notas</a><a href="L10.html">L10 · Notas</a><a href="L11.html" aria-current="page">L11 · Notas</a><a href="L12.html">L12 · Notas</a><a href="L13.html">L13 · Notas</a></div></header><nav class="toc" aria-label="Secciones"><div class="scroll"><a href="#objetivos-de-aprendizaje">Objetivos de aprendizaje</a><a href="#mapa-de-la-lección">Mapa de la lección</a><a href="#el-tad-conjuntos-disjuntos">1. El TAD Conjuntos disjuntos</a><a href="#el-bosque-de-conjuntos">2. El bosque de conjuntos</a><a href="#árboles-de-expansión-mínima">3. Árboles de expansión mínima</a><a href="#kruskal">4. Kruskal</a><a href="#prim">5. Prim</a><a href="#find-muta-es-una-consulta">6. find muta: ¿es una consulta?</a><a href="#guía-del-lab-11">7. Guía del Lab 11</a><a href="#comprueba-tu-comprensión">8. Comprueba tu comprensión</a><a href="#problem-set-11">9. Problem Set 11</a><a href="#referencias">Referencias</a></div></nav><main><blockquote>
+<p><strong>Prerrequisitos:</strong> Lección 1 (análisis amortizado), Lección 5 (ordenamiento), Lección 6 (heaps) y Lección 9 (grafos, componentes conexas).</p>
+<p><strong>Cómo estudiar esta lección:</strong> Union-Find es la estructura con la mejor relación entre “líneas de código” y “profundidad del análisis” de todo el curso: diez líneas y un teorema famoso. Los MST, por su parte, son el ejemplo canónico de <strong>algoritmo voraz</strong> demostrado correcto con un argumento de <strong>intercambio</strong>. Practica ese argumento: reaparece en todo el diseño de algoritmos.</p>
+<p><strong>Lab asociado:</strong> <code>lab11</code>: <code>DisjointSet</code>, Kruskal y Prim (C, C++ y Rust). Prim reutiliza tu <code>BinaryHeap</code> del lab06.</p>
+</blockquote>
+<h2 id="objetivos-de-aprendizaje">Objetivos de aprendizaje</h2>
+<p>Al terminar esta lección deberías poder:</p>
+<ol type="1">
+<li>Especificar el <strong>TAD Conjuntos disjuntos</strong> e implementarlo como un bosque.</li>
+<li>Demostrar que la <strong>unión por tamaño</strong> acota la altura por <span class="math inline">\(\lg n\)</span>, y explicar qué aporta la <strong>compresión de caminos</strong> (<span class="math inline">\(O(\alpha(n))\)</span> amortizado).</li>
+<li>Definir árbol de expansión mínima, <strong>corte</strong> y <strong>arista ligera</strong>, y demostrar la <strong>propiedad del corte</strong> con un argumento de intercambio.</li>
+<li>Demostrar la corrección de <strong>Kruskal</strong> y <strong>Prim</strong> como casos de la propiedad del corte, y analizar su costo.</li>
+<li>Explicar por qué <code>find</code> muta la estructura y cómo lo expresa cada lenguaje (<code>&amp;mut self</code>, no-<code>const</code>, <code>mutable</code>).</li>
+</ol>
+<h2 id="mapa-de-la-lección">Mapa de la lección</h2>
+<figure>
+<svg aria-label="Mapa de la lección 11" fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" role="img" viewbox="0 0 760 300" xmlns="http://www.w3.org/2000/svg">
+<title>Mapa de la lección 11</title>
+<defs>
+<marker id="ar" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#111827"></path></marker>
+<marker id="arc" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#1240e0"></path></marker>
+<marker id="ara" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"></path></marker>
+</defs>
+<rect fill="#ffffff" height="300" rx="12" width="760"></rect>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="40" y="26"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="54" y="50">§1</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="54" y="70">Conjuntos disjuntos</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="290" y="26"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="304" y="50">§2</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="304" y="70">Bosque, tamaño, compresión</text>
+<rect fill="#1240e0" height="58" rx="10" stroke="#1240e0" stroke-width="2" width="200" x="540" y="26"></rect>
+<text fill="#dbe4ff" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="554" y="50">§3</text>
+<text fill="#ffffff" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="554" y="70">Propiedad del corte</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="40" y="124"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="54" y="148">§6</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="54" y="168">find muta</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="290" y="124"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="304" y="148">§5</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="304" y="168">Prim</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="540" y="124"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="554" y="148">§4</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="554" y="168">Kruskal</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="40" y="222"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="54" y="246">§7</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="54" y="266">Guía del lab</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="290" y="222"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="304" y="246">§8</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="304" y="266">Comprensión</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="540" y="222"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="554" y="246">§9</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="554" y="266">Problem set</text>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="244" x2="286" y1="55.0" y2="55.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="494" x2="536" y1="55.0" y2="55.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="640.0" x2="640.0" y1="87" y2="120"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="536" x2="494" y1="153.0" y2="153.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="286" x2="244" y1="153.0" y2="153.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="140.0" x2="140.0" y1="185" y2="218"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="244" x2="286" y1="251.0" y2="251.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="494" x2="536" y1="251.0" y2="251.0"></line>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" text-anchor="start" x="650.0" y="106">intercambio: núcleo de la lección</text>
+</svg>
+<figcaption aria-hidden="true">Mapa de la lección 11</figcaption>
+</figure>
+<hr/>
+<h2 id="el-tad-conjuntos-disjuntos">1. El TAD Conjuntos disjuntos</h2>
+<p>Mantener una <strong>partición</strong> de <span class="math inline">\(\{0, \dots, n-1\}\)</span> en conjuntos disjuntos, con:</p>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 50%"/>
+<col style="width: 50%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Operación</th>
+<th>Efecto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>find(x)</code></td>
+<td>el <strong>representante</strong> del conjunto de <span class="math inline">\(x\)</span> (un elemento fijo del conjunto)</td>
+</tr>
+<tr>
+<td><code>unite(a, b)</code></td>
+<td>reemplaza los conjuntos de <span class="math inline">\(a\)</span> y <span class="math inline">\(b\)</span> por su unión</td>
+</tr>
+<tr>
+<td><code>same(a, b)</code></td>
+<td><code>find(a) == find(b)</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Al inicio cada elemento está solo. Aplicaciones: componentes conexas de un grafo que <strong>crece</strong> (agregar aristas y preguntar “¿ya están conectados?”), el algoritmo de Kruskal, la segmentación de imágenes (unir píxeles parecidos), la unificación de tipos en un compilador, la percolación.</p>
+<p>¿Por qué no BFS/DFS? Porque calculan componentes de un grafo <strong>fijo</strong> en <span class="math inline">\(O(V+E)\)</span>; si las aristas llegan una por una y entre cada una hay preguntas, recalcular cada vez cuesta <span class="math inline">\(\Theta(E(V+E))\)</span>.</p>
+<hr/>
+<h2 id="el-bosque-de-conjuntos">2. El bosque de conjuntos</h2>
+<h3 id="representación">2.1 Representación</h3>
+<p>Cada conjunto es un <strong>árbol</strong> cuyos nodos apuntan a su padre; la raíz se apunta a sí misma y es el representante. Basta un arreglo <code>parent[0..n)</code>:</p>
+<pre><code>find(x):      mientras parent[x] ≠ x:  x ← parent[x];   devolver x
+unite(a, b):  a ← find(a);  b ← find(b);  si a ≠ b:  parent[b] ← a</code></pre>
+<p>El costo de <code>find</code> es la <strong>profundidad</strong> de <span class="math inline">\(x\)</span>. Sin cuidado, una secuencia <code>unite(1,0), unite(2,1), …</code> construye una cadena y <code>find</code> cuesta <span class="math inline">\(\Theta(n)\)</span>.</p>
+<h3 id="unión-por-tamaño">2.2 Unión por tamaño</h3>
+<p>Guardar en cada raíz el tamaño de su árbol, y al unir colgar la raíz del árbol <strong>más chico</strong> de la del más grande.</p>
+<blockquote>
+<p><strong>Teorema 1.</strong> Con unión por tamaño, todo nodo tiene profundidad a lo más <span class="math inline">\(\lg n\)</span>.</p>
+</blockquote>
+<p><em>Demostración.</em> La profundidad de un nodo <span class="math inline">\(x\)</span> solo aumenta (en 1) cuando la raíz de su árbol se cuelga de otra raíz, y eso solo pasa si su árbol es el más chico de los dos: el árbol que contiene a <span class="math inline">\(x\)</span> <strong>al menos duplica</strong> su tamaño. Como el tamaño nunca pasa de <span class="math inline">\(n\)</span>, eso ocurre a lo más <span class="math inline">\(\lg n\)</span> veces. <span class="math inline">\(\blacksquare\)</span></p>
+<p>Así <code>find</code> y <code>unite</code> cuestan <span class="math inline">\(O(\lg n)\)</span> en el peor caso. La <strong>unión por rango</strong> (colgar del de mayor <em>altura</em> acotada) da la misma cota con el mismo argumento.</p>
+<h3 id="compresión-de-caminos">2.3 Compresión de caminos</h3>
+<p>Durante <code>find(x)</code>, una vez hallada la raíz <span class="math inline">\(r\)</span>, se vuelve a recorrer el camino de <span class="math inline">\(x\)</span> a <span class="math inline">\(r\)</span> y se cuelga <strong>cada nodo directamente de <span class="math inline">\(r\)</span></strong>. Las búsquedas siguientes de esos nodos (y de sus descendientes) cuestan casi nada.</p>
+<pre><code>find(x):
+    r ← x;   mientras parent[r] ≠ r:  r ← parent[r]          -- 1.ª pasada: hallar la raíz
+    mientras parent[x] ≠ r:  (x, parent[x]) ← (parent[x], r)  -- 2.ª pasada: comprimir
+    devolver r</code></pre>
+<p>Las soluciones del lab lo hacen así, <strong>iterativo</strong>: la versión recursiva (<code>parent[x] = find(parent[x])</code>) es más corta, pero si alguien unió sin tamaño, la recursión tiene profundidad <span class="math inline">\(\Theta(n)\)</span> y desborda la pila (L03, L09).</p>
+<blockquote>
+<p><strong>Teorema 2 (Tarjan, 1975).</strong> Con unión por tamaño (o rango) <strong>y</strong> compresión de caminos, cualquier secuencia de <span class="math inline">\(m\)</span> operaciones sobre <span class="math inline">\(n\)</span> elementos cuesta <span class="math inline">\(O(m\,\alpha(n))\)</span>, donde <span class="math inline">\(\alpha\)</span> es la inversa de la función de Ackermann. Y esta cota es ajustada: ninguna implementación por punteros puede hacerlo en <span class="math inline">\(O(m)\)</span>.</p>
+</blockquote>
+<p><span class="math inline">\(\alpha(n)\)</span> crece tan despacio que <span class="math inline">\(\alpha(n) \le 4\)</span> para todo <span class="math inline">\(n\)</span> menor que el número de átomos del universo. En la práctica, <strong>constante</strong>. La demostración completa (CLRS §19.4) usa el método del potencial de L01 con una función ingeniosa sobre los rangos; una versión más sencilla, con la cota <span class="math inline">\(O(m\lg^* n)\)</span>, es el ej. 3 del problem set.</p>
+<div class="tabs"><div aria-label="Lenguaje" class="tablist" role="tablist"><button aria-controls="t0-0" aria-selected="false" data-lang="c" id="t0-0-b" role="tab" tabindex="-1" type="button">C</button><button aria-controls="t0-1" aria-selected="false" data-lang="cpp" id="t0-1-b" role="tab" tabindex="-1" type="button">C++</button><button aria-controls="t0-2" aria-selected="false" data-lang="rust" id="t0-2-b" role="tab" tabindex="-1" type="button">Rust</button></div><div aria-labelledby="t0-0-b" class="panel" data-lang="c" id="t0-0" role="tabpanel"><div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a aria-hidden="true" href="#cb3-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb3-2"><a aria-hidden="true" href="#cb3-2" tabindex="-1"></a></span>
+<span id="cb3-3"><a aria-hidden="true" href="#cb3-3" tabindex="-1"></a><span class="pp">#define N </span><span class="dv">1024</span></span>
+<span id="cb3-4"><a aria-hidden="true" href="#cb3-4" tabindex="-1"></a><span class="dt">static</span> <span class="dt">int</span> parent<span class="op">[</span>N<span class="op">],</span> tam<span class="op">[</span>N<span class="op">];</span></span>
+<span id="cb3-5"><a aria-hidden="true" href="#cb3-5" tabindex="-1"></a></span>
+<span id="cb3-6"><a aria-hidden="true" href="#cb3-6" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> reiniciar<span class="op">(</span><span class="dt">void</span><span class="op">)</span> <span class="op">{</span> <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> N<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span> parent<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> i<span class="op">;</span> tam<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> <span class="op">}</span> <span class="op">}</span></span>
+<span id="cb3-7"><a aria-hidden="true" href="#cb3-7" tabindex="-1"></a><span class="dt">static</span> <span class="dt">int</span> raiz<span class="op">(</span><span class="dt">int</span> x<span class="op">)</span> <span class="op">{</span> <span class="cf">while</span> <span class="op">(</span>parent<span class="op">[</span>x<span class="op">]</span> <span class="op">!=</span> x<span class="op">)</span> x <span class="op">=</span> parent<span class="op">[</span>x<span class="op">];</span> <span class="cf">return</span> x<span class="op">;</span> <span class="op">}</span>  <span class="co">/* sin compresión */</span></span>
+<span id="cb3-8"><a aria-hidden="true" href="#cb3-8" tabindex="-1"></a><span class="dt">static</span> <span class="dt">int</span> profundidad<span class="op">(</span><span class="dt">int</span> x<span class="op">)</span> <span class="op">{</span> <span class="dt">int</span> d <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> <span class="cf">while</span> <span class="op">(</span>parent<span class="op">[</span>x<span class="op">]</span> <span class="op">!=</span> x<span class="op">)</span> <span class="op">{</span> x <span class="op">=</span> parent<span class="op">[</span>x<span class="op">];</span> d<span class="op">++;</span> <span class="op">}</span> <span class="cf">return</span> d<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb3-9"><a aria-hidden="true" href="#cb3-9" tabindex="-1"></a><span class="dt">static</span> <span class="dt">int</span> max_profundidad<span class="op">(</span><span class="dt">void</span><span class="op">)</span> <span class="op">{</span> <span class="dt">int</span> m <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> N<span class="op">;</span> i<span class="op">++)</span> <span class="cf">if</span> <span class="op">(</span>profundidad<span class="op">(</span>i<span class="op">)</span> <span class="op">&gt;</span> m<span class="op">)</span> m <span class="op">=</span> profundidad<span class="op">(</span>i<span class="op">);</span> <span class="cf">return</span> m<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb3-10"><a aria-hidden="true" href="#cb3-10" tabindex="-1"></a></span>
+<span id="cb3-11"><a aria-hidden="true" href="#cb3-11" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> unir_ingenuo<span class="op">(</span><span class="dt">int</span> a<span class="op">,</span> <span class="dt">int</span> b<span class="op">)</span> <span class="op">{</span> a <span class="op">=</span> raiz<span class="op">(</span>a<span class="op">);</span> b <span class="op">=</span> raiz<span class="op">(</span>b<span class="op">);</span> <span class="cf">if</span> <span class="op">(</span>a <span class="op">!=</span> b<span class="op">)</span> parent<span class="op">[</span>a<span class="op">]</span> <span class="op">=</span> b<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb3-12"><a aria-hidden="true" href="#cb3-12" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> unir_tamano<span class="op">(</span><span class="dt">int</span> a<span class="op">,</span> <span class="dt">int</span> b<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-13"><a aria-hidden="true" href="#cb3-13" tabindex="-1"></a>    a <span class="op">=</span> raiz<span class="op">(</span>a<span class="op">);</span> b <span class="op">=</span> raiz<span class="op">(</span>b<span class="op">);</span></span>
+<span id="cb3-14"><a aria-hidden="true" href="#cb3-14" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>a <span class="op">==</span> b<span class="op">)</span> <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb3-15"><a aria-hidden="true" href="#cb3-15" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>tam<span class="op">[</span>a<span class="op">]</span> <span class="op">&lt;</span> tam<span class="op">[</span>b<span class="op">])</span> <span class="op">{</span> <span class="dt">int</span> t <span class="op">=</span> a<span class="op">;</span> a <span class="op">=</span> b<span class="op">;</span> b <span class="op">=</span> t<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb3-16"><a aria-hidden="true" href="#cb3-16" tabindex="-1"></a>    parent<span class="op">[</span>b<span class="op">]</span> <span class="op">=</span> a<span class="op">;</span> tam<span class="op">[</span>a<span class="op">]</span> <span class="op">+=</span> tam<span class="op">[</span>b<span class="op">];</span></span>
+<span id="cb3-17"><a aria-hidden="true" href="#cb3-17" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb3-18"><a aria-hidden="true" href="#cb3-18" tabindex="-1"></a></span>
+<span id="cb3-19"><a aria-hidden="true" href="#cb3-19" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-20"><a aria-hidden="true" href="#cb3-20" tabindex="-1"></a>    reiniciar<span class="op">();</span></span>
+<span id="cb3-21"><a aria-hidden="true" href="#cb3-21" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">+</span> <span class="dv">1</span> <span class="op">&lt;</span> N<span class="op">;</span> i<span class="op">++)</span> unir_ingenuo<span class="op">(</span>i<span class="op">,</span> i <span class="op">+</span> <span class="dv">1</span><span class="op">);</span></span>
+<span id="cb3-22"><a aria-hidden="true" href="#cb3-22" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">"ingenuo, cadena:              profundidad máxima </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span> max_profundidad<span class="op">());</span></span>
+<span id="cb3-23"><a aria-hidden="true" href="#cb3-23" tabindex="-1"></a>    reiniciar<span class="op">();</span></span>
+<span id="cb3-24"><a aria-hidden="true" href="#cb3-24" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">+</span> <span class="dv">1</span> <span class="op">&lt;</span> N<span class="op">;</span> i<span class="op">++)</span> unir_tamano<span class="op">(</span>i<span class="op">,</span> i <span class="op">+</span> <span class="dv">1</span><span class="op">);</span></span>
+<span id="cb3-25"><a aria-hidden="true" href="#cb3-25" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">"por tamaño, cadena:           profundidad máxima </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span> max_profundidad<span class="op">());</span></span>
+<span id="cb3-26"><a aria-hidden="true" href="#cb3-26" tabindex="-1"></a>    reiniciar<span class="op">();</span></span>
+<span id="cb3-27"><a aria-hidden="true" href="#cb3-27" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> paso <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> paso <span class="op">&lt;</span> N<span class="op">;</span> paso <span class="op">*=</span> <span class="dv">2</span><span class="op">)</span>          <span class="co">/* peor caso: unir árboles iguales */</span></span>
+<span id="cb3-28"><a aria-hidden="true" href="#cb3-28" tabindex="-1"></a>        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">+</span> paso <span class="op">&lt;</span> N<span class="op">;</span> i <span class="op">+=</span> <span class="dv">2</span> <span class="op">*</span> paso<span class="op">)</span> unir_tamano<span class="op">(</span>i<span class="op">,</span> i <span class="op">+</span> paso<span class="op">);</span></span>
+<span id="cb3-29"><a aria-hidden="true" href="#cb3-29" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">"por tamaño, árboles iguales:  profundidad máxima </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span> max_profundidad<span class="op">());</span></span>
+<span id="cb3-30"><a aria-hidden="true" href="#cb3-30" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb3-31"><a aria-hidden="true" href="#cb3-31" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div><div aria-labelledby="t0-1-b" class="panel" data-lang="cpp" id="t0-1" role="tabpanel"><div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a aria-hidden="true" href="#cb4-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb4-2"><a aria-hidden="true" href="#cb4-2" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;numeric&gt;</span></span>
+<span id="cb4-3"><a aria-hidden="true" href="#cb4-3" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;utility&gt;</span></span>
+<span id="cb4-4"><a aria-hidden="true" href="#cb4-4" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;vector&gt;</span></span>
+<span id="cb4-5"><a aria-hidden="true" href="#cb4-5" tabindex="-1"></a></span>
+<span id="cb4-6"><a aria-hidden="true" href="#cb4-6" tabindex="-1"></a><span class="kw">struct</span> Bosque <span class="op">{</span></span>
+<span id="cb4-7"><a aria-hidden="true" href="#cb4-7" tabindex="-1"></a>    <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;</span> parent<span class="op">,</span> tam<span class="op">;</span></span>
+<span id="cb4-8"><a aria-hidden="true" href="#cb4-8" tabindex="-1"></a>    <span class="kw">explicit</span> Bosque<span class="op">(</span><span class="dt">int</span> n<span class="op">)</span> <span class="op">:</span> parent<span class="op">(</span>n<span class="op">),</span> tam<span class="op">(</span>n<span class="op">,</span> <span class="dv">1</span><span class="op">)</span> <span class="op">{</span> <span class="bu">std::</span>iota<span class="op">(</span>parent<span class="op">.</span>begin<span class="op">(),</span> parent<span class="op">.</span>end<span class="op">(),</span> <span class="dv">0</span><span class="op">);</span> <span class="op">}</span></span>
+<span id="cb4-9"><a aria-hidden="true" href="#cb4-9" tabindex="-1"></a>    <span class="dt">int</span> raiz<span class="op">(</span><span class="dt">int</span> x<span class="op">)</span> <span class="at">const</span> <span class="op">{</span> <span class="cf">while</span> <span class="op">(</span>parent<span class="op">[</span>x<span class="op">]</span> <span class="op">!=</span> x<span class="op">)</span> x <span class="op">=</span> parent<span class="op">[</span>x<span class="op">];</span> <span class="cf">return</span> x<span class="op">;</span> <span class="op">}</span>  <span class="co">// sin compresión</span></span>
+<span id="cb4-10"><a aria-hidden="true" href="#cb4-10" tabindex="-1"></a>    <span class="dt">int</span> profundidad<span class="op">(</span><span class="dt">int</span> x<span class="op">)</span> <span class="at">const</span> <span class="op">{</span> <span class="dt">int</span> d <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> <span class="cf">while</span> <span class="op">(</span>parent<span class="op">[</span>x<span class="op">]</span> <span class="op">!=</span> x<span class="op">)</span> <span class="op">{</span> x <span class="op">=</span> parent<span class="op">[</span>x<span class="op">];</span> <span class="op">++</span>d<span class="op">;</span> <span class="op">}</span> <span class="cf">return</span> d<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb4-11"><a aria-hidden="true" href="#cb4-11" tabindex="-1"></a>    <span class="dt">int</span> max_profundidad<span class="op">()</span> <span class="at">const</span> <span class="op">{</span></span>
+<span id="cb4-12"><a aria-hidden="true" href="#cb4-12" tabindex="-1"></a>        <span class="dt">int</span> m <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb4-13"><a aria-hidden="true" href="#cb4-13" tabindex="-1"></a>        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="op">(</span><span class="dt">int</span><span class="op">)</span>parent<span class="op">.</span>size<span class="op">();</span> <span class="op">++</span>i<span class="op">)</span> m <span class="op">=</span> <span class="bu">std::</span>max<span class="op">(</span>m<span class="op">,</span> profundidad<span class="op">(</span>i<span class="op">));</span></span>
+<span id="cb4-14"><a aria-hidden="true" href="#cb4-14" tabindex="-1"></a>        <span class="cf">return</span> m<span class="op">;</span></span>
+<span id="cb4-15"><a aria-hidden="true" href="#cb4-15" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-16"><a aria-hidden="true" href="#cb4-16" tabindex="-1"></a>    <span class="dt">void</span> unir_ingenuo<span class="op">(</span><span class="dt">int</span> a<span class="op">,</span> <span class="dt">int</span> b<span class="op">)</span> <span class="op">{</span> a <span class="op">=</span> raiz<span class="op">(</span>a<span class="op">);</span> b <span class="op">=</span> raiz<span class="op">(</span>b<span class="op">);</span> <span class="cf">if</span> <span class="op">(</span>a <span class="op">!=</span> b<span class="op">)</span> parent<span class="op">[</span>a<span class="op">]</span> <span class="op">=</span> b<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb4-17"><a aria-hidden="true" href="#cb4-17" tabindex="-1"></a>    <span class="dt">void</span> unir_tamano<span class="op">(</span><span class="dt">int</span> a<span class="op">,</span> <span class="dt">int</span> b<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-18"><a aria-hidden="true" href="#cb4-18" tabindex="-1"></a>        a <span class="op">=</span> raiz<span class="op">(</span>a<span class="op">);</span> b <span class="op">=</span> raiz<span class="op">(</span>b<span class="op">);</span></span>
+<span id="cb4-19"><a aria-hidden="true" href="#cb4-19" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>a <span class="op">==</span> b<span class="op">)</span> <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb4-20"><a aria-hidden="true" href="#cb4-20" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>tam<span class="op">[</span>a<span class="op">]</span> <span class="op">&lt;</span> tam<span class="op">[</span>b<span class="op">])</span> <span class="bu">std::</span>swap<span class="op">(</span>a<span class="op">,</span> b<span class="op">);</span></span>
+<span id="cb4-21"><a aria-hidden="true" href="#cb4-21" tabindex="-1"></a>        parent<span class="op">[</span>b<span class="op">]</span> <span class="op">=</span> a<span class="op">;</span> tam<span class="op">[</span>a<span class="op">]</span> <span class="op">+=</span> tam<span class="op">[</span>b<span class="op">];</span></span>
+<span id="cb4-22"><a aria-hidden="true" href="#cb4-22" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-23"><a aria-hidden="true" href="#cb4-23" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb4-24"><a aria-hidden="true" href="#cb4-24" tabindex="-1"></a></span>
+<span id="cb4-25"><a aria-hidden="true" href="#cb4-25" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb4-26"><a aria-hidden="true" href="#cb4-26" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span> N <span class="op">=</span> <span class="dv">1024</span><span class="op">;</span></span>
+<span id="cb4-27"><a aria-hidden="true" href="#cb4-27" tabindex="-1"></a>    Bosque x<span class="op">(</span>N<span class="op">),</span> y<span class="op">(</span>N<span class="op">),</span> z<span class="op">(</span>N<span class="op">);</span></span>
+<span id="cb4-28"><a aria-hidden="true" href="#cb4-28" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">+</span> <span class="dv">1</span> <span class="op">&lt;</span> N<span class="op">;</span> <span class="op">++</span>i<span class="op">)</span> x<span class="op">.</span>unir_ingenuo<span class="op">(</span>i<span class="op">,</span> i <span class="op">+</span> <span class="dv">1</span><span class="op">);</span></span>
+<span id="cb4-29"><a aria-hidden="true" href="#cb4-29" tabindex="-1"></a>    <span class="bu">std::</span>printf<span class="op">(</span><span class="st">"ingenuo, cadena:              profundidad máxima </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span> x<span class="op">.</span>max_profundidad<span class="op">());</span></span>
+<span id="cb4-30"><a aria-hidden="true" href="#cb4-30" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">+</span> <span class="dv">1</span> <span class="op">&lt;</span> N<span class="op">;</span> <span class="op">++</span>i<span class="op">)</span> y<span class="op">.</span>unir_tamano<span class="op">(</span>i<span class="op">,</span> i <span class="op">+</span> <span class="dv">1</span><span class="op">);</span></span>
+<span id="cb4-31"><a aria-hidden="true" href="#cb4-31" tabindex="-1"></a>    <span class="bu">std::</span>printf<span class="op">(</span><span class="st">"por tamaño, cadena:           profundidad máxima </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span> y<span class="op">.</span>max_profundidad<span class="op">());</span></span>
+<span id="cb4-32"><a aria-hidden="true" href="#cb4-32" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> paso <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> paso <span class="op">&lt;</span> N<span class="op">;</span> paso <span class="op">*=</span> <span class="dv">2</span><span class="op">)</span>          <span class="co">// peor caso: unir árboles iguales</span></span>
+<span id="cb4-33"><a aria-hidden="true" href="#cb4-33" tabindex="-1"></a>        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">+</span> paso <span class="op">&lt;</span> N<span class="op">;</span> i <span class="op">+=</span> <span class="dv">2</span> <span class="op">*</span> paso<span class="op">)</span> z<span class="op">.</span>unir_tamano<span class="op">(</span>i<span class="op">,</span> i <span class="op">+</span> paso<span class="op">);</span></span>
+<span id="cb4-34"><a aria-hidden="true" href="#cb4-34" tabindex="-1"></a>    <span class="bu">std::</span>printf<span class="op">(</span><span class="st">"por tamaño, árboles iguales:  profundidad máxima </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span> z<span class="op">.</span>max_profundidad<span class="op">());</span></span>
+<span id="cb4-35"><a aria-hidden="true" href="#cb4-35" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div><div aria-labelledby="t0-2-b" class="panel" data-lang="rust" id="t0-2" role="tabpanel"><div class="sourceCode" id="cb5"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb5-1"><a aria-hidden="true" href="#cb5-1" tabindex="-1"></a><span class="kw">struct</span> Bosque <span class="op">{</span> parent<span class="op">:</span> <span class="dt">Vec</span><span class="op">&lt;</span><span class="dt">usize</span><span class="op">&gt;,</span> tam<span class="op">:</span> <span class="dt">Vec</span><span class="op">&lt;</span><span class="dt">usize</span><span class="op">&gt;</span> <span class="op">}</span></span>
+<span id="cb5-2"><a aria-hidden="true" href="#cb5-2" tabindex="-1"></a></span>
+<span id="cb5-3"><a aria-hidden="true" href="#cb5-3" tabindex="-1"></a><span class="kw">impl</span> Bosque <span class="op">{</span></span>
+<span id="cb5-4"><a aria-hidden="true" href="#cb5-4" tabindex="-1"></a>    <span class="kw">fn</span> new(n<span class="op">:</span> <span class="dt">usize</span>) <span class="op">-&gt;</span> <span class="dt">Self</span> <span class="op">{</span> Bosque <span class="op">{</span> parent<span class="op">:</span> (<span class="dv">0</span><span class="op">..</span>n)<span class="op">.</span>collect()<span class="op">,</span> tam<span class="op">:</span> <span class="pp">vec!</span>[<span class="dv">1</span><span class="op">;</span> n] <span class="op">}</span> <span class="op">}</span></span>
+<span id="cb5-5"><a aria-hidden="true" href="#cb5-5" tabindex="-1"></a>    <span class="kw">fn</span> raiz(<span class="op">&amp;</span><span class="kw">self</span><span class="op">,</span> <span class="kw">mut</span> x<span class="op">:</span> <span class="dt">usize</span>) <span class="op">-&gt;</span> <span class="dt">usize</span> <span class="op">{</span> <span class="cf">while</span> <span class="kw">self</span><span class="op">.</span>parent[x] <span class="op">!=</span> x <span class="op">{</span> x <span class="op">=</span> <span class="kw">self</span><span class="op">.</span>parent[x]<span class="op">;</span> <span class="op">}</span> x <span class="op">}</span> <span class="co">// sin compresión</span></span>
+<span id="cb5-6"><a aria-hidden="true" href="#cb5-6" tabindex="-1"></a>    <span class="kw">fn</span> profundidad(<span class="op">&amp;</span><span class="kw">self</span><span class="op">,</span> <span class="kw">mut</span> x<span class="op">:</span> <span class="dt">usize</span>) <span class="op">-&gt;</span> <span class="dt">usize</span> <span class="op">{</span></span>
+<span id="cb5-7"><a aria-hidden="true" href="#cb5-7" tabindex="-1"></a>        <span class="kw">let</span> <span class="kw">mut</span> d <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb5-8"><a aria-hidden="true" href="#cb5-8" tabindex="-1"></a>        <span class="cf">while</span> <span class="kw">self</span><span class="op">.</span>parent[x] <span class="op">!=</span> x <span class="op">{</span> x <span class="op">=</span> <span class="kw">self</span><span class="op">.</span>parent[x]<span class="op">;</span> d <span class="op">+=</span> <span class="dv">1</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb5-9"><a aria-hidden="true" href="#cb5-9" tabindex="-1"></a>        d</span>
+<span id="cb5-10"><a aria-hidden="true" href="#cb5-10" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-11"><a aria-hidden="true" href="#cb5-11" tabindex="-1"></a>    <span class="kw">fn</span> max_profundidad(<span class="op">&amp;</span><span class="kw">self</span>) <span class="op">-&gt;</span> <span class="dt">usize</span> <span class="op">{</span> (<span class="dv">0</span><span class="op">..</span><span class="kw">self</span><span class="op">.</span>parent<span class="op">.</span>len())<span class="op">.</span>map(<span class="op">|</span>i<span class="op">|</span> <span class="kw">self</span><span class="op">.</span>profundidad(i))<span class="op">.</span>max()<span class="op">.</span>unwrap() <span class="op">}</span></span>
+<span id="cb5-12"><a aria-hidden="true" href="#cb5-12" tabindex="-1"></a>    <span class="kw">fn</span> unir_ingenuo(<span class="op">&amp;</span><span class="kw">mut</span> <span class="kw">self</span><span class="op">,</span> a<span class="op">:</span> <span class="dt">usize</span><span class="op">,</span> b<span class="op">:</span> <span class="dt">usize</span>) <span class="op">{</span></span>
+<span id="cb5-13"><a aria-hidden="true" href="#cb5-13" tabindex="-1"></a>        <span class="kw">let</span> (a<span class="op">,</span> b) <span class="op">=</span> (<span class="kw">self</span><span class="op">.</span>raiz(a)<span class="op">,</span> <span class="kw">self</span><span class="op">.</span>raiz(b))<span class="op">;</span></span>
+<span id="cb5-14"><a aria-hidden="true" href="#cb5-14" tabindex="-1"></a>        <span class="cf">if</span> a <span class="op">!=</span> b <span class="op">{</span> <span class="kw">self</span><span class="op">.</span>parent[a] <span class="op">=</span> b<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb5-15"><a aria-hidden="true" href="#cb5-15" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-16"><a aria-hidden="true" href="#cb5-16" tabindex="-1"></a>    <span class="kw">fn</span> unir_tamano(<span class="op">&amp;</span><span class="kw">mut</span> <span class="kw">self</span><span class="op">,</span> a<span class="op">:</span> <span class="dt">usize</span><span class="op">,</span> b<span class="op">:</span> <span class="dt">usize</span>) <span class="op">{</span></span>
+<span id="cb5-17"><a aria-hidden="true" href="#cb5-17" tabindex="-1"></a>        <span class="kw">let</span> (<span class="kw">mut</span> a<span class="op">,</span> <span class="kw">mut</span> b) <span class="op">=</span> (<span class="kw">self</span><span class="op">.</span>raiz(a)<span class="op">,</span> <span class="kw">self</span><span class="op">.</span>raiz(b))<span class="op">;</span></span>
+<span id="cb5-18"><a aria-hidden="true" href="#cb5-18" tabindex="-1"></a>        <span class="cf">if</span> a <span class="op">==</span> b <span class="op">{</span> <span class="cf">return</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb5-19"><a aria-hidden="true" href="#cb5-19" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">self</span><span class="op">.</span>tam[a] <span class="op">&lt;</span> <span class="kw">self</span><span class="op">.</span>tam[b] <span class="op">{</span> <span class="pp">std::mem::</span>swap(<span class="op">&amp;</span><span class="kw">mut</span> a<span class="op">,</span> <span class="op">&amp;</span><span class="kw">mut</span> b)<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb5-20"><a aria-hidden="true" href="#cb5-20" tabindex="-1"></a>        <span class="kw">self</span><span class="op">.</span>parent[b] <span class="op">=</span> a<span class="op">;</span></span>
+<span id="cb5-21"><a aria-hidden="true" href="#cb5-21" tabindex="-1"></a>        <span class="kw">self</span><span class="op">.</span>tam[a] <span class="op">+=</span> <span class="kw">self</span><span class="op">.</span>tam[b]<span class="op">;</span></span>
+<span id="cb5-22"><a aria-hidden="true" href="#cb5-22" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-23"><a aria-hidden="true" href="#cb5-23" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb5-24"><a aria-hidden="true" href="#cb5-24" tabindex="-1"></a></span>
+<span id="cb5-25"><a aria-hidden="true" href="#cb5-25" tabindex="-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb5-26"><a aria-hidden="true" href="#cb5-26" tabindex="-1"></a>    <span class="kw">const</span> N<span class="op">:</span> <span class="dt">usize</span> <span class="op">=</span> <span class="dv">1024</span><span class="op">;</span></span>
+<span id="cb5-27"><a aria-hidden="true" href="#cb5-27" tabindex="-1"></a>    <span class="kw">let</span> (<span class="kw">mut</span> x<span class="op">,</span> <span class="kw">mut</span> y<span class="op">,</span> <span class="kw">mut</span> z) <span class="op">=</span> (<span class="pp">Bosque::</span>new(N)<span class="op">,</span> <span class="pp">Bosque::</span>new(N)<span class="op">,</span> <span class="pp">Bosque::</span>new(N))<span class="op">;</span></span>
+<span id="cb5-28"><a aria-hidden="true" href="#cb5-28" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="dv">0</span><span class="op">..</span>N <span class="op">-</span> <span class="dv">1</span> <span class="op">{</span> x<span class="op">.</span>unir_ingenuo(i<span class="op">,</span> i <span class="op">+</span> <span class="dv">1</span>)<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb5-29"><a aria-hidden="true" href="#cb5-29" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">"ingenuo, cadena:              profundidad máxima {}"</span><span class="op">,</span> x<span class="op">.</span>max_profundidad())<span class="op">;</span></span>
+<span id="cb5-30"><a aria-hidden="true" href="#cb5-30" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="dv">0</span><span class="op">..</span>N <span class="op">-</span> <span class="dv">1</span> <span class="op">{</span> y<span class="op">.</span>unir_tamano(i<span class="op">,</span> i <span class="op">+</span> <span class="dv">1</span>)<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb5-31"><a aria-hidden="true" href="#cb5-31" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">"por tamaño, cadena:           profundidad máxima {}"</span><span class="op">,</span> y<span class="op">.</span>max_profundidad())<span class="op">;</span></span>
+<span id="cb5-32"><a aria-hidden="true" href="#cb5-32" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> paso <span class="op">=</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb5-33"><a aria-hidden="true" href="#cb5-33" tabindex="-1"></a>    <span class="cf">while</span> paso <span class="op">&lt;</span> N <span class="op">{</span></span>
+<span id="cb5-34"><a aria-hidden="true" href="#cb5-34" tabindex="-1"></a>        <span class="co">// peor caso: unir árboles iguales</span></span>
+<span id="cb5-35"><a aria-hidden="true" href="#cb5-35" tabindex="-1"></a>        <span class="kw">let</span> <span class="kw">mut</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb5-36"><a aria-hidden="true" href="#cb5-36" tabindex="-1"></a>        <span class="cf">while</span> i <span class="op">+</span> paso <span class="op">&lt;</span> N <span class="op">{</span> z<span class="op">.</span>unir_tamano(i<span class="op">,</span> i <span class="op">+</span> paso)<span class="op">;</span> i <span class="op">+=</span> <span class="dv">2</span> <span class="op">*</span> paso<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb5-37"><a aria-hidden="true" href="#cb5-37" tabindex="-1"></a>        paso <span class="op">*=</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb5-38"><a aria-hidden="true" href="#cb5-38" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-39"><a aria-hidden="true" href="#cb5-39" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">"por tamaño, árboles iguales:  profundidad máxima {}"</span><span class="op">,</span> z<span class="op">.</span>max_profundidad())<span class="op">;</span></span>
+<span id="cb5-40"><a aria-hidden="true" href="#cb5-40" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div></div>
+<pre class="text salida"><code>ingenuo, cadena:              profundidad máxima 1023
+por tamaño, cadena:           profundidad máxima 1
+por tamaño, árboles iguales:  profundidad máxima 10</code></pre>
+<p>La última línea alcanza exactamente <span class="math inline">\(\lg 1024 = 10\)</span>: la cota del Teorema 1 es ajustada.</p>
+<hr/>
+<h2 id="árboles-de-expansión-mínima">3. Árboles de expansión mínima</h2>
+<h3 id="el-problema">3.1 El problema</h3>
+<p>Sea <span class="math inline">\(G = (V, E)\)</span> un grafo <strong>no dirigido, conexo</strong>, con pesos <span class="math inline">\(w\)</span>. Un <strong>árbol de expansión</strong> es un subconjunto <span class="math inline">\(T \subseteq E\)</span> que conecta todos los vértices sin ciclos (tiene exactamente <span class="math inline">\(V - 1\)</span> aristas). Un <strong>árbol de expansión mínima</strong> (MST) es uno de peso total <span class="math inline">\(w(T) = \sum_{e \in T} w(e)\)</span> mínimo.</p>
+<p>Ejemplos: tender cable (eléctrico, de red, de fibra) entre ciudades con el menor costo; el primer paso de varios algoritmos de agrupamiento (<em>clustering</em>) y de aproximación (el problema del viajante, PS11 ej. 5).</p>
+<p>A diferencia de los caminos mínimos (L10), los <strong>pesos negativos no causan ningún problema</strong> aquí: solo importa el orden relativo de los pesos, y sumar una constante a todas las aristas no cambia cuál árbol es mínimo (todos tienen <span class="math inline">\(V - 1\)</span> aristas).</p>
+<h3 id="la-propiedad-del-corte">3.2 La propiedad del corte</h3>
+<p>Un <strong>corte</strong> <span class="math inline">\((S, V \setminus S)\)</span> es una partición de los vértices en dos lados no vacíos. Una arista <strong>cruza</strong> el corte si tiene un extremo en cada lado; es <strong>ligera</strong> si es de peso mínimo entre las que cruzan. Un conjunto de aristas <span class="math inline">\(A\)</span> <strong>respeta</strong> el corte si ninguna arista de <span class="math inline">\(A\)</span> lo cruza.</p>
+<blockquote>
+<p><strong>Teorema 3 (propiedad del corte).</strong> Sea <span class="math inline">\(A\)</span> un subconjunto de algún MST, <span class="math inline">\((S, V\setminus S)\)</span> un corte que <span class="math inline">\(A\)</span> respeta, y <span class="math inline">\(e = \{u, v\}\)</span> una arista ligera del corte. Entonces <span class="math inline">\(A \cup \{e\}\)</span> también es subconjunto de algún MST.</p>
+</blockquote>
+<p><em>Demostración (intercambio).</em> Sea <span class="math inline">\(T\)</span> un MST con <span class="math inline">\(A \subseteq T\)</span>. Si <span class="math inline">\(e \in T\)</span>, listo. Si no, <span class="math inline">\(T \cup \{e\}\)</span> tiene exactamente un ciclo (en <span class="math inline">\(T\)</span> hay un único camino de <span class="math inline">\(u\)</span> a <span class="math inline">\(v\)</span>, y <span class="math inline">\(e\)</span> lo cierra). Ese camino va de <span class="math inline">\(u \in S\)</span> a <span class="math inline">\(v \notin S\)</span>, así que cruza el corte por alguna arista <span class="math inline">\(e' \ne e\)</span>. Sea <span class="math inline">\(T' = T \setminus \{e'\} \cup \{e\}\)</span>:</p>
+<ul>
+<li><span class="math inline">\(T'\)</span> es un árbol de expansión: quitar <span class="math inline">\(e'\)</span> rompe el único ciclo, y sigue conectando todo (cualquier camino que usaba <span class="math inline">\(e'\)</span> puede rodear por el resto del ciclo).</li>
+<li><span class="math inline">\(w(T') = w(T) - w(e') + w(e) \le w(T)\)</span>, porque <span class="math inline">\(e\)</span> es ligera y <span class="math inline">\(e'\)</span> cruza el corte: <span class="math inline">\(w(e) \le w(e')\)</span>. Así que <span class="math inline">\(T'\)</span> también es un MST.</li>
+<li><span class="math inline">\(A \subseteq T'\)</span>: <span class="math inline">\(e' \notin A\)</span> porque <span class="math inline">\(A\)</span> no cruza el corte.</li>
+</ul>
+<p>Entonces <span class="math inline">\(A \cup \{e\} \subseteq T'\)</span>, un MST. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>El método voraz genérico:</strong> empezar con <span class="math inline">\(A = \emptyset\)</span> y, <span class="math inline">\(V - 1\)</span> veces, agregar una arista ligera de algún corte que <span class="math inline">\(A\)</span> respete. Por el Teorema 3, <span class="math inline">\(A\)</span> siempre es parte de un MST; al tener <span class="math inline">\(V - 1\)</span> aristas, <strong>es</strong> un MST. Kruskal y Prim son dos maneras de elegir el corte.</p>
+<figure>
+<svg aria-label="Propiedad del corte: intercambiar e′ por la arista ligera e" fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" role="img" viewbox="0 0 760 300" xmlns="http://www.w3.org/2000/svg">
+<title>Propiedad del corte: intercambiar e′ por la arista ligera e</title>
+<defs>
+<marker id="ar" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#111827"></path></marker>
+<marker id="arc" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#1240e0"></path></marker>
+<marker id="ara" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"></path></marker>
+</defs>
+<rect fill="#ffffff" height="300" rx="12" width="760"></rect>
+<rect fill="#f8fafc" height="230" rx="16" stroke="#c7d2fe" stroke-width="1.5" width="300" x="30" y="40"></rect>
+<rect fill="#fff7ed" height="230" rx="16" stroke="#c7d2fe" stroke-width="1.5" width="300" x="430" y="40"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle" x="180" y="30">S</text>
+<text fill="#c2410c" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle" x="580" y="30">V \ S</text>
+<line stroke="#1240e0" stroke-width="2.2" x1="100" x2="250" y1="100" y2="110"></line>
+<line stroke="#1240e0" stroke-width="2.2" x1="100" x2="150" y1="100" y2="200"></line>
+<line stroke="#c2410c" stroke-width="3" x1="150" x2="600" y1="200" y2="210"></line>
+<line stroke="#1240e0" stroke-width="2.2" x1="600" x2="520" y1="210" y2="120"></line>
+<line stroke="#1240e0" stroke-width="2.2" x1="520" x2="660" y1="120" y2="100"></line>
+<line stroke="#15803d" stroke-dasharray="7 5" stroke-width="3" x1="250" x2="520" y1="110" y2="120"></line>
+<circle cx="250" cy="110" fill="#ffffff" r="17" stroke="#1240e0" stroke-width="1.6"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="250" y="115">u</text>
+<circle cx="150" cy="200" fill="#ffffff" r="17" stroke="#1240e0" stroke-width="1.6"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="150" y="205">x</text>
+<circle cx="100" cy="100" fill="#ffffff" r="17" stroke="#1240e0" stroke-width="1.6"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="100" y="105">a</text>
+<circle cx="520" cy="120" fill="#ffffff" r="17" stroke="#1240e0" stroke-width="1.6"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="520" y="125">v</text>
+<circle cx="600" cy="210" fill="#ffffff" r="17" stroke="#1240e0" stroke-width="1.6"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="600" y="215">y</text>
+<circle cx="660" cy="100" fill="#ffffff" r="17" stroke="#1240e0" stroke-width="1.6"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="660" y="105">b</text>
+<text fill="#15803d" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="middle" x="385" y="100">e (ligera)</text>
+<text fill="#c2410c" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="middle" x="375" y="225">e′ ∈ T</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" x="380" y="288">T′ = T − e′ + e   y   w(e) ≤ w(e′)  ⇒  w(T′) ≤ w(T)</text>
+</svg>
+<figcaption aria-hidden="true">La propiedad del corte: intercambiar e’ por e no aumenta el peso</figcaption>
+</figure>
+<hr/>
+<h2 id="kruskal">4. Kruskal</h2>
+<pre><code>Kruskal(G):
+    A ← ∅;  D ← DisjointSet(V)
+    para cada arista {u, v} en orden CRECIENTE de peso:
+        si D.unite(u, v):  A ← A ∪ {{u, v}}      -- une dos componentes distintas</code></pre>
+<blockquote>
+<p><strong>Teorema 4.</strong> Kruskal calcula un MST en <span class="math inline">\(O(E\lg E)\)</span>.</p>
+</blockquote>
+<p><em>Demostración.</em> <em>Corrección:</em> cuando Kruskal toma <span class="math inline">\(\{u, v\}\)</span>, <span class="math inline">\(u\)</span> y <span class="math inline">\(v\)</span> están en componentes distintas <span class="math inline">\(C_u\)</span>, <span class="math inline">\(C_v\)</span> del bosque <span class="math inline">\(A\)</span>. El corte <span class="math inline">\((C_u, V \setminus C_u)\)</span> es respetado por <span class="math inline">\(A\)</span>, y <span class="math inline">\(\{u, v\}\)</span> lo cruza. Es ligera: cualquier arista más ligera que lo cruzara ya habría sido examinada (orden creciente) y tomada, porque habría unido dos componentes distintas en su momento. Teorema 3. Las aristas descartadas cerrarían un ciclo. <em>Costo:</em> ordenar <span class="math inline">\(O(E\lg E)\)</span>, más <span class="math inline">\(E\)</span> operaciones de Union-Find, <span class="math inline">\(O(E\,\alpha(V))\)</span>. Como <span class="math inline">\(E \le V^2\)</span>, <span class="math inline">\(\lg E = O(\lg V)\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<div class="tabs"><div aria-label="Lenguaje" class="tablist" role="tablist"><button aria-controls="t1-0" aria-selected="false" data-lang="c" id="t1-0-b" role="tab" tabindex="-1" type="button">C</button><button aria-controls="t1-1" aria-selected="false" data-lang="cpp" id="t1-1-b" role="tab" tabindex="-1" type="button">C++</button><button aria-controls="t1-2" aria-selected="false" data-lang="rust" id="t1-2-b" role="tab" tabindex="-1" type="button">Rust</button></div><div aria-labelledby="t1-0-b" class="panel" data-lang="c" id="t1-0" role="tabpanel"><div class="sourceCode" id="cb8"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a aria-hidden="true" href="#cb8-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb8-2"><a aria-hidden="true" href="#cb8-2" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></span>
+<span id="cb8-3"><a aria-hidden="true" href="#cb8-3" tabindex="-1"></a></span>
+<span id="cb8-4"><a aria-hidden="true" href="#cb8-4" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span> <span class="dt">int</span> u<span class="op">,</span> v<span class="op">,</span> w<span class="op">;</span> <span class="op">}</span> Arista<span class="op">;</span></span>
+<span id="cb8-5"><a aria-hidden="true" href="#cb8-5" tabindex="-1"></a><span class="dt">static</span> <span class="dt">int</span> parent<span class="op">[</span><span class="dv">9</span><span class="op">];</span></span>
+<span id="cb8-6"><a aria-hidden="true" href="#cb8-6" tabindex="-1"></a><span class="dt">static</span> <span class="dt">int</span> raiz<span class="op">(</span><span class="dt">int</span> x<span class="op">)</span> <span class="op">{</span> <span class="cf">while</span> <span class="op">(</span>parent<span class="op">[</span>x<span class="op">]</span> <span class="op">!=</span> x<span class="op">)</span> x <span class="op">=</span> parent<span class="op">[</span>x<span class="op">]</span> <span class="op">=</span> parent<span class="op">[</span>parent<span class="op">[</span>x<span class="op">]];</span> <span class="cf">return</span> x<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb8-7"><a aria-hidden="true" href="#cb8-7" tabindex="-1"></a></span>
+<span id="cb8-8"><a aria-hidden="true" href="#cb8-8" tabindex="-1"></a><span class="co">/* Orden total (peso, u, v): así la salida es la misma en los tres lenguajes. */</span></span>
+<span id="cb8-9"><a aria-hidden="true" href="#cb8-9" tabindex="-1"></a><span class="dt">static</span> <span class="dt">int</span> cmp<span class="op">(</span><span class="dt">const</span> <span class="dt">void</span> <span class="op">*</span>a<span class="op">,</span> <span class="dt">const</span> <span class="dt">void</span> <span class="op">*</span>b<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb8-10"><a aria-hidden="true" href="#cb8-10" tabindex="-1"></a>    <span class="dt">const</span> Arista <span class="op">*</span>x <span class="op">=</span> a<span class="op">,</span> <span class="op">*</span>y <span class="op">=</span> b<span class="op">;</span></span>
+<span id="cb8-11"><a aria-hidden="true" href="#cb8-11" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>x<span class="op">-&gt;</span>w <span class="op">!=</span> y<span class="op">-&gt;</span>w<span class="op">)</span> <span class="cf">return</span> <span class="op">(</span>x<span class="op">-&gt;</span>w <span class="op">&gt;</span> y<span class="op">-&gt;</span>w<span class="op">)</span> <span class="op">-</span> <span class="op">(</span>x<span class="op">-&gt;</span>w <span class="op">&lt;</span> y<span class="op">-&gt;</span>w<span class="op">);</span></span>
+<span id="cb8-12"><a aria-hidden="true" href="#cb8-12" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>x<span class="op">-&gt;</span>u <span class="op">!=</span> y<span class="op">-&gt;</span>u<span class="op">)</span> <span class="cf">return</span> <span class="op">(</span>x<span class="op">-&gt;</span>u <span class="op">&gt;</span> y<span class="op">-&gt;</span>u<span class="op">)</span> <span class="op">-</span> <span class="op">(</span>x<span class="op">-&gt;</span>u <span class="op">&lt;</span> y<span class="op">-&gt;</span>u<span class="op">);</span></span>
+<span id="cb8-13"><a aria-hidden="true" href="#cb8-13" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">(</span>x<span class="op">-&gt;</span>v <span class="op">&gt;</span> y<span class="op">-&gt;</span>v<span class="op">)</span> <span class="op">-</span> <span class="op">(</span>x<span class="op">-&gt;</span>v <span class="op">&lt;</span> y<span class="op">-&gt;</span>v<span class="op">);</span></span>
+<span id="cb8-14"><a aria-hidden="true" href="#cb8-14" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb8-15"><a aria-hidden="true" href="#cb8-15" tabindex="-1"></a></span>
+<span id="cb8-16"><a aria-hidden="true" href="#cb8-16" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb8-17"><a aria-hidden="true" href="#cb8-17" tabindex="-1"></a>    <span class="co">/* CLRS Fig. 23.1: a..i = 0..8 */</span></span>
+<span id="cb8-18"><a aria-hidden="true" href="#cb8-18" tabindex="-1"></a>    Arista es<span class="op">[]</span> <span class="op">=</span> <span class="op">{{</span><span class="dv">0</span><span class="op">,</span><span class="dv">1</span><span class="op">,</span><span class="dv">4</span><span class="op">},{</span><span class="dv">0</span><span class="op">,</span><span class="dv">7</span><span class="op">,</span><span class="dv">8</span><span class="op">},{</span><span class="dv">1</span><span class="op">,</span><span class="dv">2</span><span class="op">,</span><span class="dv">8</span><span class="op">},{</span><span class="dv">1</span><span class="op">,</span><span class="dv">7</span><span class="op">,</span><span class="dv">11</span><span class="op">},{</span><span class="dv">2</span><span class="op">,</span><span class="dv">3</span><span class="op">,</span><span class="dv">7</span><span class="op">},{</span><span class="dv">2</span><span class="op">,</span><span class="dv">8</span><span class="op">,</span><span class="dv">2</span><span class="op">},{</span><span class="dv">2</span><span class="op">,</span><span class="dv">5</span><span class="op">,</span><span class="dv">4</span><span class="op">},</span></span>
+<span id="cb8-19"><a aria-hidden="true" href="#cb8-19" tabindex="-1"></a>                   <span class="op">{</span><span class="dv">3</span><span class="op">,</span><span class="dv">4</span><span class="op">,</span><span class="dv">9</span><span class="op">},{</span><span class="dv">3</span><span class="op">,</span><span class="dv">5</span><span class="op">,</span><span class="dv">14</span><span class="op">},{</span><span class="dv">4</span><span class="op">,</span><span class="dv">5</span><span class="op">,</span><span class="dv">10</span><span class="op">},{</span><span class="dv">5</span><span class="op">,</span><span class="dv">6</span><span class="op">,</span><span class="dv">2</span><span class="op">},{</span><span class="dv">6</span><span class="op">,</span><span class="dv">7</span><span class="op">,</span><span class="dv">1</span><span class="op">},{</span><span class="dv">6</span><span class="op">,</span><span class="dv">8</span><span class="op">,</span><span class="dv">6</span><span class="op">},{</span><span class="dv">7</span><span class="op">,</span><span class="dv">8</span><span class="op">,</span><span class="dv">7</span><span class="op">}};</span></span>
+<span id="cb8-20"><a aria-hidden="true" href="#cb8-20" tabindex="-1"></a>    <span class="dt">int</span> m <span class="op">=</span> <span class="kw">sizeof</span> es <span class="op">/</span> <span class="kw">sizeof</span> es<span class="op">[</span><span class="dv">0</span><span class="op">],</span> total <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb8-21"><a aria-hidden="true" href="#cb8-21" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">9</span><span class="op">;</span> i<span class="op">++)</span> parent<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> i<span class="op">;</span></span>
+<span id="cb8-22"><a aria-hidden="true" href="#cb8-22" tabindex="-1"></a>    qsort<span class="op">(</span>es<span class="op">,</span> m<span class="op">,</span> <span class="kw">sizeof</span> es<span class="op">[</span><span class="dv">0</span><span class="op">],</span> cmp<span class="op">);</span></span>
+<span id="cb8-23"><a aria-hidden="true" href="#cb8-23" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">"aristas del MST:"</span><span class="op">);</span></span>
+<span id="cb8-24"><a aria-hidden="true" href="#cb8-24" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> m<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb8-25"><a aria-hidden="true" href="#cb8-25" tabindex="-1"></a>        <span class="dt">int</span> a <span class="op">=</span> raiz<span class="op">(</span>es<span class="op">[</span>i<span class="op">].</span>u<span class="op">),</span> b <span class="op">=</span> raiz<span class="op">(</span>es<span class="op">[</span>i<span class="op">].</span>v<span class="op">);</span></span>
+<span id="cb8-26"><a aria-hidden="true" href="#cb8-26" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>a <span class="op">==</span> b<span class="op">)</span> <span class="cf">continue</span><span class="op">;</span></span>
+<span id="cb8-27"><a aria-hidden="true" href="#cb8-27" tabindex="-1"></a>        parent<span class="op">[</span>a<span class="op">]</span> <span class="op">=</span> b<span class="op">;</span></span>
+<span id="cb8-28"><a aria-hidden="true" href="#cb8-28" tabindex="-1"></a>        total <span class="op">+=</span> es<span class="op">[</span>i<span class="op">].</span>w<span class="op">;</span></span>
+<span id="cb8-29"><a aria-hidden="true" href="#cb8-29" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">" </span><span class="sc">%c%c</span><span class="st">(</span><span class="sc">%d</span><span class="st">)"</span><span class="op">,</span> <span class="ch">'a'</span> <span class="op">+</span> es<span class="op">[</span>i<span class="op">].</span>u<span class="op">,</span> <span class="ch">'a'</span> <span class="op">+</span> es<span class="op">[</span>i<span class="op">].</span>v<span class="op">,</span> es<span class="op">[</span>i<span class="op">].</span>w<span class="op">);</span></span>
+<span id="cb8-30"><a aria-hidden="true" href="#cb8-30" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb8-31"><a aria-hidden="true" href="#cb8-31" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">"</span><span class="sc">\n</span><span class="st">peso total: </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span> total<span class="op">);</span></span>
+<span id="cb8-32"><a aria-hidden="true" href="#cb8-32" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb8-33"><a aria-hidden="true" href="#cb8-33" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div><div aria-labelledby="t1-1-b" class="panel" data-lang="cpp" id="t1-1" role="tabpanel"><div class="sourceCode" id="cb9"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb9-1"><a aria-hidden="true" href="#cb9-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;algorithm&gt;</span></span>
+<span id="cb9-2"><a aria-hidden="true" href="#cb9-2" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb9-3"><a aria-hidden="true" href="#cb9-3" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;numeric&gt;</span></span>
+<span id="cb9-4"><a aria-hidden="true" href="#cb9-4" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;tuple&gt;</span></span>
+<span id="cb9-5"><a aria-hidden="true" href="#cb9-5" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;vector&gt;</span></span>
+<span id="cb9-6"><a aria-hidden="true" href="#cb9-6" tabindex="-1"></a></span>
+<span id="cb9-7"><a aria-hidden="true" href="#cb9-7" tabindex="-1"></a><span class="kw">struct</span> Arista <span class="op">{</span> <span class="dt">int</span> u<span class="op">,</span> v<span class="op">,</span> w<span class="op">;</span> <span class="op">};</span></span>
+<span id="cb9-8"><a aria-hidden="true" href="#cb9-8" tabindex="-1"></a></span>
+<span id="cb9-9"><a aria-hidden="true" href="#cb9-9" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb9-10"><a aria-hidden="true" href="#cb9-10" tabindex="-1"></a>    <span class="co">// CLRS Fig. 23.1: a..i = 0..8</span></span>
+<span id="cb9-11"><a aria-hidden="true" href="#cb9-11" tabindex="-1"></a>    <span class="bu">std::</span>vector<span class="op">&lt;</span>Arista<span class="op">&gt;</span> es <span class="op">=</span> <span class="op">{{</span><span class="dv">0</span><span class="op">,</span><span class="dv">1</span><span class="op">,</span><span class="dv">4</span><span class="op">},{</span><span class="dv">0</span><span class="op">,</span><span class="dv">7</span><span class="op">,</span><span class="dv">8</span><span class="op">},{</span><span class="dv">1</span><span class="op">,</span><span class="dv">2</span><span class="op">,</span><span class="dv">8</span><span class="op">},{</span><span class="dv">1</span><span class="op">,</span><span class="dv">7</span><span class="op">,</span><span class="dv">11</span><span class="op">},{</span><span class="dv">2</span><span class="op">,</span><span class="dv">3</span><span class="op">,</span><span class="dv">7</span><span class="op">},{</span><span class="dv">2</span><span class="op">,</span><span class="dv">8</span><span class="op">,</span><span class="dv">2</span><span class="op">},{</span><span class="dv">2</span><span class="op">,</span><span class="dv">5</span><span class="op">,</span><span class="dv">4</span><span class="op">},</span></span>
+<span id="cb9-12"><a aria-hidden="true" href="#cb9-12" tabindex="-1"></a>                              <span class="op">{</span><span class="dv">3</span><span class="op">,</span><span class="dv">4</span><span class="op">,</span><span class="dv">9</span><span class="op">},{</span><span class="dv">3</span><span class="op">,</span><span class="dv">5</span><span class="op">,</span><span class="dv">14</span><span class="op">},{</span><span class="dv">4</span><span class="op">,</span><span class="dv">5</span><span class="op">,</span><span class="dv">10</span><span class="op">},{</span><span class="dv">5</span><span class="op">,</span><span class="dv">6</span><span class="op">,</span><span class="dv">2</span><span class="op">},{</span><span class="dv">6</span><span class="op">,</span><span class="dv">7</span><span class="op">,</span><span class="dv">1</span><span class="op">},{</span><span class="dv">6</span><span class="op">,</span><span class="dv">8</span><span class="op">,</span><span class="dv">6</span><span class="op">},{</span><span class="dv">7</span><span class="op">,</span><span class="dv">8</span><span class="op">,</span><span class="dv">7</span><span class="op">}};</span></span>
+<span id="cb9-13"><a aria-hidden="true" href="#cb9-13" tabindex="-1"></a>    <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;</span> parent<span class="op">(</span><span class="dv">9</span><span class="op">);</span></span>
+<span id="cb9-14"><a aria-hidden="true" href="#cb9-14" tabindex="-1"></a>    <span class="bu">std::</span>iota<span class="op">(</span>parent<span class="op">.</span>begin<span class="op">(),</span> parent<span class="op">.</span>end<span class="op">(),</span> <span class="dv">0</span><span class="op">);</span></span>
+<span id="cb9-15"><a aria-hidden="true" href="#cb9-15" tabindex="-1"></a>    <span class="kw">auto</span> raiz <span class="op">=</span> <span class="op">[&amp;](</span><span class="dt">int</span> x<span class="op">)</span> <span class="op">{</span> <span class="cf">while</span> <span class="op">(</span>parent<span class="op">[</span>x<span class="op">]</span> <span class="op">!=</span> x<span class="op">)</span> x <span class="op">=</span> parent<span class="op">[</span>x<span class="op">]</span> <span class="op">=</span> parent<span class="op">[</span>parent<span class="op">[</span>x<span class="op">]];</span> <span class="cf">return</span> x<span class="op">;</span> <span class="op">};</span></span>
+<span id="cb9-16"><a aria-hidden="true" href="#cb9-16" tabindex="-1"></a>    <span class="co">// Orden total (peso, u, v): así la salida es la misma en los tres lenguajes.</span></span>
+<span id="cb9-17"><a aria-hidden="true" href="#cb9-17" tabindex="-1"></a>    <span class="bu">std::</span>sort<span class="op">(</span>es<span class="op">.</span>begin<span class="op">(),</span> es<span class="op">.</span>end<span class="op">(),</span> <span class="op">[](</span><span class="at">const</span> Arista<span class="op">&amp;</span> a<span class="op">,</span> <span class="at">const</span> Arista<span class="op">&amp;</span> b<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-18"><a aria-hidden="true" href="#cb9-18" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">std::</span>tie<span class="op">(</span>a<span class="op">.</span>w<span class="op">,</span> a<span class="op">.</span>u<span class="op">,</span> a<span class="op">.</span>v<span class="op">)</span> <span class="op">&lt;</span> <span class="bu">std::</span>tie<span class="op">(</span>b<span class="op">.</span>w<span class="op">,</span> b<span class="op">.</span>u<span class="op">,</span> b<span class="op">.</span>v<span class="op">);</span></span>
+<span id="cb9-19"><a aria-hidden="true" href="#cb9-19" tabindex="-1"></a>    <span class="op">});</span></span>
+<span id="cb9-20"><a aria-hidden="true" href="#cb9-20" tabindex="-1"></a>    <span class="dt">int</span> total <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb9-21"><a aria-hidden="true" href="#cb9-21" tabindex="-1"></a>    <span class="bu">std::</span>printf<span class="op">(</span><span class="st">"aristas del MST:"</span><span class="op">);</span></span>
+<span id="cb9-22"><a aria-hidden="true" href="#cb9-22" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="at">const</span> <span class="kw">auto</span><span class="op">&amp;</span> e <span class="op">:</span> es<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-23"><a aria-hidden="true" href="#cb9-23" tabindex="-1"></a>        <span class="dt">int</span> a <span class="op">=</span> raiz<span class="op">(</span>e<span class="op">.</span>u<span class="op">),</span> b <span class="op">=</span> raiz<span class="op">(</span>e<span class="op">.</span>v<span class="op">);</span></span>
+<span id="cb9-24"><a aria-hidden="true" href="#cb9-24" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>a <span class="op">==</span> b<span class="op">)</span> <span class="cf">continue</span><span class="op">;</span></span>
+<span id="cb9-25"><a aria-hidden="true" href="#cb9-25" tabindex="-1"></a>        parent<span class="op">[</span>a<span class="op">]</span> <span class="op">=</span> b<span class="op">;</span></span>
+<span id="cb9-26"><a aria-hidden="true" href="#cb9-26" tabindex="-1"></a>        total <span class="op">+=</span> e<span class="op">.</span>w<span class="op">;</span></span>
+<span id="cb9-27"><a aria-hidden="true" href="#cb9-27" tabindex="-1"></a>        <span class="bu">std::</span>printf<span class="op">(</span><span class="st">" </span><span class="sc">%c%c</span><span class="st">(</span><span class="sc">%d</span><span class="st">)"</span><span class="op">,</span> <span class="ch">'a'</span> <span class="op">+</span> e<span class="op">.</span>u<span class="op">,</span> <span class="ch">'a'</span> <span class="op">+</span> e<span class="op">.</span>v<span class="op">,</span> e<span class="op">.</span>w<span class="op">);</span></span>
+<span id="cb9-28"><a aria-hidden="true" href="#cb9-28" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb9-29"><a aria-hidden="true" href="#cb9-29" tabindex="-1"></a>    <span class="bu">std::</span>printf<span class="op">(</span><span class="st">"</span><span class="sc">\n</span><span class="st">peso total: </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span> total<span class="op">);</span></span>
+<span id="cb9-30"><a aria-hidden="true" href="#cb9-30" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div><div aria-labelledby="t1-2-b" class="panel" data-lang="rust" id="t1-2" role="tabpanel"><div class="sourceCode" id="cb10"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb10-1"><a aria-hidden="true" href="#cb10-1" tabindex="-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb10-2"><a aria-hidden="true" href="#cb10-2" tabindex="-1"></a>    <span class="co">// CLRS Fig. 23.1: a..i = 0..8</span></span>
+<span id="cb10-3"><a aria-hidden="true" href="#cb10-3" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> es<span class="op">:</span> <span class="dt">Vec</span><span class="op">&lt;</span>(<span class="dt">usize</span><span class="op">,</span> <span class="dt">usize</span><span class="op">,</span> <span class="dt">i32</span>)<span class="op">&gt;</span> <span class="op">=</span> <span class="pp">vec!</span>[(<span class="dv">0</span><span class="op">,</span><span class="dv">1</span><span class="op">,</span><span class="dv">4</span>)<span class="op">,</span>(<span class="dv">0</span><span class="op">,</span><span class="dv">7</span><span class="op">,</span><span class="dv">8</span>)<span class="op">,</span>(<span class="dv">1</span><span class="op">,</span><span class="dv">2</span><span class="op">,</span><span class="dv">8</span>)<span class="op">,</span>(<span class="dv">1</span><span class="op">,</span><span class="dv">7</span><span class="op">,</span><span class="dv">11</span>)<span class="op">,</span>(<span class="dv">2</span><span class="op">,</span><span class="dv">3</span><span class="op">,</span><span class="dv">7</span>)<span class="op">,</span>(<span class="dv">2</span><span class="op">,</span><span class="dv">8</span><span class="op">,</span><span class="dv">2</span>)<span class="op">,</span>(<span class="dv">2</span><span class="op">,</span><span class="dv">5</span><span class="op">,</span><span class="dv">4</span>)<span class="op">,</span></span>
+<span id="cb10-4"><a aria-hidden="true" href="#cb10-4" tabindex="-1"></a>                                                 (<span class="dv">3</span><span class="op">,</span><span class="dv">4</span><span class="op">,</span><span class="dv">9</span>)<span class="op">,</span>(<span class="dv">3</span><span class="op">,</span><span class="dv">5</span><span class="op">,</span><span class="dv">14</span>)<span class="op">,</span>(<span class="dv">4</span><span class="op">,</span><span class="dv">5</span><span class="op">,</span><span class="dv">10</span>)<span class="op">,</span>(<span class="dv">5</span><span class="op">,</span><span class="dv">6</span><span class="op">,</span><span class="dv">2</span>)<span class="op">,</span>(<span class="dv">6</span><span class="op">,</span><span class="dv">7</span><span class="op">,</span><span class="dv">1</span>)<span class="op">,</span>(<span class="dv">6</span><span class="op">,</span><span class="dv">8</span><span class="op">,</span><span class="dv">6</span>)<span class="op">,</span>(<span class="dv">7</span><span class="op">,</span><span class="dv">8</span><span class="op">,</span><span class="dv">7</span>)]<span class="op">;</span></span>
+<span id="cb10-5"><a aria-hidden="true" href="#cb10-5" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> parent<span class="op">:</span> <span class="dt">Vec</span><span class="op">&lt;</span><span class="dt">usize</span><span class="op">&gt;</span> <span class="op">=</span> (<span class="dv">0</span><span class="op">..</span><span class="dv">9</span>)<span class="op">.</span>collect()<span class="op">;</span></span>
+<span id="cb10-6"><a aria-hidden="true" href="#cb10-6" tabindex="-1"></a>    <span class="kw">fn</span> raiz(p<span class="op">:</span> <span class="op">&amp;</span><span class="kw">mut</span> [<span class="dt">usize</span>]<span class="op">,</span> <span class="kw">mut</span> x<span class="op">:</span> <span class="dt">usize</span>) <span class="op">-&gt;</span> <span class="dt">usize</span> <span class="op">{</span></span>
+<span id="cb10-7"><a aria-hidden="true" href="#cb10-7" tabindex="-1"></a>        <span class="cf">while</span> p[x] <span class="op">!=</span> x <span class="op">{</span> p[x] <span class="op">=</span> p[p[x]]<span class="op">;</span> x <span class="op">=</span> p[x]<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb10-8"><a aria-hidden="true" href="#cb10-8" tabindex="-1"></a>        x</span>
+<span id="cb10-9"><a aria-hidden="true" href="#cb10-9" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb10-10"><a aria-hidden="true" href="#cb10-10" tabindex="-1"></a>    <span class="co">// Orden total (peso, u, v): así la salida es la misma en los tres lenguajes.</span></span>
+<span id="cb10-11"><a aria-hidden="true" href="#cb10-11" tabindex="-1"></a>    es<span class="op">.</span>sort_by_key(<span class="op">|&amp;</span>(u<span class="op">,</span> v<span class="op">,</span> w)<span class="op">|</span> (w<span class="op">,</span> u<span class="op">,</span> v))<span class="op">;</span></span>
+<span id="cb10-12"><a aria-hidden="true" href="#cb10-12" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> total <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb10-13"><a aria-hidden="true" href="#cb10-13" tabindex="-1"></a>    <span class="pp">print!</span>(<span class="st">"aristas del MST:"</span>)<span class="op">;</span></span>
+<span id="cb10-14"><a aria-hidden="true" href="#cb10-14" tabindex="-1"></a>    <span class="cf">for</span> (u<span class="op">,</span> v<span class="op">,</span> w) <span class="kw">in</span> es <span class="op">{</span></span>
+<span id="cb10-15"><a aria-hidden="true" href="#cb10-15" tabindex="-1"></a>        <span class="kw">let</span> (a<span class="op">,</span> b) <span class="op">=</span> (raiz(<span class="op">&amp;</span><span class="kw">mut</span> parent<span class="op">,</span> u)<span class="op">,</span> raiz(<span class="op">&amp;</span><span class="kw">mut</span> parent<span class="op">,</span> v))<span class="op">;</span></span>
+<span id="cb10-16"><a aria-hidden="true" href="#cb10-16" tabindex="-1"></a>        <span class="cf">if</span> a <span class="op">==</span> b <span class="op">{</span> <span class="cf">continue</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb10-17"><a aria-hidden="true" href="#cb10-17" tabindex="-1"></a>        parent[a] <span class="op">=</span> b<span class="op">;</span></span>
+<span id="cb10-18"><a aria-hidden="true" href="#cb10-18" tabindex="-1"></a>        total <span class="op">+=</span> w<span class="op">;</span></span>
+<span id="cb10-19"><a aria-hidden="true" href="#cb10-19" tabindex="-1"></a>        <span class="pp">print!</span>(<span class="st">" {}{}({})"</span><span class="op">,</span> (<span class="ch">b'a'</span> <span class="op">+</span> u <span class="kw">as</span> <span class="dt">u8</span>) <span class="kw">as</span> <span class="dt">char</span><span class="op">,</span> (<span class="ch">b'a'</span> <span class="op">+</span> v <span class="kw">as</span> <span class="dt">u8</span>) <span class="kw">as</span> <span class="dt">char</span><span class="op">,</span> w)<span class="op">;</span></span>
+<span id="cb10-20"><a aria-hidden="true" href="#cb10-20" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb10-21"><a aria-hidden="true" href="#cb10-21" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">peso total: {total}"</span>)<span class="op">;</span></span>
+<span id="cb10-22"><a aria-hidden="true" href="#cb10-22" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div></div>
+<pre class="text salida"><code>aristas del MST: gh(1) ci(2) fg(2) ab(4) cf(4) cd(7) ah(8) de(9)
+peso total: 37</code></pre>
+<hr/>
+<h2 id="prim">5. Prim</h2>
+<pre><code>Prim(G):
+    T ← {0}   -- el árbol crece desde un vértice cualquiera
+    mientras T no tenga todos los vértices:
+        tomar la arista más ligera {u, v} con u ∈ T, v ∉ T;   T ← T ∪ {v}</code></pre>
+<blockquote>
+<p><strong>Teorema 5.</strong> Prim calcula un MST; con un heap binario cuesta <span class="math inline">\(O(E\lg V)\)</span>.</p>
+</blockquote>
+<p><em>Demostración.</em> <em>Corrección:</em> en cada paso, el corte es <span class="math inline">\((T, V \setminus T)\)</span>, respetado por las aristas ya elegidas (todas dentro de <span class="math inline">\(T\)</span>), y la arista tomada es ligera por definición. Teorema 3. <em>Costo:</em> igual que Dijkstra (L10 §5.3), con inserción perezosa: cada arista mete a lo más dos pares al heap, <span class="math inline">\(O(E\lg E) = O(E\lg V)\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<p>Prim es <strong>casi idéntico a Dijkstra</strong>; la única diferencia es la prioridad: Dijkstra usa la distancia desde <span class="math inline">\(s\)</span> (<span class="math inline">\(d[u] + w\)</span>), Prim usa el peso de la arista sola (<span class="math inline">\(w\)</span>). Las soluciones del lab comparten la misma estructura de inserción perezosa en los dos labs.</p>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>Kruskal</th>
+<th>Prim</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estructura auxiliar</td>
+<td>Union-Find</td>
+<td>heap</td>
+</tr>
+<tr>
+<td>Crece</td>
+<td>un bosque (muchas componentes)</td>
+<td>un árbol</td>
+</tr>
+<tr>
+<td>Mejor en</td>
+<td>grafos dispersos; aristas ya ordenadas</td>
+<td>grafos densos (con arreglo: <span class="math inline">\(O(V^2)\)</span>)</td>
+</tr>
+<tr>
+<td>Costo</td>
+<td><span class="math inline">\(O(E\lg E)\)</span></td>
+<td><span class="math inline">\(O(E\lg V)\)</span> con heap binario</td>
+</tr>
+</tbody>
+</table></div>
+<p>Si el grafo no es conexo, ninguno de los dos produce un árbol: Kruskal termina con más de una componente y Prim no alcanza todos los vértices. El lab devuelve <code>None</code>/<code>nullopt</code>/<code>false</code> en ese caso.</p>
+<hr/>
+<h2 id="find-muta-es-una-consulta">6. <code>find</code> muta: ¿es una consulta?</h2>
+<p><code>find(x)</code> <strong>responde una pregunta</strong> (¿quién es el representante?), pero la compresión de caminos <strong>modifica</strong> el arreglo. ¿Debe ser <code>const</code> / <code>&amp;self</code>?</p>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>Firma en el lab</th>
+<th>Consecuencia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C</td>
+<td><code>size_t disjoint_set_find(DisjointSet *d, size_t x)</code></td>
+<td>puntero no-<code>const</code>: honesto</td>
+</tr>
+<tr>
+<td>C++</td>
+<td><code>std::size_t find(std::size_t x)</code> (no <code>const</code>)</td>
+<td>no se puede llamar sobre un <code>const DisjointSet&amp;</code></td>
+</tr>
+<tr>
+<td>C++ (alternativa)</td>
+<td><code>std::size_t find(std::size_t x) const</code> con <code>mutable std::vector&lt;std::size_t&gt; parent_</code></td>
+<td>parece consulta, pero dos hilos que lo llamen a la vez tienen una carrera de datos</td>
+</tr>
+<tr>
+<td>Rust</td>
+<td><code>pub fn find(&amp;mut self, x: usize) -&gt; usize</code></td>
+<td>quien llame debe tener acceso <strong>exclusivo</strong>: el compilador impide compartirlo entre hilos sin sincronización</td>
+</tr>
+<tr>
+<td>Rust (alternativa)</td>
+<td><code>parent: Vec&lt;Cell&lt;usize&gt;&gt;</code> y <code>find(&amp;self)</code></td>
+<td><code>Cell</code> no es <code>Sync</code>: el compilador impide compartirlo entre hilos</td>
+</tr>
+</tbody>
+</table></div>
+<p>La versión de Rust con <code>&amp;mut self</code> dice la verdad sobre la operación, y el sistema de tipos protege de la carrera de datos que la versión <code>mutable</code> de C++ permite en silencio. Es el mismo contraste “lo que el compilador verifica” de toda la serie, ahora con concurrencia.</p>
+<hr/>
+<h2 id="guía-del-lab-11">7. Guía del Lab 11</h2>
+<p><strong>Archivos:</strong> <code>c/src/lab11/{disjoint_set,mst}.c</code>, <code>cpp/include/algolib/lab11/{disjoint_set,mst}.hpp</code>, <code>rust/src/lab11/mod.rs</code>. Prim necesita tu <code>BinaryHeap</code> del <strong>lab06</strong>.</p>
+<p><strong>Orden sugerido:</strong> <code>DisjointSet</code> (con tamaño y compresión <strong>iterativa</strong>) → Kruskal → Prim.</p>
+<p><strong>Errores frecuentes:</strong></p>
+<ul>
+<li><code>unite</code> que hace <code>parent[a] = b</code> sin pasar antes por <code>find</code>: cuelga un nodo interno y rompe el bosque.</li>
+<li><code>find</code> recursivo: <code>dsu_grande_y_profundo</code> usa un millón de elementos; si la unión no usa tamaño, la recursión desborda.</li>
+<li>Kruskal sin verificar conexidad al final (<code>count() == 1</code>).</li>
+<li>Prim con grafo no dirigido: agregar solo una dirección de cada arista.</li>
+<li>Prim que ignora los pares obsoletos al sacarlos: suma dos veces un vértice.</li>
+</ul>
+<hr/>
+<h2 id="comprueba-tu-comprensión">8. Comprueba tu comprensión</h2>
+<ol type="1">
+<li>¿Por qué la unión por tamaño no evita, por sí sola, que <code>find</code> cueste <span class="math inline">\(\Theta(\lg n)\)</span>?</li>
+<li>Si todas las aristas tienen pesos distintos, ¿el MST es único? ¿Por qué?</li>
+<li>¿Sirve Kruskal para hallar un árbol de expansión <strong>máxima</strong>?</li>
+<li>¿Por qué un MST no da caminos mínimos entre sus vértices? Da un ejemplo con 3 vértices.</li>
+<li>Si se agrega una arista <span class="math inline">\(e\)</span> a un grafo cuyo MST ya conoces, ¿cómo actualizas el MST en <span class="math inline">\(O(V)\)</span>?</li>
+</ol>
+<details>
+<summary>
+Respuestas
+</summary>
+<ol type="1">
+<li>Porque el árbol de “árboles iguales” alcanza altura <span class="math inline">\(\lg n\)</span> (el programa de §2.3), y sin compresión cada <code>find</code> en sus hojas recorre todo el camino.</li>
+<li>Sí. Si hubiera dos, sea <span class="math inline">\(e\)</span> la arista más ligera que está en uno y no en el otro; aplicando el intercambio del Teorema 3, se obtendría un árbol de peso estrictamente menor.</li>
+<li>Sí: ordenar en orden <strong>decreciente</strong> (o negar los pesos). La propiedad del corte vale igual con “pesada” en lugar de “ligera”.</li>
+<li>Triángulo con <span class="math inline">\(w(a,b) = w(b,c) = 2\)</span> y <span class="math inline">\(w(a,c) = 3\)</span>: el MST es <span class="math inline">\(\{ab, bc\}\)</span> (peso 4), pero el camino mínimo de <span class="math inline">\(a\)</span> a <span class="math inline">\(c\)</span> es la arista directa (3), que no está en el MST.</li>
+<li>Agregar <span class="math inline">\(e\)</span> crea un único ciclo en el árbol; quitar la arista más pesada de ese ciclo (propiedad del ciclo, PS11 ej. 2). Encontrar el ciclo y su máximo cuesta <span class="math inline">\(O(V)\)</span> con un DFS en el árbol.</li>
+</ol>
+</details>
+<hr/>
+<h2 id="problem-set-11">9. Problem Set 11</h2>
+<p><strong>Teoría</strong></p>
+<ol type="1">
+<li>Demuestra que con unión por <strong>rango</strong> (sin compresión) un nodo de rango <span class="math inline">\(r\)</span> tiene al menos <span class="math inline">\(2^r\)</span> descendientes, y concluye que la altura es <span class="math inline">\(\le \lg n\)</span>.</li>
+<li><strong>Propiedad del ciclo.</strong> Demuestra que si <span class="math inline">\(e\)</span> es la arista estrictamente más pesada de algún ciclo, <span class="math inline">\(e\)</span> no está en ningún MST.</li>
+<li>Demuestra que con unión por rango y compresión de caminos, <span class="math inline">\(m\)</span> operaciones cuestan <span class="math inline">\(O(m\lg^* n)\)</span>, donde <span class="math inline">\(\lg^* n\)</span> es el número de veces que hay que aplicar <span class="math inline">\(\lg\)</span> para llegar a <span class="math inline">\(\le 1\)</span>. (Pista: agrupa los rangos en bloques <span class="math inline">\([k, 2^k)\)</span>.)</li>
+<li><strong>Borůvka.</strong> En cada ronda, cada componente elige su arista más ligera que sale de ella, y se agregan todas. Demuestra que es correcto (con pesos distintos), que cada ronda al menos divide entre dos el número de componentes, y que cuesta <span class="math inline">\(O(E\lg V)\)</span>.</li>
+<li><strong>Aproximación del viajante métrico.</strong> Demuestra que recorrer un MST en preorden y saltar los vértices repetidos da un ciclo de peso a lo más el doble del óptimo, si los pesos cumplen la desigualdad del triángulo.</li>
+</ol>
+<p><strong>Implementación (C, C++ y Rust)</strong></p>
+<ol start="6" type="1">
+<li>Agrega a Kruskal y Prim la lista de aristas del MST (no solo el peso) y verifica que es un árbol de expansión.</li>
+<li>Implementa Borůvka con tu <code>DisjointSet</code> y compáralo con Kruskal y Prim en grafos aleatorios grandes.</li>
+<li>Usa tu <code>DisjointSet</code> para contar componentes conexas de una imagen binaria de <span class="math inline">\(1000\times1000\)</span> píxeles (vecindad 4) y compara con BFS.</li>
+<li>Implementa una versión de <code>DisjointSet</code> con <code>find(&amp;self)</code> en Rust usando <code>Cell</code>, y muestra con un ejemplo que no se puede compartir entre hilos (error de compilación con <code>std::thread::scope</code>).</li>
+</ol>
+<hr/>
+<h2 id="referencias">Referencias</h2>
+<ul>
+<li>CLRS, <em>Introduction to Algorithms</em>, 4ª ed.: Cap. 19 (conjuntos disjuntos; §19.4 análisis con <span class="math inline">\(\alpha\)</span>), Cap. 21 (MST: propiedad del corte, Kruskal, Prim).</li>
+<li>MIT 6.046 (Spring 2015), Lecture 12 (<em>Greedy Algorithms: MST</em>) y Recitation (<em>Union-Find</em>).</li>
+<li>Tarjan, R. E. (1975). <em>Efficiency of a good but not linear set union algorithm</em>. JACM 22(2).</li>
+<li>Kruskal, J. B. (1956). <em>On the shortest spanning subtree of a graph and the traveling salesman problem</em>. Proc. AMS 7.</li>
+<li>Prim, R. C. (1957). <em>Shortest connection networks and some generalizations</em>. Bell System Technical Journal 36.</li>
+</ul>
+</main><footer>algolib · Estructuras de Datos y Algoritmos. Fuente: <code>notas/L11-union-find-mst.md</code>. Regenerar con <code>make html</code>.</footer><script>{
+
+const KEY='algolib-lang';let pref='cpp';try{pref=localStorage.getItem(KEY)||'cpp'}catch(e){}
+function pick(lang,save){
+  for(const g of document.querySelectorAll('.tabs')){
+    const btns=[...g.querySelectorAll('[role=tab]')];if(!btns.length)continue;
+    const b=btns.find(x=>x.dataset.lang===lang)||btns[0];
+    for(const x of btns){const on=x===b;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;
+      document.getElementById(x.getAttribute('aria-controls')).hidden=!on;}
+  }
+  if(save){try{localStorage.setItem(KEY,lang)}catch(e){}}
+}
+for(const g of document.querySelectorAll('.tablist')){
+  g.addEventListener('click',e=>{const b=e.target.closest('[role=tab]');if(b){const y=b.getBoundingClientRect().top;pick(b.dataset.lang,true);window.scrollBy(0,b.getBoundingClientRect().top-y);}});
+  g.addEventListener('keydown',e=>{const bs=[...g.querySelectorAll('[role=tab]')];const i=bs.indexOf(document.activeElement);
+    if(i<0)return;let j=i;if(e.key==='ArrowRight')j=(i+1)%bs.length;else if(e.key==='ArrowLeft')j=(i-1+bs.length)%bs.length;else return;
+    e.preventDefault();pick(bs[j].dataset.lang,true);bs[j].focus();});
+}
+pick(pref,false);
+for(const p of document.querySelectorAll('main pre:not(.pizarra):not(.salida)')){
+  const b=document.createElement('button');b.className='copy';b.type='button';b.textContent='Copiar';
+  b.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(p.innerText.replace(/Copiar$/,''));b.textContent='Copiado';}catch(e){b.textContent='No se pudo';}setTimeout(()=>b.textContent='Copiar',1600);});
+  p.appendChild(b);}
+}</script></body></html>

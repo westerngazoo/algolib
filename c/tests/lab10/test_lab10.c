@@ -124,8 +124,37 @@ static void floyd_warshall_vs_oraculo(void) {
     free(all);
 }
 
+static void dijkstra_grande_pesos_unitarios(void) {
+    /* 200 000 vértices, 10⁶ aristas de peso 1: Dijkstra debe coincidir con BFS.
+     * Un Dijkstra que busca el mínimo recorriendo todos los vértices es Θ(V²) ≈ 4·10¹⁰. */
+    enum { N = 200000, M = 1000000 };
+    Lcg rng = {19};
+    Arista *es = malloc(M * sizeof *es);
+    for (size_t i = 0; i < M; i++) es[i] = (Arista){lcg_below(&rng, N), lcg_below(&rng, N), 1};
+    WGraph *g = construir(N, es, M);
+    /* BFS sobre el mismo grafo, usando la API de vecinos. */
+    int64_t *bfs = malloc(N * sizeof *bfs), *d = malloc(N * sizeof *d);
+    size_t *cola = malloc(N * sizeof *cola), ini = 0, fin = 0;
+    for (size_t v = 0; v < N; v++) bfs[v] = DIST_INF;
+    bfs[0] = 0;
+    cola[fin++] = 0;
+    while (ini < fin) {
+        size_t u = cola[ini++], k;
+        const WeightedEdge *vs = wgraph_neighbors(g, u, &k);
+        for (size_t j = 0; j < k; j++)
+            if (bfs[vs[j].to] == DIST_INF) { bfs[vs[j].to] = bfs[u] + 1; cola[fin++] = vs[j].to; }
+    }
+    dijkstra(g, 0, d);
+    for (size_t v = 0; v < N; v++) CHECK_EQ(d[v], bfs[v]);
+    free(cola);
+    free(d);
+    free(bfs);
+    wgraph_free(g);
+    free(es);
+}
+
 int main(void) {
     return algotest_run("lab10", (AlgoTest[]){
         T(dijkstra_clrs_24_6), T(dijkstra_inalcanzable), T(dijkstra_aleatorio),
-        T(bellman_ford_negativos_y_ciclos), T(dag_aleatorio_con_negativos), T(floyd_warshall_vs_oraculo), {0}});
+        T(bellman_ford_negativos_y_ciclos), T(dag_aleatorio_con_negativos), T(floyd_warshall_vs_oraculo), T(dijkstra_grande_pesos_unitarios), {0}});
 }

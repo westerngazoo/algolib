@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 300" width="760" height="300" role="img" aria-label="Mapa de la lección 13" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#111827">
+<title>Mapa de la lección 13</title>
+<defs>
+  <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#111827"/></marker>
+  <marker id="arc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1240e0"/></marker>
+  <marker id="ara" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"/></marker>
+</defs>
+<rect width="760" height="300" rx="12" fill="#ffffff"/>
+<rect x="40" y="26" width="200" height="58" rx="10" fill="#eef2ff" stroke="#1240e0" stroke-width="1.4"/>
+<text x="54" y="50" font-size="13" text-anchor="start" fill="#1240e0" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">§1</text>
+<text x="54" y="70" font-size="14" text-anchor="start" fill="#111827" font-weight="600" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">Tries</text>
+<rect x="290" y="26" width="200" height="58" rx="10" fill="#eef2ff" stroke="#1240e0" stroke-width="1.4"/>
+<text x="304" y="50" font-size="13" text-anchor="start" fill="#1240e0" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">§2</text>
+<text x="304" y="70" font-size="14" text-anchor="start" fill="#111827" font-weight="600" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">Consultas de rango</text>
+<rect x="540" y="26" width="200" height="58" rx="10" fill="#1240e0" stroke="#1240e0" stroke-width="2"/>
+<text x="554" y="50" font-size="13" text-anchor="start" fill="#dbe4ff" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">§3</text>
+<text x="554" y="70" font-size="14" text-anchor="start" fill="#ffffff" font-weight="600" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">Fenwick</text>
+<rect x="40" y="124" width="200" height="58" rx="10" fill="#eef2ff" stroke="#1240e0" stroke-width="1.4"/>
+<text x="54" y="148" font-size="13" text-anchor="start" fill="#1240e0" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">§6</text>
+<text x="54" y="168" font-size="14" text-anchor="start" fill="#111827" font-weight="600" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">Paradigmas</text>
+<rect x="290" y="124" width="200" height="58" rx="10" fill="#eef2ff" stroke="#1240e0" stroke-width="1.4"/>
+<text x="304" y="148" font-size="13" text-anchor="start" fill="#1240e0" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">§5</text>
+<text x="304" y="168" font-size="14" text-anchor="start" fill="#111827" font-weight="600" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">¿Cuál uso?</text>
+<rect x="540" y="124" width="200" height="58" rx="10" fill="#eef2ff" stroke="#1240e0" stroke-width="1.4"/>
+<text x="554" y="148" font-size="13" text-anchor="start" fill="#1240e0" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">§4</text>
+<text x="554" y="168" font-size="14" text-anchor="start" fill="#111827" font-weight="600" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">Árbol de segmentos</text>
+<rect x="40" y="222" width="200" height="58" rx="10" fill="#eef2ff" stroke="#1240e0" stroke-width="1.4"/>
+<text x="54" y="246" font-size="13" text-anchor="start" fill="#1240e0" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">§7</text>
+<text x="54" y="266" font-size="14" text-anchor="start" fill="#111827" font-weight="600" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">Guía del lab</text>
+<rect x="290" y="222" width="200" height="58" rx="10" fill="#eef2ff" stroke="#1240e0" stroke-width="1.4"/>
+<text x="304" y="246" font-size="13" text-anchor="start" fill="#1240e0" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">§8</text>
+<text x="304" y="266" font-size="14" text-anchor="start" fill="#111827" font-weight="600" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">Comprensión</text>
+<rect x="540" y="222" width="200" height="58" rx="10" fill="#eef2ff" stroke="#1240e0" stroke-width="1.4"/>
+<text x="554" y="246" font-size="13" text-anchor="start" fill="#1240e0" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">§9</text>
+<text x="554" y="266" font-size="14" text-anchor="start" fill="#111827" font-weight="600" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">Problem set</text>
+<line x1="244" y1="55.0" x2="286" y2="55.0" stroke="#111827" stroke-width="1.6" marker-end="url(#ar)"/>
+<line x1="494" y1="55.0" x2="536" y2="55.0" stroke="#111827" stroke-width="1.6" marker-end="url(#ar)"/>
+<line x1="640.0" y1="87" x2="640.0" y2="120" stroke="#111827" stroke-width="1.6" marker-end="url(#ar)"/>
+<line x1="536" y1="153.0" x2="494" y2="153.0" stroke="#111827" stroke-width="1.6" marker-end="url(#ar)"/>
+<line x1="286" y1="153.0" x2="244" y2="153.0" stroke="#111827" stroke-width="1.6" marker-end="url(#ar)"/>
+<line x1="140.0" y1="185" x2="140.0" y2="218" stroke="#111827" stroke-width="1.6" marker-end="url(#ar)"/>
+<line x1="244" y1="251.0" x2="286" y2="251.0" stroke="#111827" stroke-width="1.6" marker-end="url(#ar)"/>
+<line x1="494" y1="251.0" x2="536" y2="251.0" stroke="#111827" stroke-width="1.6" marker-end="url(#ar)"/>
+<text x="650.0" y="106" font-size="12" text-anchor="start" fill="#1240e0" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">índices en binario: núcleo de la lección</text>
+</svg>

@@ -37,6 +37,7 @@
 8ed5aab3cbcdde7fd8e5436f928583c02e947d345cf1095839d57f5cc4a005d0  rust/src/lab01/array_stack.rs
 8f895b7a5968413f9ec2447df8c1d66eccc51749244c45fc44c1ae6f560530cd  cpp/include/algolib/lab04/ring_queue.hpp
 95cb7b07682ee9926c13905321ddcc4e10471e989189f86fdf80dbde41a1a108  rust/src/lab01/mod.rs
+9f4e5c59247f516eeebda3be7f3e2c51ba91b97ff8115d9275d22529326e3454  cpp/include/algolib/lab03/forward_list.hpp
 c1b2c8bc04ff2ce62a6ce5142e39e4ba12d8cc7df62c3a8ea4087f85d4719d33  c/src/lab08/order_stat_set.c
 c5d81a8bc576e66f7cc596587655e8262ae8df8ad08fdde207efa48aacd66f46  c/src/lab07/avl_map.c
 ca6bf260b0bfd43186d809a950c7dea1382aab0c519ff010d0634657241202a8  rust/src/lab02/mod.rs

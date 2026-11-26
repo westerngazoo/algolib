@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>L07 · Notas · Estructuras de Datos y Algoritmos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: apuntes de curso universitario, sobrios y precisos; el guion habla en voz de profesor.
+   IDEA: cuaderno de clase técnico con pizarrón: hoja limpia, recuadros de pizarra verde para lo que se escribe.
+   PICTURE: diagramas SVG propios de cada lección (cotas, arreglos, costos), sobre placa blanca.
+   COLOUR and TYPE: tira cobalto #1240e0, hoja blanca, zonas #eef2ff, acento naranja quemado; Space Grotesk + Inter + JetBrains Mono.
+   LAYOUT: tira de título a todo el ancho, fila de secciones, columna de lectura de 780px; figuras y tablas hasta 900px. */
+:root{color-scheme:light dark;
+ --bg:light-dark(#ffffff,#0b0e17);--ink:light-dark(#111827,#e6e9f2);--muted:light-dark(#5b6270,#9aa3b5);
+ --cob:#1240e0;--cob-ink:light-dark(#1240e0,#8fa8ff);--pale:light-dark(#eef2ff,#141b33);--line:light-dark(#dfe4f2,#252c44);
+ --acc:light-dark(#c2410c,#fb923c);--acc-pale:light-dark(#fff1e6,#2a1a10);--ok:light-dark(#15803d,#4ade80);
+ --chalk-bg:#1f3a2e;--chalk:#eef3e8;--chalk-dim:#a9c2b2;--wood:#7a5a33}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Inter,system-ui,sans-serif;overflow-x:clip}
+a{color:var(--cob-ink)}
+.strip{background:var(--cob);color:#fff;padding:clamp(22px,3.5vw,44px) max(5vw,16px) clamp(20px,3vw,34px)}
+.strip .curso{font:600 14px/1.3 'Space Grotesk',sans-serif;opacity:.85;margin:0 0 10px}
+.strip h1{font:700 clamp(30px,4.6vw,48px)/1.06 'Space Grotesk',sans-serif;margin:0;text-wrap:balance;max-width:24ch}
+.strip .desc{margin:14px 0 0;max-width:62ch;opacity:.92;font-size:16px}
+.pages{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.pages a{color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.45);border-radius:999px;padding:6px 14px;font-size:14px;line-height:1.3}
+.pages a[aria-current]{background:#fff;color:var(--cob)}
+.pages a:hover{background:rgba(255,255,255,.16)}
+nav.toc{border-bottom:1px solid var(--line);background:var(--bg);z-index:5}
+nav.toc .scroll{display:flex;gap:4px;padding:8px max(5vw,16px);white-space:nowrap}
+nav.toc a{flex:none;text-decoration:none;color:var(--muted);font-size:14px;padding:6px 10px;border-radius:8px}
+nav.toc a:hover{background:var(--pale);color:var(--ink)}
+@media(min-width:900px){nav.toc{position:sticky;top:0}}
+main{max-width:820px;margin:0 auto;padding:28px max(4vw,16px) 80px}
+main h1{font:700 32px/1.1 'Space Grotesk',sans-serif;margin:56px 0 12px;padding-top:18px;border-top:4px solid var(--cob);color:var(--cob-ink)}
+main h2{font:700 26px/1.2 'Space Grotesk',sans-serif;margin:48px 0 10px;text-wrap:balance}
+main h3{font:600 21px/1.25 'Space Grotesk',sans-serif;margin:36px 0 8px}
+main h4{font:600 18px/1.3 'Space Grotesk',sans-serif;margin:28px 0 6px}
+.tiempo{display:inline-block;vertical-align:middle;margin-left:8px;font:500 13px/1 Inter,sans-serif;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:4px 9px}
+p,li{max-width:70ch}
+hr{border:0;border-top:1px solid var(--line);margin:40px 0}
+blockquote{margin:16px 0;padding:12px 18px;border-left:4px solid var(--cob);background:var(--pale);border-radius:0 10px 10px 0}
+blockquote p{margin:6px 0}
+code{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.88em;background:var(--pale);padding:1px 5px;border-radius:5px;overflow-wrap:anywhere}
+pre{position:relative;overflow-x:auto;background:light-dark(#f6f7fb,#11162a);border:1px solid var(--line);border-radius:10px;padding:14px 16px;font:14px/1.55 'JetBrains Mono',ui-monospace,monospace}
+pre code{background:none;padding:0;font-size:inherit;overflow-wrap:normal}
+.copy{position:absolute;top:8px;right:8px;font:600 12px Inter,sans-serif;border:1px solid var(--line);background:var(--bg);color:var(--muted);border-radius:7px;padding:6px 10px;min-height:32px;cursor:pointer}
+.copy:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;margin:16px 0;font-size:15px;width:100%}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-weight:600;background:var(--pale)}
+figure{margin:26px 0;padding:0}
+figure svg{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:12px}
+figcaption{color:var(--muted);font-size:14px;margin-top:8px}
+details{margin:12px 0;border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:var(--bg)}
+summary{cursor:pointer;font-weight:600;color:var(--cob-ink);min-height:28px}
+.callout{margin:16px 0;padding:12px 16px 12px 16px;border-radius:10px;border:1px solid var(--line)}
+.callout>.lbl{display:block;font:700 12px/1.2 Inter,sans-serif;letter-spacing:.02em;margin-bottom:4px}
+.dice{background:light-dark(#f8fafc,#121726);border-left:5px solid var(--ink)}
+.dice>.lbl{color:var(--ink)}
+.pregunta{background:var(--pale);border-left:5px solid var(--cob)}
+.pregunta>.lbl{color:var(--cob-ink)}
+.pregunta+blockquote{margin-top:-10px;border-left-color:var(--ok);background:light-dark(#f0fdf4,#0f1f16)}
+.pregunta+blockquote::before{content:"Respuesta esperada";display:block;font:700 12px Inter,sans-serif;color:var(--ok);margin-bottom:2px}
+.nota{background:light-dark(#fffbea,#211d0c);border-left:5px solid #ca8a04}
+.nota>.lbl{color:light-dark(#a16207,#facc15)}
+.atencion{background:var(--acc-pale);border-left:5px solid var(--acc)}
+.atencion>.lbl{color:var(--acc)}
+.ejercicio{display:inline-block;font:700 12px Inter,sans-serif;color:#fff;background:var(--acc);border-radius:6px;padding:2px 8px;margin-right:6px;vertical-align:2px}
+.moneda{display:inline-block;width:.9em;height:.9em;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fde68a,#d97706);vertical-align:-1px;margin-right:4px}
+.pizarra-label{display:table!important;margin:22px 0 0;font:600 13px/1.3 Inter,sans-serif;color:var(--chalk-dim);background:var(--chalk-bg);display:inline-block;padding:6px 12px;border-radius:8px 8px 0 0;border:6px solid var(--wood);border-bottom:0}
+.pizarra-label b{color:#fff}
+pre.pizarra,div.pizarra{margin-top:0;background:var(--chalk-bg);color:var(--chalk);border:6px solid var(--wood);border-radius:0 10px 10px 10px;box-shadow:inset 0 0 40px rgba(0,0,0,.35);font:15px/1.6 'JetBrains Mono',ui-monospace,monospace;padding:16px 18px;overflow-x:auto;white-space:pre}
+table.pizarra{border:6px solid var(--wood);background:var(--chalk-bg);color:var(--chalk);margin-top:0}
+table.pizarra th{background:#2a4a3c;color:#fff}table.pizarra td,table.pizarra th{border-color:#3d5e4f}
+mjx-container[display=true]{overflow-x:auto;overflow-y:hidden;max-width:100%}
+mjx-container:not([display]){display:inline-block;max-width:100%;overflow-x:auto;overflow-y:hidden;vertical-align:middle}
+.lessons{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px;margin:24px 0}
+.lessons a{display:block;text-decoration:none;color:var(--ink);background:var(--pale);border:1px solid var(--line);border-radius:12px;padding:18px}
+.lessons a:hover{border-color:var(--cob)}
+.lessons b{display:block;font:700 19px/1.2 'Space Grotesk',sans-serif;color:var(--cob-ink);margin-bottom:6px}
+.lessons span{color:var(--muted);font-size:15px}
+footer{color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding:24px max(5vw,16px)}
+@media(max-width:600px){body{font-size:16px}table{font-size:13px}pre.pizarra,div.pizarra{font-size:13px}main h1{font-size:27px}main h2{font-size:23px}}
+
+/* pestañas de código */
+.tabs{margin:20px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:light-dark(#f6f7fb,#11162a)}
+.tablist{display:flex;gap:2px;padding:6px 6px 0;background:var(--pale);border-bottom:1px solid var(--line);overflow-x:auto}
+.tablist button{font:600 14px Inter,sans-serif;color:var(--muted);background:none;border:0;border-radius:8px 8px 0 0;padding:10px 16px;min-height:44px;cursor:pointer;white-space:nowrap}
+.tablist button[aria-selected=true]{background:light-dark(#f6f7fb,#11162a);color:var(--cob-ink);box-shadow:inset 0 3px 0 var(--cob)}
+.tablist button:focus-visible{outline:3px solid var(--acc);outline-offset:-3px}
+.tablist .badge{font:600 11px Inter,sans-serif;color:var(--acc);margin-left:6px}
+.tabs .panel pre{margin:0;border:0;border-radius:0}
+.tabs .panel[hidden]{display:none}
+pre.salida{background:light-dark(#0f172a,#05070d);color:#d1fae5;border-color:#0f172a;margin-top:-8px;padding-top:30px}
+pre.salida::before{content:"Salida";position:absolute;top:8px;left:16px;font:700 11px Inter,sans-serif;color:#6ee7b7;letter-spacing:.03em}
+pre.salida .copy{display:none}
+/* resaltado de sintaxis (clases de pandoc) */
+code span.kw,code span.cf{color:light-dark(#1d4ed8,#93b4ff);font-weight:600}
+code span.dt{color:light-dark(#7c3aed,#c4b5fd)}
+code span.dv,code span.bn,code span.fl,code span.cn{color:light-dark(#b45309,#fbbf24)}
+code span.st,code span.ch,code span.ss,code span.sc{color:light-dark(#047857,#6ee7b7)}
+code span.co,code span.do,code span.cv{color:light-dark(#6b7280,#8b95a7);font-style:italic}
+code span.pp,code span.im,code span.at{color:light-dark(#be185d,#f9a8d4)}
+code span.fu,code span.bu{color:light-dark(#0e7490,#67e8f9)}
+code span.op{color:light-dark(#374151,#cbd5e1)}
+code span.er,code span.al{color:var(--acc)}
+pre.sourceCode a{display:none}
+@media print{nav.toc,.copy,.tablist{display:none}.tabs .panel[hidden]{display:block}.strip{background:none;color:#000}}
+</style>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+</head><body>
+<header class="strip"><p class="curso">algolib · Estructuras de Datos y Algoritmos</p><h1>Lección 7 — Árboles binarios de búsqueda y árboles AVL</h1><p class="desc">Diccionario ordenado, BST, rotaciones, la cota de altura AVL con Fibonacci y rebalanceo en cuatro casos.</p><div class="pages"><a href="index.html">Inicio</a><a href="L00.html">L00 · Prerrequisitos</a><a href="L01.html">L01 · Notas</a><a href="L02.html">L02 · Notas</a><a href="L03.html">L03 · Notas</a><a href="L04.html">L04 · Notas</a><a href="L05.html">L05 · Notas</a><a href="L06.html">L06 · Notas</a><a href="L07.html" aria-current="page">L07 · Notas</a><a href="L08.html">L08 · Notas</a><a href="L09.html">L09 · Notas</a><a href="L10.html">L10 · Notas</a><a href="L11.html">L11 · Notas</a><a href="L12.html">L12 · Notas</a><a href="L13.html">L13 · Notas</a></div></header><nav class="toc" aria-label="Secciones"><div class="scroll"><a href="#objetivos-de-aprendizaje">Objetivos de aprendizaje</a><a href="#mapa-de-la-lección">Mapa de la lección</a><a href="#el-diccionario-ordenado">1. El diccionario ordenado</a><a href="#árboles-binarios-de-búsqueda">2. Árboles binarios de búsqueda</a><a href="#rotaciones">3. Rotaciones</a><a href="#árboles-avl">4. Árboles AVL</a><a href="#tomar-y-devolver-el-subárbol">5. Tomar y devolver el subárbol</a><a href="#otros-árboles-balanceados">6. Otros árboles balanceados</a><a href="#resumen-de-paradigmas-en-este-lab">7. Resumen de paradigmas en este…</a><a href="#guía-del-lab-07">8. Guía del Lab 07</a><a href="#comprueba-tu-comprensión">9. Comprueba tu comprensión</a><a href="#problem-set-7">10. Problem Set 7</a><a href="#referencias">Referencias</a></div></nav><main><blockquote>
+<p><strong>Prerrequisitos:</strong> Lección 0 (§1 inducción, §3 recurrencias lineales), Lección 3 (ownership y <code>Option&lt;Box&gt;</code>), Lección 4 (TAD Diccionario) y Lección 6 (árboles binarios).</p>
+<p><strong>Cómo estudiar esta lección:</strong> todo gira alrededor de <strong>una</strong> operación, la rotación, y de <strong>un</strong> número, la altura. Antes de leer cada demostración, dibuja la rotación en papel con subárboles <span class="math inline">\(A\)</span>, <span class="math inline">\(B\)</span>, <span class="math inline">\(C\)</span> como triángulos y anota sus alturas.</p>
+<p><strong>Lab asociado:</strong> <code>lab07</code>: <code>AvlMap</code> (C, C++ y Rust). Lo extenderás en el lab08.</p>
+</blockquote>
+<h2 id="objetivos-de-aprendizaje">Objetivos de aprendizaje</h2>
+<p>Al terminar esta lección deberías poder:</p>
+<ol type="1">
+<li>Especificar el <strong>TAD Diccionario ordenado</strong> (con mínimo, sucesor y rangos) y explicar qué ofrece que una tabla hash no.</li>
+<li>Demostrar que el recorrido <strong>in-order</strong> de un BST produce las claves en orden, e implementar búsqueda, inserción, borrado y sucesor en <span class="math inline">\(O(h)\)</span>.</li>
+<li>Demostrar que una <strong>rotación</strong> preserva el invariante BST.</li>
+<li>Demostrar que un árbol AVL de <span class="math inline">\(n\)</span> nodos tiene altura <span class="math inline">\(h &lt; 1.4405\lg(n+2) - 0.3277\)</span> usando los números de Fibonacci.</li>
+<li>Demostrar que <code>rebalance</code> repara cualquier nodo con factor de balance <span class="math inline">\(\pm 2\)</span> cuyos hijos son AVL, distinguiendo los cuatro casos.</li>
+<li>Implementar un árbol balanceado con el estilo “tomar y devolver el subárbol” en C, C++ (<code>unique_ptr</code>) y Rust (<code>Option&lt;Box&gt;</code>).</li>
+</ol>
+<h2 id="mapa-de-la-lección">Mapa de la lección</h2>
+<figure>
+<svg aria-label="Mapa de la lección 7" fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" role="img" viewbox="0 0 760 300" xmlns="http://www.w3.org/2000/svg">
+<title>Mapa de la lección 7</title>
+<defs>
+<marker id="ar" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#111827"></path></marker>
+<marker id="arc" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#1240e0"></path></marker>
+<marker id="ara" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"></path></marker>
+</defs>
+<rect fill="#ffffff" height="300" rx="12" width="760"></rect>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="40" y="26"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="54" y="50">§1</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="54" y="70">Diccionario ordenado</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="290" y="26"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="304" y="50">§2</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="304" y="70">BST</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="540" y="26"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="554" y="50">§3</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="554" y="70">Rotaciones</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="40" y="124"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="54" y="148">§6</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="54" y="168">Otros balanceados</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="290" y="124"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="304" y="148">§5</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="304" y="168">Tomar y devolver</text>
+<rect fill="#1240e0" height="58" rx="10" stroke="#1240e0" stroke-width="2" width="200" x="540" y="124"></rect>
+<text fill="#dbe4ff" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="554" y="148">§4</text>
+<text fill="#ffffff" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="554" y="168">AVL</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="40" y="222"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="54" y="246">§7</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="54" y="266">Paradigmas</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="290" y="222"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="304" y="246">§8</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="304" y="266">Guía del lab</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="540" y="222"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="554" y="246">§9–10</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="554" y="266">Ejercicios</text>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="244" x2="286" y1="55.0" y2="55.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="494" x2="536" y1="55.0" y2="55.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="640.0" x2="640.0" y1="87" y2="120"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="536" x2="494" y1="153.0" y2="153.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="286" x2="244" y1="153.0" y2="153.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="140.0" x2="140.0" y1="185" y2="218"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="244" x2="286" y1="251.0" y2="251.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="494" x2="536" y1="251.0" y2="251.0"></line>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" text-anchor="start" x="650.0" y="204">altura &lt; 1.44 lg n: núcleo de la lección</text>
+</svg>
+<figcaption aria-hidden="true">Mapa de la lección 7</figcaption>
+</figure>
+<hr/>
+<h2 id="el-diccionario-ordenado">1. El diccionario ordenado</h2>
+<p>La tabla hash de L04 da <code>insert</code>, <code>find</code> y <code>erase</code> en <span class="math inline">\(O(1)\)</span> esperado, pero destruye el orden de las claves. Muchas aplicaciones lo necesitan:</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th>Operación</th>
+<th>Tabla hash</th>
+<th>Diccionario ordenado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>insert</code>, <code>find</code>, <code>erase</code></td>
+<td><span class="math inline">\(O(1)\)</span> esperado</td>
+<td><span class="math inline">\(O(\lg n)\)</span> peor caso</td>
+</tr>
+<tr>
+<td><code>min</code>, <code>max</code></td>
+<td><span class="math inline">\(\Theta(n)\)</span></td>
+<td><span class="math inline">\(O(\lg n)\)</span></td>
+</tr>
+<tr>
+<td><code>sucesor(k)</code>: la menor clave <span class="math inline">\(&gt; k\)</span></td>
+<td><span class="math inline">\(\Theta(n)\)</span></td>
+<td><span class="math inline">\(O(\lg n)\)</span></td>
+</tr>
+<tr>
+<td>rango <span class="math inline">\([a, b]\)</span> con <span class="math inline">\(r\)</span> resultados</td>
+<td><span class="math inline">\(\Theta(n)\)</span></td>
+<td><span class="math inline">\(O(\lg n + r)\)</span></td>
+</tr>
+<tr>
+<td>recorrer en orden</td>
+<td><span class="math inline">\(\Theta(n\lg n)\)</span> (ordenar)</td>
+<td><span class="math inline">\(\Theta(n)\)</span></td>
+</tr>
+</tbody>
+</table></div>
+<p>Ejemplos: el planificador de un calendario (“¿qué evento sigue después de las 10:00?”), un índice de base de datos (<code>WHERE precio BETWEEN 100 AND 200</code>), las tablas de rutas de red (prefijo más largo), un libro de órdenes de bolsa (mejor precio de compra y de venta).</p>
+<p>Además, la cota es de <strong>peor caso</strong>, sin hipótesis sobre la función hash ni sobre el azar.</p>
+<hr/>
+<h2 id="árboles-binarios-de-búsqueda">2. Árboles binarios de búsqueda</h2>
+<h3 id="invariante">2.1 Invariante</h3>
+<p>Un <strong>árbol binario de búsqueda</strong> (BST) guarda una clave en cada nodo y cumple:</p>
+<blockquote>
+<p><strong>Invariante BST.</strong> Para todo nodo <span class="math inline">\(x\)</span>: todas las claves del subárbol izquierdo de <span class="math inline">\(x\)</span> son <span class="math inline">\(&lt;\)</span> <code>x.key</code>, y todas las del subárbol derecho son <span class="math inline">\(&gt;\)</span> <code>x.key</code>.</p>
+</blockquote>
+<p>Observa que dice <strong>todas</strong> las claves del subárbol, no solo las de los hijos. Un árbol donde cada hijo izquierdo es menor que su padre pero un nieto no lo es <strong>no</strong> es BST.</p>
+<blockquote>
+<p><strong>Teorema 1.</strong> El recorrido in-order (izquierdo, nodo, derecho) de un BST visita las claves en orden creciente.</p>
+</blockquote>
+<p><em>Demostración.</em> Inducción sobre la altura. Un árbol vacío no visita nada. Si la raíz es <span class="math inline">\(x\)</span>, el recorrido visita primero el subárbol izquierdo (en orden, por hipótesis de inducción, y todas sus claves <span class="math inline">\(&lt;\)</span> <code>x.key</code> por el invariante), luego <code>x.key</code>, luego el derecho (en orden, todas <span class="math inline">\(&gt;\)</span> <code>x.key</code>). La concatenación está en orden. <span class="math inline">\(\blacksquare\)</span></p>
+<p>Consecuencia: un BST “es” una secuencia ordenada; la forma del árbol solo decide cuánto cuesta llegar a cada clave.</p>
+<h3 id="operaciones-en-oh">2.2 Operaciones en <span class="math inline">\(O(h)\)</span></h3>
+<p>Sea <span class="math inline">\(h\)</span> la altura (número de nodos del camino más largo de la raíz a una hoja; vacío <span class="math inline">\(= 0\)</span>).</p>
+<ul>
+<li><strong><code>find(k)</code></strong>: desde la raíz, ir a la izquierda si <span class="math inline">\(k &lt;\)</span> clave, a la derecha si <span class="math inline">\(k &gt;\)</span>, parar si es igual. Por el invariante, si <span class="math inline">\(k\)</span> está en el árbol, está en el subárbol al que bajamos. <span class="math inline">\(O(h)\)</span>.</li>
+<li><strong><code>insert(k)</code></strong>: buscar <span class="math inline">\(k\)</span>; si no está, la búsqueda termina en un hijo vacío, y ahí se cuelga un nodo nuevo. El invariante se preserva porque el nodo nuevo queda en el único lugar consistente con todas las comparaciones del camino. <span class="math inline">\(O(h)\)</span>.</li>
+<li><strong><code>min</code>/<code>max</code></strong>: bajar siempre a la izquierda / derecha. <span class="math inline">\(O(h)\)</span>.</li>
+<li><strong><code>sucesor(k)</code></strong>: buscar <span class="math inline">\(k\)</span> guardando el último nodo en el que se bajó a la <strong>izquierda</strong>; si el nodo de <span class="math inline">\(k\)</span> tiene subárbol derecho, el sucesor es el mínimo de ese subárbol; si no, es el último ancestro guardado. <span class="math inline">\(O(h)\)</span>.</li>
+<li><strong><code>erase(k)</code></strong>: tres casos según los hijos del nodo <span class="math inline">\(z\)</span> con clave <span class="math inline">\(k\)</span>:
+<ol type="1">
+<li><em>Sin hijos:</em> quitarlo.</li>
+<li><em>Un hijo:</em> el hijo ocupa el lugar de <span class="math inline">\(z\)</span>.</li>
+<li><em>Dos hijos:</em> el <strong>sucesor</strong> <span class="math inline">\(s\)</span> de <span class="math inline">\(z\)</span> (mínimo del subárbol derecho) no tiene hijo izquierdo; se desengancha <span class="math inline">\(s\)</span> de su lugar (caso 1 o 2) y <span class="math inline">\(s\)</span> ocupa el lugar de <span class="math inline">\(z\)</span>. Como <span class="math inline">\(s\)</span> es la menor clave mayor que <code>z.key</code>, es mayor que todo el subárbol izquierdo y menor que el resto del derecho: el invariante se preserva.</li>
+</ol></li>
+</ul>
+<h3 id="el-problema-la-altura">2.3 El problema: la altura</h3>
+<p>Todo cuesta <span class="math inline">\(O(h)\)</span>, y <span class="math inline">\(h\)</span> depende del orden de inserción. Si las claves llegan <strong>ordenadas</strong>, cada una se cuelga a la derecha de la anterior y el árbol es una lista: <span class="math inline">\(h = n\)</span>. Con un orden aleatorio, la altura esperada es <span class="math inline">\(O(\lg n)\)</span> (con constante <span class="math inline">\(\approx 4.311\)</span>; Devroye 1986), pero no podemos elegir el orden de llegada de las claves.</p>
+<div class="tabs"><div aria-label="Lenguaje" class="tablist" role="tablist"><button aria-controls="t0-0" aria-selected="false" data-lang="c" id="t0-0-b" role="tab" tabindex="-1" type="button">C</button><button aria-controls="t0-1" aria-selected="false" data-lang="cpp" id="t0-1-b" role="tab" tabindex="-1" type="button">C++</button><button aria-controls="t0-2" aria-selected="false" data-lang="rust" id="t0-2-b" role="tab" tabindex="-1" type="button">Rust</button></div><div aria-labelledby="t0-0-b" class="panel" data-lang="c" id="t0-0" role="tabpanel"><div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2" tabindex="-1"></a></span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3" tabindex="-1"></a><span class="pp">#define N </span><span class="dv">1000</span></span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4" tabindex="-1"></a><span class="dt">static</span> <span class="dt">int</span> clave<span class="op">[</span>N<span class="op">],</span> izq<span class="op">[</span>N<span class="op">],</span> der<span class="op">[</span>N<span class="op">],</span> nodos<span class="op">;</span></span>
+<span id="cb1-5"><a aria-hidden="true" href="#cb1-5" tabindex="-1"></a></span>
+<span id="cb1-6"><a aria-hidden="true" href="#cb1-6" tabindex="-1"></a><span class="co">/* BST sin balancear en arreglos (índice -1 = vacío). Inserción iterativa. */</span></span>
+<span id="cb1-7"><a aria-hidden="true" href="#cb1-7" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> insertar<span class="op">(</span><span class="dt">int</span> k<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-8"><a aria-hidden="true" href="#cb1-8" tabindex="-1"></a>    <span class="dt">int</span> nuevo <span class="op">=</span> nodos<span class="op">++;</span></span>
+<span id="cb1-9"><a aria-hidden="true" href="#cb1-9" tabindex="-1"></a>    clave<span class="op">[</span>nuevo<span class="op">]</span> <span class="op">=</span> k<span class="op">;</span> izq<span class="op">[</span>nuevo<span class="op">]</span> <span class="op">=</span> der<span class="op">[</span>nuevo<span class="op">]</span> <span class="op">=</span> <span class="op">-</span><span class="dv">1</span><span class="op">;</span></span>
+<span id="cb1-10"><a aria-hidden="true" href="#cb1-10" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>nuevo <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb1-11"><a aria-hidden="true" href="#cb1-11" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> t <span class="op">=</span> <span class="dv">0</span><span class="op">;;)</span> <span class="op">{</span></span>
+<span id="cb1-12"><a aria-hidden="true" href="#cb1-12" tabindex="-1"></a>        <span class="dt">int</span> <span class="op">*</span>hijo <span class="op">=</span> k <span class="op">&lt;</span> clave<span class="op">[</span>t<span class="op">]</span> <span class="op">?</span> <span class="op">&amp;</span>izq<span class="op">[</span>t<span class="op">]</span> <span class="op">:</span> <span class="op">&amp;</span>der<span class="op">[</span>t<span class="op">];</span></span>
+<span id="cb1-13"><a aria-hidden="true" href="#cb1-13" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(*</span>hijo <span class="op">&lt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span> <span class="op">*</span>hijo <span class="op">=</span> nuevo<span class="op">;</span> <span class="cf">return</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb1-14"><a aria-hidden="true" href="#cb1-14" tabindex="-1"></a>        t <span class="op">=</span> <span class="op">*</span>hijo<span class="op">;</span></span>
+<span id="cb1-15"><a aria-hidden="true" href="#cb1-15" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-16"><a aria-hidden="true" href="#cb1-16" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-17"><a aria-hidden="true" href="#cb1-17" tabindex="-1"></a></span>
+<span id="cb1-18"><a aria-hidden="true" href="#cb1-18" tabindex="-1"></a><span class="dt">static</span> <span class="dt">int</span> altura<span class="op">(</span><span class="dt">int</span> t<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-19"><a aria-hidden="true" href="#cb1-19" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>t <span class="op">&lt;</span> <span class="dv">0</span><span class="op">)</span> <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-20"><a aria-hidden="true" href="#cb1-20" tabindex="-1"></a>    <span class="dt">int</span> a <span class="op">=</span> altura<span class="op">(</span>izq<span class="op">[</span>t<span class="op">]),</span> b <span class="op">=</span> altura<span class="op">(</span>der<span class="op">[</span>t<span class="op">]);</span></span>
+<span id="cb1-21"><a aria-hidden="true" href="#cb1-21" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">1</span> <span class="op">+</span> <span class="op">(</span>a <span class="op">&gt;</span> b <span class="op">?</span> a <span class="op">:</span> b<span class="op">);</span></span>
+<span id="cb1-22"><a aria-hidden="true" href="#cb1-22" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-23"><a aria-hidden="true" href="#cb1-23" tabindex="-1"></a></span>
+<span id="cb1-24"><a aria-hidden="true" href="#cb1-24" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-25"><a aria-hidden="true" href="#cb1-25" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> N<span class="op">;</span> i<span class="op">++)</span> insertar<span class="op">(</span>i<span class="op">);</span></span>
+<span id="cb1-26"><a aria-hidden="true" href="#cb1-26" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">"claves en orden:     altura </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span> altura<span class="op">(</span><span class="dv">0</span><span class="op">));</span></span>
+<span id="cb1-27"><a aria-hidden="true" href="#cb1-27" tabindex="-1"></a>    nodos <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-28"><a aria-hidden="true" href="#cb1-28" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span> s <span class="op">=</span> <span class="dv">7</span><span class="op">;</span></span>
+<span id="cb1-29"><a aria-hidden="true" href="#cb1-29" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> N<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb1-30"><a aria-hidden="true" href="#cb1-30" tabindex="-1"></a>        s <span class="op">=</span> s <span class="op">*</span> <span class="dv">6364136223846793005</span><span class="bu">ULL</span> <span class="op">+</span> <span class="dv">1442695040888963407</span><span class="bu">ULL</span><span class="op">;</span></span>
+<span id="cb1-31"><a aria-hidden="true" href="#cb1-31" tabindex="-1"></a>        insertar<span class="op">((</span><span class="dt">int</span><span class="op">)(</span>s <span class="op">&gt;&gt;</span> <span class="dv">33</span><span class="op">));</span></span>
+<span id="cb1-32"><a aria-hidden="true" href="#cb1-32" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-33"><a aria-hidden="true" href="#cb1-33" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">"claves aleatorias:   altura </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span> altura<span class="op">(</span><span class="dv">0</span><span class="op">));</span></span>
+<span id="cb1-34"><a aria-hidden="true" href="#cb1-34" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">"AVL (cualquier orden): altura &lt;= </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span> <span class="dv">14</span><span class="op">);</span></span>
+<span id="cb1-35"><a aria-hidden="true" href="#cb1-35" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-36"><a aria-hidden="true" href="#cb1-36" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div><div aria-labelledby="t0-1-b" class="panel" data-lang="cpp" id="t0-1" role="tabpanel"><div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a aria-hidden="true" href="#cb2-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;cstdint&gt;</span></span>
+<span id="cb2-2"><a aria-hidden="true" href="#cb2-2" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb2-3"><a aria-hidden="true" href="#cb2-3" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;vector&gt;</span></span>
+<span id="cb2-4"><a aria-hidden="true" href="#cb2-4" tabindex="-1"></a></span>
+<span id="cb2-5"><a aria-hidden="true" href="#cb2-5" tabindex="-1"></a><span class="co">// BST sin balancear en arreglos (índice -1 = vacío). Inserción iterativa.</span></span>
+<span id="cb2-6"><a aria-hidden="true" href="#cb2-6" tabindex="-1"></a><span class="kw">struct</span> Bst <span class="op">{</span></span>
+<span id="cb2-7"><a aria-hidden="true" href="#cb2-7" tabindex="-1"></a>    <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;</span> clave<span class="op">,</span> izq<span class="op">,</span> der<span class="op">;</span></span>
+<span id="cb2-8"><a aria-hidden="true" href="#cb2-8" tabindex="-1"></a>    <span class="dt">void</span> insertar<span class="op">(</span><span class="dt">int</span> k<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-9"><a aria-hidden="true" href="#cb2-9" tabindex="-1"></a>        <span class="dt">int</span> nuevo <span class="op">=</span> <span class="op">(</span><span class="dt">int</span><span class="op">)</span>clave<span class="op">.</span>size<span class="op">();</span></span>
+<span id="cb2-10"><a aria-hidden="true" href="#cb2-10" tabindex="-1"></a>        clave<span class="op">.</span>push_back<span class="op">(</span>k<span class="op">);</span> izq<span class="op">.</span>push_back<span class="op">(-</span><span class="dv">1</span><span class="op">);</span> der<span class="op">.</span>push_back<span class="op">(-</span><span class="dv">1</span><span class="op">);</span></span>
+<span id="cb2-11"><a aria-hidden="true" href="#cb2-11" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>nuevo <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb2-12"><a aria-hidden="true" href="#cb2-12" tabindex="-1"></a>        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> t <span class="op">=</span> <span class="dv">0</span><span class="op">;;)</span> <span class="op">{</span></span>
+<span id="cb2-13"><a aria-hidden="true" href="#cb2-13" tabindex="-1"></a>            <span class="dt">int</span><span class="op">&amp;</span> hijo <span class="op">=</span> k <span class="op">&lt;</span> clave<span class="op">[</span>t<span class="op">]</span> <span class="op">?</span> izq<span class="op">[</span>t<span class="op">]</span> <span class="op">:</span> der<span class="op">[</span>t<span class="op">];</span></span>
+<span id="cb2-14"><a aria-hidden="true" href="#cb2-14" tabindex="-1"></a>            <span class="cf">if</span> <span class="op">(</span>hijo <span class="op">&lt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span> hijo <span class="op">=</span> nuevo<span class="op">;</span> <span class="cf">return</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb2-15"><a aria-hidden="true" href="#cb2-15" tabindex="-1"></a>            t <span class="op">=</span> hijo<span class="op">;</span></span>
+<span id="cb2-16"><a aria-hidden="true" href="#cb2-16" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb2-17"><a aria-hidden="true" href="#cb2-17" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-18"><a aria-hidden="true" href="#cb2-18" tabindex="-1"></a>    <span class="dt">int</span> altura<span class="op">(</span><span class="dt">int</span> t<span class="op">)</span> <span class="at">const</span> <span class="op">{</span></span>
+<span id="cb2-19"><a aria-hidden="true" href="#cb2-19" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>t <span class="op">&lt;</span> <span class="dv">0</span><span class="op">)</span> <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb2-20"><a aria-hidden="true" href="#cb2-20" tabindex="-1"></a>        <span class="dt">int</span> a <span class="op">=</span> altura<span class="op">(</span>izq<span class="op">[</span>t<span class="op">]),</span> b <span class="op">=</span> altura<span class="op">(</span>der<span class="op">[</span>t<span class="op">]);</span></span>
+<span id="cb2-21"><a aria-hidden="true" href="#cb2-21" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">1</span> <span class="op">+</span> <span class="op">(</span>a <span class="op">&gt;</span> b <span class="op">?</span> a <span class="op">:</span> b<span class="op">);</span></span>
+<span id="cb2-22"><a aria-hidden="true" href="#cb2-22" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-23"><a aria-hidden="true" href="#cb2-23" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb2-24"><a aria-hidden="true" href="#cb2-24" tabindex="-1"></a></span>
+<span id="cb2-25"><a aria-hidden="true" href="#cb2-25" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb2-26"><a aria-hidden="true" href="#cb2-26" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span> N <span class="op">=</span> <span class="dv">1000</span><span class="op">;</span></span>
+<span id="cb2-27"><a aria-hidden="true" href="#cb2-27" tabindex="-1"></a>    Bst ordenado<span class="op">,</span> aleatorio<span class="op">;</span></span>
+<span id="cb2-28"><a aria-hidden="true" href="#cb2-28" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> N<span class="op">;</span> <span class="op">++</span>i<span class="op">)</span> ordenado<span class="op">.</span>insertar<span class="op">(</span>i<span class="op">);</span></span>
+<span id="cb2-29"><a aria-hidden="true" href="#cb2-29" tabindex="-1"></a>    <span class="bu">std::</span>printf<span class="op">(</span><span class="st">"claves en orden:     altura </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span> ordenado<span class="op">.</span>altura<span class="op">(</span><span class="dv">0</span><span class="op">));</span></span>
+<span id="cb2-30"><a aria-hidden="true" href="#cb2-30" tabindex="-1"></a>    <span class="bu">std::</span>uint64_t s <span class="op">=</span> <span class="dv">7</span><span class="op">;</span></span>
+<span id="cb2-31"><a aria-hidden="true" href="#cb2-31" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> N<span class="op">;</span> <span class="op">++</span>i<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-32"><a aria-hidden="true" href="#cb2-32" tabindex="-1"></a>        s <span class="op">=</span> s <span class="op">*</span> <span class="dv">6364136223846793005</span><span class="bu">ULL</span> <span class="op">+</span> <span class="dv">1442695040888963407</span><span class="bu">ULL</span><span class="op">;</span></span>
+<span id="cb2-33"><a aria-hidden="true" href="#cb2-33" tabindex="-1"></a>        aleatorio<span class="op">.</span>insertar<span class="op">((</span><span class="dt">int</span><span class="op">)(</span>s <span class="op">&gt;&gt;</span> <span class="dv">33</span><span class="op">));</span></span>
+<span id="cb2-34"><a aria-hidden="true" href="#cb2-34" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-35"><a aria-hidden="true" href="#cb2-35" tabindex="-1"></a>    <span class="bu">std::</span>printf<span class="op">(</span><span class="st">"claves aleatorias:   altura </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span> aleatorio<span class="op">.</span>altura<span class="op">(</span><span class="dv">0</span><span class="op">));</span></span>
+<span id="cb2-36"><a aria-hidden="true" href="#cb2-36" tabindex="-1"></a>    <span class="bu">std::</span>printf<span class="op">(</span><span class="st">"AVL (cualquier orden): altura &lt;= </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span> <span class="dv">14</span><span class="op">);</span></span>
+<span id="cb2-37"><a aria-hidden="true" href="#cb2-37" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div><div aria-labelledby="t0-2-b" class="panel" data-lang="rust" id="t0-2" role="tabpanel"><div class="sourceCode" id="cb3"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb3-1"><a aria-hidden="true" href="#cb3-1" tabindex="-1"></a><span class="co">/// BST sin balancear en arreglos (`usize::MAX` = vacío). Inserción iterativa.</span></span>
+<span id="cb3-2"><a aria-hidden="true" href="#cb3-2" tabindex="-1"></a><span class="kw">struct</span> Bst <span class="op">{</span> clave<span class="op">:</span> <span class="dt">Vec</span><span class="op">&lt;</span><span class="dt">i64</span><span class="op">&gt;,</span> izq<span class="op">:</span> <span class="dt">Vec</span><span class="op">&lt;</span><span class="dt">usize</span><span class="op">&gt;,</span> der<span class="op">:</span> <span class="dt">Vec</span><span class="op">&lt;</span><span class="dt">usize</span><span class="op">&gt;</span> <span class="op">}</span></span>
+<span id="cb3-3"><a aria-hidden="true" href="#cb3-3" tabindex="-1"></a><span class="kw">const</span> VACIO<span class="op">:</span> <span class="dt">usize</span> <span class="op">=</span> <span class="dt">usize</span><span class="pp">::</span><span class="cn">MAX</span><span class="op">;</span></span>
+<span id="cb3-4"><a aria-hidden="true" href="#cb3-4" tabindex="-1"></a></span>
+<span id="cb3-5"><a aria-hidden="true" href="#cb3-5" tabindex="-1"></a><span class="kw">impl</span> Bst <span class="op">{</span></span>
+<span id="cb3-6"><a aria-hidden="true" href="#cb3-6" tabindex="-1"></a>    <span class="kw">fn</span> insertar(<span class="op">&amp;</span><span class="kw">mut</span> <span class="kw">self</span><span class="op">,</span> k<span class="op">:</span> <span class="dt">i64</span>) <span class="op">{</span></span>
+<span id="cb3-7"><a aria-hidden="true" href="#cb3-7" tabindex="-1"></a>        <span class="kw">let</span> nuevo <span class="op">=</span> <span class="kw">self</span><span class="op">.</span>clave<span class="op">.</span>len()<span class="op">;</span></span>
+<span id="cb3-8"><a aria-hidden="true" href="#cb3-8" tabindex="-1"></a>        <span class="kw">self</span><span class="op">.</span>clave<span class="op">.</span>push(k)<span class="op">;</span></span>
+<span id="cb3-9"><a aria-hidden="true" href="#cb3-9" tabindex="-1"></a>        <span class="kw">self</span><span class="op">.</span>izq<span class="op">.</span>push(VACIO)<span class="op">;</span></span>
+<span id="cb3-10"><a aria-hidden="true" href="#cb3-10" tabindex="-1"></a>        <span class="kw">self</span><span class="op">.</span>der<span class="op">.</span>push(VACIO)<span class="op">;</span></span>
+<span id="cb3-11"><a aria-hidden="true" href="#cb3-11" tabindex="-1"></a>        <span class="cf">if</span> nuevo <span class="op">==</span> <span class="dv">0</span> <span class="op">{</span> <span class="cf">return</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb3-12"><a aria-hidden="true" href="#cb3-12" tabindex="-1"></a>        <span class="kw">let</span> <span class="kw">mut</span> t <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb3-13"><a aria-hidden="true" href="#cb3-13" tabindex="-1"></a>        <span class="cf">loop</span> <span class="op">{</span></span>
+<span id="cb3-14"><a aria-hidden="true" href="#cb3-14" tabindex="-1"></a>            <span class="kw">let</span> hijo <span class="op">=</span> <span class="cf">if</span> k <span class="op">&lt;</span> <span class="kw">self</span><span class="op">.</span>clave[t] <span class="op">{</span> <span class="op">&amp;</span><span class="kw">mut</span> <span class="kw">self</span><span class="op">.</span>izq[t] <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span> <span class="op">&amp;</span><span class="kw">mut</span> <span class="kw">self</span><span class="op">.</span>der[t] <span class="op">};</span></span>
+<span id="cb3-15"><a aria-hidden="true" href="#cb3-15" tabindex="-1"></a>            <span class="cf">if</span> <span class="op">*</span>hijo <span class="op">==</span> VACIO <span class="op">{</span> <span class="op">*</span>hijo <span class="op">=</span> nuevo<span class="op">;</span> <span class="cf">return</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb3-16"><a aria-hidden="true" href="#cb3-16" tabindex="-1"></a>            t <span class="op">=</span> <span class="op">*</span>hijo<span class="op">;</span></span>
+<span id="cb3-17"><a aria-hidden="true" href="#cb3-17" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb3-18"><a aria-hidden="true" href="#cb3-18" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb3-19"><a aria-hidden="true" href="#cb3-19" tabindex="-1"></a>    <span class="kw">fn</span> altura(<span class="op">&amp;</span><span class="kw">self</span><span class="op">,</span> t<span class="op">:</span> <span class="dt">usize</span>) <span class="op">-&gt;</span> <span class="dt">i32</span> <span class="op">{</span></span>
+<span id="cb3-20"><a aria-hidden="true" href="#cb3-20" tabindex="-1"></a>        <span class="cf">if</span> t <span class="op">==</span> VACIO <span class="op">{</span> <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb3-21"><a aria-hidden="true" href="#cb3-21" tabindex="-1"></a>        <span class="dv">1</span> <span class="op">+</span> <span class="kw">self</span><span class="op">.</span>altura(<span class="kw">self</span><span class="op">.</span>izq[t])<span class="op">.</span>max(<span class="kw">self</span><span class="op">.</span>altura(<span class="kw">self</span><span class="op">.</span>der[t]))</span>
+<span id="cb3-22"><a aria-hidden="true" href="#cb3-22" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb3-23"><a aria-hidden="true" href="#cb3-23" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb3-24"><a aria-hidden="true" href="#cb3-24" tabindex="-1"></a></span>
+<span id="cb3-25"><a aria-hidden="true" href="#cb3-25" tabindex="-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb3-26"><a aria-hidden="true" href="#cb3-26" tabindex="-1"></a>    <span class="kw">const</span> N<span class="op">:</span> <span class="dt">i64</span> <span class="op">=</span> <span class="dv">1000</span><span class="op">;</span></span>
+<span id="cb3-27"><a aria-hidden="true" href="#cb3-27" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> ordenado <span class="op">=</span> Bst <span class="op">{</span> clave<span class="op">:</span> <span class="pp">vec!</span>[]<span class="op">,</span> izq<span class="op">:</span> <span class="pp">vec!</span>[]<span class="op">,</span> der<span class="op">:</span> <span class="pp">vec!</span>[] <span class="op">};</span></span>
+<span id="cb3-28"><a aria-hidden="true" href="#cb3-28" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="dv">0</span><span class="op">..</span>N <span class="op">{</span> ordenado<span class="op">.</span>insertar(i)<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb3-29"><a aria-hidden="true" href="#cb3-29" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">"claves en orden:     altura {}"</span><span class="op">,</span> ordenado<span class="op">.</span>altura(<span class="dv">0</span>))<span class="op">;</span></span>
+<span id="cb3-30"><a aria-hidden="true" href="#cb3-30" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> aleatorio <span class="op">=</span> Bst <span class="op">{</span> clave<span class="op">:</span> <span class="pp">vec!</span>[]<span class="op">,</span> izq<span class="op">:</span> <span class="pp">vec!</span>[]<span class="op">,</span> der<span class="op">:</span> <span class="pp">vec!</span>[] <span class="op">};</span></span>
+<span id="cb3-31"><a aria-hidden="true" href="#cb3-31" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> s<span class="op">:</span> <span class="dt">u64</span> <span class="op">=</span> <span class="dv">7</span><span class="op">;</span></span>
+<span id="cb3-32"><a aria-hidden="true" href="#cb3-32" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="dv">0</span><span class="op">..</span>N <span class="op">{</span></span>
+<span id="cb3-33"><a aria-hidden="true" href="#cb3-33" tabindex="-1"></a>        s <span class="op">=</span> s<span class="op">.</span>wrapping_mul(<span class="dv">6364136223846793005</span>)<span class="op">.</span>wrapping_add(<span class="dv">1442695040888963407</span>)<span class="op">;</span></span>
+<span id="cb3-34"><a aria-hidden="true" href="#cb3-34" tabindex="-1"></a>        aleatorio<span class="op">.</span>insertar((s <span class="op">&gt;&gt;</span> <span class="dv">33</span>) <span class="kw">as</span> <span class="dt">i32</span> <span class="kw">as</span> <span class="dt">i64</span>)<span class="op">;</span></span>
+<span id="cb3-35"><a aria-hidden="true" href="#cb3-35" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb3-36"><a aria-hidden="true" href="#cb3-36" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">"claves aleatorias:   altura {}"</span><span class="op">,</span> aleatorio<span class="op">.</span>altura(<span class="dv">0</span>))<span class="op">;</span></span>
+<span id="cb3-37"><a aria-hidden="true" href="#cb3-37" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">"AVL (cualquier orden): altura &lt;= {}"</span><span class="op">,</span> <span class="dv">14</span>)<span class="op">;</span></span>
+<span id="cb3-38"><a aria-hidden="true" href="#cb3-38" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div></div>
+<pre class="text salida"><code>claves en orden:     altura 1000
+claves aleatorias:   altura 19
+AVL (cualquier orden): altura &lt;= 14</code></pre>
+<p>(El 14 de la última línea es la cota del Teorema 3 para <span class="math inline">\(n = 1000\)</span>: <span class="math inline">\(\lfloor 1.4405\lg 1002 - 0.3277\rfloor = 14\)</span>.)</p>
+<p>Un <strong>árbol balanceado</strong> garantiza <span class="math inline">\(h = O(\lg n)\)</span> sin importar el orden, reorganizándose con <strong>rotaciones</strong>.</p>
+<hr/>
+<h2 id="rotaciones">3. Rotaciones</h2>
+<figure>
+<svg aria-label="Rotación a la derecha y a la izquierda; el orden A x B y C se conserva" fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" role="img" viewbox="0 0 760 250" xmlns="http://www.w3.org/2000/svg">
+<title>Rotación a la derecha y a la izquierda; el orden A x B y C se conserva</title>
+<defs>
+<marker id="ar" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#111827"></path></marker>
+<marker id="arc" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#1240e0"></path></marker>
+<marker id="ara" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"></path></marker>
+</defs>
+<rect fill="#ffffff" height="250" rx="12" width="760"></rect>
+<line stroke="#6b7280" stroke-width="1.4" x1="180" x2="120" y1="50" y2="110"></line>
+<line stroke="#6b7280" stroke-width="1.4" x1="180" x2="240" y1="50" y2="120"></line>
+<line stroke="#6b7280" stroke-width="1.4" x1="120" x2="80" y1="110" y2="160"></line>
+<line stroke="#6b7280" stroke-width="1.4" x1="120" x2="160" y1="110" y2="160"></line>
+<circle cx="180" cy="50" fill="#eef2ff" r="18" stroke="#1240e0" stroke-width="1.5"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="180" y="55">y</text>
+<circle cx="120" cy="110" fill="#eef2ff" r="18" stroke="#1240e0" stroke-width="1.5"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="120" y="115">x</text>
+<path d="M80,140 L56,186 L104,186 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"></path>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="80" y="176">A</text>
+<path d="M160,140 L136,186 L184,186 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"></path>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="160" y="176">B</text>
+<path d="M240,120 L216,166 L264,166 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"></path>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="240" y="156">C</text>
+<line stroke="#6b7280" stroke-width="1.4" x1="560" x2="500" y1="50" y2="120"></line>
+<line stroke="#6b7280" stroke-width="1.4" x1="560" x2="620" y1="50" y2="110"></line>
+<line stroke="#6b7280" stroke-width="1.4" x1="620" x2="580" y1="110" y2="160"></line>
+<line stroke="#6b7280" stroke-width="1.4" x1="620" x2="660" y1="110" y2="160"></line>
+<circle cx="560" cy="50" fill="#eef2ff" r="18" stroke="#1240e0" stroke-width="1.5"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="560" y="55">x</text>
+<circle cx="620" cy="110" fill="#eef2ff" r="18" stroke="#1240e0" stroke-width="1.5"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="620" y="115">y</text>
+<path d="M500,120 L476,166 L524,166 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"></path>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="500" y="156">A</text>
+<path d="M580,140 L556,186 L604,186 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"></path>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="580" y="176">B</text>
+<path d="M660,140 L636,186 L684,186 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"></path>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="660" y="176">C</text>
+<line marker-end="url(#arc)" stroke="#1240e0" stroke-width="2" x1="310" x2="440" y1="90" y2="90"></line>
+<text fill="#1240e0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="375" y="80">rotate_right(y)</text>
+<line marker-end="url(#ara)" stroke="#c2410c" stroke-width="2" x1="440" x2="310" y1="130" y2="130"></line>
+<text fill="#c2410c" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="375" y="150">rotate_left(x)</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" x="380" y="228">in-order en ambos: A &lt; x &lt; B &lt; y &lt; C</text>
+</svg>
+<figcaption aria-hidden="true">Rotación a la derecha y a la izquierda</figcaption>
+</figure>
+<pre><code>        y                    x
+       / \                  / \
+      x   C     ──der──▶   A   y
+     / \       ◀──izq──       / \
+    A   B                    B   C</code></pre>
+<p><code>rotate_right(y)</code>: <span class="math inline">\(x\)</span> = hijo izquierdo de <span class="math inline">\(y\)</span>; el subárbol <span class="math inline">\(B\)</span> (hijo derecho de <span class="math inline">\(x\)</span>) pasa a ser hijo izquierdo de <span class="math inline">\(y\)</span>; <span class="math inline">\(y\)</span> pasa a ser hijo derecho de <span class="math inline">\(x\)</span>; <span class="math inline">\(x\)</span> es la nueva raíz. Son tres asignaciones de punteros: <span class="math inline">\(O(1)\)</span>.</p>
+<blockquote>
+<p><strong>Lema 2.</strong> Una rotación preserva el invariante BST y el recorrido in-order.</p>
+</blockquote>
+<p><em>Demostración.</em> Antes de rotar, por el invariante en <span class="math inline">\(x\)</span> y en <span class="math inline">\(y\)</span>: <span class="math inline">\(A &lt; x &lt; B &lt; y &lt; C\)</span> (cada letra representa todas las claves de ese subárbol). Después, <span class="math inline">\(x\)</span> tiene a <span class="math inline">\(A\)</span> a su izquierda (<span class="math inline">\(A &lt; x\)</span> ✔) y a <span class="math inline">\(y\)</span> a su derecha, que contiene <span class="math inline">\(B\)</span> e <span class="math inline">\(y\)</span> y <span class="math inline">\(C\)</span>, todos <span class="math inline">\(&gt; x\)</span> ✔; <span class="math inline">\(y\)</span> tiene a <span class="math inline">\(B\)</span> a la izquierda (<span class="math inline">\(B &lt; y\)</span> ✔) y a <span class="math inline">\(C\)</span> a la derecha ✔. Los subárboles <span class="math inline">\(A\)</span>, <span class="math inline">\(B\)</span>, <span class="math inline">\(C\)</span> no cambiaron internamente. El in-order es <span class="math inline">\(A, x, B, y, C\)</span> en ambos casos. <span class="math inline">\(\blacksquare\)</span></p>
+<p>Lo que <strong>sí</strong> cambia son las alturas: <span class="math inline">\(A\)</span> sube un nivel y <span class="math inline">\(C\)</span> baja uno. Rotar es la herramienta para mover peso de un lado a otro.</p>
+<hr/>
+<h2 id="árboles-avl">4. Árboles AVL</h2>
+<h3 id="definición">4.1 Definición</h3>
+<p>Adelson-Velsky y Landis (1962): un BST es <strong>AVL</strong> si en todo nodo las alturas de los dos subárboles difieren en a lo más 1. El <strong>factor de balance</strong> de un nodo es <span class="math inline">\(\text{bf} = h(\text{izq}) - h(\text{der}) \in \{-1, 0, 1\}\)</span>.</p>
+<p>Cada nodo guarda su altura (o su factor de balance) para no recalcularla: <code>height = 1 + max(h(izq), h(der))</code>, con <span class="math inline">\(h(\text{vacío}) = 0\)</span>.</p>
+<h3 id="la-altura-es-logarítmica">4.2 La altura es logarítmica</h3>
+<p>Sea <span class="math inline">\(N(h)\)</span> el <strong>mínimo</strong> número de nodos de un árbol AVL de altura <span class="math inline">\(h\)</span>.</p>
+<blockquote>
+<p><strong>Lema.</strong> <span class="math inline">\(N(0) = 0\)</span>, <span class="math inline">\(N(1) = 1\)</span> y <span class="math inline">\(N(h) = N(h-1) + N(h-2) + 1\)</span> para <span class="math inline">\(h \ge 2\)</span>.</p>
+</blockquote>
+<p><em>Demostración.</em> Un AVL de altura <span class="math inline">\(h \ge 2\)</span> con el mínimo de nodos tiene una raíz y dos subárboles AVL. Uno debe tener altura <span class="math inline">\(h - 1\)</span> (si no, la altura no sería <span class="math inline">\(h\)</span>). El otro tiene altura <span class="math inline">\(h - 1\)</span> o <span class="math inline">\(h - 2\)</span> (por la condición AVL); para minimizar, <span class="math inline">\(h - 2\)</span>. Cada subárbol, a su vez, debe tener el mínimo de nodos para su altura. <span class="math inline">\(\blacksquare\)</span></p>
+<p>Con los números de Fibonacci <span class="math inline">\(F_0 = 0\)</span>, <span class="math inline">\(F_1 = 1\)</span>, <span class="math inline">\(F_{k} = F_{k-1} + F_{k-2}\)</span>: si <span class="math inline">\(M(h) = N(h) + 1\)</span>, entonces <span class="math inline">\(M(h) = M(h-1) + M(h-2)\)</span> con <span class="math inline">\(M(0) = 1 = F_2\)</span> y <span class="math inline">\(M(1) = 2 = F_3\)</span>. Así que <span class="math inline">\(N(h) = F_{h+2} - 1\)</span>.</p>
+<blockquote>
+<p><strong>Teorema 3.</strong> Un árbol AVL con <span class="math inline">\(n\)</span> nodos tiene altura <span class="math inline">\(h &lt; 1.4405\lg(n+2) - 0.3277\)</span>.</p>
+</blockquote>
+<p><em>Demostración.</em> Por la fórmula cerrada de Fibonacci, <span class="math inline">\(F_k = \frac{\varphi^k - \psi^k}{\sqrt 5}\)</span> con <span class="math inline">\(\varphi = \frac{1+\sqrt5}2 \approx 1.618\)</span> y <span class="math inline">\(|\psi| &lt; 1\)</span>, se tiene <span class="math inline">\(F_k &gt; \frac{\varphi^k}{\sqrt5} - 1\)</span>. Entonces <span class="math display">\[n \ge N(h) = F_{h+2} - 1 &gt; \frac{\varphi^{h+2}}{\sqrt5} - 2 \quad\Longrightarrow\quad \varphi^{h+2} &lt; \sqrt5\,(n + 2).\]</span> Tomando <span class="math inline">\(\log_\varphi\)</span>: <span class="math display">\[h + 2 &lt; \log_\varphi\sqrt5 + \log_\varphi(n+2) = \frac{\lg\sqrt5}{\lg\varphi} + \frac{\lg(n+2)}{\lg\varphi}.\]</span> Con <span class="math inline">\(1/\lg\varphi \approx 1.4405\)</span> y <span class="math inline">\(\lg\sqrt5/\lg\varphi \approx 1.6723\)</span>: <span class="math display">\[h &lt; 1.4405\lg(n+2) + 1.6723 - 2 = 1.4405\lg(n+2) - 0.3277. \qquad\blacksquare\]</span></p>
+<p>En palabras: <strong>un AVL es a lo más un 44% más alto que el árbol perfectamente balanceado</strong>. Los tests <code>avl_cota_de_altura_*</code> verifican exactamente esta desigualdad.</p>
+<div class="tabs"><div aria-label="Lenguaje" class="tablist" role="tablist"><button aria-controls="t1-0" aria-selected="false" data-lang="c" id="t1-0-b" role="tab" tabindex="-1" type="button">C</button><button aria-controls="t1-1" aria-selected="false" data-lang="cpp" id="t1-1-b" role="tab" tabindex="-1" type="button">C++</button><button aria-controls="t1-2" aria-selected="false" data-lang="rust" id="t1-2-b" role="tab" tabindex="-1" type="button">Rust</button></div><div aria-labelledby="t1-0-b" class="panel" data-lang="c" id="t1-0" role="tabpanel"><div class="sourceCode" id="cb6"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a aria-hidden="true" href="#cb6-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;math.h&gt;</span></span>
+<span id="cb6-2"><a aria-hidden="true" href="#cb6-2" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb6-3"><a aria-hidden="true" href="#cb6-3" tabindex="-1"></a></span>
+<span id="cb6-4"><a aria-hidden="true" href="#cb6-4" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb6-5"><a aria-hidden="true" href="#cb6-5" tabindex="-1"></a>    <span class="dt">long</span> n_min<span class="op">[</span><span class="dv">25</span><span class="op">]</span> <span class="op">=</span> <span class="op">{</span><span class="dv">0</span><span class="op">,</span> <span class="dv">1</span><span class="op">};</span></span>
+<span id="cb6-6"><a aria-hidden="true" href="#cb6-6" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> h <span class="op">=</span> <span class="dv">2</span><span class="op">;</span> h <span class="op">&lt;</span> <span class="dv">25</span><span class="op">;</span> h<span class="op">++)</span> n_min<span class="op">[</span>h<span class="op">]</span> <span class="op">=</span> n_min<span class="op">[</span>h <span class="op">-</span> <span class="dv">1</span><span class="op">]</span> <span class="op">+</span> n_min<span class="op">[</span>h <span class="op">-</span> <span class="dv">2</span><span class="op">]</span> <span class="op">+</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb6-7"><a aria-hidden="true" href="#cb6-7" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">" h   N(h) mínimo   cota(N(h))</span><span class="sc">\n</span><span class="st">"</span><span class="op">);</span></span>
+<span id="cb6-8"><a aria-hidden="true" href="#cb6-8" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> h <span class="op">=</span> <span class="dv">4</span><span class="op">;</span> h <span class="op">&lt;=</span> <span class="dv">24</span><span class="op">;</span> h <span class="op">+=</span> <span class="dv">4</span><span class="op">)</span></span>
+<span id="cb6-9"><a aria-hidden="true" href="#cb6-9" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">"</span><span class="sc">%2d</span><span class="st"> </span><span class="sc">%13ld</span><span class="st"> </span><span class="sc">%12.4f\n</span><span class="st">"</span><span class="op">,</span> h<span class="op">,</span> n_min<span class="op">[</span>h<span class="op">],</span> <span class="fl">1.4405</span> <span class="op">*</span> log2<span class="op">((</span><span class="dt">double</span><span class="op">)</span>n_min<span class="op">[</span>h<span class="op">]</span> <span class="op">+</span> <span class="dv">2</span><span class="op">)</span> <span class="op">-</span> <span class="fl">0.3277</span><span class="op">);</span></span>
+<span id="cb6-10"><a aria-hidden="true" href="#cb6-10" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb6-11"><a aria-hidden="true" href="#cb6-11" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div><div aria-labelledby="t1-1-b" class="panel" data-lang="cpp" id="t1-1" role="tabpanel"><div class="sourceCode" id="cb7"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a aria-hidden="true" href="#cb7-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;cmath&gt;</span></span>
+<span id="cb7-2"><a aria-hidden="true" href="#cb7-2" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb7-3"><a aria-hidden="true" href="#cb7-3" tabindex="-1"></a></span>
+<span id="cb7-4"><a aria-hidden="true" href="#cb7-4" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb7-5"><a aria-hidden="true" href="#cb7-5" tabindex="-1"></a>    <span class="dt">long</span> n_min<span class="op">[</span><span class="dv">25</span><span class="op">]</span> <span class="op">=</span> <span class="op">{</span><span class="dv">0</span><span class="op">,</span> <span class="dv">1</span><span class="op">};</span></span>
+<span id="cb7-6"><a aria-hidden="true" href="#cb7-6" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> h <span class="op">=</span> <span class="dv">2</span><span class="op">;</span> h <span class="op">&lt;</span> <span class="dv">25</span><span class="op">;</span> <span class="op">++</span>h<span class="op">)</span> n_min<span class="op">[</span>h<span class="op">]</span> <span class="op">=</span> n_min<span class="op">[</span>h <span class="op">-</span> <span class="dv">1</span><span class="op">]</span> <span class="op">+</span> n_min<span class="op">[</span>h <span class="op">-</span> <span class="dv">2</span><span class="op">]</span> <span class="op">+</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb7-7"><a aria-hidden="true" href="#cb7-7" tabindex="-1"></a>    <span class="bu">std::</span>printf<span class="op">(</span><span class="st">" h   N(h) mínimo   cota(N(h))</span><span class="sc">\n</span><span class="st">"</span><span class="op">);</span></span>
+<span id="cb7-8"><a aria-hidden="true" href="#cb7-8" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> h <span class="op">=</span> <span class="dv">4</span><span class="op">;</span> h <span class="op">&lt;=</span> <span class="dv">24</span><span class="op">;</span> h <span class="op">+=</span> <span class="dv">4</span><span class="op">)</span></span>
+<span id="cb7-9"><a aria-hidden="true" href="#cb7-9" tabindex="-1"></a>        <span class="bu">std::</span>printf<span class="op">(</span><span class="st">"</span><span class="sc">%2d</span><span class="st"> </span><span class="sc">%13ld</span><span class="st"> </span><span class="sc">%12.4f\n</span><span class="st">"</span><span class="op">,</span> h<span class="op">,</span> n_min<span class="op">[</span>h<span class="op">],</span> <span class="fl">1.4405</span> <span class="op">*</span> <span class="bu">std::</span>log2<span class="op">((</span><span class="dt">double</span><span class="op">)</span>n_min<span class="op">[</span>h<span class="op">]</span> <span class="op">+</span> <span class="dv">2</span><span class="op">)</span> <span class="op">-</span> <span class="fl">0.3277</span><span class="op">);</span></span>
+<span id="cb7-10"><a aria-hidden="true" href="#cb7-10" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div><div aria-labelledby="t1-2-b" class="panel" data-lang="rust" id="t1-2" role="tabpanel"><div class="sourceCode" id="cb8"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb8-1"><a aria-hidden="true" href="#cb8-1" tabindex="-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb8-2"><a aria-hidden="true" href="#cb8-2" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> n_min <span class="op">=</span> [<span class="dv">0i64</span><span class="op">;</span> <span class="dv">25</span>]<span class="op">;</span></span>
+<span id="cb8-3"><a aria-hidden="true" href="#cb8-3" tabindex="-1"></a>    n_min[<span class="dv">1</span>] <span class="op">=</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb8-4"><a aria-hidden="true" href="#cb8-4" tabindex="-1"></a>    <span class="cf">for</span> h <span class="kw">in</span> <span class="dv">2</span><span class="op">..</span><span class="dv">25</span> <span class="op">{</span> n_min[h] <span class="op">=</span> n_min[h <span class="op">-</span> <span class="dv">1</span>] <span class="op">+</span> n_min[h <span class="op">-</span> <span class="dv">2</span>] <span class="op">+</span> <span class="dv">1</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb8-5"><a aria-hidden="true" href="#cb8-5" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">" h   N(h) mínimo   cota(N(h))"</span>)<span class="op">;</span></span>
+<span id="cb8-6"><a aria-hidden="true" href="#cb8-6" tabindex="-1"></a>    <span class="cf">for</span> h <span class="kw">in</span> (<span class="dv">4</span><span class="op">..=</span><span class="dv">24</span>)<span class="op">.</span>step_by(<span class="dv">4</span>) <span class="op">{</span></span>
+<span id="cb8-7"><a aria-hidden="true" href="#cb8-7" tabindex="-1"></a>        <span class="pp">println!</span>(<span class="st">"{:2} {:13} {:12.4}"</span><span class="op">,</span> h<span class="op">,</span> n_min[h]<span class="op">,</span> <span class="dv">1.4405</span> <span class="op">*</span> ((n_min[h] <span class="op">+</span> <span class="dv">2</span>) <span class="kw">as</span> <span class="dt">f64</span>)<span class="op">.</span>log2() <span class="op">-</span> <span class="dv">0.3277</span>)<span class="op">;</span></span>
+<span id="cb8-8"><a aria-hidden="true" href="#cb8-8" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb8-9"><a aria-hidden="true" href="#cb8-9" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div></div>
+<pre class="text salida"><code> h   N(h) mínimo   cota(N(h))
+ 4             7       4.2386
+ 8            54       8.0378
+12           376      12.0062
+16          2583      16.0017
+20         17710      20.0013
+24        121392      24.0014</code></pre>
+<p>Observa que en los árboles mínimos la cota supera a la altura real por apenas milésimas (<span class="math inline">\(h = 16\)</span> contra <span class="math inline">\(16.0017\)</span>): la cota del Teorema 3 es prácticamente ajustada, y por eso se escribe con cuatro decimales.</p>
+<h3 id="rebalancear">4.3 Rebalancear</h3>
+<p>Tras insertar o borrar, las alturas cambian a lo más en 1 a lo largo del camino a la raíz, así que un nodo puede quedar con <span class="math inline">\(|\text{bf}| = 2\)</span>. La función <code>rebalance(t)</code> lo repara, suponiendo que los hijos de <span class="math inline">\(t\)</span> <strong>ya son AVL</strong>. Hay cuatro casos; por simetría basta analizar <span class="math inline">\(\text{bf}(t) = +2\)</span> (izquierdo más alto). Sea <span class="math inline">\(x\)</span> el hijo izquierdo, con altura <span class="math inline">\(k + 2\)</span>, y el derecho de <span class="math inline">\(t\)</span> con altura <span class="math inline">\(k\)</span>.</p>
+<p><strong>Caso izquierda-izquierda</strong> (<span class="math inline">\(h(x.\text{izq}) \ge h(x.\text{der})\)</span>): rotación simple a la derecha en <span class="math inline">\(t\)</span>.</p>
+<p><strong>Caso izquierda-derecha</strong> (<span class="math inline">\(h(x.\text{izq}) &lt; h(x.\text{der})\)</span>): rotación a la izquierda en <span class="math inline">\(x\)</span>, y luego a la derecha en <span class="math inline">\(t\)</span> (<strong>rotación doble</strong>).</p>
+<figure>
+<svg aria-label="Los dos casos de rebalanceo AVL cuando el lado izquierdo es más alto" fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" role="img" viewbox="0 0 800 520" xmlns="http://www.w3.org/2000/svg">
+<title>Los dos casos de rebalanceo AVL cuando el lado izquierdo es más alto</title>
+<defs>
+<marker id="ar" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#111827"></path></marker>
+<marker id="arc" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#1240e0"></path></marker>
+<marker id="ara" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"></path></marker>
+</defs>
+<rect fill="#ffffff" height="520" rx="12" width="800"></rect>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start" x="20" y="28">Caso izquierda-izquierda: una rotación a la derecha en t</text>
+<line stroke="#6b7280" stroke-width="1.4" x1="170" x2="110" y1="60" y2="115"></line>
+<line stroke="#6b7280" stroke-width="1.4" x1="170" x2="230" y1="60" y2="120"></line>
+<line stroke="#6b7280" stroke-width="1.4" x1="110" x2="70" y1="115" y2="160"></line>
+<line stroke="#6b7280" stroke-width="1.4" x1="110" x2="150" y1="115" y2="160"></line>
+<circle cx="170" cy="60" fill="#ffedd5" r="18" stroke="#1240e0" stroke-width="1.5"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="170" y="65">t</text>
+<circle cx="110" cy="115" fill="#eef2ff" r="18" stroke="#1240e0" stroke-width="1.5"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="110" y="120">x</text>
+<path d="M70,135 L46,205 L94,205 Z" fill="#ffedd5" stroke="#6b7280" stroke-width="1.3"></path>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="70" y="195">A</text>
+<path d="M150,135 L126,185 L174,185 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"></path>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="150" y="175">B</text>
+<path d="M230,120 L206,160 L254,160 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"></path>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="230" y="150">C</text>
+<text fill="#c2410c" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="middle" x="70" y="222">k+1</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="400" text-anchor="middle" x="150" y="202">≤ k+1</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="400" text-anchor="middle" x="230" y="178">k</text>
+<line marker-end="url(#arc)" stroke="#1240e0" stroke-width="2" x1="300" x2="400" y1="120" y2="120"></line>
+<line stroke="#6b7280" stroke-width="1.4" x1="560" x2="500" y1="60" y2="115"></line>
+<line stroke="#6b7280" stroke-width="1.4" x1="560" x2="620" y1="60" y2="115"></line>
+<line stroke="#6b7280" stroke-width="1.4" x1="620" x2="580" y1="115" y2="160"></line>
+<line stroke="#6b7280" stroke-width="1.4" x1="620" x2="660" y1="115" y2="160"></line>
+<circle cx="560" cy="60" fill="#eef2ff" r="18" stroke="#1240e0" stroke-width="1.5"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="560" y="65">x</text>
+<circle cx="620" cy="115" fill="#eef2ff" r="18" stroke="#1240e0" stroke-width="1.5"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="620" y="120">t</text>
+<path d="M500,115 L476,185 L524,185 Z" fill="#ffedd5" stroke="#6b7280" stroke-width="1.3"></path>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="500" y="175">A</text>
+<path d="M580,140 L556,190 L604,190 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"></path>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="580" y="180">B</text>
+<path d="M660,140 L636,180 L684,180 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"></path>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="660" y="170">C</text>
+<text fill="#15803d" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="700" y="80">balanceado</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start" x="20" y="270">Caso izquierda-derecha: rotación doble (izquierda en x, derecha en t)</text>
+<line stroke="#6b7280" stroke-width="1.4" x1="170" x2="110" y1="302" y2="357"></line>
+<line stroke="#6b7280" stroke-width="1.4" x1="170" x2="230" y1="302" y2="362"></line>
+<line stroke="#6b7280" stroke-width="1.4" x1="110" x2="70" y1="357" y2="402"></line>
+<line stroke="#6b7280" stroke-width="1.4" x1="110" x2="150" y1="357" y2="402"></line>
+<circle cx="170" cy="302" fill="#ffedd5" r="18" stroke="#1240e0" stroke-width="1.5"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="170" y="307">t</text>
+<circle cx="110" cy="357" fill="#eef2ff" r="18" stroke="#1240e0" stroke-width="1.5"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="110" y="362">x</text>
+<circle cx="150" cy="402" fill="#ffedd5" r="18" stroke="#1240e0" stroke-width="1.5"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="150" y="407">y</text>
+<path d="M70,377 L46,422 L94,422 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"></path>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="70" y="412">A</text>
+<path d="M230,362 L206,407 L254,407 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"></path>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="230" y="397">C</text>
+<line stroke="#6b7280" stroke-width="1.4" x1="150" x2="125" y1="420" y2="450"></line>
+<line stroke="#6b7280" stroke-width="1.4" x1="150" x2="175" y1="420" y2="450"></line>
+<path d="M125,450 L101,490 L149,490 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"></path>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="125" y="480">B₁</text>
+<path d="M175,450 L151,490 L199,490 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"></path>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="175" y="480">B₂</text>
+<line marker-end="url(#arc)" stroke="#1240e0" stroke-width="2" x1="300" x2="400" y1="380" y2="380"></line>
+<line stroke="#6b7280" stroke-width="1.4" x1="580" x2="510" y1="310" y2="370"></line>
+<line stroke="#6b7280" stroke-width="1.4" x1="580" x2="650" y1="310" y2="370"></line>
+<line stroke="#6b7280" stroke-width="1.4" x1="510" x2="480" y1="370" y2="410"></line>
+<line stroke="#6b7280" stroke-width="1.4" x1="510" x2="540" y1="370" y2="410"></line>
+<line stroke="#6b7280" stroke-width="1.4" x1="650" x2="620" y1="370" y2="410"></line>
+<line stroke="#6b7280" stroke-width="1.4" x1="650" x2="680" y1="370" y2="410"></line>
+<circle cx="580" cy="310" fill="#ffedd5" r="18" stroke="#1240e0" stroke-width="1.5"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="580" y="315">y</text>
+<circle cx="510" cy="370" fill="#eef2ff" r="18" stroke="#1240e0" stroke-width="1.5"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="510" y="375">x</text>
+<circle cx="650" cy="370" fill="#eef2ff" r="18" stroke="#1240e0" stroke-width="1.5"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="650" y="375">t</text>
+<path d="M480,405 L456,450 L504,450 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"></path>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="480" y="440">A</text>
+<path d="M540,405 L516,445 L564,445 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"></path>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="540" y="435">B₁</text>
+<path d="M620,405 L596,445 L644,445 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"></path>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="620" y="435">B₂</text>
+<path d="M680,405 L656,450 L704,450 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"></path>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="680" y="440">C</text>
+<text fill="#15803d" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="720" y="330">balanceado</text>
+</svg>
+<figcaption aria-hidden="true">Los dos casos de rebalanceo cuando el lado izquierdo es más alto</figcaption>
+</figure>
+<blockquote>
+<p><strong>Teorema 4.</strong> Si los hijos de <span class="math inline">\(t\)</span> son AVL y <span class="math inline">\(\text{bf}(t) = +2\)</span>, <code>rebalance(t)</code> devuelve un árbol AVL con las mismas claves, de altura <span class="math inline">\(k+2\)</span> o <span class="math inline">\(k+3\)</span>.</p>
+</blockquote>
+<p><em>Demostración.</em> Sea <span class="math inline">\(A = x.\text{izq}\)</span>, <span class="math inline">\(B = x.\text{der}\)</span>, <span class="math inline">\(C = t.\text{der}\)</span>, con <span class="math inline">\(h(C) = k\)</span> y <span class="math inline">\(\max(h(A), h(B)) = k + 1\)</span>.</p>
+<p><em>Caso izquierda-izquierda:</em> <span class="math inline">\(h(A) = k + 1\)</span> y <span class="math inline">\(h(B) \in \{k, k+1\}\)</span>. Tras rotar a la derecha, <span class="math inline">\(t\)</span> tiene hijos <span class="math inline">\(B\)</span> y <span class="math inline">\(C\)</span>: alturas <span class="math inline">\(\le k+1\)</span> y <span class="math inline">\(k\)</span>, diferencia <span class="math inline">\(\le 1\)</span> ✔, y <span class="math inline">\(h(t) \in \{k+1, k+2\}\)</span>. La nueva raíz <span class="math inline">\(x\)</span> tiene hijos <span class="math inline">\(A\)</span> (<span class="math inline">\(k + 1\)</span>) y <span class="math inline">\(t\)</span> (<span class="math inline">\(k+1\)</span> o <span class="math inline">\(k+2\)</span>): diferencia <span class="math inline">\(\le 1\)</span> ✔.</p>
+<p><em>Caso izquierda-derecha:</em> <span class="math inline">\(h(B) = k + 1\)</span> y <span class="math inline">\(h(A) = k\)</span>. Sea <span class="math inline">\(y\)</span> la raíz de <span class="math inline">\(B\)</span> con subárboles <span class="math inline">\(B_1, B_2\)</span> de alturas <span class="math inline">\(k\)</span> o <span class="math inline">\(k-1\)</span> (al menos uno <span class="math inline">\(k\)</span>). Tras la doble rotación, <span class="math inline">\(y\)</span> es la raíz con hijos <span class="math inline">\(x\)</span> (sobre <span class="math inline">\(A\)</span> y <span class="math inline">\(B_1\)</span>) y <span class="math inline">\(t\)</span> (sobre <span class="math inline">\(B_2\)</span> y <span class="math inline">\(C\)</span>). <span class="math inline">\(x\)</span>: alturas <span class="math inline">\(k\)</span> y <span class="math inline">\(\ge k - 1\)</span> ✔, <span class="math inline">\(h(x) = k+1\)</span>. <span class="math inline">\(t\)</span>: alturas <span class="math inline">\(\ge k - 1\)</span> y <span class="math inline">\(k\)</span> ✔, <span class="math inline">\(h(t) = k + 1\)</span>. <span class="math inline">\(y\)</span>: dos hijos de altura <span class="math inline">\(k+1\)</span> ✔, <span class="math inline">\(h(y) = k+2\)</span>.</p>
+<p>En ambos casos las rotaciones preservan el invariante BST (Lema 2). <span class="math inline">\(\blacksquare\)</span></p>
+<p><em>¿Por qué la rotación simple no basta en el caso izquierda-derecha?</em> Porque rotar a la derecha en <span class="math inline">\(t\)</span> mueve <span class="math inline">\(B\)</span> (el subárbol alto) al lado de <span class="math inline">\(C\)</span> a la <strong>misma</strong> profundidad: el desbalance pasa al otro lado.</p>
+<h3 id="inserción-y-borrado">4.4 Inserción y borrado</h3>
+<p>Ambos se escriben recursivamente: bajar como en un BST, hacer la modificación, y <strong>al volver</strong> de la recursión llamar <code>rebalance</code> en cada nodo del camino. Por inducción sobre la recursión, cuando se llama <code>rebalance(t)</code> los hijos de <span class="math inline">\(t\)</span> ya son AVL y <span class="math inline">\(|\text{bf}(t)| \le 2\)</span> (una inserción o un borrado cambia una altura en a lo más 1), que es la precondición del Teorema 4.</p>
+<ul>
+<li><strong>Inserción:</strong> basta <strong>una</strong> rotación (simple o doble): la que se hace devuelve el subárbol a la altura que tenía antes de insertar, así que los ancestros ya no cambian.</li>
+<li><strong>Borrado:</strong> puede requerir una rotación en cada nivel, <span class="math inline">\(O(\lg n)\)</span> en total: tras rotar, el subárbol puede quedar <strong>más bajo</strong> que antes, y el desbalance se propaga.</li>
+</ul>
+<p>Ambas cuestan <span class="math inline">\(O(h) = O(\lg n)\)</span>. El test <code>avl_borrar_rebalancea</code> borra 65 000 de 65 536 claves consecutivas: un borrado que no rebalancea deja un árbol de altura <span class="math inline">\(\approx 16\)</span> con 536 claves, cuando la cota es <span class="math inline">\(\approx 12.7\)</span>.</p>
+<hr/>
+<h2 id="tomar-y-devolver-el-subárbol">5. Tomar y devolver el subárbol</h2>
+<p>Rotar cambia <strong>qué nodo es la raíz</strong> de un subárbol, y el padre tiene que enterarse. Hay dos estilos:</p>
+<ol type="1">
+<li><strong>Punteros al padre</strong> en cada nodo: la rotación actualiza el hijo del padre. Más memoria, más punteros que mantener consistentes, y en Rust imposible con <code>Box</code> (ciclos padre ⇄ hijo, como en la L03).</li>
+<li><strong>Tomar y devolver</strong> (estilo funcional): cada función recursiva recibe la raíz de un subárbol y <strong>devuelve la nueva raíz</strong>; el que llama reasigna su puntero: <code>t-&gt;left = insert(std::move(t-&gt;left), k, v)</code>.</li>
+</ol>
+<p>Las tres soluciones de referencia usan el estilo 2:</p>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>firma de <code>insert</code></th>
+<th>rotación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C</td>
+<td><code>AvlNode *insertar(AvlMap *m, AvlNode *t, ...)</code></td>
+<td>reasignar punteros crudos</td>
+</tr>
+<tr>
+<td>C++</td>
+<td><code>static Link insert(Link t, ...)</code> con <code>Link = unique_ptr&lt;Node&gt;</code></td>
+<td><code>std::move</code> de <code>unique_ptr</code></td>
+</tr>
+<tr>
+<td>Rust</td>
+<td><code>fn insert(t: Link&lt;K,V&gt;, k, v) -&gt; (Box&lt;Node&lt;K,V&gt;&gt;, Option&lt;V&gt;)</code></td>
+<td><code>take()</code> y reasignar <code>Box</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>En Rust el estilo 2 es la forma natural: la función es <strong>dueña</strong> del subárbol mientras lo reorganiza, así que el compilador no tiene nada que objetar. Y no hace falta ni una línea de <code>unsafe</code>.</p>
+<p><strong>Recursión y pila.</strong> A diferencia de las listas (L03), aquí la recursión (y el destructor por defecto, que también es recursivo) tiene profundidad <span class="math inline">\(h = O(\lg n)\)</span>: con <span class="math inline">\(10^9\)</span> nodos, menos de 45 niveles. No hay riesgo de desbordar la pila.</p>
+<hr/>
+<h2 id="otros-árboles-balanceados">6. Otros árboles balanceados</h2>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Estructura</th>
+<th>Garantía</th>
+<th>Rotaciones por inserción</th>
+<th>Dónde se usa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AVL</td>
+<td><span class="math inline">\(h &lt; 1.44\lg n\)</span></td>
+<td><span class="math inline">\(\le 2\)</span></td>
+<td>bases de datos en memoria; búsquedas frecuentes</td>
+</tr>
+<tr>
+<td>Rojinegro</td>
+<td><span class="math inline">\(h \le 2\lg(n+1)\)</span></td>
+<td><span class="math inline">\(\le 2\)</span> (y <span class="math inline">\(\le 3\)</span> al borrar)</td>
+<td><code>std::map</code> (C++), <code>TreeMap</code> (Java), el planificador de Linux</td>
+</tr>
+<tr>
+<td>B-árbol</td>
+<td><span class="math inline">\(h = O(\log_B n)\)</span></td>
+<td>divisiones de nodos</td>
+<td>bases de datos en disco; <strong><code>BTreeMap</code> de Rust</strong></td>
+</tr>
+<tr>
+<td>Treap</td>
+<td><span class="math inline">\(O(\lg n)\)</span> esperado</td>
+<td>aleatorias</td>
+<td>simple de implementar; división y unión</td>
+</tr>
+<tr>
+<td>Splay</td>
+<td><span class="math inline">\(O(\lg n)\)</span> amortizado</td>
+<td>muchas</td>
+<td>cachés: lo reciente queda arriba</td>
+</tr>
+</tbody>
+</table></div>
+<p>Rust eligió un <strong>B-árbol</strong> para su <code>BTreeMap</code> y no un árbol binario: cada nodo guarda hasta 11 claves contiguas, así que una búsqueda toca <span class="math inline">\(\log_{12} n\)</span> nodos y cada nodo cabe en pocas líneas de caché (L02 §5.4). C++ eligió rojinegro porque el estándar exige que las referencias a elementos de <code>std::map</code> nunca se invaliden, y en un B-árbol las claves se mueven dentro de los nodos.</p>
+<hr/>
+<h2 id="resumen-de-paradigmas-en-este-lab">7. Resumen de paradigmas en este lab</h2>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Aspecto</th>
+<th>C</th>
+<th>C++</th>
+<th>Rust</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hijos</td>
+<td><code>AvlNode *left, *right</code></td>
+<td><code>std::unique_ptr&lt;Node&gt;</code></td>
+<td><code>Option&lt;Box&lt;Node&gt;&gt;</code></td>
+</tr>
+<tr>
+<td>Rotar</td>
+<td>reasignar punteros</td>
+<td><code>std::move</code></td>
+<td><code>take()</code> + reasignar</td>
+</tr>
+<tr>
+<td>Comparación</td>
+<td><code>algolib_cmp</code></td>
+<td><code>operator&lt;</code></td>
+<td><code>Ord::cmp</code> → <code>Ordering</code> (un <code>match</code> con 3 ramas)</td>
+</tr>
+<tr>
+<td><code>insert</code> devuelve</td>
+<td><code>bool</code> (¿nueva?)</td>
+<td><code>bool</code></td>
+<td><code>Option&lt;V&gt;</code> (el valor viejo)</td>
+</tr>
+<tr>
+<td>Liberar</td>
+<td>recursivo, a mano</td>
+<td>destructor por defecto (recursivo, <span class="math inline">\(O(\lg n)\)</span> de pila)</td>
+<td><code>Drop</code> derivado (recursivo)</td>
+</tr>
+<tr>
+<td>Mínimo de un vacío</td>
+<td><code>false</code></td>
+<td><code>std::nullopt</code></td>
+<td><code>None</code></td>
+</tr>
+</tbody>
+</table></div>
+<hr/>
+<h2 id="guía-del-lab-07">8. Guía del Lab 07</h2>
+<p><strong>Archivos:</strong> <code>c/src/lab07/avl_map.c</code>, <code>cpp/include/algolib/lab07/avl_map.hpp</code>, <code>rust/src/lab07/mod.rs</code>.</p>
+<p><strong>Orden sugerido:</strong></p>
+<ol type="1">
+<li>Escribe primero un <strong>BST sin balancear</strong>: <code>find</code>, <code>insert</code> (estilo tomar y devolver), <code>keys</code> (in-order), <code>min_key</code>/<code>max_key</code>, <code>height</code>. Pasarán <code>avl_basico</code> y el test aleatorio, pero no los de altura.</li>
+<li>Agrega el campo <code>height</code>, la función <code>update</code> y las dos rotaciones. Pruébalas a mano con 3 nodos.</li>
+<li><code>rebalance</code> con los cuatro casos, llamada al volver de cada <code>insert</code>. Ahora pasa <code>avl_secuencial_es_perfecto</code> (insertar 1..7 da el árbol perfecto de altura 3) y <code>avl_cota_de_altura_insercion_ordenada</code>.</li>
+<li><code>erase</code> con el caso de dos hijos (<code>remove_min</code> del subárbol derecho), con <code>rebalance</code> al volver. Pasa <code>avl_borrar_rebalancea</code>.</li>
+</ol>
+<p><strong>Errores frecuentes:</strong></p>
+<ul>
+<li>Olvidar <code>update</code> del nodo de abajo <strong>antes</strong> que el de arriba en una rotación (la altura de la nueva raíz depende de la del nodo que bajó).</li>
+<li>Decidir entre rotación simple y doble con <code>bf(x) &lt; 0</code> vs. <code>bf(x) &lt;= 0</code>: en el caso izquierda-izquierda con <span class="math inline">\(h(A) = h(B)\)</span> (que solo ocurre al borrar), la rotación doble deja un desbalance. La regla correcta: doble solo si el hijo está inclinado <strong>hacia el lado contrario</strong> estrictamente.</li>
+<li>En <code>erase</code> con dos hijos, copiar la clave y el valor del sucesor sobre <span class="math inline">\(z\)</span> y luego borrar el sucesor: funciona, pero copia <code>K</code> y <code>V</code> (en C++ y Rust exige <code>Clone</code>). Las soluciones de referencia <strong>mueven el nodo</strong> del sucesor en su lugar.</li>
+<li>En Rust, <code>match key.cmp(&amp;t.key) { Equal =&gt; return (t, Some(mem::replace(&amp;mut t.value, v))) }</code> no compila: <code>t</code> se mueve antes de tomar el préstamo. Haz el <code>replace</code> en una línea previa.</li>
+</ul>
+<hr/>
+<h2 id="comprueba-tu-comprensión">9. Comprueba tu comprensión</h2>
+<ol type="1">
+<li>¿Es BST el árbol con raíz 10, hijo izquierdo 5 y, como hijo derecho de 5, el 12?</li>
+<li>¿Cuál es la altura máxima de un AVL con 20 nodos? ¿Y con <span class="math inline">\(N(6) = 20\)</span> exactamente?</li>
+<li>Inserta 3, 2, 1 en un AVL vacío. ¿Qué rotación ocurre? ¿Y con 3, 1, 2?</li>
+<li>¿Por qué después de una rotación en una inserción ya no hacen falta más rotaciones arriba?</li>
+<li>¿Qué devuelve el recorrido in-order de un AVL tras insertar 5, 3, 8, 1, 4?</li>
+</ol>
+<details>
+<summary>
+Respuestas
+</summary>
+<ol type="1">
+<li>No. 12 está en el subárbol izquierdo de 10 y <span class="math inline">\(12 &gt; 10\)</span>.</li>
+<li><span class="math inline">\(N(h) = F_{h+2} - 1\)</span>: <span class="math inline">\(N(6) = F_8 - 1 = 20\)</span> y <span class="math inline">\(N(7) = 33\)</span>. Con 20 nodos la altura máxima es 6.</li>
+<li>3, 2, 1: caso izquierda-izquierda, rotación simple a la derecha en 3; queda 2 con hijos 1 y 3. 3, 1, 2: caso izquierda-derecha, doble rotación; también queda 2 con hijos 1 y 3.</li>
+<li>Porque la inserción subió la altura del subárbol en 1 y la rotación la devuelve a la altura que tenía <strong>antes</strong> de insertar (Teorema 4: <span class="math inline">\(k + 2\)</span>), así que para los ancestros nada cambió.</li>
+<li><span class="math inline">\(\langle 1, 3, 4, 5, 8\rangle\)</span> (Teorema 1), sin importar la forma.</li>
+</ol>
+</details>
+<hr/>
+<h2 id="problem-set-7">10. Problem Set 7</h2>
+<p><strong>Teoría</strong></p>
+<ol type="1">
+<li>Demuestra que la altura esperada de un BST construido insertando una permutación uniforme de <span class="math inline">\(n\)</span> claves es <span class="math inline">\(O(\lg n)\)</span>. (Pista: la profundidad esperada de un nodo se relaciona con el análisis de quicksort de L05: ¿cuándo es <span class="math inline">\(z_i\)</span> ancestro de <span class="math inline">\(z_j\)</span>?)</li>
+<li>Demuestra que la inserción en AVL hace a lo más una rotación (simple o doble), y que el borrado puede necesitar <span class="math inline">\(\Theta(\lg n)\)</span> rotaciones (construye el ejemplo con un árbol de Fibonacci).</li>
+<li><strong>Rojinegros.</strong> Con las reglas (raíz negra, hijos de un rojo son negros, todos los caminos a hojas nulas tienen el mismo número de negros), demuestra que <span class="math inline">\(h \le 2\lg(n+1)\)</span>. Demuestra que todo AVL se puede colorear como rojinegro.</li>
+<li>Diseña <code>range(a, b)</code> que devuelva las <span class="math inline">\(r\)</span> claves en <span class="math inline">\([a, b]\)</span> en <span class="math inline">\(O(\lg n + r)\)</span> y demuéstralo.</li>
+<li>Demuestra que dos BST con las mismas claves se pueden transformar uno en el otro con a lo más <span class="math inline">\(2n - 2\)</span> rotaciones (pista: convierte ambos a una “espina” derecha).</li>
+</ol>
+<p><strong>Implementación (C, C++ y Rust)</strong></p>
+<ol start="6" type="1">
+<li>Agrega <code>successor(k)</code> y <code>predecessor(k)</code> en <span class="math inline">\(O(\lg n)\)</span>, con tests contra <code>std::map::upper_bound</code> / <code>BTreeMap::range</code>.</li>
+<li>Agrega un iterador in-order con pila explícita (<span class="math inline">\(O(h)\)</span> memoria). En Rust, implementa <code>Iterator</code> para <code>Iter&lt;'a, K, V&gt;</code> y verifica que no se puede modificar el mapa mientras el iterador vive.</li>
+<li>Implementa un <strong>treap</strong> (BST por clave + heap por prioridad aleatoria) con <code>split</code> y <code>merge</code>, y compara su altura promedio con la del AVL.</li>
+<li>Escribe un verificador <code>check_invariants()</code> que recorra el árbol y verifique BST, AVL y alturas cacheadas, y úsalo en el test aleatorio después de cada operación.</li>
+</ol>
+<hr/>
+<h2 id="referencias">Referencias</h2>
+<ul>
+<li>CLRS, <em>Introduction to Algorithms</em>, 4ª ed.: Cap. 12 (BST; §12.4 altura de BST aleatorios), Cap. 13 (rojinegros).</li>
+<li>MIT 6.006 (Spring 2020), Lectures 6–7: <em>Binary Trees</em> y <em>AVL Trees</em>.</li>
+<li>Adelson-Velsky, G. M. y Landis, E. M. (1962). <em>An algorithm for the organization of information</em>. Soviet Math. Doklady 3.</li>
+<li>Knuth, D. E. <em>The Art of Computer Programming</em>, Vol. 3, §6.2.3 (árboles balanceados; la cota <span class="math inline">\(1.4405\lg(n+2) - 0.3277\)</span>).</li>
+<li>Devroye, L. (1986). <em>A note on the height of binary search trees</em>. JACM 33(3).</li>
+</ul>
+</main><footer>algolib · Estructuras de Datos y Algoritmos. Fuente: <code>notas/L07-bst-avl.md</code>. Regenerar con <code>make html</code>.</footer><script>{
+
+const KEY='algolib-lang';let pref='cpp';try{pref=localStorage.getItem(KEY)||'cpp'}catch(e){}
+function pick(lang,save){
+  for(const g of document.querySelectorAll('.tabs')){
+    const btns=[...g.querySelectorAll('[role=tab]')];if(!btns.length)continue;
+    const b=btns.find(x=>x.dataset.lang===lang)||btns[0];
+    for(const x of btns){const on=x===b;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;
+      document.getElementById(x.getAttribute('aria-controls')).hidden=!on;}
+  }
+  if(save){try{localStorage.setItem(KEY,lang)}catch(e){}}
+}
+for(const g of document.querySelectorAll('.tablist')){
+  g.addEventListener('click',e=>{const b=e.target.closest('[role=tab]');if(b){const y=b.getBoundingClientRect().top;pick(b.dataset.lang,true);window.scrollBy(0,b.getBoundingClientRect().top-y);}});
+  g.addEventListener('keydown',e=>{const bs=[...g.querySelectorAll('[role=tab]')];const i=bs.indexOf(document.activeElement);
+    if(i<0)return;let j=i;if(e.key==='ArrowRight')j=(i+1)%bs.length;else if(e.key==='ArrowLeft')j=(i-1+bs.length)%bs.length;else return;
+    e.preventDefault();pick(bs[j].dataset.lang,true);bs[j].focus();});
+}
+pick(pref,false);
+for(const p of document.querySelectorAll('main pre:not(.pizarra):not(.salida)')){
+  const b=document.createElement('button');b.className='copy';b.type='button';b.textContent='Copiar';
+  b.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(p.innerText.replace(/Copiar$/,''));b.textContent='Copiado';}catch(e){b.textContent='No se pudo';}setTimeout(()=>b.textContent='Copiar',1600);});
+  p.appendChild(b);}
+}</script></body></html>

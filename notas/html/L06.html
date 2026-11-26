@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>L06 · Notas · Estructuras de Datos y Algoritmos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: apuntes de curso universitario, sobrios y precisos; el guion habla en voz de profesor.
+   IDEA: cuaderno de clase técnico con pizarrón: hoja limpia, recuadros de pizarra verde para lo que se escribe.
+   PICTURE: diagramas SVG propios de cada lección (cotas, arreglos, costos), sobre placa blanca.
+   COLOUR and TYPE: tira cobalto #1240e0, hoja blanca, zonas #eef2ff, acento naranja quemado; Space Grotesk + Inter + JetBrains Mono.
+   LAYOUT: tira de título a todo el ancho, fila de secciones, columna de lectura de 780px; figuras y tablas hasta 900px. */
+:root{color-scheme:light dark;
+ --bg:light-dark(#ffffff,#0b0e17);--ink:light-dark(#111827,#e6e9f2);--muted:light-dark(#5b6270,#9aa3b5);
+ --cob:#1240e0;--cob-ink:light-dark(#1240e0,#8fa8ff);--pale:light-dark(#eef2ff,#141b33);--line:light-dark(#dfe4f2,#252c44);
+ --acc:light-dark(#c2410c,#fb923c);--acc-pale:light-dark(#fff1e6,#2a1a10);--ok:light-dark(#15803d,#4ade80);
+ --chalk-bg:#1f3a2e;--chalk:#eef3e8;--chalk-dim:#a9c2b2;--wood:#7a5a33}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Inter,system-ui,sans-serif;overflow-x:clip}
+a{color:var(--cob-ink)}
+.strip{background:var(--cob);color:#fff;padding:clamp(22px,3.5vw,44px) max(5vw,16px) clamp(20px,3vw,34px)}
+.strip .curso{font:600 14px/1.3 'Space Grotesk',sans-serif;opacity:.85;margin:0 0 10px}
+.strip h1{font:700 clamp(30px,4.6vw,48px)/1.06 'Space Grotesk',sans-serif;margin:0;text-wrap:balance;max-width:24ch}
+.strip .desc{margin:14px 0 0;max-width:62ch;opacity:.92;font-size:16px}
+.pages{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.pages a{color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.45);border-radius:999px;padding:6px 14px;font-size:14px;line-height:1.3}
+.pages a[aria-current]{background:#fff;color:var(--cob)}
+.pages a:hover{background:rgba(255,255,255,.16)}
+nav.toc{border-bottom:1px solid var(--line);background:var(--bg);z-index:5}
+nav.toc .scroll{display:flex;gap:4px;padding:8px max(5vw,16px);white-space:nowrap}
+nav.toc a{flex:none;text-decoration:none;color:var(--muted);font-size:14px;padding:6px 10px;border-radius:8px}
+nav.toc a:hover{background:var(--pale);color:var(--ink)}
+@media(min-width:900px){nav.toc{position:sticky;top:0}}
+main{max-width:820px;margin:0 auto;padding:28px max(4vw,16px) 80px}
+main h1{font:700 32px/1.1 'Space Grotesk',sans-serif;margin:56px 0 12px;padding-top:18px;border-top:4px solid var(--cob);color:var(--cob-ink)}
+main h2{font:700 26px/1.2 'Space Grotesk',sans-serif;margin:48px 0 10px;text-wrap:balance}
+main h3{font:600 21px/1.25 'Space Grotesk',sans-serif;margin:36px 0 8px}
+main h4{font:600 18px/1.3 'Space Grotesk',sans-serif;margin:28px 0 6px}
+.tiempo{display:inline-block;vertical-align:middle;margin-left:8px;font:500 13px/1 Inter,sans-serif;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:4px 9px}
+p,li{max-width:70ch}
+hr{border:0;border-top:1px solid var(--line);margin:40px 0}
+blockquote{margin:16px 0;padding:12px 18px;border-left:4px solid var(--cob);background:var(--pale);border-radius:0 10px 10px 0}
+blockquote p{margin:6px 0}
+code{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.88em;background:var(--pale);padding:1px 5px;border-radius:5px;overflow-wrap:anywhere}
+pre{position:relative;overflow-x:auto;background:light-dark(#f6f7fb,#11162a);border:1px solid var(--line);border-radius:10px;padding:14px 16px;font:14px/1.55 'JetBrains Mono',ui-monospace,monospace}
+pre code{background:none;padding:0;font-size:inherit;overflow-wrap:normal}
+.copy{position:absolute;top:8px;right:8px;font:600 12px Inter,sans-serif;border:1px solid var(--line);background:var(--bg);color:var(--muted);border-radius:7px;padding:6px 10px;min-height:32px;cursor:pointer}
+.copy:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;margin:16px 0;font-size:15px;width:100%}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-weight:600;background:var(--pale)}
+figure{margin:26px 0;padding:0}
+figure svg{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:12px}
+figcaption{color:var(--muted);font-size:14px;margin-top:8px}
+details{margin:12px 0;border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:var(--bg)}
+summary{cursor:pointer;font-weight:600;color:var(--cob-ink);min-height:28px}
+.callout{margin:16px 0;padding:12px 16px 12px 16px;border-radius:10px;border:1px solid var(--line)}
+.callout>.lbl{display:block;font:700 12px/1.2 Inter,sans-serif;letter-spacing:.02em;margin-bottom:4px}
+.dice{background:light-dark(#f8fafc,#121726);border-left:5px solid var(--ink)}
+.dice>.lbl{color:var(--ink)}
+.pregunta{background:var(--pale);border-left:5px solid var(--cob)}
+.pregunta>.lbl{color:var(--cob-ink)}
+.pregunta+blockquote{margin-top:-10px;border-left-color:var(--ok);background:light-dark(#f0fdf4,#0f1f16)}
+.pregunta+blockquote::before{content:"Respuesta esperada";display:block;font:700 12px Inter,sans-serif;color:var(--ok);margin-bottom:2px}
+.nota{background:light-dark(#fffbea,#211d0c);border-left:5px solid #ca8a04}
+.nota>.lbl{color:light-dark(#a16207,#facc15)}
+.atencion{background:var(--acc-pale);border-left:5px solid var(--acc)}
+.atencion>.lbl{color:var(--acc)}
+.ejercicio{display:inline-block;font:700 12px Inter,sans-serif;color:#fff;background:var(--acc);border-radius:6px;padding:2px 8px;margin-right:6px;vertical-align:2px}
+.moneda{display:inline-block;width:.9em;height:.9em;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fde68a,#d97706);vertical-align:-1px;margin-right:4px}
+.pizarra-label{display:table!important;margin:22px 0 0;font:600 13px/1.3 Inter,sans-serif;color:var(--chalk-dim);background:var(--chalk-bg);display:inline-block;padding:6px 12px;border-radius:8px 8px 0 0;border:6px solid var(--wood);border-bottom:0}
+.pizarra-label b{color:#fff}
+pre.pizarra,div.pizarra{margin-top:0;background:var(--chalk-bg);color:var(--chalk);border:6px solid var(--wood);border-radius:0 10px 10px 10px;box-shadow:inset 0 0 40px rgba(0,0,0,.35);font:15px/1.6 'JetBrains Mono',ui-monospace,monospace;padding:16px 18px;overflow-x:auto;white-space:pre}
+table.pizarra{border:6px solid var(--wood);background:var(--chalk-bg);color:var(--chalk);margin-top:0}
+table.pizarra th{background:#2a4a3c;color:#fff}table.pizarra td,table.pizarra th{border-color:#3d5e4f}
+mjx-container[display=true]{overflow-x:auto;overflow-y:hidden;max-width:100%}
+mjx-container:not([display]){display:inline-block;max-width:100%;overflow-x:auto;overflow-y:hidden;vertical-align:middle}
+.lessons{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px;margin:24px 0}
+.lessons a{display:block;text-decoration:none;color:var(--ink);background:var(--pale);border:1px solid var(--line);border-radius:12px;padding:18px}
+.lessons a:hover{border-color:var(--cob)}
+.lessons b{display:block;font:700 19px/1.2 'Space Grotesk',sans-serif;color:var(--cob-ink);margin-bottom:6px}
+.lessons span{color:var(--muted);font-size:15px}
+footer{color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding:24px max(5vw,16px)}
+@media(max-width:600px){body{font-size:16px}table{font-size:13px}pre.pizarra,div.pizarra{font-size:13px}main h1{font-size:27px}main h2{font-size:23px}}
+
+/* pestañas de código */
+.tabs{margin:20px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:light-dark(#f6f7fb,#11162a)}
+.tablist{display:flex;gap:2px;padding:6px 6px 0;background:var(--pale);border-bottom:1px solid var(--line);overflow-x:auto}
+.tablist button{font:600 14px Inter,sans-serif;color:var(--muted);background:none;border:0;border-radius:8px 8px 0 0;padding:10px 16px;min-height:44px;cursor:pointer;white-space:nowrap}
+.tablist button[aria-selected=true]{background:light-dark(#f6f7fb,#11162a);color:var(--cob-ink);box-shadow:inset 0 3px 0 var(--cob)}
+.tablist button:focus-visible{outline:3px solid var(--acc);outline-offset:-3px}
+.tablist .badge{font:600 11px Inter,sans-serif;color:var(--acc);margin-left:6px}
+.tabs .panel pre{margin:0;border:0;border-radius:0}
+.tabs .panel[hidden]{display:none}
+pre.salida{background:light-dark(#0f172a,#05070d);color:#d1fae5;border-color:#0f172a;margin-top:-8px;padding-top:30px}
+pre.salida::before{content:"Salida";position:absolute;top:8px;left:16px;font:700 11px Inter,sans-serif;color:#6ee7b7;letter-spacing:.03em}
+pre.salida .copy{display:none}
+/* resaltado de sintaxis (clases de pandoc) */
+code span.kw,code span.cf{color:light-dark(#1d4ed8,#93b4ff);font-weight:600}
+code span.dt{color:light-dark(#7c3aed,#c4b5fd)}
+code span.dv,code span.bn,code span.fl,code span.cn{color:light-dark(#b45309,#fbbf24)}
+code span.st,code span.ch,code span.ss,code span.sc{color:light-dark(#047857,#6ee7b7)}
+code span.co,code span.do,code span.cv{color:light-dark(#6b7280,#8b95a7);font-style:italic}
+code span.pp,code span.im,code span.at{color:light-dark(#be185d,#f9a8d4)}
+code span.fu,code span.bu{color:light-dark(#0e7490,#67e8f9)}
+code span.op{color:light-dark(#374151,#cbd5e1)}
+code span.er,code span.al{color:var(--acc)}
+pre.sourceCode a{display:none}
+@media print{nav.toc,.copy,.tablist{display:none}.tabs .panel[hidden]{display:block}.strip{background:none;color:#000}}
+</style>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+</head><body>
+<header class="strip"><p class="curso">algolib · Estructuras de Datos y Algoritmos</p><h1>Lección 6 — Colas de prioridad y heaps binarios</h1><p class="desc">Colas de prioridad, árbol casi completo en un arreglo, sift_up/sift_down, heapify en O(n) y aplicaciones.</p><div class="pages"><a href="index.html">Inicio</a><a href="L00.html">L00 · Prerrequisitos</a><a href="L01.html">L01 · Notas</a><a href="L02.html">L02 · Notas</a><a href="L03.html">L03 · Notas</a><a href="L04.html">L04 · Notas</a><a href="L05.html">L05 · Notas</a><a href="L06.html" aria-current="page">L06 · Notas</a><a href="L07.html">L07 · Notas</a><a href="L08.html">L08 · Notas</a><a href="L09.html">L09 · Notas</a><a href="L10.html">L10 · Notas</a><a href="L11.html">L11 · Notas</a><a href="L12.html">L12 · Notas</a><a href="L13.html">L13 · Notas</a></div></header><nav class="toc" aria-label="Secciones"><div class="scroll"><a href="#objetivos-de-aprendizaje">Objetivos de aprendizaje</a><a href="#mapa-de-la-lección">Mapa de la lección</a><a href="#el-tad-cola-de-prioridad">1. El TAD Cola de prioridad</a><a href="#el-árbol-casi-completo-en-un-arreglo">2. El árbol casi completo en un…</a><a href="#restaurar-el-invariante">3. Restaurar el invariante</a><a href="#construir-un-heap-en-tiempo-lineal">4. Construir un heap en tiempo l…</a><a href="#problemas-que-se-resuelven-con-un-heap">5. Problemas que se resuelven co…</a><a href="#resumen-de-paradigmas-en-este-lab">6. Resumen de paradigmas en este…</a><a href="#guía-del-lab-06">7. Guía del Lab 06</a><a href="#comprueba-tu-comprensión">8. Comprueba tu comprensión</a><a href="#problem-set-6">9. Problem Set 6</a><a href="#referencias">Referencias</a></div></nav><main><blockquote>
+<p><strong>Prerrequisitos:</strong> Lección 1 (§6 análisis amortizado), Lección 2 (arreglo dinámico) y Lección 5 (§6 heapsort y heapify).</p>
+<p><strong>Cómo estudiar esta lección:</strong> un heap es un árbol que <strong>no se guarda como árbol</strong>: vive en un arreglo y la forma se deduce de los índices. Dibuja siempre las dos vistas, el árbol y el arreglo, una debajo de la otra.</p>
+<p><strong>Lab asociado:</strong> <code>lab06</code>: <code>BinaryHeap</code> (C, C++ y Rust). Lo reutilizarás en los labs 10 (Dijkstra) y 11 (Prim).</p>
+</blockquote>
+<h2 id="objetivos-de-aprendizaje">Objetivos de aprendizaje</h2>
+<p>Al terminar esta lección deberías poder:</p>
+<ol type="1">
+<li>Especificar el <strong>TAD Cola de prioridad</strong> y comparar sus implementaciones.</li>
+<li>Explicar la <strong>representación implícita</strong> de un árbol binario casi completo en un arreglo y demostrar que su altura es <span class="math inline">\(\lfloor\lg n\rfloor\)</span>.</li>
+<li>Demostrar la corrección de <code>sift_up</code> y <code>sift_down</code> con el lema de la <strong>violación local</strong>.</li>
+<li>Demostrar que construir un heap cuesta a lo más <span class="math inline">\(2n\)</span> comparaciones, y que hacerlo con <span class="math inline">\(n\)</span> inserciones puede costar <span class="math inline">\(\Theta(n\lg n)\)</span>.</li>
+<li>Resolver problemas con heaps: top-<span class="math inline">\(k\)</span>, mezcla de <span class="math inline">\(k\)</span> listas, mediana en línea.</li>
+<li>Comparar cómo C, C++ y Rust parametrizan el orden: puntero a función, parámetro de plantilla <code>Compare</code>, y el envoltorio <code>Reverse&lt;T&gt;</code>.</li>
+</ol>
+<h2 id="mapa-de-la-lección">Mapa de la lección</h2>
+<figure>
+<svg aria-label="Mapa de la lección 6" fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" role="img" viewbox="0 0 760 300" xmlns="http://www.w3.org/2000/svg">
+<title>Mapa de la lección 6</title>
+<defs>
+<marker id="ar" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#111827"></path></marker>
+<marker id="arc" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#1240e0"></path></marker>
+<marker id="ara" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"></path></marker>
+</defs>
+<rect fill="#ffffff" height="300" rx="12" width="760"></rect>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="40" y="26"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="54" y="50">§1</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="54" y="70">Cola de prioridad</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="290" y="26"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="304" y="50">§2</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="304" y="70">Árbol en un arreglo</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="540" y="26"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="554" y="50">§3</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="554" y="70">sift_up / sift_down</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="40" y="124"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="54" y="148">§6</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="54" y="168">Paradigmas</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="290" y="124"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="304" y="148">§5</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="304" y="168">Aplicaciones</text>
+<rect fill="#1240e0" height="58" rx="10" stroke="#1240e0" stroke-width="2" width="200" x="540" y="124"></rect>
+<text fill="#dbe4ff" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="554" y="148">§4</text>
+<text fill="#ffffff" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="554" y="168">Heapify en O(n)</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="40" y="222"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="54" y="246">§7</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="54" y="266">Guía del lab</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="290" y="222"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="304" y="246">§8</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="304" y="266">Comprensión</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="540" y="222"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="554" y="246">§9</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="554" y="266">Problem set</text>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="244" x2="286" y1="55.0" y2="55.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="494" x2="536" y1="55.0" y2="55.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="640.0" x2="640.0" y1="87" y2="120"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="536" x2="494" y1="153.0" y2="153.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="286" x2="244" y1="153.0" y2="153.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="140.0" x2="140.0" y1="185" y2="218"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="244" x2="286" y1="251.0" y2="251.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="494" x2="536" y1="251.0" y2="251.0"></line>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" text-anchor="start" x="650.0" y="204">construir en lineal: núcleo de la lección</text>
+</svg>
+<figcaption aria-hidden="true">Mapa de la lección 6</figcaption>
+</figure>
+<hr/>
+<h2 id="el-tad-cola-de-prioridad">1. El TAD Cola de prioridad</h2>
+<p>Una <strong>cola de prioridad</strong> guarda elementos con una prioridad y permite sacar siempre el de <strong>mejor</strong> prioridad (en este curso, el <strong>mínimo</strong>):</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th>Operación</th>
+<th>Efecto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>push(x)</code></td>
+<td>agrega <span class="math inline">\(x\)</span></td>
+</tr>
+<tr>
+<td><code>top()</code></td>
+<td>el mínimo, sin quitarlo</td>
+</tr>
+<tr>
+<td><code>pop()</code></td>
+<td>quita el mínimo</td>
+</tr>
+<tr>
+<td><code>build(a)</code></td>
+<td>construye desde <span class="math inline">\(n\)</span> elementos</td>
+</tr>
+</tbody>
+</table></div>
+<p>Aparece en todas partes: el planificador de un sistema operativo (el proceso de mayor prioridad), la simulación de eventos (el próximo evento en el tiempo), Dijkstra y Prim (el vértice más cercano, L10–L11), la compresión de Huffman (los dos símbolos menos frecuentes).</p>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 20%"/>
+<col style="width: 20%"/>
+<col style="width: 20%"/>
+<col style="width: 20%"/>
+<col style="width: 20%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Implementación</th>
+<th><code>push</code></th>
+<th><code>top</code></th>
+<th><code>pop</code></th>
+<th><code>build</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Arreglo sin ordenar</td>
+<td><span class="math inline">\(O(1)\)</span> amort.</td>
+<td><span class="math inline">\(\Theta(n)\)</span></td>
+<td><span class="math inline">\(\Theta(n)\)</span></td>
+<td><span class="math inline">\(O(n)\)</span></td>
+</tr>
+<tr>
+<td>Arreglo ordenado</td>
+<td><span class="math inline">\(\Theta(n)\)</span></td>
+<td><span class="math inline">\(O(1)\)</span></td>
+<td><span class="math inline">\(O(1)\)</span></td>
+<td><span class="math inline">\(O(n\lg n)\)</span></td>
+</tr>
+<tr>
+<td>Árbol balanceado (L07)</td>
+<td><span class="math inline">\(O(\lg n)\)</span></td>
+<td><span class="math inline">\(O(\lg n)\)</span></td>
+<td><span class="math inline">\(O(\lg n)\)</span></td>
+<td><span class="math inline">\(O(n\lg n)\)</span></td>
+</tr>
+<tr>
+<td><strong>Heap binario</strong></td>
+<td><span class="math inline">\(O(\lg n)\)</span></td>
+<td><span class="math inline">\(O(1)\)</span></td>
+<td><span class="math inline">\(O(\lg n)\)</span></td>
+<td><span class="math inline">\(O(n)\)</span></td>
+</tr>
+</tbody>
+</table></div>
+<p>El heap gana porque exige <strong>menos orden</strong> que un arreglo ordenado o un árbol de búsqueda: no le importa el orden entre hermanos, solo que cada padre sea menor que sus hijos. Menos orden que mantener, menos trabajo.</p>
+<blockquote>
+<p><strong>Observación.</strong> Una cola de prioridad permite ordenar: <span class="math inline">\(n\)</span> <code>push</code> y <span class="math inline">\(n\)</span> <code>pop</code>. Por la cota inferior de L05, si sus operaciones solo comparan, <span class="math inline">\(\max(\text{push}, \text{pop})\)</span> no puede ser <span class="math inline">\(o(\lg n)\)</span> amortizado. El heap binario es asintóticamente óptimo.</p>
+</blockquote>
+<hr/>
+<h2 id="el-árbol-casi-completo-en-un-arreglo">2. El árbol casi completo en un arreglo</h2>
+<h3 id="la-forma">2.1 La forma</h3>
+<p>Un <strong>árbol binario casi completo</strong> tiene todos sus niveles llenos excepto quizá el último, que se llena de izquierda a derecha. Numerando los nodos por niveles, de izquierda a derecha, empezando en 0: <span class="math display">\[\text{padre}(i) = \Big\lfloor\frac{i-1}{2}\Big\rfloor, \qquad \text{izq}(i) = 2i + 1, \qquad \text{der}(i) = 2i + 2.\]</span></p>
+<p>No hay punteros: el arreglo <span class="math inline">\(a[0..n)\)</span> <strong>es</strong> el árbol. Agregar un nodo en la única posición que preserva la forma es <code>a.push_back(x)</code>; quitar el último es <code>a.pop_back()</code>.</p>
+<figure>
+<svg aria-label="Un min-heap de 9 elementos como árbol y como arreglo" fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" role="img" viewbox="0 0 760 330" xmlns="http://www.w3.org/2000/svg">
+<title>Un min-heap de 9 elementos como árbol y como arreglo</title>
+<defs>
+<marker id="ar" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#111827"></path></marker>
+<marker id="arc" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#1240e0"></path></marker>
+<marker id="ara" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"></path></marker>
+</defs>
+<rect fill="#ffffff" height="330" rx="12" width="760"></rect>
+<line stroke="#c7d2fe" stroke-width="1.5" x1="380.0" x2="210.0" y1="46" y2="72"></line>
+<line stroke="#c7d2fe" stroke-width="1.5" x1="380.0" x2="550.0" y1="46" y2="72"></line>
+<line stroke="#c7d2fe" stroke-width="1.5" x1="210.0" x2="125.0" y1="104" y2="130"></line>
+<line stroke="#c7d2fe" stroke-width="1.5" x1="210.0" x2="295.0" y1="104" y2="130"></line>
+<line stroke="#c7d2fe" stroke-width="1.5" x1="550.0" x2="465.0" y1="104" y2="130"></line>
+<line stroke="#c7d2fe" stroke-width="1.5" x1="550.0" x2="635.0" y1="104" y2="130"></line>
+<line stroke="#c7d2fe" stroke-width="1.5" x1="125.0" x2="82.5" y1="162" y2="188"></line>
+<line stroke="#c7d2fe" stroke-width="1.5" x1="125.0" x2="167.5" y1="162" y2="188"></line>
+<circle cx="380.0" cy="30" fill="#1240e0" r="17" stroke="#1240e0" stroke-width="1.5"></circle>
+<text fill="#ffffff" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="380.0" y="35">1</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="10" font-weight="400" text-anchor="start" x="402.0" y="20">0</text>
+<circle cx="210.0" cy="88" fill="#eef2ff" r="17" stroke="#1240e0" stroke-width="1.5"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="210.0" y="93">3</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="10" font-weight="400" text-anchor="start" x="232.0" y="78">1</text>
+<circle cx="550.0" cy="88" fill="#eef2ff" r="17" stroke="#1240e0" stroke-width="1.5"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="550.0" y="93">2</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="10" font-weight="400" text-anchor="start" x="572.0" y="78">2</text>
+<circle cx="125.0" cy="146" fill="#eef2ff" r="17" stroke="#1240e0" stroke-width="1.5"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="125.0" y="151">7</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="10" font-weight="400" text-anchor="start" x="147.0" y="136">3</text>
+<circle cx="295.0" cy="146" fill="#eef2ff" r="17" stroke="#1240e0" stroke-width="1.5"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="295.0" y="151">4</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="10" font-weight="400" text-anchor="start" x="317.0" y="136">4</text>
+<circle cx="465.0" cy="146" fill="#eef2ff" r="17" stroke="#1240e0" stroke-width="1.5"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="465.0" y="151">5</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="10" font-weight="400" text-anchor="start" x="487.0" y="136">5</text>
+<circle cx="635.0" cy="146" fill="#eef2ff" r="17" stroke="#1240e0" stroke-width="1.5"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="635.0" y="151">6</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="10" font-weight="400" text-anchor="start" x="657.0" y="136">6</text>
+<circle cx="82.5" cy="204" fill="#eef2ff" r="17" stroke="#1240e0" stroke-width="1.5"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="82.5" y="209">9</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="10" font-weight="400" text-anchor="start" x="104.5" y="194">7</text>
+<circle cx="167.5" cy="204" fill="#eef2ff" r="17" stroke="#1240e0" stroke-width="1.5"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="167.5" y="209">8</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="10" font-weight="400" text-anchor="start" x="189.5" y="194">8</text>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="600" text-anchor="end" x="96" y="287">a =</text>
+<rect fill="#1240e0" height="38" rx="6" stroke="#1240e0" stroke-width="1.5" width="54" x="110" y="262"></rect>
+<text fill="#ffffff" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="137.0" y="287">1</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="400" text-anchor="middle" x="137.0" y="316">0</text>
+<rect fill="#eef2ff" height="38" rx="6" stroke="#1240e0" stroke-width="1.5" width="54" x="170" y="262"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="197.0" y="287">3</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="400" text-anchor="middle" x="197.0" y="316">1</text>
+<rect fill="#eef2ff" height="38" rx="6" stroke="#1240e0" stroke-width="1.5" width="54" x="230" y="262"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="257.0" y="287">2</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="400" text-anchor="middle" x="257.0" y="316">2</text>
+<rect fill="#eef2ff" height="38" rx="6" stroke="#1240e0" stroke-width="1.5" width="54" x="290" y="262"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="317.0" y="287">7</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="400" text-anchor="middle" x="317.0" y="316">3</text>
+<rect fill="#eef2ff" height="38" rx="6" stroke="#1240e0" stroke-width="1.5" width="54" x="350" y="262"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="377.0" y="287">4</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="400" text-anchor="middle" x="377.0" y="316">4</text>
+<rect fill="#eef2ff" height="38" rx="6" stroke="#1240e0" stroke-width="1.5" width="54" x="410" y="262"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="437.0" y="287">5</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="400" text-anchor="middle" x="437.0" y="316">5</text>
+<rect fill="#eef2ff" height="38" rx="6" stroke="#1240e0" stroke-width="1.5" width="54" x="470" y="262"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="497.0" y="287">6</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="400" text-anchor="middle" x="497.0" y="316">6</text>
+<rect fill="#eef2ff" height="38" rx="6" stroke="#1240e0" stroke-width="1.5" width="54" x="530" y="262"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="557.0" y="287">9</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="400" text-anchor="middle" x="557.0" y="316">7</text>
+<rect fill="#eef2ff" height="38" rx="6" stroke="#1240e0" stroke-width="1.5" width="54" x="590" y="262"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="617.0" y="287">8</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="400" text-anchor="middle" x="617.0" y="316">8</text>
+<text fill="#1240e0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="end" x="700" y="210">padre(i) = ⌊(i−1)/2⌋</text>
+<text fill="#1240e0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="end" x="700" y="228">hijos: 2i+1, 2i+2</text>
+</svg>
+<figcaption aria-hidden="true">Heap como árbol y como arreglo</figcaption>
+</figure>
+<p><em>¿Por qué funcionan las fórmulas?</em> El nivel <span class="math inline">\(d\)</span> tiene los índices <span class="math inline">\(2^d - 1, \dots, 2^{d+1} - 2\)</span>. El nodo <span class="math inline">\(i = 2^d - 1 + t\)</span> (el <span class="math inline">\(t\)</span>-ésimo de su nivel) tiene como hijos a los nodos <span class="math inline">\(2t\)</span> y <span class="math inline">\(2t + 1\)</span> del nivel <span class="math inline">\(d + 1\)</span>, cuyos índices son <span class="math inline">\(2^{d+1} - 1 + 2t = 2i + 1\)</span> y <span class="math inline">\(2i + 2\)</span>. ✔</p>
+<blockquote>
+<p><strong>Lema 1.</strong> Un árbol casi completo de <span class="math inline">\(n \ge 1\)</span> nodos tiene altura <span class="math inline">\(h = \lfloor\lg n\rfloor\)</span>.</p>
+</blockquote>
+<p><em>Demostración.</em> Con altura <span class="math inline">\(h\)</span>, los niveles <span class="math inline">\(0..h-1\)</span> están llenos (<span class="math inline">\(2^h - 1\)</span> nodos) y el nivel <span class="math inline">\(h\)</span> tiene entre 1 y <span class="math inline">\(2^h\)</span>: <span class="math inline">\(2^h \le n \le 2^{h+1} - 1 &lt; 2^{h+1}\)</span>. Tomando <span class="math inline">\(\lg\)</span>: <span class="math inline">\(h \le \lg n &lt; h + 1\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<h3 id="el-invariante-de-heap">2.2 El invariante de heap</h3>
+<blockquote>
+<p><strong>Invariante (min-heap).</strong> Para todo <span class="math inline">\(i &gt; 0\)</span>: <span class="math inline">\(a[\text{padre}(i)] \le a[i]\)</span>.</p>
+</blockquote>
+<p>Por transitividad a lo largo del camino a la raíz, todo nodo es <span class="math inline">\(\ge\)</span> que todos sus ancestros; en particular <span class="math inline">\(a[0]\)</span> es un mínimo. <code>top()</code> es <span class="math inline">\(O(1)\)</span>.</p>
+<p><strong>El orden como parámetro.</strong> El lab usa un min-heap. En C el orden lo da el comparador <code>cmp</code>; en C++, el parámetro de plantilla <code>Compare</code> (con <code>std::greater&lt;T&gt;</code> se obtiene un max-heap); en Rust, el tipo debe ser <code>Ord</code> y para invertir el orden se envuelve en <code>std::cmp::Reverse&lt;T&gt;</code>, cuyo <code>Ord</code> es el inverso. Ojo: <code>std::priority_queue</code> (C++) y <code>std::collections::BinaryHeap</code> (Rust) son <strong>max</strong>-heaps.</p>
+<hr/>
+<h2 id="restaurar-el-invariante">3. Restaurar el invariante</h2>
+<p>Las dos operaciones primitivas reparan <strong>una sola violación</strong>.</p>
+<h3 id="sift_up">3.1 <code>sift_up</code></h3>
+<pre><code>sift_up(i):
+    mientras i &gt; 0 y a[i] &lt; a[padre(i)]:
+        intercambiar a[i] y a[padre(i)];  i ← padre(i)</code></pre>
+<blockquote>
+<p><strong>Lema 2 (violación local hacia arriba).</strong> Si el invariante vale en todo el arreglo excepto, quizá, entre <span class="math inline">\(i\)</span> y su padre, <code>sift_up(i)</code> lo restablece con a lo más <span class="math inline">\(\lfloor\lg n\rfloor\)</span> comparaciones.</p>
+</blockquote>
+<p><em>Demostración.</em> Invariante del ciclo: <em>el único par que puede violar el invariante es <span class="math inline">\((i, \text{padre}(i))\)</span>, y además <span class="math inline">\(a[i] \le\)</span> todos los descendientes de <span class="math inline">\(i\)</span>.</em> Al principio vale (el elemento recién agregado es hoja). Si <span class="math inline">\(a[i] &lt; a[p]\)</span> con <span class="math inline">\(p = \text{padre}(i)\)</span>, intercambiamos: ahora <span class="math inline">\(a[p]\)</span> es el valor menor, que es menor que el viejo <span class="math inline">\(a[p]\)</span> y por lo tanto que todos los descendientes de <span class="math inline">\(p\)</span> (el viejo <span class="math inline">\(a[p]\)</span> lo era, por el invariante en el resto del heap); y la nueva <span class="math inline">\(a[i]\)</span> (el viejo <span class="math inline">\(a[p]\)</span>) cumple <span class="math inline">\(\le\)</span> sus hijos, porque antes ya era <span class="math inline">\(\le\)</span> los nodos de ese subárbol. La única posible violación se movió a <span class="math inline">\((p, \text{padre}(p))\)</span>. El ciclo termina en la raíz o cuando no hay violación. Cada iteración sube un nivel: <span class="math inline">\(\le h = \lfloor\lg n\rfloor\)</span> iteraciones. <span class="math inline">\(\blacksquare\)</span></p>
+<h3 id="sift_down">3.2 <code>sift_down</code></h3>
+<pre><code>sift_down(i):
+    repetir:
+        c ← el hijo de i con el valor MENOR (si existe)
+        si no hay hijos o a[i] ≤ a[c]: terminar
+        intercambiar a[i] y a[c];  i ← c</code></pre>
+<blockquote>
+<p><strong>Lema 3 (violación local hacia abajo).</strong> Si los subárboles de los dos hijos de <span class="math inline">\(i\)</span> son heaps, <code>sift_down(i)</code> convierte el subárbol de <span class="math inline">\(i\)</span> en heap con a lo más <span class="math inline">\(2\cdot\text{altura}(i)\)</span> comparaciones.</p>
+</blockquote>
+<p><em>Demostración.</em> Si <span class="math inline">\(a[i]\)</span> es <span class="math inline">\(\le\)</span> ambos hijos, ya es heap. Si no, el menor hijo <span class="math inline">\(c\)</span> es <span class="math inline">\(\le\)</span> el otro hijo y <span class="math inline">\(&lt; a[i]\)</span>: al subirlo, la nueva <span class="math inline">\(a[i] = a[c]\)</span> es <span class="math inline">\(\le\)</span> ambos hijos (el otro hijo y el viejo <span class="math inline">\(a[i]\)</span> que bajó a <span class="math inline">\(c\)</span>). El subárbol del otro hijo no cambió. El de <span class="math inline">\(c\)</span> tiene ahora en su raíz el viejo <span class="math inline">\(a[i]\)</span>, con sus dos subárboles todavía heaps: es la misma situación, un nivel más abajo. Cada nivel cuesta 2 comparaciones (elegir el menor hijo y compararlo con <span class="math inline">\(a[i]\)</span>). <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>¿Por qué el menor hijo?</strong> Si subiéramos el mayor, quedaría como padre del menor: violación inmediata.</p>
+<h3 id="las-operaciones">3.3 Las operaciones</h3>
+<pre><code>push(x):  a.push_back(x);  sift_up(n − 1)
+pop():    a[0] ← a[n − 1];  a.pop_back();  sift_down(0)</code></pre>
+<p>En <code>push</code>, el nuevo elemento ocupa la única posición que preserva la forma y la violación posible es con su padre: Lema 2. En <code>pop</code>, mover el último a la raíz preserva la forma, y los subárboles de los hijos de la raíz siguen siendo heaps: Lema 3. Ambas <span class="math inline">\(O(\lg n)\)</span>.</p>
+<p><strong>Detalle de implementación: el hueco.</strong> En vez de intercambiar en cada nivel (3 asignaciones), las soluciones de C y C++ sacan el elemento a una variable y van <strong>moviendo</strong> padres o hijos hacia el hueco; al final escriben el elemento una sola vez. Es 1 asignación por nivel en vez de 3. En Rust seguro no se puede dejar una celda vacía; la solución usa <code>swap</code>, y <code>std</code> implementa el hueco con <code>unsafe</code> (su tipo interno <code>Hole</code>).</p>
+<hr/>
+<h2 id="construir-un-heap-en-tiempo-lineal">4. Construir un heap en tiempo lineal</h2>
+<p>Dos formas de construir un heap con <span class="math inline">\(n\)</span> elementos dados:</p>
+<ol type="1">
+<li><strong>De arriba hacia abajo:</strong> <span class="math inline">\(n\)</span> veces <code>push</code>. Cada <code>push</code> cuesta <span class="math inline">\(O(\lg n)\)</span>: total <span class="math inline">\(O(n\lg n)\)</span>.</li>
+<li><strong>De abajo hacia arriba (<em>heapify</em>):</strong> poner los elementos en el arreglo tal cual y llamar <code>sift_down(i)</code> para <span class="math inline">\(i = \lfloor n/2\rfloor - 1, \dots, 1, 0\)</span>.</li>
+</ol>
+<p><em>Corrección de heapify.</em> Invariante: <em>antes de procesar <span class="math inline">\(i\)</span>, todo nodo <span class="math inline">\(j &gt; i\)</span> es raíz de un heap.</em> Los nodos <span class="math inline">\(j \ge \lfloor n/2\rfloor\)</span> son hojas (su hijo izquierdo <span class="math inline">\(2j+1 \ge n\)</span>), heaps triviales. Al procesar <span class="math inline">\(i\)</span>, sus hijos <span class="math inline">\(2i+1, 2i+2 &gt; i\)</span> son raíces de heaps, que es la precondición del Lema 3. Al terminar con <span class="math inline">\(i = 0\)</span>, el arreglo completo es heap. ✔</p>
+<blockquote>
+<p><strong>Teorema 4.</strong> heapify hace a lo más <span class="math inline">\(2n\)</span> comparaciones.</p>
+</blockquote>
+<p><em>Demostración.</em> Por el Lema 3, <code>sift_down(i)</code> hace a lo más <span class="math inline">\(2\,\text{alt}(i)\)</span> comparaciones, donde <span class="math inline">\(\text{alt}(i)\)</span> es la altura del nodo <span class="math inline">\(i\)</span> (largo del camino más largo de <span class="math inline">\(i\)</span> a una hoja). Basta demostrar que <span class="math inline">\(S(n) = \sum_i \text{alt}(i) \le n - 1\)</span>.</p>
+<p>Contemos por niveles: hay a lo más <span class="math inline">\(\lceil n/2^{h+1}\rceil\)</span> nodos de altura <span class="math inline">\(h\)</span>, así que <span class="math display">\[S(n) \le \sum_{h \ge 1}\frac{n}{2^{h+1}}\cdot h \;+\; (\text{redondeos}) \;=\; \frac n2\sum_{h\ge1}\frac{h}{2^h} = \frac n2\cdot 2 = n,\]</span> usando <span class="math inline">\(\sum_{h\ge 0} h x^h = x/(1-x)^2\)</span> con <span class="math inline">\(x = 1/2\)</span>. Un conteo exacto (por inducción sobre la altura del árbol, CLRS Ej. 6.3-4) da <span class="math inline">\(S(n) \le n - 1\)</span>. Total: <span class="math inline">\(2S(n) \le 2n\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>¿Por qué tan barato?</strong> La mitad de los nodos son hojas y no cuestan nada; un cuarto tiene altura 1 y cuesta 2 comparaciones; solo la raíz paga <span class="math inline">\(2\lg n\)</span>. En la construcción de arriba hacia abajo es al revés: los últimos <span class="math inline">\(n/2\)</span> elementos, que se insertan en el nivel más profundo, pueden subir <span class="math inline">\(\lg n\)</span> niveles cada uno.</p>
+<blockquote>
+<p><strong>Proposición 5.</strong> La construcción con <span class="math inline">\(n\)</span> <code>push</code> hace <span class="math inline">\(\Theta(n\lg n)\)</span> comparaciones en el peor caso.</p>
+</blockquote>
+<p><em>Demostración.</em> Con la entrada en orden <strong>descendente</strong>, cada elemento nuevo es el menor visto hasta ahora y sube hasta la raíz: el <code>push</code> del elemento <span class="math inline">\(k\)</span> (con <span class="math inline">\(k\)</span> elementos ya en el heap) hace <span class="math inline">\(\lfloor\lg(k+1)\rfloor\)</span> comparaciones. <span class="math inline">\(\sum_{k=1}^{n}\lfloor\lg k\rfloor \ge \sum_{k = n/2}^{n}(\lg n - 1) = \Theta(n\lg n)\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<p>El programa cuenta las comparaciones de las dos construcciones sobre la entrada descendente. El test <code>heap_heapify_es_lineal</code> del lab exige exactamente <span class="math inline">\(\le 2n\)</span>:</p>
+<div class="tabs"><div aria-label="Lenguaje" class="tablist" role="tablist"><button aria-controls="t0-0" aria-selected="false" data-lang="c" id="t0-0-b" role="tab" tabindex="-1" type="button">C</button><button aria-controls="t0-1" aria-selected="false" data-lang="cpp" id="t0-1-b" role="tab" tabindex="-1" type="button">C++</button><button aria-controls="t0-2" aria-selected="false" data-lang="rust" id="t0-2-b" role="tab" tabindex="-1" type="button">Rust</button></div><div aria-labelledby="t0-0-b" class="panel" data-lang="c" id="t0-0" role="tabpanel"><div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a aria-hidden="true" href="#cb4-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb4-2"><a aria-hidden="true" href="#cb4-2" tabindex="-1"></a></span>
+<span id="cb4-3"><a aria-hidden="true" href="#cb4-3" tabindex="-1"></a><span class="pp">#define N </span><span class="dv">65536</span></span>
+<span id="cb4-4"><a aria-hidden="true" href="#cb4-4" tabindex="-1"></a><span class="dt">static</span> <span class="dt">int</span> a<span class="op">[</span>N<span class="op">];</span></span>
+<span id="cb4-5"><a aria-hidden="true" href="#cb4-5" tabindex="-1"></a><span class="dt">static</span> <span class="dt">long</span> comparaciones<span class="op">;</span></span>
+<span id="cb4-6"><a aria-hidden="true" href="#cb4-6" tabindex="-1"></a></span>
+<span id="cb4-7"><a aria-hidden="true" href="#cb4-7" tabindex="-1"></a><span class="dt">static</span> <span class="dt">int</span> menor<span class="op">(</span><span class="dt">int</span> x<span class="op">,</span> <span class="dt">int</span> y<span class="op">)</span> <span class="op">{</span> comparaciones<span class="op">++;</span> <span class="cf">return</span> x <span class="op">&lt;</span> y<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb4-8"><a aria-hidden="true" href="#cb4-8" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> swap<span class="op">(</span><span class="dt">int</span> <span class="op">*</span>x<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>y<span class="op">)</span> <span class="op">{</span> <span class="dt">int</span> t <span class="op">=</span> <span class="op">*</span>x<span class="op">;</span> <span class="op">*</span>x <span class="op">=</span> <span class="op">*</span>y<span class="op">;</span> <span class="op">*</span>y <span class="op">=</span> t<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb4-9"><a aria-hidden="true" href="#cb4-9" tabindex="-1"></a></span>
+<span id="cb4-10"><a aria-hidden="true" href="#cb4-10" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> sift_up<span class="op">(</span><span class="dt">int</span> i<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-11"><a aria-hidden="true" href="#cb4-11" tabindex="-1"></a>    <span class="cf">while</span> <span class="op">(</span>i <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">&amp;&amp;</span> menor<span class="op">(</span>a<span class="op">[</span>i<span class="op">],</span> a<span class="op">[(</span>i <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">/</span> <span class="dv">2</span><span class="op">]))</span> <span class="op">{</span> swap<span class="op">(&amp;</span>a<span class="op">[</span>i<span class="op">],</span> <span class="op">&amp;</span>a<span class="op">[(</span>i <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">/</span> <span class="dv">2</span><span class="op">]);</span> i <span class="op">=</span> <span class="op">(</span>i <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">/</span> <span class="dv">2</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb4-12"><a aria-hidden="true" href="#cb4-12" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-13"><a aria-hidden="true" href="#cb4-13" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> sift_down<span class="op">(</span><span class="dt">int</span> i<span class="op">,</span> <span class="dt">int</span> n<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-14"><a aria-hidden="true" href="#cb4-14" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(;;)</span> <span class="op">{</span></span>
+<span id="cb4-15"><a aria-hidden="true" href="#cb4-15" tabindex="-1"></a>        <span class="dt">int</span> c <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> i <span class="op">+</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb4-16"><a aria-hidden="true" href="#cb4-16" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>c <span class="op">&gt;=</span> n<span class="op">)</span> <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb4-17"><a aria-hidden="true" href="#cb4-17" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>c <span class="op">+</span> <span class="dv">1</span> <span class="op">&lt;</span> n <span class="op">&amp;&amp;</span> menor<span class="op">(</span>a<span class="op">[</span>c <span class="op">+</span> <span class="dv">1</span><span class="op">],</span> a<span class="op">[</span>c<span class="op">]))</span> c<span class="op">++;</span></span>
+<span id="cb4-18"><a aria-hidden="true" href="#cb4-18" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(!</span>menor<span class="op">(</span>a<span class="op">[</span>c<span class="op">],</span> a<span class="op">[</span>i<span class="op">]))</span> <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb4-19"><a aria-hidden="true" href="#cb4-19" tabindex="-1"></a>        swap<span class="op">(&amp;</span>a<span class="op">[</span>i<span class="op">],</span> <span class="op">&amp;</span>a<span class="op">[</span>c<span class="op">]);</span></span>
+<span id="cb4-20"><a aria-hidden="true" href="#cb4-20" tabindex="-1"></a>        i <span class="op">=</span> c<span class="op">;</span></span>
+<span id="cb4-21"><a aria-hidden="true" href="#cb4-21" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-22"><a aria-hidden="true" href="#cb4-22" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-23"><a aria-hidden="true" href="#cb4-23" tabindex="-1"></a></span>
+<span id="cb4-24"><a aria-hidden="true" href="#cb4-24" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-25"><a aria-hidden="true" href="#cb4-25" tabindex="-1"></a>    comparaciones <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb4-26"><a aria-hidden="true" href="#cb4-26" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> k <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> k <span class="op">&lt;</span> N<span class="op">;</span> k<span class="op">++)</span> <span class="op">{</span> a<span class="op">[</span>k<span class="op">]</span> <span class="op">=</span> N <span class="op">-</span> k<span class="op">;</span> sift_up<span class="op">(</span>k<span class="op">);</span> <span class="op">}</span></span>
+<span id="cb4-27"><a aria-hidden="true" href="#cb4-27" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">"n push:   </span><span class="sc">%ld</span><span class="st"> comparaciones (</span><span class="sc">%.1f</span><span class="st"> por elemento)</span><span class="sc">\n</span><span class="st">"</span><span class="op">,</span> comparaciones<span class="op">,</span> <span class="op">(</span><span class="dt">double</span><span class="op">)</span>comparaciones <span class="op">/</span> N<span class="op">);</span></span>
+<span id="cb4-28"><a aria-hidden="true" href="#cb4-28" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> k <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> k <span class="op">&lt;</span> N<span class="op">;</span> k<span class="op">++)</span> a<span class="op">[</span>k<span class="op">]</span> <span class="op">=</span> N <span class="op">-</span> k<span class="op">;</span></span>
+<span id="cb4-29"><a aria-hidden="true" href="#cb4-29" tabindex="-1"></a>    comparaciones <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb4-30"><a aria-hidden="true" href="#cb4-30" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> N <span class="op">/</span> <span class="dv">2</span> <span class="op">-</span> <span class="dv">1</span><span class="op">;</span> i <span class="op">&gt;=</span> <span class="dv">0</span><span class="op">;</span> i<span class="op">--)</span> sift_down<span class="op">(</span>i<span class="op">,</span> N<span class="op">);</span></span>
+<span id="cb4-31"><a aria-hidden="true" href="#cb4-31" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">"heapify:  </span><span class="sc">%ld</span><span class="st"> comparaciones (</span><span class="sc">%.1f</span><span class="st"> por elemento)</span><span class="sc">\n</span><span class="st">"</span><span class="op">,</span> comparaciones<span class="op">,</span> <span class="op">(</span><span class="dt">double</span><span class="op">)</span>comparaciones <span class="op">/</span> N<span class="op">);</span></span>
+<span id="cb4-32"><a aria-hidden="true" href="#cb4-32" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb4-33"><a aria-hidden="true" href="#cb4-33" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div><div aria-labelledby="t0-1-b" class="panel" data-lang="cpp" id="t0-1" role="tabpanel"><div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a aria-hidden="true" href="#cb5-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb5-2"><a aria-hidden="true" href="#cb5-2" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;utility&gt;</span></span>
+<span id="cb5-3"><a aria-hidden="true" href="#cb5-3" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;vector&gt;</span></span>
+<span id="cb5-4"><a aria-hidden="true" href="#cb5-4" tabindex="-1"></a></span>
+<span id="cb5-5"><a aria-hidden="true" href="#cb5-5" tabindex="-1"></a><span class="dt">long</span> comparaciones <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb5-6"><a aria-hidden="true" href="#cb5-6" tabindex="-1"></a><span class="dt">bool</span> menor<span class="op">(</span><span class="dt">int</span> x<span class="op">,</span> <span class="dt">int</span> y<span class="op">)</span> <span class="op">{</span> <span class="op">++</span>comparaciones<span class="op">;</span> <span class="cf">return</span> x <span class="op">&lt;</span> y<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb5-7"><a aria-hidden="true" href="#cb5-7" tabindex="-1"></a></span>
+<span id="cb5-8"><a aria-hidden="true" href="#cb5-8" tabindex="-1"></a><span class="dt">void</span> sift_up<span class="op">(</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&amp;</span> a<span class="op">,</span> <span class="bu">std::</span>size_t i<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-9"><a aria-hidden="true" href="#cb5-9" tabindex="-1"></a>    <span class="cf">while</span> <span class="op">(</span>i <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">&amp;&amp;</span> menor<span class="op">(</span>a<span class="op">[</span>i<span class="op">],</span> a<span class="op">[(</span>i <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">/</span> <span class="dv">2</span><span class="op">]))</span> <span class="op">{</span> <span class="bu">std::</span>swap<span class="op">(</span>a<span class="op">[</span>i<span class="op">],</span> a<span class="op">[(</span>i <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">/</span> <span class="dv">2</span><span class="op">]);</span> i <span class="op">=</span> <span class="op">(</span>i <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">/</span> <span class="dv">2</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb5-10"><a aria-hidden="true" href="#cb5-10" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb5-11"><a aria-hidden="true" href="#cb5-11" tabindex="-1"></a><span class="dt">void</span> sift_down<span class="op">(</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&amp;</span> a<span class="op">,</span> <span class="bu">std::</span>size_t i<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-12"><a aria-hidden="true" href="#cb5-12" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(;;)</span> <span class="op">{</span></span>
+<span id="cb5-13"><a aria-hidden="true" href="#cb5-13" tabindex="-1"></a>        <span class="bu">std::</span>size_t c <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> i <span class="op">+</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb5-14"><a aria-hidden="true" href="#cb5-14" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>c <span class="op">&gt;=</span> a<span class="op">.</span>size<span class="op">())</span> <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb5-15"><a aria-hidden="true" href="#cb5-15" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>c <span class="op">+</span> <span class="dv">1</span> <span class="op">&lt;</span> a<span class="op">.</span>size<span class="op">()</span> <span class="op">&amp;&amp;</span> menor<span class="op">(</span>a<span class="op">[</span>c <span class="op">+</span> <span class="dv">1</span><span class="op">],</span> a<span class="op">[</span>c<span class="op">]))</span> <span class="op">++</span>c<span class="op">;</span></span>
+<span id="cb5-16"><a aria-hidden="true" href="#cb5-16" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(!</span>menor<span class="op">(</span>a<span class="op">[</span>c<span class="op">],</span> a<span class="op">[</span>i<span class="op">]))</span> <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb5-17"><a aria-hidden="true" href="#cb5-17" tabindex="-1"></a>        <span class="bu">std::</span>swap<span class="op">(</span>a<span class="op">[</span>i<span class="op">],</span> a<span class="op">[</span>c<span class="op">]);</span></span>
+<span id="cb5-18"><a aria-hidden="true" href="#cb5-18" tabindex="-1"></a>        i <span class="op">=</span> c<span class="op">;</span></span>
+<span id="cb5-19"><a aria-hidden="true" href="#cb5-19" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-20"><a aria-hidden="true" href="#cb5-20" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb5-21"><a aria-hidden="true" href="#cb5-21" tabindex="-1"></a></span>
+<span id="cb5-22"><a aria-hidden="true" href="#cb5-22" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb5-23"><a aria-hidden="true" href="#cb5-23" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span> N <span class="op">=</span> <span class="dv">65536</span><span class="op">;</span></span>
+<span id="cb5-24"><a aria-hidden="true" href="#cb5-24" tabindex="-1"></a>    <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;</span> a<span class="op">;</span></span>
+<span id="cb5-25"><a aria-hidden="true" href="#cb5-25" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> k <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> k <span class="op">&lt;</span> N<span class="op">;</span> <span class="op">++</span>k<span class="op">)</span> <span class="op">{</span> a<span class="op">.</span>push_back<span class="op">(</span>N <span class="op">-</span> k<span class="op">);</span> sift_up<span class="op">(</span>a<span class="op">,</span> a<span class="op">.</span>size<span class="op">()</span> <span class="op">-</span> <span class="dv">1</span><span class="op">);</span> <span class="op">}</span></span>
+<span id="cb5-26"><a aria-hidden="true" href="#cb5-26" tabindex="-1"></a>    <span class="bu">std::</span>printf<span class="op">(</span><span class="st">"n push:   </span><span class="sc">%ld</span><span class="st"> comparaciones (</span><span class="sc">%.1f</span><span class="st"> por elemento)</span><span class="sc">\n</span><span class="st">"</span><span class="op">,</span> comparaciones<span class="op">,</span> <span class="op">(</span><span class="dt">double</span><span class="op">)</span>comparaciones <span class="op">/</span> N<span class="op">);</span></span>
+<span id="cb5-27"><a aria-hidden="true" href="#cb5-27" tabindex="-1"></a>    a<span class="op">.</span>clear<span class="op">();</span></span>
+<span id="cb5-28"><a aria-hidden="true" href="#cb5-28" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> k <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> k <span class="op">&lt;</span> N<span class="op">;</span> <span class="op">++</span>k<span class="op">)</span> a<span class="op">.</span>push_back<span class="op">(</span>N <span class="op">-</span> k<span class="op">);</span></span>
+<span id="cb5-29"><a aria-hidden="true" href="#cb5-29" tabindex="-1"></a>    comparaciones <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb5-30"><a aria-hidden="true" href="#cb5-30" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="bu">std::</span>size_t i <span class="op">=</span> N <span class="op">/</span> <span class="dv">2</span><span class="op">;</span> i<span class="op">--</span> <span class="op">&gt;</span> <span class="dv">0</span><span class="op">;)</span> sift_down<span class="op">(</span>a<span class="op">,</span> i<span class="op">);</span></span>
+<span id="cb5-31"><a aria-hidden="true" href="#cb5-31" tabindex="-1"></a>    <span class="bu">std::</span>printf<span class="op">(</span><span class="st">"heapify:  </span><span class="sc">%ld</span><span class="st"> comparaciones (</span><span class="sc">%.1f</span><span class="st"> por elemento)</span><span class="sc">\n</span><span class="st">"</span><span class="op">,</span> comparaciones<span class="op">,</span> <span class="op">(</span><span class="dt">double</span><span class="op">)</span>comparaciones <span class="op">/</span> N<span class="op">);</span></span>
+<span id="cb5-32"><a aria-hidden="true" href="#cb5-32" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div><div aria-labelledby="t0-2-b" class="panel" data-lang="rust" id="t0-2" role="tabpanel"><div class="sourceCode" id="cb6"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb6-1"><a aria-hidden="true" href="#cb6-1" tabindex="-1"></a><span class="kw">const</span> N<span class="op">:</span> <span class="dt">usize</span> <span class="op">=</span> <span class="dv">65536</span><span class="op">;</span></span>
+<span id="cb6-2"><a aria-hidden="true" href="#cb6-2" tabindex="-1"></a></span>
+<span id="cb6-3"><a aria-hidden="true" href="#cb6-3" tabindex="-1"></a><span class="kw">fn</span> menor(x<span class="op">:</span> <span class="dt">i32</span><span class="op">,</span> y<span class="op">:</span> <span class="dt">i32</span><span class="op">,</span> c<span class="op">:</span> <span class="op">&amp;</span><span class="kw">mut</span> <span class="dt">u64</span>) <span class="op">-&gt;</span> <span class="dt">bool</span> <span class="op">{</span> <span class="op">*</span>c <span class="op">+=</span> <span class="dv">1</span><span class="op">;</span> x <span class="op">&lt;</span> y <span class="op">}</span></span>
+<span id="cb6-4"><a aria-hidden="true" href="#cb6-4" tabindex="-1"></a></span>
+<span id="cb6-5"><a aria-hidden="true" href="#cb6-5" tabindex="-1"></a><span class="kw">fn</span> sift_up(a<span class="op">:</span> <span class="op">&amp;</span><span class="kw">mut</span> [<span class="dt">i32</span>]<span class="op">,</span> <span class="kw">mut</span> i<span class="op">:</span> <span class="dt">usize</span><span class="op">,</span> c<span class="op">:</span> <span class="op">&amp;</span><span class="kw">mut</span> <span class="dt">u64</span>) <span class="op">{</span></span>
+<span id="cb6-6"><a aria-hidden="true" href="#cb6-6" tabindex="-1"></a>    <span class="cf">while</span> i <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">&amp;&amp;</span> menor(a[i]<span class="op">,</span> a[(i <span class="op">-</span> <span class="dv">1</span>) <span class="op">/</span> <span class="dv">2</span>]<span class="op">,</span> c) <span class="op">{</span> a<span class="op">.</span>swap(i<span class="op">,</span> (i <span class="op">-</span> <span class="dv">1</span>) <span class="op">/</span> <span class="dv">2</span>)<span class="op">;</span> i <span class="op">=</span> (i <span class="op">-</span> <span class="dv">1</span>) <span class="op">/</span> <span class="dv">2</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb6-7"><a aria-hidden="true" href="#cb6-7" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb6-8"><a aria-hidden="true" href="#cb6-8" tabindex="-1"></a><span class="kw">fn</span> sift_down(a<span class="op">:</span> <span class="op">&amp;</span><span class="kw">mut</span> [<span class="dt">i32</span>]<span class="op">,</span> <span class="kw">mut</span> i<span class="op">:</span> <span class="dt">usize</span><span class="op">,</span> c<span class="op">:</span> <span class="op">&amp;</span><span class="kw">mut</span> <span class="dt">u64</span>) <span class="op">{</span></span>
+<span id="cb6-9"><a aria-hidden="true" href="#cb6-9" tabindex="-1"></a>    <span class="cf">loop</span> <span class="op">{</span></span>
+<span id="cb6-10"><a aria-hidden="true" href="#cb6-10" tabindex="-1"></a>        <span class="kw">let</span> <span class="kw">mut</span> h <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> i <span class="op">+</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb6-11"><a aria-hidden="true" href="#cb6-11" tabindex="-1"></a>        <span class="cf">if</span> h <span class="op">&gt;=</span> a<span class="op">.</span>len() <span class="op">{</span> <span class="cf">return</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb6-12"><a aria-hidden="true" href="#cb6-12" tabindex="-1"></a>        <span class="cf">if</span> h <span class="op">+</span> <span class="dv">1</span> <span class="op">&lt;</span> a<span class="op">.</span>len() <span class="op">&amp;&amp;</span> menor(a[h <span class="op">+</span> <span class="dv">1</span>]<span class="op">,</span> a[h]<span class="op">,</span> c) <span class="op">{</span> h <span class="op">+=</span> <span class="dv">1</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb6-13"><a aria-hidden="true" href="#cb6-13" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">!</span>menor(a[h]<span class="op">,</span> a[i]<span class="op">,</span> c) <span class="op">{</span> <span class="cf">return</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb6-14"><a aria-hidden="true" href="#cb6-14" tabindex="-1"></a>        a<span class="op">.</span>swap(i<span class="op">,</span> h)<span class="op">;</span></span>
+<span id="cb6-15"><a aria-hidden="true" href="#cb6-15" tabindex="-1"></a>        i <span class="op">=</span> h<span class="op">;</span></span>
+<span id="cb6-16"><a aria-hidden="true" href="#cb6-16" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-17"><a aria-hidden="true" href="#cb6-17" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb6-18"><a aria-hidden="true" href="#cb6-18" tabindex="-1"></a></span>
+<span id="cb6-19"><a aria-hidden="true" href="#cb6-19" tabindex="-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb6-20"><a aria-hidden="true" href="#cb6-20" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> c <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb6-21"><a aria-hidden="true" href="#cb6-21" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> a<span class="op">:</span> <span class="dt">Vec</span><span class="op">&lt;</span><span class="dt">i32</span><span class="op">&gt;</span> <span class="op">=</span> <span class="dt">Vec</span><span class="pp">::</span>new()<span class="op">;</span></span>
+<span id="cb6-22"><a aria-hidden="true" href="#cb6-22" tabindex="-1"></a>    <span class="cf">for</span> k <span class="kw">in</span> <span class="dv">0</span><span class="op">..</span>N <span class="op">{</span></span>
+<span id="cb6-23"><a aria-hidden="true" href="#cb6-23" tabindex="-1"></a>        a<span class="op">.</span>push((N <span class="op">-</span> k) <span class="kw">as</span> <span class="dt">i32</span>)<span class="op">;</span></span>
+<span id="cb6-24"><a aria-hidden="true" href="#cb6-24" tabindex="-1"></a>        <span class="kw">let</span> i <span class="op">=</span> a<span class="op">.</span>len() <span class="op">-</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb6-25"><a aria-hidden="true" href="#cb6-25" tabindex="-1"></a>        sift_up(<span class="op">&amp;</span><span class="kw">mut</span> a<span class="op">,</span> i<span class="op">,</span> <span class="op">&amp;</span><span class="kw">mut</span> c)<span class="op">;</span></span>
+<span id="cb6-26"><a aria-hidden="true" href="#cb6-26" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-27"><a aria-hidden="true" href="#cb6-27" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">"n push:   {} comparaciones ({:.1} por elemento)"</span><span class="op">,</span> c<span class="op">,</span> c <span class="kw">as</span> <span class="dt">f64</span> <span class="op">/</span> N <span class="kw">as</span> <span class="dt">f64</span>)<span class="op">;</span></span>
+<span id="cb6-28"><a aria-hidden="true" href="#cb6-28" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> a<span class="op">:</span> <span class="dt">Vec</span><span class="op">&lt;</span><span class="dt">i32</span><span class="op">&gt;</span> <span class="op">=</span> (<span class="dv">0</span><span class="op">..</span>N)<span class="op">.</span>map(<span class="op">|</span>k<span class="op">|</span> (N <span class="op">-</span> k) <span class="kw">as</span> <span class="dt">i32</span>)<span class="op">.</span>collect()<span class="op">;</span></span>
+<span id="cb6-29"><a aria-hidden="true" href="#cb6-29" tabindex="-1"></a>    c <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb6-30"><a aria-hidden="true" href="#cb6-30" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> (<span class="dv">0</span><span class="op">..</span>N <span class="op">/</span> <span class="dv">2</span>)<span class="op">.</span>rev() <span class="op">{</span> sift_down(<span class="op">&amp;</span><span class="kw">mut</span> a<span class="op">,</span> i<span class="op">,</span> <span class="op">&amp;</span><span class="kw">mut</span> c)<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb6-31"><a aria-hidden="true" href="#cb6-31" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">"heapify:  {} comparaciones ({:.1} por elemento)"</span><span class="op">,</span> c<span class="op">,</span> c <span class="kw">as</span> <span class="dt">f64</span> <span class="op">/</span> N <span class="kw">as</span> <span class="dt">f64</span>)<span class="op">;</span></span>
+<span id="cb6-32"><a aria-hidden="true" href="#cb6-32" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div></div>
+<pre class="text salida"><code>n push:   917522 comparaciones (14.0 por elemento)
+heapify:  131040 comparaciones (2.0 por elemento)</code></pre>
+<hr/>
+<h2 id="problemas-que-se-resuelven-con-un-heap">5. Problemas que se resuelven con un heap</h2>
+<h3 id="los-k-mayores-de-un-flujo">5.1 Los <span class="math inline">\(k\)</span> mayores de un flujo</h3>
+<p>Recibimos <span class="math inline">\(n\)</span> números (quizá más de los que caben en memoria) y queremos los <span class="math inline">\(k\)</span> mayores. Ordenar cuesta <span class="math inline">\(O(n\lg n)\)</span> y <span class="math inline">\(\Theta(n)\)</span> memoria. Con un <strong>min</strong>-heap de tamaño <span class="math inline">\(k\)</span>: para cada número, si el heap tiene menos de <span class="math inline">\(k\)</span> o el número es mayor que <code>top()</code>, se inserta (y si pasa de <span class="math inline">\(k\)</span>, <code>pop()</code>). Invariante: <em>el heap contiene los <span class="math inline">\(k\)</span> mayores vistos hasta ahora</em>, y su mínimo es el umbral para entrar. Costo <span class="math inline">\(O(n\lg k)\)</span>, memoria <span class="math inline">\(O(k)\)</span>.</p>
+<h3 id="mezclar-k-listas-ordenadas">5.2 Mezclar <span class="math inline">\(k\)</span> listas ordenadas</h3>
+<p>Un heap con el frente de cada lista: <code>pop</code> da el menor de todos; se reemplaza por el siguiente de su lista. <span class="math inline">\(N\)</span> elementos en total, cada uno entra y sale una vez: <span class="math inline">\(O(N\lg k)\)</span>. Es la fase de mezcla del ordenamiento externo (archivos que no caben en memoria) y de los motores de búsqueda que combinan listas de documentos.</p>
+<h3 id="mediana-en-línea">5.3 Mediana en línea</h3>
+<p>Dos heaps: un <strong>max</strong>-heap con la mitad menor y un <strong>min</strong>-heap con la mitad mayor, con tamaños que difieren en a lo más 1. La mediana está en la cima de alguno. Cada inserción: meter en el heap que corresponda y, si los tamaños se desequilibran, pasar una cima al otro. <span class="math inline">\(O(\lg n)\)</span> por inserción, <span class="math inline">\(O(1)\)</span> por consulta.</p>
+<h3 id="decrease_key-y-lo-que-viene">5.4 <code>decrease_key</code> y lo que viene</h3>
+<p>Dijkstra y Prim (L10–L11) necesitan <strong>bajar</strong> la prioridad de un elemento que ya está en el heap. El heap binario lo hace en <span class="math inline">\(O(\lg n)\)</span> con <code>sift_up</code>, <strong>si sabe dónde está el elemento</strong>: requiere un arreglo auxiliar <code>pos[elemento] = índice</code> que se actualiza en cada intercambio (<em>heap indexado</em>). La alternativa, que usaremos en el lab10, es más simple: insertar un duplicado con la prioridad nueva e ignorar los viejos al sacarlos (<em>lazy deletion</em>).</p>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 20%"/>
+<col style="width: 20%"/>
+<col style="width: 20%"/>
+<col style="width: 20%"/>
+<col style="width: 20%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Heap</th>
+<th><code>push</code></th>
+<th><code>pop</code></th>
+<th><code>decrease_key</code></th>
+<th>Nota</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Binario</td>
+<td><span class="math inline">\(O(\lg n)\)</span></td>
+<td><span class="math inline">\(O(\lg n)\)</span></td>
+<td><span class="math inline">\(O(\lg n)\)</span></td>
+<td>el del lab</td>
+</tr>
+<tr>
+<td><span class="math inline">\(d\)</span>-ario</td>
+<td><span class="math inline">\(O(\log_d n)\)</span></td>
+<td><span class="math inline">\(O(d\log_d n)\)</span></td>
+<td><span class="math inline">\(O(\log_d n)\)</span></td>
+<td>árbol más bajo; mejor caché</td>
+</tr>
+<tr>
+<td>Fibonacci</td>
+<td><span class="math inline">\(O(1)\)</span> amort.</td>
+<td><span class="math inline">\(O(\lg n)\)</span> amort.</td>
+<td><span class="math inline">\(O(1)\)</span> amort.</td>
+<td>Dijkstra en <span class="math inline">\(O(E + V\lg V)\)</span>; constantes grandes</td>
+</tr>
+<tr>
+<td>Pairing</td>
+<td><span class="math inline">\(O(1)\)</span></td>
+<td><span class="math inline">\(O(\lg n)\)</span> amort.</td>
+<td><span class="math inline">\(o(\lg n)\)</span> amort.</td>
+<td>rápido en la práctica</td>
+</tr>
+</tbody>
+</table></div>
+<hr/>
+<h2 id="resumen-de-paradigmas-en-este-lab">6. Resumen de paradigmas en este lab</h2>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Aspecto</th>
+<th>C</th>
+<th>C++</th>
+<th>Rust</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>El orden</td>
+<td><code>algolib_cmp cmp</code> (puntero a función)</td>
+<td>parámetro de plantilla <code>Compare</code>, por defecto <code>std::less&lt;T&gt;</code></td>
+<td>el <code>Ord</code> del tipo; invertir con <code>Reverse&lt;T&gt;</code></td>
+</tr>
+<tr>
+<td>¿Cuándo se elige?</td>
+<td>en ejecución</td>
+<td>en compilación (se genera código por cada <code>Compare</code>)</td>
+<td>en compilación (por cada tipo)</td>
+</tr>
+<tr>
+<td>Costo de comparar</td>
+<td>llamada indirecta</td>
+<td>normalmente se <em>inlinea</em></td>
+<td>normalmente se <em>inlinea</em></td>
+</tr>
+<tr>
+<td>El hueco en <code>sift_*</code></td>
+<td>búfer <code>tmp</code> de <code>elem_size</code> bytes</td>
+<td><code>T x = std::move(a[i])</code></td>
+<td><code>swap</code> (el hueco exige <code>unsafe</code>)</td>
+</tr>
+<tr>
+<td><code>std</code> es…</td>
+<td>no hay</td>
+<td><code>priority_queue</code>: max-heap</td>
+<td><code>BinaryHeap</code>: max-heap</td>
+</tr>
+<tr>
+<td>Heap vacío</td>
+<td><code>NULL</code> / <code>false</code></td>
+<td>excepción</td>
+<td><code>Option</code></td>
+</tr>
+</tbody>
+</table></div>
+<hr/>
+<h2 id="guía-del-lab-06">7. Guía del Lab 06</h2>
+<p><strong>Archivos:</strong> <code>c/src/lab06/binary_heap.c</code>, <code>cpp/include/algolib/lab06/binary_heap.hpp</code>, <code>rust/src/lab06/mod.rs</code>.</p>
+<p><strong>Orden sugerido:</strong> <code>sift_up</code> → <code>push</code>, <code>top</code> → <code>sift_down</code> → <code>pop</code> → construcción desde arreglo (heapify) → <code>drain_sorted</code>/<code>into_sorted_vec</code>. Escribe los Lemas 2 y 3 como comentarios encima de cada función.</p>
+<p><strong>Errores frecuentes:</strong></p>
+<ul>
+<li>En <code>sift_down</code>, comparar con el hijo <strong>izquierdo</strong> siempre en vez del menor de los dos: viola el invariante.</li>
+<li>Olvidar que el hijo derecho puede no existir (<code>c + 1 &lt; n</code>).</li>
+<li>En C, <code>int i = (n / 2) - 1</code> con <code>n</code> de tipo <code>size_t</code>: si <span class="math inline">\(n = 0\)</span>, desborda. Usa <code>for (size_t i = n / 2; i-- &gt; 0;)</code>.</li>
+<li>Construir desde un arreglo con <span class="math inline">\(n\)</span> <code>push</code>: pasa los tests de corrección pero no <code>heap_heapify_es_lineal</code>.</li>
+<li>En C++, en <code>pop</code>, escribir <code>a_[0] = a_.back()</code> cuando el heap tiene un solo elemento y después <code>pop_back()</code>: funciona, pero si usas el hueco con <code>std::move</code>, asegúrate de no hacer <code>sift_down</code> sobre un arreglo vacío.</li>
+</ul>
+<hr/>
+<h2 id="comprueba-tu-comprensión">8. Comprueba tu comprensión</h2>
+<ol type="1">
+<li>¿Cuáles son el padre y los hijos del índice 6? ¿En qué nivel está?</li>
+<li>¿Es un min-heap el arreglo <span class="math inline">\(\langle 1, 3, 2, 7, 4, 5, 6\rangle\)</span>? ¿Y <span class="math inline">\(\langle 1, 3, 2, 2, 4\rangle\)</span>?</li>
+<li>¿Dónde puede estar el <strong>máximo</strong> de un min-heap? ¿Cuánto cuesta encontrarlo?</li>
+<li>¿Por qué heapify empieza en <span class="math inline">\(\lfloor n/2\rfloor - 1\)</span> y no en <span class="math inline">\(n - 1\)</span>?</li>
+<li>Para los <span class="math inline">\(k\)</span> mayores, ¿por qué se usa un <strong>min</strong>-heap y no un max-heap?</li>
+</ol>
+<details>
+<summary>
+Respuestas
+</summary>
+<ol type="1">
+<li>Padre <span class="math inline">\(\lfloor 5/2\rfloor = 2\)</span>; hijos 13 y 14. Nivel 2 (índices 3 a 6).</li>
+<li>El primero sí. El segundo no: el índice 3 (valor 2) tiene padre 1 (valor 3) y <span class="math inline">\(3 &gt; 2\)</span>.</li>
+<li>En una hoja (si tuviera un hijo, el hijo sería <span class="math inline">\(\ge\)</span>). Hay <span class="math inline">\(\lceil n/2\rceil\)</span> hojas y no hay orden entre ellas: <span class="math inline">\(\Theta(n)\)</span>.</li>
+<li>Los índices <span class="math inline">\(\ge \lfloor n/2\rfloor\)</span> son hojas: ya son heaps y <code>sift_down</code> no haría nada.</li>
+<li>Porque necesitamos acceso rápido al <strong>menor</strong> de los <span class="math inline">\(k\)</span> guardados: es el que sale cuando llega uno mayor.</li>
+</ol>
+</details>
+<hr/>
+<h2 id="problem-set-6">9. Problem Set 6</h2>
+<p><strong>Teoría</strong></p>
+<ol type="1">
+<li>Demuestra por inducción que <span class="math inline">\(\sum_i \text{alt}(i) \le n - 1\)</span> en un árbol casi completo de <span class="math inline">\(n\)</span> nodos.</li>
+<li>En un heap <span class="math inline">\(d\)</span>-ario (cada nodo con <span class="math inline">\(d\)</span> hijos), da las fórmulas de padre e hijos, y demuestra que <code>push</code> cuesta <span class="math inline">\(O(\log_d n)\)</span> y <code>pop</code> <span class="math inline">\(O(d\log_d n)\)</span>. ¿Qué <span class="math inline">\(d\)</span> minimiza el costo de Dijkstra, que hace <span class="math inline">\(V\)</span> <code>pop</code> y <span class="math inline">\(E\)</span> <code>decrease_key</code>?</li>
+<li>Demuestra que el <span class="math inline">\(k\)</span>-ésimo menor de un min-heap se puede encontrar en <span class="math inline">\(O(k\lg k)\)</span> sin modificar el heap (pista: un segundo heap con la “frontera”).</li>
+<li>Demuestra que la mezcla de <span class="math inline">\(k\)</span> listas con un heap hace <span class="math inline">\(O(N\lg k)\)</span> comparaciones y que es óptimo en el modelo de comparaciones (pista: cuenta las formas de intercalar <span class="math inline">\(k\)</span> listas de tamaño <span class="math inline">\(N/k\)</span>).</li>
+<li>Demuestra que la mediana en línea con dos heaps mantiene su invariante de balance y devuelve la mediana correcta.</li>
+</ol>
+<p><strong>Implementación (C, C++ y Rust)</strong></p>
+<ol start="6" type="1">
+<li>Agrega <code>decrease_key</code> con un heap <strong>indexado</strong>: cada elemento tiene un identificador en <span class="math inline">\(\{0..n-1\}\)</span> y el heap mantiene <code>pos[id]</code>. Tests contra un oráculo.</li>
+<li>Implementa top-<span class="math inline">\(k\)</span> (§5.1) y mezcla de <span class="math inline">\(k\)</span> listas (§5.2) usando tu <code>BinaryHeap</code>.</li>
+<li>Implementa la mediana en línea (§5.3). En Rust, el max-heap es tu <code>BinaryHeap&lt;Reverse&lt;T&gt;&gt;</code>.</li>
+<li>Mide <code>push</code>/<code>pop</code> para heaps 2-, 4- y 8-arios con <span class="math inline">\(10^6\)</span> elementos y explica los resultados con el modelo de caché de L02 §5.4.</li>
+</ol>
+<hr/>
+<h2 id="referencias">Referencias</h2>
+<ul>
+<li>CLRS, <em>Introduction to Algorithms</em>, 4ª ed.: Cap. 6 (heaps; Ej. 6.3-4), §19 (heaps de Fibonacci).</li>
+<li>MIT 6.006 (Spring 2020), Lecture 8: <em>Binary Heaps</em>.</li>
+<li>Williams, J. W. J. (1964). <em>Algorithm 232: Heapsort</em>. Communications of the ACM 7(6).</li>
+<li>Floyd, R. W. (1964). <em>Algorithm 245: Treesort 3</em> (heapify de abajo hacia arriba).</li>
+<li>Fredman, M. L. y Tarjan, R. E. (1987). <em>Fibonacci heaps and their uses in improved network optimization algorithms</em>. JACM 34(3).</li>
+</ul>
+</main><footer>algolib · Estructuras de Datos y Algoritmos. Fuente: <code>notas/L06-heaps.md</code>. Regenerar con <code>make html</code>.</footer><script>{
+
+const KEY='algolib-lang';let pref='cpp';try{pref=localStorage.getItem(KEY)||'cpp'}catch(e){}
+function pick(lang,save){
+  for(const g of document.querySelectorAll('.tabs')){
+    const btns=[...g.querySelectorAll('[role=tab]')];if(!btns.length)continue;
+    const b=btns.find(x=>x.dataset.lang===lang)||btns[0];
+    for(const x of btns){const on=x===b;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;
+      document.getElementById(x.getAttribute('aria-controls')).hidden=!on;}
+  }
+  if(save){try{localStorage.setItem(KEY,lang)}catch(e){}}
+}
+for(const g of document.querySelectorAll('.tablist')){
+  g.addEventListener('click',e=>{const b=e.target.closest('[role=tab]');if(b){const y=b.getBoundingClientRect().top;pick(b.dataset.lang,true);window.scrollBy(0,b.getBoundingClientRect().top-y);}});
+  g.addEventListener('keydown',e=>{const bs=[...g.querySelectorAll('[role=tab]')];const i=bs.indexOf(document.activeElement);
+    if(i<0)return;let j=i;if(e.key==='ArrowRight')j=(i+1)%bs.length;else if(e.key==='ArrowLeft')j=(i-1+bs.length)%bs.length;else return;
+    e.preventDefault();pick(bs[j].dataset.lang,true);bs[j].focus();});
+}
+pick(pref,false);
+for(const p of document.querySelectorAll('main pre:not(.pizarra):not(.salida)')){
+  const b=document.createElement('button');b.className='copy';b.type='button';b.textContent='Copiar';
+  b.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(p.innerText.replace(/Copiar$/,''));b.textContent='Copiado';}catch(e){b.textContent='No se pudo';}setTimeout(()=>b.textContent='Copiar',1600);});
+  p.appendChild(b);}
+}</script></body></html>

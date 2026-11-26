@@ -4,6 +4,7 @@
 #   make c-lab01       # solo C
 #   make cpp-lab01     # solo C++
 #   make rust-lab01    # solo Rust
+#   make c-fugas-lab01 # busca fugas de memoria en tu C (en macOS usa `leaks`)
 #   make all-labs      # todos los labs, los tres lenguajes
 #   make clean
 
@@ -28,6 +29,19 @@ c-lab%: cconfigure
 cpp-lab%: configure
 	@cmake --build $(BUILD) --target lab$*_tests -- --no-print-directory 2>&1 | grep -Ev '^\[|^Built target|^gmake' || true
 	@./$(BUILD)/lab$*_tests || true
+
+# Fugas de memoria en C. En Linux, LeakSanitizer ya corre dentro de c-labNN.
+# En macOS LeakSanitizer no existe: compilamos SIN sanitizers (leaks no convive con
+# ASan) y corremos los tests bajo `leaks --atExit`, que reporta cada bloque sin liberar.
+c-fugas-lab%:
+ifeq ($(shell uname -s),Darwin)
+	@cmake -S c -B c/build-fugas -DALGOLIB_SANITIZE=OFF > /dev/null
+	@cmake --build c/build-fugas --target lab$*_tests -- --no-print-directory 2>&1 | grep -Ev '^\[|^Built target|^gmake' || true
+	@MallocStackLogging=lite leaks --quiet --atExit -- ./c/build-fugas/lab$*_tests 2>&1 \
+	  | grep -Ev 'MallocStackLogging|^Process [0-9]+ is not debuggable|^$$' ; true
+else
+	@$(MAKE) --no-print-directory c-lab$*
+endif
 
 rust-lab%:
 	@cd rust && cargo test -q --test lab$* 2>&1 | grep -Ev '^\s*$$|Finished|Running|Compiling|error: test failed|Caused by|process didn.t exit' || true
@@ -57,4 +71,4 @@ html: diagramas
 	python3 notas/herramientas/build_html.py
 
 clean:
-	rm -rf $(BUILD) $(CBUILD) rust/target
+	rm -rf $(BUILD) $(CBUILD) c/build-fugas rust/target

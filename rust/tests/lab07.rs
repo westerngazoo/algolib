@@ -6,7 +6,7 @@ use std::collections::BTreeMap;
 fn main() {
     common::run(
         "lab07",
-        cases![avl_basico, avl_secuencial_es_perfecto, avl_cota_de_altura_insercion_ordenada, avl_aleatorio_vs_btreemap],
+        cases![avl_basico, avl_secuencial_es_perfecto, avl_cota_de_altura_insercion_ordenada, avl_aleatorio_vs_btreemap, avl_borrar_rebalancea],
     );
 }
 
@@ -69,4 +69,16 @@ fn avl_aleatorio_vs_btreemap() {
             assert!(cumple_cota_avl(m.height(), m.len()));
         }
     }
+}
+
+/// Borrar casi todo un lado: sin rotaciones al borrar, quedaría la columna derecha
+/// del árbol original (altura ~16 con ~500 claves) y violaría la cota.
+fn avl_borrar_rebalancea() {
+    let mut m = AvlMap::new();
+    for i in 0..65_536usize { m.insert(i, i); }
+    for i in 0..65_000usize { assert_eq!(m.remove(&i), Some(i)); }
+    assert_eq!(m.len(), 536);
+    assert!(cumple_cota_avl(m.height(), m.len()));
+    let ks: Vec<usize> = m.keys().into_iter().copied().collect();
+    assert_eq!(ks, (65_000..65_536).collect::<Vec<_>>());
 }

@@ -2,6 +2,7 @@
 
 #include <algotest.hpp>
 
+#include <queue>
 #include <tuple>
 #include <vector>
 
@@ -93,4 +94,29 @@ TEST(floyd_warshall_vs_oraculo) {
         CHECK_EQ(all.size(), 40u);
         for (std::size_t s = 0; s < 40; ++s) CHECK(all[s] == oraculo(40, es, s));
     }
+}
+
+TEST(dijkstra_grande_pesos_unitarios) {
+    // 200 000 vértices, 10⁶ aristas de peso 1: Dijkstra debe coincidir con BFS.
+    // Un Dijkstra que busca el mínimo recorriendo todos los vértices es Θ(V²) ≈ 4·10¹⁰.
+    const std::size_t n = 200000;
+    algotest::Lcg rng(19);
+    WeightedGraph g(n);
+    std::vector<std::vector<std::size_t>> adj(n);
+    for (int i = 0; i < 1000000; ++i) {
+        auto u = rng.below(n), v = rng.below(n);
+        g.add_edge(u, v, 1);
+        adj[u].push_back(v);
+    }
+    std::vector<Dist> bfs(n);
+    std::queue<std::size_t> q;
+    bfs[0] = 0;
+    q.push(0);
+    while (!q.empty()) {
+        auto u = q.front();
+        q.pop();
+        for (auto v : adj[u])
+            if (!bfs[v]) { bfs[v] = *bfs[u] + 1; q.push(v); }
+    }
+    CHECK(dijkstra(g, 0) == bfs);
 }

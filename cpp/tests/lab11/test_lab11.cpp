@@ -83,3 +83,16 @@ TEST(mst_aleatorio_vs_fuerza_bruta) {
         CHECK(prim(n, es) == o);
     }
 }
+
+TEST(mst_grande_kruskal_igual_prim) {
+    // 200 000 vértices, ~10⁶ aristas (con un camino que garantiza conexidad).
+    // Kruskal y Prim deben coincidir; un Prim Θ(V²) no termina a tiempo.
+    const std::size_t n = 200000;
+    algotest::Lcg rng(20);
+    std::vector<Edge> es;
+    for (std::size_t i = 0; i + 1 < n; ++i) es.push_back({i, i + 1, 1000000 + rng.range(0, 1000)});
+    for (int i = 0; i < 800000; ++i) es.push_back({rng.below(n), rng.below(n), rng.range(-1000, 1000000)});
+    auto k = kruskal(n, es);
+    CHECK(k.has_value());
+    CHECK(k == prim(n, es));
+}

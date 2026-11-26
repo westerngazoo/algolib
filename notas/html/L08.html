@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>L08 · Notas · Estructuras de Datos y Algoritmos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: apuntes de curso universitario, sobrios y precisos; el guion habla en voz de profesor.
+   IDEA: cuaderno de clase técnico con pizarrón: hoja limpia, recuadros de pizarra verde para lo que se escribe.
+   PICTURE: diagramas SVG propios de cada lección (cotas, arreglos, costos), sobre placa blanca.
+   COLOUR and TYPE: tira cobalto #1240e0, hoja blanca, zonas #eef2ff, acento naranja quemado; Space Grotesk + Inter + JetBrains Mono.
+   LAYOUT: tira de título a todo el ancho, fila de secciones, columna de lectura de 780px; figuras y tablas hasta 900px. */
+:root{color-scheme:light dark;
+ --bg:light-dark(#ffffff,#0b0e17);--ink:light-dark(#111827,#e6e9f2);--muted:light-dark(#5b6270,#9aa3b5);
+ --cob:#1240e0;--cob-ink:light-dark(#1240e0,#8fa8ff);--pale:light-dark(#eef2ff,#141b33);--line:light-dark(#dfe4f2,#252c44);
+ --acc:light-dark(#c2410c,#fb923c);--acc-pale:light-dark(#fff1e6,#2a1a10);--ok:light-dark(#15803d,#4ade80);
+ --chalk-bg:#1f3a2e;--chalk:#eef3e8;--chalk-dim:#a9c2b2;--wood:#7a5a33}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Inter,system-ui,sans-serif;overflow-x:clip}
+a{color:var(--cob-ink)}
+.strip{background:var(--cob);color:#fff;padding:clamp(22px,3.5vw,44px) max(5vw,16px) clamp(20px,3vw,34px)}
+.strip .curso{font:600 14px/1.3 'Space Grotesk',sans-serif;opacity:.85;margin:0 0 10px}
+.strip h1{font:700 clamp(30px,4.6vw,48px)/1.06 'Space Grotesk',sans-serif;margin:0;text-wrap:balance;max-width:24ch}
+.strip .desc{margin:14px 0 0;max-width:62ch;opacity:.92;font-size:16px}
+.pages{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.pages a{color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.45);border-radius:999px;padding:6px 14px;font-size:14px;line-height:1.3}
+.pages a[aria-current]{background:#fff;color:var(--cob)}
+.pages a:hover{background:rgba(255,255,255,.16)}
+nav.toc{border-bottom:1px solid var(--line);background:var(--bg);z-index:5}
+nav.toc .scroll{display:flex;gap:4px;padding:8px max(5vw,16px);white-space:nowrap}
+nav.toc a{flex:none;text-decoration:none;color:var(--muted);font-size:14px;padding:6px 10px;border-radius:8px}
+nav.toc a:hover{background:var(--pale);color:var(--ink)}
+@media(min-width:900px){nav.toc{position:sticky;top:0}}
+main{max-width:820px;margin:0 auto;padding:28px max(4vw,16px) 80px}
+main h1{font:700 32px/1.1 'Space Grotesk',sans-serif;margin:56px 0 12px;padding-top:18px;border-top:4px solid var(--cob);color:var(--cob-ink)}
+main h2{font:700 26px/1.2 'Space Grotesk',sans-serif;margin:48px 0 10px;text-wrap:balance}
+main h3{font:600 21px/1.25 'Space Grotesk',sans-serif;margin:36px 0 8px}
+main h4{font:600 18px/1.3 'Space Grotesk',sans-serif;margin:28px 0 6px}
+.tiempo{display:inline-block;vertical-align:middle;margin-left:8px;font:500 13px/1 Inter,sans-serif;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:4px 9px}
+p,li{max-width:70ch}
+hr{border:0;border-top:1px solid var(--line);margin:40px 0}
+blockquote{margin:16px 0;padding:12px 18px;border-left:4px solid var(--cob);background:var(--pale);border-radius:0 10px 10px 0}
+blockquote p{margin:6px 0}
+code{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.88em;background:var(--pale);padding:1px 5px;border-radius:5px;overflow-wrap:anywhere}
+pre{position:relative;overflow-x:auto;background:light-dark(#f6f7fb,#11162a);border:1px solid var(--line);border-radius:10px;padding:14px 16px;font:14px/1.55 'JetBrains Mono',ui-monospace,monospace}
+pre code{background:none;padding:0;font-size:inherit;overflow-wrap:normal}
+.copy{position:absolute;top:8px;right:8px;font:600 12px Inter,sans-serif;border:1px solid var(--line);background:var(--bg);color:var(--muted);border-radius:7px;padding:6px 10px;min-height:32px;cursor:pointer}
+.copy:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;margin:16px 0;font-size:15px;width:100%}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-weight:600;background:var(--pale)}
+figure{margin:26px 0;padding:0}
+figure svg{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:12px}
+figcaption{color:var(--muted);font-size:14px;margin-top:8px}
+details{margin:12px 0;border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:var(--bg)}
+summary{cursor:pointer;font-weight:600;color:var(--cob-ink);min-height:28px}
+.callout{margin:16px 0;padding:12px 16px 12px 16px;border-radius:10px;border:1px solid var(--line)}
+.callout>.lbl{display:block;font:700 12px/1.2 Inter,sans-serif;letter-spacing:.02em;margin-bottom:4px}
+.dice{background:light-dark(#f8fafc,#121726);border-left:5px solid var(--ink)}
+.dice>.lbl{color:var(--ink)}
+.pregunta{background:var(--pale);border-left:5px solid var(--cob)}
+.pregunta>.lbl{color:var(--cob-ink)}
+.pregunta+blockquote{margin-top:-10px;border-left-color:var(--ok);background:light-dark(#f0fdf4,#0f1f16)}
+.pregunta+blockquote::before{content:"Respuesta esperada";display:block;font:700 12px Inter,sans-serif;color:var(--ok);margin-bottom:2px}
+.nota{background:light-dark(#fffbea,#211d0c);border-left:5px solid #ca8a04}
+.nota>.lbl{color:light-dark(#a16207,#facc15)}
+.atencion{background:var(--acc-pale);border-left:5px solid var(--acc)}
+.atencion>.lbl{color:var(--acc)}
+.ejercicio{display:inline-block;font:700 12px Inter,sans-serif;color:#fff;background:var(--acc);border-radius:6px;padding:2px 8px;margin-right:6px;vertical-align:2px}
+.moneda{display:inline-block;width:.9em;height:.9em;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fde68a,#d97706);vertical-align:-1px;margin-right:4px}
+.pizarra-label{display:table!important;margin:22px 0 0;font:600 13px/1.3 Inter,sans-serif;color:var(--chalk-dim);background:var(--chalk-bg);display:inline-block;padding:6px 12px;border-radius:8px 8px 0 0;border:6px solid var(--wood);border-bottom:0}
+.pizarra-label b{color:#fff}
+pre.pizarra,div.pizarra{margin-top:0;background:var(--chalk-bg);color:var(--chalk);border:6px solid var(--wood);border-radius:0 10px 10px 10px;box-shadow:inset 0 0 40px rgba(0,0,0,.35);font:15px/1.6 'JetBrains Mono',ui-monospace,monospace;padding:16px 18px;overflow-x:auto;white-space:pre}
+table.pizarra{border:6px solid var(--wood);background:var(--chalk-bg);color:var(--chalk);margin-top:0}
+table.pizarra th{background:#2a4a3c;color:#fff}table.pizarra td,table.pizarra th{border-color:#3d5e4f}
+mjx-container[display=true]{overflow-x:auto;overflow-y:hidden;max-width:100%}
+mjx-container:not([display]){display:inline-block;max-width:100%;overflow-x:auto;overflow-y:hidden;vertical-align:middle}
+.lessons{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px;margin:24px 0}
+.lessons a{display:block;text-decoration:none;color:var(--ink);background:var(--pale);border:1px solid var(--line);border-radius:12px;padding:18px}
+.lessons a:hover{border-color:var(--cob)}
+.lessons b{display:block;font:700 19px/1.2 'Space Grotesk',sans-serif;color:var(--cob-ink);margin-bottom:6px}
+.lessons span{color:var(--muted);font-size:15px}
+footer{color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding:24px max(5vw,16px)}
+@media(max-width:600px){body{font-size:16px}table{font-size:13px}pre.pizarra,div.pizarra{font-size:13px}main h1{font-size:27px}main h2{font-size:23px}}
+
+/* pestañas de código */
+.tabs{margin:20px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:light-dark(#f6f7fb,#11162a)}
+.tablist{display:flex;gap:2px;padding:6px 6px 0;background:var(--pale);border-bottom:1px solid var(--line);overflow-x:auto}
+.tablist button{font:600 14px Inter,sans-serif;color:var(--muted);background:none;border:0;border-radius:8px 8px 0 0;padding:10px 16px;min-height:44px;cursor:pointer;white-space:nowrap}
+.tablist button[aria-selected=true]{background:light-dark(#f6f7fb,#11162a);color:var(--cob-ink);box-shadow:inset 0 3px 0 var(--cob)}
+.tablist button:focus-visible{outline:3px solid var(--acc);outline-offset:-3px}
+.tablist .badge{font:600 11px Inter,sans-serif;color:var(--acc);margin-left:6px}
+.tabs .panel pre{margin:0;border:0;border-radius:0}
+.tabs .panel[hidden]{display:none}
+pre.salida{background:light-dark(#0f172a,#05070d);color:#d1fae5;border-color:#0f172a;margin-top:-8px;padding-top:30px}
+pre.salida::before{content:"Salida";position:absolute;top:8px;left:16px;font:700 11px Inter,sans-serif;color:#6ee7b7;letter-spacing:.03em}
+pre.salida .copy{display:none}
+/* resaltado de sintaxis (clases de pandoc) */
+code span.kw,code span.cf{color:light-dark(#1d4ed8,#93b4ff);font-weight:600}
+code span.dt{color:light-dark(#7c3aed,#c4b5fd)}
+code span.dv,code span.bn,code span.fl,code span.cn{color:light-dark(#b45309,#fbbf24)}
+code span.st,code span.ch,code span.ss,code span.sc{color:light-dark(#047857,#6ee7b7)}
+code span.co,code span.do,code span.cv{color:light-dark(#6b7280,#8b95a7);font-style:italic}
+code span.pp,code span.im,code span.at{color:light-dark(#be185d,#f9a8d4)}
+code span.fu,code span.bu{color:light-dark(#0e7490,#67e8f9)}
+code span.op{color:light-dark(#374151,#cbd5e1)}
+code span.er,code span.al{color:var(--acc)}
+pre.sourceCode a{display:none}
+@media print{nav.toc,.copy,.tablist{display:none}.tabs .panel[hidden]{display:block}.strip{background:none;color:#000}}
+</style>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+</head><body>
+<header class="strip"><p class="curso">algolib · Estructuras de Datos y Algoritmos</p><h1>Lección 8 — Árboles aumentados y estadísticos de orden</h1><p class="desc">Teorema de aumentación, select y rank en O(lg n), treaps con split/merge y árboles de intervalos.</p><div class="pages"><a href="index.html">Inicio</a><a href="L00.html">L00 · Prerrequisitos</a><a href="L01.html">L01 · Notas</a><a href="L02.html">L02 · Notas</a><a href="L03.html">L03 · Notas</a><a href="L04.html">L04 · Notas</a><a href="L05.html">L05 · Notas</a><a href="L06.html">L06 · Notas</a><a href="L07.html">L07 · Notas</a><a href="L08.html" aria-current="page">L08 · Notas</a><a href="L09.html">L09 · Notas</a><a href="L10.html">L10 · Notas</a><a href="L11.html">L11 · Notas</a><a href="L12.html">L12 · Notas</a><a href="L13.html">L13 · Notas</a></div></header><nav class="toc" aria-label="Secciones"><div class="scroll"><a href="#objetivos-de-aprendizaje">Objetivos de aprendizaje</a><a href="#mapa-de-la-lección">Mapa de la lección</a><a href="#estadísticos-de-orden-dinámicos">1. Estadísticos de orden dinámicos</a><a href="#el-teorema-de-aumentación">2. El teorema de aumentación</a><a href="#select-y-rank">3. select y rank</a><a href="#treaps-balance-por-azar">4. Treaps: balance por azar</a><a href="#otras-aumentaciones">5. Otras aumentaciones</a><a href="#resumen-de-paradigmas-en-este-lab">6. Resumen de paradigmas en este…</a><a href="#guía-del-lab-08">7. Guía del Lab 08</a><a href="#comprueba-tu-comprensión">8. Comprueba tu comprensión</a><a href="#problem-set-8">9. Problem Set 8</a><a href="#referencias">Referencias</a></div></nav><main><blockquote>
+<p><strong>Prerrequisitos:</strong> Lección 5 (§5.2 análisis de quicksort aleatorizado) y Lección 7 completa (BST, rotaciones, AVL).</p>
+<p><strong>Cómo estudiar esta lección:</strong> es una lección de <strong>diseño</strong>: no inventa una estructura nueva, sino un método para agregar información a una que ya funciona sin romper sus garantías. Para cada campo aumentado pregúntate: <em>¿lo puedo calcular mirando solo al nodo y a sus dos hijos?</em></p>
+<p><strong>Lab asociado:</strong> <code>lab08</code>: <code>OrderStatSet</code> (C, C++ y Rust).</p>
+</blockquote>
+<h2 id="objetivos-de-aprendizaje">Objetivos de aprendizaje</h2>
+<p>Al terminar esta lección deberías poder:</p>
+<ol type="1">
+<li>Enunciar y demostrar el <strong>teorema de aumentación</strong>: qué campos se pueden mantener en un árbol balanceado sin cambiar su costo asintótico.</li>
+<li>Implementar <code>select(k)</code> y <code>rank(x)</code> en <span class="math inline">\(O(\lg n)\)</span> con el campo <code>size</code>, y demostrar su corrección con invariantes de ciclo.</li>
+<li>Definir un <strong>treap</strong>, demostrar que su forma está determinada por claves y prioridades, y que su altura esperada es <span class="math inline">\(O(\lg n)\)</span>.</li>
+<li>Implementar un treap con <code>split</code> y <code>merge</code>, y expresar inserción y borrado en términos de ellas.</li>
+<li>Diseñar otras aumentaciones (suma, mínimo, máximo extremo de intervalos) para problemas nuevos.</li>
+</ol>
+<h2 id="mapa-de-la-lección">Mapa de la lección</h2>
+<figure>
+<svg aria-label="Mapa de la lección 8" fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" role="img" viewbox="0 0 760 300" xmlns="http://www.w3.org/2000/svg">
+<title>Mapa de la lección 8</title>
+<defs>
+<marker id="ar" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#111827"></path></marker>
+<marker id="arc" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#1240e0"></path></marker>
+<marker id="ara" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"></path></marker>
+</defs>
+<rect fill="#ffffff" height="300" rx="12" width="760"></rect>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="40" y="26"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="54" y="50">§1</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="54" y="70">Estadísticos de orden</text>
+<rect fill="#1240e0" height="58" rx="10" stroke="#1240e0" stroke-width="2" width="200" x="290" y="26"></rect>
+<text fill="#dbe4ff" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="304" y="50">§2</text>
+<text fill="#ffffff" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="304" y="70">Teorema de aumentación</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="540" y="26"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="554" y="50">§3</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="554" y="70">select y rank</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="40" y="124"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="54" y="148">§6</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="54" y="168">Paradigmas</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="290" y="124"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="304" y="148">§5</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="304" y="168">Otras aumentaciones</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="540" y="124"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="554" y="148">§4</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="554" y="168">Treaps</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="40" y="222"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="54" y="246">§7</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="54" y="266">Guía del lab</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="290" y="222"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="304" y="246">§8</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="304" y="266">Comprensión</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="540" y="222"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="554" y="246">§9</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="554" y="266">Problem set</text>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="244" x2="286" y1="55.0" y2="55.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="494" x2="536" y1="55.0" y2="55.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="640.0" x2="640.0" y1="87" y2="120"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="536" x2="494" y1="153.0" y2="153.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="286" x2="244" y1="153.0" y2="153.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="140.0" x2="140.0" y1="185" y2="218"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="244" x2="286" y1="251.0" y2="251.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="494" x2="536" y1="251.0" y2="251.0"></line>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" text-anchor="start" x="400.0" y="106">f(x) desde los hijos: núcleo de la lección</text>
+</svg>
+<figcaption aria-hidden="true">Mapa de la lección 8</figcaption>
+</figure>
+<hr/>
+<h2 id="estadísticos-de-orden-dinámicos">1. Estadísticos de orden dinámicos</h2>
+<p>El <strong><span class="math inline">\(k\)</span>-ésimo estadístico de orden</strong> de un conjunto es su <span class="math inline">\(k\)</span>-ésimo menor elemento (en el lab, 0-indexado: <code>select(0)</code> es el mínimo). El <strong>rango</strong> de <span class="math inline">\(x\)</span> es el número de elementos estrictamente menores que <span class="math inline">\(x\)</span>. Son inversos: si <span class="math inline">\(x\)</span> está en el conjunto, <code>select(rank(x)) == x</code>.</p>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Estructura</th>
+<th><code>insert</code></th>
+<th><code>select(k)</code></th>
+<th><code>rank(x)</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Arreglo ordenado</td>
+<td><span class="math inline">\(\Theta(n)\)</span></td>
+<td><span class="math inline">\(O(1)\)</span></td>
+<td><span class="math inline">\(O(\lg n)\)</span> (búsqueda binaria)</td>
+</tr>
+<tr>
+<td>Arreglo sin ordenar</td>
+<td><span class="math inline">\(O(1)\)</span></td>
+<td><span class="math inline">\(O(n)\)</span> esperado (quickselect, PS5)</td>
+<td><span class="math inline">\(\Theta(n)\)</span></td>
+</tr>
+<tr>
+<td>AVL del lab07</td>
+<td><span class="math inline">\(O(\lg n)\)</span></td>
+<td><span class="math inline">\(\Theta(n)\)</span> (recorrido in-order)</td>
+<td><span class="math inline">\(\Theta(n)\)</span></td>
+</tr>
+<tr>
+<td><strong>AVL aumentado</strong></td>
+<td><span class="math inline">\(O(\lg n)\)</span></td>
+<td><span class="math inline">\(O(\lg n)\)</span></td>
+<td><span class="math inline">\(O(\lg n)\)</span></td>
+</tr>
+</tbody>
+</table></div>
+<p>Ejemplos: la mediana o el percentil 99 de un flujo de latencias que cambia; el lugar de un jugador en una tabla de posiciones; contar inversiones de una secuencia en <span class="math inline">\(O(n\lg n)\)</span> (para cada elemento, cuántos de los ya vistos son mayores: <code>i − rank(x)</code>).</p>
+<hr/>
+<h2 id="el-teorema-de-aumentación">2. El teorema de aumentación</h2>
+<p><strong>Aumentar</strong> una estructura es guardar en cada nodo un campo extra <span class="math inline">\(f(x)\)</span> que resume algo de su subárbol. La pregunta es cuándo ese campo se puede mantener barato.</p>
+<blockquote>
+<p><strong>Teorema 1 (aumentación; CLRS 17.1).</strong> Sea <span class="math inline">\(f\)</span> un campo tal que <span class="math inline">\(f(x)\)</span> se puede calcular en <span class="math inline">\(O(1)\)</span> a partir de <code>x.key</code>, <span class="math inline">\(f(x.\text{izq})\)</span> y <span class="math inline">\(f(x.\text{der})\)</span> (con un valor fijo para el árbol vacío). Entonces, en un árbol AVL (o rojinegro), <span class="math inline">\(f\)</span> se puede mantener en todos los nodos durante <code>insert</code> y <code>erase</code> sin cambiar su costo <span class="math inline">\(O(\lg n)\)</span>.</p>
+</blockquote>
+<p><em>Demostración.</em> <span class="math inline">\(f(x)\)</span> depende solo del subárbol de <span class="math inline">\(x\)</span>. Una operación cambia el subárbol de un nodo solo si (a) el nodo está en el camino de la raíz al punto modificado, o (b) participa en una rotación.</p>
+<ol type="a">
+<li><p>En la inserción y el borrado recursivos (estilo “tomar y devolver”, L07 §5), cada nodo del camino se recalcula al volver de la recursión, <strong>después</strong> de que sus hijos ya están actualizados: <span class="math inline">\(O(1)\)</span> por nodo, <span class="math inline">\(O(h) = O(\lg n)\)</span> en total.</p></li>
+<li><p>Una rotación solo cambia los hijos de dos nodos (<span class="math inline">\(x\)</span> e <span class="math inline">\(y\)</span> en el dibujo de L07 §3), y los subárboles <span class="math inline">\(A\)</span>, <span class="math inline">\(B\)</span>, <span class="math inline">\(C\)</span> no cambian internamente. Basta recalcular primero el nodo que baja y después el que sube: <span class="math inline">\(O(1)\)</span> por rotación, y hay <span class="math inline">\(O(\lg n)\)</span> rotaciones. <span class="math inline">\(\blacksquare\)</span></p></li>
+</ol>
+<p>En las soluciones de referencia, la aumentación es <strong>una línea</strong>: la función <code>update</code>, que ya recalculaba la altura, ahora también recalcula el tamaño:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1" tabindex="-1"></a><span class="at">static</span> <span class="dt">void</span> update<span class="op">(</span>Node<span class="op">&amp;</span> t<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2" tabindex="-1"></a>    t<span class="op">.</span>height <span class="op">=</span> <span class="dv">1</span> <span class="op">+</span> <span class="bu">std::</span>max<span class="op">(</span>h<span class="op">(</span>t<span class="op">.</span>left<span class="op">),</span> h<span class="op">(</span>t<span class="op">.</span>right<span class="op">));</span></span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3" tabindex="-1"></a>    t<span class="op">.</span>size   <span class="op">=</span> <span class="dv">1</span> <span class="op">+</span> sz<span class="op">(</span>t<span class="op">.</span>left<span class="op">)</span> <span class="op">+</span> sz<span class="op">(</span>t<span class="op">.</span>right<span class="op">);</span>      <span class="co">// ← la aumentación</span></span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Como <code>update</code> ya se llamaba en todos los lugares que exige la demostración (en cada rotación y en <code>rebalance</code> al volver de la recursión), el código del lab07 queda intacto.</p>
+<p><strong>Qué campos cumplen la hipótesis:</strong> tamaño, suma, mínimo, máximo, altura, cualquier operación asociativa sobre las claves del subárbol. <strong>Qué campos no:</strong> la profundidad de un nodo (depende de sus <strong>ancestros</strong>, que cambian con cada rotación arriba), el rango de un nodo guardado explícitamente (insertar el mínimo cambiaría el rango de <strong>todos</strong> los nodos: <span class="math inline">\(\Theta(n)\)</span>).</p>
+<hr/>
+<h2 id="select-y-rank">3. <code>select</code> y <code>rank</code></h2>
+<p>Sea <code>size(x)</code> el número de nodos del subárbol de <span class="math inline">\(x\)</span> (<span class="math inline">\(0\)</span> para el vacío).</p>
+<h3 id="selectk">3.1 <code>select(k)</code></h3>
+<pre><code>select(k):
+    x ← raíz
+    mientras x ≠ vacío:
+        r ← size(x.izq)            -- x es el r-ésimo (0-indexado) de su subárbol
+        si k &lt; r:  x ← x.izq
+        si k = r:  devolver x.key
+        si k &gt; r:  k ← k − r − 1;  x ← x.der
+    devolver "no existe"           -- k ≥ n</code></pre>
+<blockquote>
+<p><strong>Teorema 2.</strong> <code>select(k)</code> devuelve el <span class="math inline">\(k\)</span>-ésimo menor elemento en <span class="math inline">\(O(h)\)</span>.</p>
+</blockquote>
+<p><em>Demostración.</em> Invariante: <em>la respuesta buscada es el <span class="math inline">\(k\)</span>-ésimo menor del subárbol de <span class="math inline">\(x\)</span></em> (con el <span class="math inline">\(k\)</span> actual). Al inicio, <span class="math inline">\(x\)</span> es la raíz y <span class="math inline">\(k\)</span> el original ✔. Por el Teorema 1 de L07 (in-order ordenado), en el subárbol de <span class="math inline">\(x\)</span> hay exactamente <span class="math inline">\(r\)</span> claves menores que <code>x.key</code>: las de su subárbol izquierdo. Si <span class="math inline">\(k &lt; r\)</span>, el <span class="math inline">\(k\)</span>-ésimo está entre ellas, y es el <span class="math inline">\(k\)</span>-ésimo del subárbol izquierdo ✔. Si <span class="math inline">\(k = r\)</span>, es <code>x.key</code> ✔. Si <span class="math inline">\(k &gt; r\)</span>, está en el subárbol derecho, y como <span class="math inline">\(r + 1\)</span> elementos del subárbol de <span class="math inline">\(x\)</span> (el izquierdo y <span class="math inline">\(x\)</span>) son menores que todos los del derecho, es el <span class="math inline">\((k - r - 1)\)</span>-ésimo del derecho ✔. Cada iteración baja un nivel: <span class="math inline">\(O(h)\)</span>. Si <span class="math inline">\(x\)</span> llega a vacío, el subárbol no tenía <span class="math inline">\(k+1\)</span> elementos: <span class="math inline">\(k \ge n\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<h3 id="rankx">3.2 <code>rank(x)</code></h3>
+<pre><code>rank(clave):
+    acum ← 0;  x ← raíz
+    mientras x ≠ vacío:
+        si x.key &lt; clave:  acum ← acum + size(x.izq) + 1;  x ← x.der
+        si no:             x ← x.izq
+    devolver acum</code></pre>
+<blockquote>
+<p><strong>Teorema 3.</strong> <code>rank(c)</code> devuelve el número de claves <span class="math inline">\(&lt; c\)</span> en <span class="math inline">\(O(h)\)</span>, aunque <span class="math inline">\(c\)</span> no esté en el conjunto.</p>
+</blockquote>
+<p><em>Demostración.</em> Invariante: <em><code>acum</code> es el número de claves <span class="math inline">\(&lt; c\)</span> que <strong>no</strong> están en el subárbol de <span class="math inline">\(x\)</span>.</em> Al inicio vale 0 ✔. Si <code>x.key</code> <span class="math inline">\(&lt; c\)</span>: todas las claves del subárbol izquierdo de <span class="math inline">\(x\)</span> y <code>x.key</code> son <span class="math inline">\(&lt; c\)</span> (<span class="math inline">\(\text{size}(x.\text{izq}) + 1\)</span> claves que salen de consideración al bajar a la derecha) ✔. Si no, <code>x.key</code> <span class="math inline">\(\ge c\)</span> y todo el subárbol derecho también: ninguna es <span class="math inline">\(&lt; c\)</span>, y al bajar a la izquierda no se pierde nada ✔. Cuando <span class="math inline">\(x\)</span> es vacío, <code>acum</code> cuenta todas. <span class="math inline">\(\blacksquare\)</span></p>
+<p>El programa construye un BST perfectamente balanceado sobre <span class="math inline">\(\{0, 10, 20, \dots\}\)</span> con el campo <code>size</code>, y ejecuta los dos algoritmos:</p>
+<div class="tabs"><div aria-label="Lenguaje" class="tablist" role="tablist"><button aria-controls="t0-0" aria-selected="false" data-lang="c" id="t0-0-b" role="tab" tabindex="-1" type="button">C</button><button aria-controls="t0-1" aria-selected="false" data-lang="cpp" id="t0-1-b" role="tab" tabindex="-1" type="button">C++</button><button aria-controls="t0-2" aria-selected="false" data-lang="rust" id="t0-2-b" role="tab" tabindex="-1" type="button">Rust</button></div><div aria-labelledby="t0-0-b" class="panel" data-lang="c" id="t0-0" role="tabpanel"><div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a aria-hidden="true" href="#cb4-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb4-2"><a aria-hidden="true" href="#cb4-2" tabindex="-1"></a></span>
+<span id="cb4-3"><a aria-hidden="true" href="#cb4-3" tabindex="-1"></a><span class="pp">#define N </span><span class="dv">15</span></span>
+<span id="cb4-4"><a aria-hidden="true" href="#cb4-4" tabindex="-1"></a><span class="dt">static</span> <span class="dt">int</span> clave<span class="op">[</span>N<span class="op">],</span> izq<span class="op">[</span>N<span class="op">],</span> der<span class="op">[</span>N<span class="op">],</span> tam<span class="op">[</span>N<span class="op">],</span> nodos<span class="op">;</span></span>
+<span id="cb4-5"><a aria-hidden="true" href="#cb4-5" tabindex="-1"></a></span>
+<span id="cb4-6"><a aria-hidden="true" href="#cb4-6" tabindex="-1"></a><span class="co">/* Árbol balanceado sobre las claves 10·lo .. 10·(hi−1), en arreglos (−1 = vacío). */</span></span>
+<span id="cb4-7"><a aria-hidden="true" href="#cb4-7" tabindex="-1"></a><span class="dt">static</span> <span class="dt">int</span> construir<span class="op">(</span><span class="dt">int</span> lo<span class="op">,</span> <span class="dt">int</span> hi<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-8"><a aria-hidden="true" href="#cb4-8" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>lo <span class="op">&gt;=</span> hi<span class="op">)</span> <span class="cf">return</span> <span class="op">-</span><span class="dv">1</span><span class="op">;</span></span>
+<span id="cb4-9"><a aria-hidden="true" href="#cb4-9" tabindex="-1"></a>    <span class="dt">int</span> m <span class="op">=</span> <span class="op">(</span>lo <span class="op">+</span> hi<span class="op">)</span> <span class="op">/</span> <span class="dv">2</span><span class="op">,</span> x <span class="op">=</span> nodos<span class="op">++;</span></span>
+<span id="cb4-10"><a aria-hidden="true" href="#cb4-10" tabindex="-1"></a>    clave<span class="op">[</span>x<span class="op">]</span> <span class="op">=</span> <span class="dv">10</span> <span class="op">*</span> m<span class="op">;</span></span>
+<span id="cb4-11"><a aria-hidden="true" href="#cb4-11" tabindex="-1"></a>    izq<span class="op">[</span>x<span class="op">]</span> <span class="op">=</span> construir<span class="op">(</span>lo<span class="op">,</span> m<span class="op">);</span></span>
+<span id="cb4-12"><a aria-hidden="true" href="#cb4-12" tabindex="-1"></a>    der<span class="op">[</span>x<span class="op">]</span> <span class="op">=</span> construir<span class="op">(</span>m <span class="op">+</span> <span class="dv">1</span><span class="op">,</span> hi<span class="op">);</span></span>
+<span id="cb4-13"><a aria-hidden="true" href="#cb4-13" tabindex="-1"></a>    tam<span class="op">[</span>x<span class="op">]</span> <span class="op">=</span> <span class="dv">1</span> <span class="op">+</span> <span class="op">(</span>izq<span class="op">[</span>x<span class="op">]</span> <span class="op">&gt;=</span> <span class="dv">0</span> <span class="op">?</span> tam<span class="op">[</span>izq<span class="op">[</span>x<span class="op">]]</span> <span class="op">:</span> <span class="dv">0</span><span class="op">)</span> <span class="op">+</span> <span class="op">(</span>der<span class="op">[</span>x<span class="op">]</span> <span class="op">&gt;=</span> <span class="dv">0</span> <span class="op">?</span> tam<span class="op">[</span>der<span class="op">[</span>x<span class="op">]]</span> <span class="op">:</span> <span class="dv">0</span><span class="op">);</span></span>
+<span id="cb4-14"><a aria-hidden="true" href="#cb4-14" tabindex="-1"></a>    <span class="cf">return</span> x<span class="op">;</span></span>
+<span id="cb4-15"><a aria-hidden="true" href="#cb4-15" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-16"><a aria-hidden="true" href="#cb4-16" tabindex="-1"></a><span class="dt">static</span> <span class="dt">int</span> sz<span class="op">(</span><span class="dt">int</span> x<span class="op">)</span> <span class="op">{</span> <span class="cf">return</span> x <span class="op">&gt;=</span> <span class="dv">0</span> <span class="op">?</span> tam<span class="op">[</span>x<span class="op">]</span> <span class="op">:</span> <span class="dv">0</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb4-17"><a aria-hidden="true" href="#cb4-17" tabindex="-1"></a></span>
+<span id="cb4-18"><a aria-hidden="true" href="#cb4-18" tabindex="-1"></a><span class="dt">static</span> <span class="dt">int</span> select_k<span class="op">(</span><span class="dt">int</span> x<span class="op">,</span> <span class="dt">int</span> k<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-19"><a aria-hidden="true" href="#cb4-19" tabindex="-1"></a>    <span class="cf">while</span> <span class="op">(</span>x <span class="op">&gt;=</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-20"><a aria-hidden="true" href="#cb4-20" tabindex="-1"></a>        <span class="dt">int</span> r <span class="op">=</span> sz<span class="op">(</span>izq<span class="op">[</span>x<span class="op">]);</span></span>
+<span id="cb4-21"><a aria-hidden="true" href="#cb4-21" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>k <span class="op">&lt;</span> r<span class="op">)</span> x <span class="op">=</span> izq<span class="op">[</span>x<span class="op">];</span></span>
+<span id="cb4-22"><a aria-hidden="true" href="#cb4-22" tabindex="-1"></a>        <span class="cf">else</span> <span class="cf">if</span> <span class="op">(</span>k <span class="op">==</span> r<span class="op">)</span> <span class="cf">return</span> clave<span class="op">[</span>x<span class="op">];</span></span>
+<span id="cb4-23"><a aria-hidden="true" href="#cb4-23" tabindex="-1"></a>        <span class="cf">else</span> <span class="op">{</span> k <span class="op">-=</span> r <span class="op">+</span> <span class="dv">1</span><span class="op">;</span> x <span class="op">=</span> der<span class="op">[</span>x<span class="op">];</span> <span class="op">}</span></span>
+<span id="cb4-24"><a aria-hidden="true" href="#cb4-24" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-25"><a aria-hidden="true" href="#cb4-25" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">-</span><span class="dv">1</span><span class="op">;</span></span>
+<span id="cb4-26"><a aria-hidden="true" href="#cb4-26" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-27"><a aria-hidden="true" href="#cb4-27" tabindex="-1"></a></span>
+<span id="cb4-28"><a aria-hidden="true" href="#cb4-28" tabindex="-1"></a><span class="dt">static</span> <span class="dt">int</span> rank_de<span class="op">(</span><span class="dt">int</span> x<span class="op">,</span> <span class="dt">int</span> c<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-29"><a aria-hidden="true" href="#cb4-29" tabindex="-1"></a>    <span class="dt">int</span> acum <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb4-30"><a aria-hidden="true" href="#cb4-30" tabindex="-1"></a>    <span class="cf">while</span> <span class="op">(</span>x <span class="op">&gt;=</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-31"><a aria-hidden="true" href="#cb4-31" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>clave<span class="op">[</span>x<span class="op">]</span> <span class="op">&lt;</span> c<span class="op">)</span> <span class="op">{</span> acum <span class="op">+=</span> sz<span class="op">(</span>izq<span class="op">[</span>x<span class="op">])</span> <span class="op">+</span> <span class="dv">1</span><span class="op">;</span> x <span class="op">=</span> der<span class="op">[</span>x<span class="op">];</span> <span class="op">}</span></span>
+<span id="cb4-32"><a aria-hidden="true" href="#cb4-32" tabindex="-1"></a>        <span class="cf">else</span> x <span class="op">=</span> izq<span class="op">[</span>x<span class="op">];</span></span>
+<span id="cb4-33"><a aria-hidden="true" href="#cb4-33" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-34"><a aria-hidden="true" href="#cb4-34" tabindex="-1"></a>    <span class="cf">return</span> acum<span class="op">;</span></span>
+<span id="cb4-35"><a aria-hidden="true" href="#cb4-35" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-36"><a aria-hidden="true" href="#cb4-36" tabindex="-1"></a></span>
+<span id="cb4-37"><a aria-hidden="true" href="#cb4-37" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-38"><a aria-hidden="true" href="#cb4-38" tabindex="-1"></a>    <span class="dt">int</span> raiz <span class="op">=</span> construir<span class="op">(</span><span class="dv">0</span><span class="op">,</span> N<span class="op">);</span></span>
+<span id="cb4-39"><a aria-hidden="true" href="#cb4-39" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">"size(raíz) = </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span> tam<span class="op">[</span>raiz<span class="op">]);</span></span>
+<span id="cb4-40"><a aria-hidden="true" href="#cb4-40" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">"select(0) = </span><span class="sc">%d</span><span class="st">, select(7) = </span><span class="sc">%d</span><span class="st">, select(14) = </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span></span>
+<span id="cb4-41"><a aria-hidden="true" href="#cb4-41" tabindex="-1"></a>           select_k<span class="op">(</span>raiz<span class="op">,</span> <span class="dv">0</span><span class="op">),</span> select_k<span class="op">(</span>raiz<span class="op">,</span> <span class="dv">7</span><span class="op">),</span> select_k<span class="op">(</span>raiz<span class="op">,</span> <span class="dv">14</span><span class="op">));</span></span>
+<span id="cb4-42"><a aria-hidden="true" href="#cb4-42" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">"rank(70) = </span><span class="sc">%d</span><span class="st">, rank(75) = </span><span class="sc">%d</span><span class="st">, rank(1000) = </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span></span>
+<span id="cb4-43"><a aria-hidden="true" href="#cb4-43" tabindex="-1"></a>           rank_de<span class="op">(</span>raiz<span class="op">,</span> <span class="dv">70</span><span class="op">),</span> rank_de<span class="op">(</span>raiz<span class="op">,</span> <span class="dv">75</span><span class="op">),</span> rank_de<span class="op">(</span>raiz<span class="op">,</span> <span class="dv">1000</span><span class="op">));</span></span>
+<span id="cb4-44"><a aria-hidden="true" href="#cb4-44" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb4-45"><a aria-hidden="true" href="#cb4-45" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div><div aria-labelledby="t0-1-b" class="panel" data-lang="cpp" id="t0-1" role="tabpanel"><div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a aria-hidden="true" href="#cb5-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb5-2"><a aria-hidden="true" href="#cb5-2" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;vector&gt;</span></span>
+<span id="cb5-3"><a aria-hidden="true" href="#cb5-3" tabindex="-1"></a></span>
+<span id="cb5-4"><a aria-hidden="true" href="#cb5-4" tabindex="-1"></a><span class="co">// Árbol balanceado sobre las claves 10·lo .. 10·(hi−1), en arreglos (−1 = vacío).</span></span>
+<span id="cb5-5"><a aria-hidden="true" href="#cb5-5" tabindex="-1"></a><span class="kw">struct</span> Arbol <span class="op">{</span></span>
+<span id="cb5-6"><a aria-hidden="true" href="#cb5-6" tabindex="-1"></a>    <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;</span> clave<span class="op">,</span> izq<span class="op">,</span> der<span class="op">,</span> tam<span class="op">;</span></span>
+<span id="cb5-7"><a aria-hidden="true" href="#cb5-7" tabindex="-1"></a>    <span class="dt">int</span> construir<span class="op">(</span><span class="dt">int</span> lo<span class="op">,</span> <span class="dt">int</span> hi<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-8"><a aria-hidden="true" href="#cb5-8" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>lo <span class="op">&gt;=</span> hi<span class="op">)</span> <span class="cf">return</span> <span class="op">-</span><span class="dv">1</span><span class="op">;</span></span>
+<span id="cb5-9"><a aria-hidden="true" href="#cb5-9" tabindex="-1"></a>        <span class="dt">int</span> m <span class="op">=</span> <span class="op">(</span>lo <span class="op">+</span> hi<span class="op">)</span> <span class="op">/</span> <span class="dv">2</span><span class="op">,</span> x <span class="op">=</span> <span class="op">(</span><span class="dt">int</span><span class="op">)</span>clave<span class="op">.</span>size<span class="op">();</span></span>
+<span id="cb5-10"><a aria-hidden="true" href="#cb5-10" tabindex="-1"></a>        clave<span class="op">.</span>push_back<span class="op">(</span><span class="dv">10</span> <span class="op">*</span> m<span class="op">);</span> izq<span class="op">.</span>push_back<span class="op">(-</span><span class="dv">1</span><span class="op">);</span> der<span class="op">.</span>push_back<span class="op">(-</span><span class="dv">1</span><span class="op">);</span> tam<span class="op">.</span>push_back<span class="op">(</span><span class="dv">0</span><span class="op">);</span></span>
+<span id="cb5-11"><a aria-hidden="true" href="#cb5-11" tabindex="-1"></a>        <span class="dt">int</span> l <span class="op">=</span> construir<span class="op">(</span>lo<span class="op">,</span> m<span class="op">),</span> r <span class="op">=</span> construir<span class="op">(</span>m <span class="op">+</span> <span class="dv">1</span><span class="op">,</span> hi<span class="op">);</span></span>
+<span id="cb5-12"><a aria-hidden="true" href="#cb5-12" tabindex="-1"></a>        izq<span class="op">[</span>x<span class="op">]</span> <span class="op">=</span> l<span class="op">;</span> der<span class="op">[</span>x<span class="op">]</span> <span class="op">=</span> r<span class="op">;</span></span>
+<span id="cb5-13"><a aria-hidden="true" href="#cb5-13" tabindex="-1"></a>        tam<span class="op">[</span>x<span class="op">]</span> <span class="op">=</span> <span class="dv">1</span> <span class="op">+</span> sz<span class="op">(</span>l<span class="op">)</span> <span class="op">+</span> sz<span class="op">(</span>r<span class="op">);</span></span>
+<span id="cb5-14"><a aria-hidden="true" href="#cb5-14" tabindex="-1"></a>        <span class="cf">return</span> x<span class="op">;</span></span>
+<span id="cb5-15"><a aria-hidden="true" href="#cb5-15" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-16"><a aria-hidden="true" href="#cb5-16" tabindex="-1"></a>    <span class="dt">int</span> sz<span class="op">(</span><span class="dt">int</span> x<span class="op">)</span> <span class="at">const</span> <span class="op">{</span> <span class="cf">return</span> x <span class="op">&gt;=</span> <span class="dv">0</span> <span class="op">?</span> tam<span class="op">[</span>x<span class="op">]</span> <span class="op">:</span> <span class="dv">0</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb5-17"><a aria-hidden="true" href="#cb5-17" tabindex="-1"></a>    <span class="dt">int</span> select_k<span class="op">(</span><span class="dt">int</span> x<span class="op">,</span> <span class="dt">int</span> k<span class="op">)</span> <span class="at">const</span> <span class="op">{</span></span>
+<span id="cb5-18"><a aria-hidden="true" href="#cb5-18" tabindex="-1"></a>        <span class="cf">while</span> <span class="op">(</span>x <span class="op">&gt;=</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-19"><a aria-hidden="true" href="#cb5-19" tabindex="-1"></a>            <span class="dt">int</span> r <span class="op">=</span> sz<span class="op">(</span>izq<span class="op">[</span>x<span class="op">]);</span></span>
+<span id="cb5-20"><a aria-hidden="true" href="#cb5-20" tabindex="-1"></a>            <span class="cf">if</span> <span class="op">(</span>k <span class="op">&lt;</span> r<span class="op">)</span> x <span class="op">=</span> izq<span class="op">[</span>x<span class="op">];</span></span>
+<span id="cb5-21"><a aria-hidden="true" href="#cb5-21" tabindex="-1"></a>            <span class="cf">else</span> <span class="cf">if</span> <span class="op">(</span>k <span class="op">==</span> r<span class="op">)</span> <span class="cf">return</span> clave<span class="op">[</span>x<span class="op">];</span></span>
+<span id="cb5-22"><a aria-hidden="true" href="#cb5-22" tabindex="-1"></a>            <span class="cf">else</span> <span class="op">{</span> k <span class="op">-=</span> r <span class="op">+</span> <span class="dv">1</span><span class="op">;</span> x <span class="op">=</span> der<span class="op">[</span>x<span class="op">];</span> <span class="op">}</span></span>
+<span id="cb5-23"><a aria-hidden="true" href="#cb5-23" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb5-24"><a aria-hidden="true" href="#cb5-24" tabindex="-1"></a>        <span class="cf">return</span> <span class="op">-</span><span class="dv">1</span><span class="op">;</span></span>
+<span id="cb5-25"><a aria-hidden="true" href="#cb5-25" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-26"><a aria-hidden="true" href="#cb5-26" tabindex="-1"></a>    <span class="dt">int</span> rank_de<span class="op">(</span><span class="dt">int</span> x<span class="op">,</span> <span class="dt">int</span> c<span class="op">)</span> <span class="at">const</span> <span class="op">{</span></span>
+<span id="cb5-27"><a aria-hidden="true" href="#cb5-27" tabindex="-1"></a>        <span class="dt">int</span> acum <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb5-28"><a aria-hidden="true" href="#cb5-28" tabindex="-1"></a>        <span class="cf">while</span> <span class="op">(</span>x <span class="op">&gt;=</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-29"><a aria-hidden="true" href="#cb5-29" tabindex="-1"></a>            <span class="cf">if</span> <span class="op">(</span>clave<span class="op">[</span>x<span class="op">]</span> <span class="op">&lt;</span> c<span class="op">)</span> <span class="op">{</span> acum <span class="op">+=</span> sz<span class="op">(</span>izq<span class="op">[</span>x<span class="op">])</span> <span class="op">+</span> <span class="dv">1</span><span class="op">;</span> x <span class="op">=</span> der<span class="op">[</span>x<span class="op">];</span> <span class="op">}</span></span>
+<span id="cb5-30"><a aria-hidden="true" href="#cb5-30" tabindex="-1"></a>            <span class="cf">else</span> x <span class="op">=</span> izq<span class="op">[</span>x<span class="op">];</span></span>
+<span id="cb5-31"><a aria-hidden="true" href="#cb5-31" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb5-32"><a aria-hidden="true" href="#cb5-32" tabindex="-1"></a>        <span class="cf">return</span> acum<span class="op">;</span></span>
+<span id="cb5-33"><a aria-hidden="true" href="#cb5-33" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-34"><a aria-hidden="true" href="#cb5-34" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb5-35"><a aria-hidden="true" href="#cb5-35" tabindex="-1"></a></span>
+<span id="cb5-36"><a aria-hidden="true" href="#cb5-36" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb5-37"><a aria-hidden="true" href="#cb5-37" tabindex="-1"></a>    Arbol t<span class="op">;</span></span>
+<span id="cb5-38"><a aria-hidden="true" href="#cb5-38" tabindex="-1"></a>    <span class="dt">int</span> raiz <span class="op">=</span> t<span class="op">.</span>construir<span class="op">(</span><span class="dv">0</span><span class="op">,</span> <span class="dv">15</span><span class="op">);</span></span>
+<span id="cb5-39"><a aria-hidden="true" href="#cb5-39" tabindex="-1"></a>    <span class="bu">std::</span>printf<span class="op">(</span><span class="st">"size(raíz) = </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span> t<span class="op">.</span>tam<span class="op">[</span>raiz<span class="op">]);</span></span>
+<span id="cb5-40"><a aria-hidden="true" href="#cb5-40" tabindex="-1"></a>    <span class="bu">std::</span>printf<span class="op">(</span><span class="st">"select(0) = </span><span class="sc">%d</span><span class="st">, select(7) = </span><span class="sc">%d</span><span class="st">, select(14) = </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span></span>
+<span id="cb5-41"><a aria-hidden="true" href="#cb5-41" tabindex="-1"></a>                t<span class="op">.</span>select_k<span class="op">(</span>raiz<span class="op">,</span> <span class="dv">0</span><span class="op">),</span> t<span class="op">.</span>select_k<span class="op">(</span>raiz<span class="op">,</span> <span class="dv">7</span><span class="op">),</span> t<span class="op">.</span>select_k<span class="op">(</span>raiz<span class="op">,</span> <span class="dv">14</span><span class="op">));</span></span>
+<span id="cb5-42"><a aria-hidden="true" href="#cb5-42" tabindex="-1"></a>    <span class="bu">std::</span>printf<span class="op">(</span><span class="st">"rank(70) = </span><span class="sc">%d</span><span class="st">, rank(75) = </span><span class="sc">%d</span><span class="st">, rank(1000) = </span><span class="sc">%d\n</span><span class="st">"</span><span class="op">,</span></span>
+<span id="cb5-43"><a aria-hidden="true" href="#cb5-43" tabindex="-1"></a>                t<span class="op">.</span>rank_de<span class="op">(</span>raiz<span class="op">,</span> <span class="dv">70</span><span class="op">),</span> t<span class="op">.</span>rank_de<span class="op">(</span>raiz<span class="op">,</span> <span class="dv">75</span><span class="op">),</span> t<span class="op">.</span>rank_de<span class="op">(</span>raiz<span class="op">,</span> <span class="dv">1000</span><span class="op">));</span></span>
+<span id="cb5-44"><a aria-hidden="true" href="#cb5-44" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div><div aria-labelledby="t0-2-b" class="panel" data-lang="rust" id="t0-2" role="tabpanel"><div class="sourceCode" id="cb6"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb6-1"><a aria-hidden="true" href="#cb6-1" tabindex="-1"></a><span class="co">/// Árbol balanceado sobre las claves 10·lo .. 10·(hi−1), en arreglos (None = vacío).</span></span>
+<span id="cb6-2"><a aria-hidden="true" href="#cb6-2" tabindex="-1"></a><span class="kw">struct</span> Arbol <span class="op">{</span> clave<span class="op">:</span> <span class="dt">Vec</span><span class="op">&lt;</span><span class="dt">i32</span><span class="op">&gt;,</span> izq<span class="op">:</span> <span class="dt">Vec</span><span class="op">&lt;</span><span class="dt">Option</span><span class="op">&lt;</span><span class="dt">usize</span><span class="op">&gt;&gt;,</span> der<span class="op">:</span> <span class="dt">Vec</span><span class="op">&lt;</span><span class="dt">Option</span><span class="op">&lt;</span><span class="dt">usize</span><span class="op">&gt;&gt;,</span> tam<span class="op">:</span> <span class="dt">Vec</span><span class="op">&lt;</span><span class="dt">usize</span><span class="op">&gt;</span> <span class="op">}</span></span>
+<span id="cb6-3"><a aria-hidden="true" href="#cb6-3" tabindex="-1"></a></span>
+<span id="cb6-4"><a aria-hidden="true" href="#cb6-4" tabindex="-1"></a><span class="kw">impl</span> Arbol <span class="op">{</span></span>
+<span id="cb6-5"><a aria-hidden="true" href="#cb6-5" tabindex="-1"></a>    <span class="kw">fn</span> sz(<span class="op">&amp;</span><span class="kw">self</span><span class="op">,</span> x<span class="op">:</span> <span class="dt">Option</span><span class="op">&lt;</span><span class="dt">usize</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="dt">usize</span> <span class="op">{</span> x<span class="op">.</span>map_or(<span class="dv">0</span><span class="op">,</span> <span class="op">|</span>i<span class="op">|</span> <span class="kw">self</span><span class="op">.</span>tam[i]) <span class="op">}</span></span>
+<span id="cb6-6"><a aria-hidden="true" href="#cb6-6" tabindex="-1"></a>    <span class="kw">fn</span> construir(<span class="op">&amp;</span><span class="kw">mut</span> <span class="kw">self</span><span class="op">,</span> lo<span class="op">:</span> <span class="dt">i32</span><span class="op">,</span> hi<span class="op">:</span> <span class="dt">i32</span>) <span class="op">-&gt;</span> <span class="dt">Option</span><span class="op">&lt;</span><span class="dt">usize</span><span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb6-7"><a aria-hidden="true" href="#cb6-7" tabindex="-1"></a>        <span class="cf">if</span> lo <span class="op">&gt;=</span> hi <span class="op">{</span> <span class="cf">return</span> <span class="cn">None</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb6-8"><a aria-hidden="true" href="#cb6-8" tabindex="-1"></a>        <span class="kw">let</span> m <span class="op">=</span> (lo <span class="op">+</span> hi) <span class="op">/</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb6-9"><a aria-hidden="true" href="#cb6-9" tabindex="-1"></a>        <span class="kw">let</span> x <span class="op">=</span> <span class="kw">self</span><span class="op">.</span>clave<span class="op">.</span>len()<span class="op">;</span></span>
+<span id="cb6-10"><a aria-hidden="true" href="#cb6-10" tabindex="-1"></a>        <span class="kw">self</span><span class="op">.</span>clave<span class="op">.</span>push(<span class="dv">10</span> <span class="op">*</span> m)<span class="op">;</span> <span class="kw">self</span><span class="op">.</span>izq<span class="op">.</span>push(<span class="cn">None</span>)<span class="op">;</span> <span class="kw">self</span><span class="op">.</span>der<span class="op">.</span>push(<span class="cn">None</span>)<span class="op">;</span> <span class="kw">self</span><span class="op">.</span>tam<span class="op">.</span>push(<span class="dv">0</span>)<span class="op">;</span></span>
+<span id="cb6-11"><a aria-hidden="true" href="#cb6-11" tabindex="-1"></a>        <span class="kw">let</span> (l<span class="op">,</span> r) <span class="op">=</span> (<span class="kw">self</span><span class="op">.</span>construir(lo<span class="op">,</span> m)<span class="op">,</span> <span class="kw">self</span><span class="op">.</span>construir(m <span class="op">+</span> <span class="dv">1</span><span class="op">,</span> hi))<span class="op">;</span></span>
+<span id="cb6-12"><a aria-hidden="true" href="#cb6-12" tabindex="-1"></a>        <span class="kw">self</span><span class="op">.</span>izq[x] <span class="op">=</span> l<span class="op">;</span></span>
+<span id="cb6-13"><a aria-hidden="true" href="#cb6-13" tabindex="-1"></a>        <span class="kw">self</span><span class="op">.</span>der[x] <span class="op">=</span> r<span class="op">;</span></span>
+<span id="cb6-14"><a aria-hidden="true" href="#cb6-14" tabindex="-1"></a>        <span class="kw">self</span><span class="op">.</span>tam[x] <span class="op">=</span> <span class="dv">1</span> <span class="op">+</span> <span class="kw">self</span><span class="op">.</span>sz(l) <span class="op">+</span> <span class="kw">self</span><span class="op">.</span>sz(r)<span class="op">;</span></span>
+<span id="cb6-15"><a aria-hidden="true" href="#cb6-15" tabindex="-1"></a>        <span class="cn">Some</span>(x)</span>
+<span id="cb6-16"><a aria-hidden="true" href="#cb6-16" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-17"><a aria-hidden="true" href="#cb6-17" tabindex="-1"></a>    <span class="kw">fn</span> select_k(<span class="op">&amp;</span><span class="kw">self</span><span class="op">,</span> <span class="kw">mut</span> x<span class="op">:</span> <span class="dt">Option</span><span class="op">&lt;</span><span class="dt">usize</span><span class="op">&gt;,</span> <span class="kw">mut</span> k<span class="op">:</span> <span class="dt">usize</span>) <span class="op">-&gt;</span> <span class="dt">Option</span><span class="op">&lt;</span><span class="dt">i32</span><span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb6-18"><a aria-hidden="true" href="#cb6-18" tabindex="-1"></a>        <span class="cf">while</span> <span class="kw">let</span> <span class="cn">Some</span>(i) <span class="op">=</span> x <span class="op">{</span></span>
+<span id="cb6-19"><a aria-hidden="true" href="#cb6-19" tabindex="-1"></a>            <span class="kw">let</span> r <span class="op">=</span> <span class="kw">self</span><span class="op">.</span>sz(<span class="kw">self</span><span class="op">.</span>izq[i])<span class="op">;</span></span>
+<span id="cb6-20"><a aria-hidden="true" href="#cb6-20" tabindex="-1"></a>            <span class="cf">if</span> k <span class="op">&lt;</span> r <span class="op">{</span> x <span class="op">=</span> <span class="kw">self</span><span class="op">.</span>izq[i]<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb6-21"><a aria-hidden="true" href="#cb6-21" tabindex="-1"></a>            <span class="cf">else</span> <span class="cf">if</span> k <span class="op">==</span> r <span class="op">{</span> <span class="cf">return</span> <span class="cn">Some</span>(<span class="kw">self</span><span class="op">.</span>clave[i])<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb6-22"><a aria-hidden="true" href="#cb6-22" tabindex="-1"></a>            <span class="cf">else</span> <span class="op">{</span> k <span class="op">-=</span> r <span class="op">+</span> <span class="dv">1</span><span class="op">;</span> x <span class="op">=</span> <span class="kw">self</span><span class="op">.</span>der[i]<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb6-23"><a aria-hidden="true" href="#cb6-23" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb6-24"><a aria-hidden="true" href="#cb6-24" tabindex="-1"></a>        <span class="cn">None</span></span>
+<span id="cb6-25"><a aria-hidden="true" href="#cb6-25" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-26"><a aria-hidden="true" href="#cb6-26" tabindex="-1"></a>    <span class="kw">fn</span> rank_de(<span class="op">&amp;</span><span class="kw">self</span><span class="op">,</span> <span class="kw">mut</span> x<span class="op">:</span> <span class="dt">Option</span><span class="op">&lt;</span><span class="dt">usize</span><span class="op">&gt;,</span> c<span class="op">:</span> <span class="dt">i32</span>) <span class="op">-&gt;</span> <span class="dt">usize</span> <span class="op">{</span></span>
+<span id="cb6-27"><a aria-hidden="true" href="#cb6-27" tabindex="-1"></a>        <span class="kw">let</span> <span class="kw">mut</span> acum <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb6-28"><a aria-hidden="true" href="#cb6-28" tabindex="-1"></a>        <span class="cf">while</span> <span class="kw">let</span> <span class="cn">Some</span>(i) <span class="op">=</span> x <span class="op">{</span></span>
+<span id="cb6-29"><a aria-hidden="true" href="#cb6-29" tabindex="-1"></a>            <span class="cf">if</span> <span class="kw">self</span><span class="op">.</span>clave[i] <span class="op">&lt;</span> c <span class="op">{</span> acum <span class="op">+=</span> <span class="kw">self</span><span class="op">.</span>sz(<span class="kw">self</span><span class="op">.</span>izq[i]) <span class="op">+</span> <span class="dv">1</span><span class="op">;</span> x <span class="op">=</span> <span class="kw">self</span><span class="op">.</span>der[i]<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb6-30"><a aria-hidden="true" href="#cb6-30" tabindex="-1"></a>            <span class="cf">else</span> <span class="op">{</span> x <span class="op">=</span> <span class="kw">self</span><span class="op">.</span>izq[i]<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb6-31"><a aria-hidden="true" href="#cb6-31" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb6-32"><a aria-hidden="true" href="#cb6-32" tabindex="-1"></a>        acum</span>
+<span id="cb6-33"><a aria-hidden="true" href="#cb6-33" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-34"><a aria-hidden="true" href="#cb6-34" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb6-35"><a aria-hidden="true" href="#cb6-35" tabindex="-1"></a></span>
+<span id="cb6-36"><a aria-hidden="true" href="#cb6-36" tabindex="-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb6-37"><a aria-hidden="true" href="#cb6-37" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> t <span class="op">=</span> Arbol <span class="op">{</span> clave<span class="op">:</span> <span class="pp">vec!</span>[]<span class="op">,</span> izq<span class="op">:</span> <span class="pp">vec!</span>[]<span class="op">,</span> der<span class="op">:</span> <span class="pp">vec!</span>[]<span class="op">,</span> tam<span class="op">:</span> <span class="pp">vec!</span>[] <span class="op">};</span></span>
+<span id="cb6-38"><a aria-hidden="true" href="#cb6-38" tabindex="-1"></a>    <span class="kw">let</span> raiz <span class="op">=</span> t<span class="op">.</span>construir(<span class="dv">0</span><span class="op">,</span> <span class="dv">15</span>)<span class="op">;</span></span>
+<span id="cb6-39"><a aria-hidden="true" href="#cb6-39" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">"size(raíz) = {}"</span><span class="op">,</span> t<span class="op">.</span>sz(raiz))<span class="op">;</span></span>
+<span id="cb6-40"><a aria-hidden="true" href="#cb6-40" tabindex="-1"></a>    <span class="kw">let</span> s <span class="op">=</span> <span class="op">|</span>k<span class="op">|</span> t<span class="op">.</span>select_k(raiz<span class="op">,</span> k)<span class="op">.</span>unwrap()<span class="op">;</span></span>
+<span id="cb6-41"><a aria-hidden="true" href="#cb6-41" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">"select(0) = {}, select(7) = {}, select(14) = {}"</span><span class="op">,</span> s(<span class="dv">0</span>)<span class="op">,</span> s(<span class="dv">7</span>)<span class="op">,</span> s(<span class="dv">14</span>))<span class="op">;</span></span>
+<span id="cb6-42"><a aria-hidden="true" href="#cb6-42" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">"rank(70) = {}, rank(75) = {}, rank(1000) = {}"</span><span class="op">,</span></span>
+<span id="cb6-43"><a aria-hidden="true" href="#cb6-43" tabindex="-1"></a>             t<span class="op">.</span>rank_de(raiz<span class="op">,</span> <span class="dv">70</span>)<span class="op">,</span> t<span class="op">.</span>rank_de(raiz<span class="op">,</span> <span class="dv">75</span>)<span class="op">,</span> t<span class="op">.</span>rank_de(raiz<span class="op">,</span> <span class="dv">1000</span>))<span class="op">;</span></span>
+<span id="cb6-44"><a aria-hidden="true" href="#cb6-44" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div></div>
+<pre class="text salida"><code>size(raíz) = 15
+select(0) = 0, select(7) = 70, select(14) = 140
+rank(70) = 7, rank(75) = 8, rank(1000) = 15</code></pre>
+<figure>
+<svg aria-label="select(10) en un árbol de 15 claves, guiado por los tamaños de los subárboles" fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" role="img" viewbox="0 0 900 330" xmlns="http://www.w3.org/2000/svg">
+<title>select(10) en un árbol de 15 claves, guiado por los tamaños de los subárboles</title>
+<defs>
+<marker id="ar" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#111827"></path></marker>
+<marker id="arc" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#1240e0"></path></marker>
+<marker id="ara" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"></path></marker>
+</defs>
+<rect fill="#ffffff" height="330" rx="12" width="900"></rect>
+<line stroke="#c7d2fe" stroke-width="1.4" x1="100.0" x2="60.0" y1="198" y2="232"></line>
+<line stroke="#c7d2fe" stroke-width="1.4" x1="100.0" x2="140.0" y1="198" y2="232"></line>
+<line stroke="#c7d2fe" stroke-width="1.4" x1="260.0" x2="220.0" y1="198" y2="232"></line>
+<line stroke="#c7d2fe" stroke-width="1.4" x1="260.0" x2="300.0" y1="198" y2="232"></line>
+<line stroke="#c7d2fe" stroke-width="1.4" x1="180.0" x2="100.0" y1="128" y2="162"></line>
+<line stroke="#c7d2fe" stroke-width="1.4" x1="180.0" x2="260.0" y1="128" y2="162"></line>
+<line stroke="#c7d2fe" stroke-width="1.4" x1="420.0" x2="380.0" y1="198" y2="232"></line>
+<line stroke="#c7d2fe" stroke-width="1.4" x1="420.0" x2="460.0" y1="198" y2="232"></line>
+<line stroke="#c7d2fe" stroke-width="1.4" x1="580.0" x2="540.0" y1="198" y2="232"></line>
+<line stroke="#c7d2fe" stroke-width="1.4" x1="580.0" x2="620.0" y1="198" y2="232"></line>
+<line stroke="#c7d2fe" stroke-width="1.4" x1="500.0" x2="420.0" y1="128" y2="162"></line>
+<line stroke="#c7d2fe" stroke-width="1.4" x1="500.0" x2="580.0" y1="128" y2="162"></line>
+<line stroke="#c7d2fe" stroke-width="1.4" x1="340.0" x2="180.0" y1="58" y2="92"></line>
+<line stroke="#c7d2fe" stroke-width="1.4" x1="340.0" x2="500.0" y1="58" y2="92"></line>
+<circle cx="340.0" cy="40" fill="#ffedd5" r="19" stroke="#c2410c" stroke-width="2"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="middle" x="340.0" y="44">70</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="10" font-weight="400" text-anchor="middle" x="340.0" y="73">s=15</text>
+<circle cx="180.0" cy="110" fill="#eef2ff" r="19" stroke="#1240e0" stroke-width="1.3"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="middle" x="180.0" y="114">30</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="10" font-weight="400" text-anchor="middle" x="180.0" y="143">s=7</text>
+<circle cx="100.0" cy="180" fill="#eef2ff" r="19" stroke="#1240e0" stroke-width="1.3"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="middle" x="100.0" y="184">10</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="10" font-weight="400" text-anchor="middle" x="100.0" y="213">s=3</text>
+<circle cx="60.0" cy="250" fill="#eef2ff" r="19" stroke="#1240e0" stroke-width="1.3"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="middle" x="60.0" y="254">0</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="10" font-weight="400" text-anchor="middle" x="60.0" y="283">s=1</text>
+<circle cx="140.0" cy="250" fill="#eef2ff" r="19" stroke="#1240e0" stroke-width="1.3"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="middle" x="140.0" y="254">20</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="10" font-weight="400" text-anchor="middle" x="140.0" y="283">s=1</text>
+<circle cx="260.0" cy="180" fill="#eef2ff" r="19" stroke="#1240e0" stroke-width="1.3"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="middle" x="260.0" y="184">50</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="10" font-weight="400" text-anchor="middle" x="260.0" y="213">s=3</text>
+<circle cx="220.0" cy="250" fill="#eef2ff" r="19" stroke="#1240e0" stroke-width="1.3"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="middle" x="220.0" y="254">40</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="10" font-weight="400" text-anchor="middle" x="220.0" y="283">s=1</text>
+<circle cx="300.0" cy="250" fill="#eef2ff" r="19" stroke="#1240e0" stroke-width="1.3"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="middle" x="300.0" y="254">60</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="10" font-weight="400" text-anchor="middle" x="300.0" y="283">s=1</text>
+<circle cx="500.0" cy="110" fill="#ffedd5" r="19" stroke="#c2410c" stroke-width="2"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="middle" x="500.0" y="114">110</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="10" font-weight="400" text-anchor="middle" x="500.0" y="143">s=7</text>
+<circle cx="420.0" cy="180" fill="#ffedd5" r="19" stroke="#c2410c" stroke-width="2"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="middle" x="420.0" y="184">90</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="10" font-weight="400" text-anchor="middle" x="420.0" y="213">s=3</text>
+<circle cx="380.0" cy="250" fill="#eef2ff" r="19" stroke="#1240e0" stroke-width="1.3"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="middle" x="380.0" y="254">80</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="10" font-weight="400" text-anchor="middle" x="380.0" y="283">s=1</text>
+<circle cx="460.0" cy="250" fill="#ffedd5" r="19" stroke="#c2410c" stroke-width="2"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="middle" x="460.0" y="254">100</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="10" font-weight="400" text-anchor="middle" x="460.0" y="283">s=1</text>
+<circle cx="580.0" cy="180" fill="#eef2ff" r="19" stroke="#1240e0" stroke-width="1.3"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="middle" x="580.0" y="184">130</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="10" font-weight="400" text-anchor="middle" x="580.0" y="213">s=3</text>
+<circle cx="540.0" cy="250" fill="#eef2ff" r="19" stroke="#1240e0" stroke-width="1.3"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="middle" x="540.0" y="254">120</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="10" font-weight="400" text-anchor="middle" x="540.0" y="283">s=1</text>
+<circle cx="620.0" cy="250" fill="#eef2ff" r="19" stroke="#1240e0" stroke-width="1.3"></circle>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="middle" x="620.0" y="254">140</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="10" font-weight="400" text-anchor="middle" x="620.0" y="283">s=1</text>
+<text fill="#c2410c" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="start" x="680" y="60">k=10, r=7 → der, k=2</text>
+<text fill="#c2410c" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="start" x="680" y="82">k=2, r=3 → izq</text>
+<text fill="#c2410c" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="start" x="680" y="104">k=2, r=1 → der, k=0</text>
+<text fill="#c2410c" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="start" x="680" y="126">k=0, r=0 → ¡100!</text>
+<text fill="#6b7280" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" x="680" y="158">s = size del subárbol</text>
+</svg>
+<figcaption aria-hidden="true">select(10) recorre un camino guiado por los tamaños</figcaption>
+</figure>
+<hr/>
+<h2 id="treaps-balance-por-azar">4. Treaps: balance por azar</h2>
+<p>El AVL garantiza la altura con reglas locales y casos. Hay una alternativa mucho más corta de programar que garantiza altura <span class="math inline">\(O(\lg n)\)</span> <strong>en esperanza</strong>.</p>
+<h3 id="definición">4.1 Definición</h3>
+<p>Un <strong>treap</strong> (<em>tree + heap</em>; Seidel y Aragon, 1989) guarda en cada nodo una clave y una <strong>prioridad</strong> elegida al azar al insertar, y cumple dos invariantes a la vez:</p>
+<ul>
+<li><strong>BST</strong> por clave, y</li>
+<li><strong>heap</strong> (máximo) por prioridad: la prioridad de cada nodo es mayor que las de sus hijos.</li>
+</ul>
+<blockquote>
+<p><strong>Lema 4.</strong> Si las claves y las prioridades son distintas, existe <strong>exactamente un</strong> treap con ellas, y es el BST que resulta de insertar las claves en orden decreciente de prioridad.</p>
+</blockquote>
+<p><em>Demostración.</em> Inducción sobre <span class="math inline">\(n\)</span>. La raíz debe ser la de mayor prioridad (invariante de heap). Las claves menores que la raíz forman el subárbol izquierdo y las mayores el derecho (invariante BST); por hipótesis de inducción, cada uno es el único treap con sus claves y prioridades. Insertar en orden de prioridad produce exactamente esto: la primera insertada queda en la raíz y parte a las demás. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Consecuencia.</strong> Como las prioridades son aleatorias e independientes de las claves, el orden “decreciente de prioridad” es una <strong>permutación uniforme</strong>, y el treap tiene la forma de un <strong>BST construido con inserciones en orden aleatorio</strong>, sin importar en qué orden llegaron las claves. Por el análisis de L05 §5.2 (y PS7 ej. 1), la profundidad esperada de cada nodo es <span class="math inline">\(\le 2H_n = O(\lg n)\)</span>. El adversario que inserta claves ordenadas ya no puede hacer nada: el azar es nuestro.</p>
+<h3 id="split-y-merge">4.2 <code>split</code> y <code>merge</code></h3>
+<p>Todo el treap se programa con dos funciones recursivas:</p>
+<ul>
+<li><strong><code>split(t, k)</code></strong> → <span class="math inline">\((L, R)\)</span> con las claves <span class="math inline">\(&lt; k\)</span> en <span class="math inline">\(L\)</span> y las <span class="math inline">\(\ge k\)</span> en <span class="math inline">\(R\)</span>. Si la raíz es <span class="math inline">\(&lt; k\)</span>, ella y su subárbol izquierdo van a <span class="math inline">\(L\)</span>, y se parte recursivamente su subárbol derecho; si no, simétrico. Cada nivel baja una vez: <span class="math inline">\(O(h)\)</span>.</li>
+<li><strong><code>merge(L, R)</code></strong>, con toda clave de <span class="math inline">\(L\)</span> menor que toda de <span class="math inline">\(R\)</span> → un treap. La raíz es la de mayor prioridad entre las dos raíces; si es la de <span class="math inline">\(L\)</span>, su subárbol derecho se mezcla con <span class="math inline">\(R\)</span>, y simétrico. <span class="math inline">\(O(h_L + h_R)\)</span>.</li>
+</ul>
+<p>Ambas preservan los dos invariantes: el BST porque solo se cuelgan subárboles en el lado que les corresponde por clave, y el heap porque la raíz elegida tiene la mayor prioridad del resultado.</p>
+<p>Con ellas:</p>
+<pre><code>insert(k):  (L, R) ← split(t, k);  t ← merge(merge(L, nodo(k, prioridad aleatoria)), R)
+erase(k):   (L, R) ← split(t, k);  quitar el mínimo de R (que es k);  t ← merge(L, R)</code></pre>
+<p>La aumentación con <code>size</code> es la misma: recalcular <code>size</code> en cada nodo al que se le cambia un hijo dentro de <code>split</code> y <code>merge</code>. La solución de Rust del lab es un treap aumentado; las de C y C++ aumentan el AVL del lab07.</p>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>AVL</th>
+<th>Treap</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Garantía de altura</td>
+<td>peor caso, <span class="math inline">\(&lt; 1.44\lg n\)</span></td>
+<td>esperada, <span class="math inline">\(\approx 2\ln n \approx 1.39\lg n\)</span> por nodo</td>
+</tr>
+<tr>
+<td>Código</td>
+<td>rotaciones + 4 casos</td>
+<td><code>split</code> + <code>merge</code></td>
+</tr>
+<tr>
+<td>Unión/partición de conjuntos</td>
+<td>difícil</td>
+<td>natural (son <code>merge</code>/<code>split</code>)</td>
+</tr>
+<tr>
+<td>Memoria por nodo</td>
+<td>altura (1 byte basta)</td>
+<td>prioridad (8 bytes)</td>
+</tr>
+</tbody>
+</table></div>
+<hr/>
+<h2 id="otras-aumentaciones">5. Otras aumentaciones</h2>
+<p>El método es siempre el mismo: <strong>¿qué resumen del subárbol responde la pregunta, y se puede calcular desde los hijos?</strong></p>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Problema</th>
+<th>Campo aumentado</th>
+<th><code>update</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math inline">\(k\)</span>-ésimo, rango</td>
+<td><code>size</code></td>
+<td><code>1 + size(izq) + size(der)</code></td>
+</tr>
+<tr>
+<td>suma de valores con clave en <span class="math inline">\([a, b]\)</span></td>
+<td><code>suma</code></td>
+<td><code>valor + suma(izq) + suma(der)</code></td>
+</tr>
+<tr>
+<td>mínimo de valores en un rango de claves</td>
+<td><code>min</code></td>
+<td><code>min(valor, min(izq), min(der))</code></td>
+</tr>
+<tr>
+<td><strong>árbol de intervalos</strong>: ¿algún intervalo guardado se cruza con <span class="math inline">\([a, b]\)</span>?</td>
+<td><code>max_fin</code></td>
+<td><code>max(fin, max_fin(izq), max_fin(der))</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Árbol de intervalos</strong> (CLRS 17.3). Se guardan intervalos <span class="math inline">\([\ell, r]\)</span> ordenados por <span class="math inline">\(\ell\)</span>, con <code>max_fin</code> = el mayor extremo derecho del subárbol. Para buscar un intervalo que se cruce con <span class="math inline">\(q = [a, b]\)</span>: si el nodo actual se cruza, listo; si el subárbol izquierdo existe y su <code>max_fin</code> <span class="math inline">\(\ge a\)</span>, ir a la izquierda (si hay solución, hay una ahí); si no, a la derecha. <span class="math inline">\(O(\lg n)\)</span>. Se usa en calendarios (“¿choca esta cita con alguna?”), en genómica y en detección de colisiones.</p>
+<p>Las sumas sobre rangos vuelven en la L13, donde los árboles de Fenwick y de segmentos las resuelven con menos memoria cuando las posiciones son fijas.</p>
+<hr/>
+<h2 id="resumen-de-paradigmas-en-este-lab">6. Resumen de paradigmas en este lab</h2>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Aspecto</th>
+<th>C</th>
+<th>C++</th>
+<th>Rust</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Estructura de la solución</td>
+<td>AVL aumentado</td>
+<td>AVL aumentado</td>
+<td>treap aumentado</td>
+</tr>
+<tr>
+<td>Campo aumentado</td>
+<td><code>size_t size</code> en el nodo</td>
+<td><code>std::size_t size</code></td>
+<td><code>usize size</code></td>
+</tr>
+<tr>
+<td><code>select</code> fuera de rango</td>
+<td><code>false</code></td>
+<td><code>std::nullopt</code></td>
+<td><code>None</code></td>
+</tr>
+<tr>
+<td>Aleatoriedad (treap)</td>
+<td>—</td>
+<td>—</td>
+<td>xorshift propio en un <code>thread_local!</code></td>
+</tr>
+<tr>
+<td>Recursión</td>
+<td>profundidad <span class="math inline">\(O(\lg n)\)</span></td>
+<td>profundidad <span class="math inline">\(O(\lg n)\)</span></td>
+<td>profundidad <span class="math inline">\(O(\lg n)\)</span> esperada</td>
+</tr>
+</tbody>
+</table></div>
+<hr/>
+<h2 id="guía-del-lab-08">7. Guía del Lab 08</h2>
+<p><strong>Archivos:</strong> <code>c/src/lab08/order_stat_set.c</code>, <code>cpp/include/algolib/lab08/order_stat_set.hpp</code>, <code>rust/src/lab08/mod.rs</code>.</p>
+<p><strong>Opción A (recomendada si tu lab07 funciona):</strong> copia tu AVL, cambia el mapa por un conjunto (sin valores), agrega <code>size</code> al nodo y a <code>update</code>, y escribe <code>select</code> y <code>rank</code> iterativos.</p>
+<p><strong>Opción B:</strong> implementa un treap con <code>split</code> y <code>merge</code> (§4.2). Es menos código, pero escribe con cuidado las precondiciones de <code>merge</code>.</p>
+<p><strong>Errores frecuentes:</strong></p>
+<ul>
+<li>Recalcular <code>size</code> en el padre antes que en el hijo en una rotación (el padre suma un <code>size</code> viejo).</li>
+<li>En <code>select</code>, olvidar restar <span class="math inline">\(r + 1\)</span> (y no solo <span class="math inline">\(r\)</span>) al bajar a la derecha.</li>
+<li>En <code>rank</code>, sumar <code>size(x.izq) + 1</code> cuando <code>x.key == c</code>: las claves <strong>iguales</strong> no son estrictamente menores.</li>
+<li>Guardar el rango de cada nodo explícitamente: insertar un mínimo obliga a actualizar todos los nodos.</li>
+<li>Treap: comparar prioridades con <code>&lt;</code> en <code>merge</code> y con <code>&gt;</code> en otro lado: el invariante de heap queda inconsistente.</li>
+</ul>
+<p>El test <code>ostat_select_rank_logaritmicos</code> inserta 200 000 claves <strong>en orden</strong> (exige balanceo) y hace 200 000 consultas: con <code>select</code> o <code>rank</code> lineales no termina.</p>
+<hr/>
+<h2 id="comprueba-tu-comprensión">8. Comprueba tu comprensión</h2>
+<ol type="1">
+<li>En un árbol con raíz de <code>size</code> 15 y subárbol izquierdo de <code>size</code> 7, ¿dónde está <code>select(10)</code>? ¿Con qué <span class="math inline">\(k\)</span> se sigue?</li>
+<li>¿Por qué el campo “profundidad del nodo” no cumple la hipótesis del Teorema 1?</li>
+<li>¿Qué devuelve <code>rank(x)</code> si <span class="math inline">\(x\)</span> es mayor que todas las claves? ¿Y si es menor que todas?</li>
+<li>Si dos nodos de un treap tuvieran la misma prioridad, ¿qué parte del Lema 4 fallaría?</li>
+<li>¿Cómo responderías “¿cuántas claves hay en <span class="math inline">\([a, b)\)</span>?” con <code>rank</code>?</li>
+</ol>
+<details>
+<summary>
+Respuestas
+</summary>
+<ol type="1">
+<li>En el subárbol derecho (<span class="math inline">\(10 &gt; 7\)</span>), buscando el <span class="math inline">\(10 - 7 - 1 = 2\)</span>.</li>
+<li>Porque depende de los ancestros, no del subárbol: una rotación arriba de un nodo cambia la profundidad de todos sus descendientes, que pueden ser <span class="math inline">\(\Theta(n)\)</span>.</li>
+<li><span class="math inline">\(n\)</span> y <span class="math inline">\(0\)</span>.</li>
+<li>La unicidad: dos nodos de igual prioridad podrían intercambiarse como padre e hijo, y habría dos treaps válidos. Con prioridades aleatorias de 64 bits, la probabilidad de empate es despreciable.</li>
+<li><code>rank(b) − rank(a)</code>, en <span class="math inline">\(O(\lg n)\)</span>.</li>
+</ol>
+</details>
+<hr/>
+<h2 id="problem-set-8">9. Problem Set 8</h2>
+<p><strong>Teoría</strong></p>
+<ol type="1">
+<li>Demuestra que <code>rank</code> y <code>select</code> son inversos: si <span class="math inline">\(x\)</span> está en el conjunto, <code>select(rank(x)) = x</code>, y para <span class="math inline">\(0 \le k &lt; n\)</span>, <code>rank(select(k)) = k</code>.</li>
+<li>Demuestra que contar las inversiones de una secuencia de <span class="math inline">\(n\)</span> números con un árbol de estadísticos de orden cuesta <span class="math inline">\(O(n\lg n)\)</span>. Compara con el método de mergesort (L05).</li>
+<li>Demuestra la corrección de la búsqueda en el árbol de intervalos: si el subárbol izquierdo tiene <code>max_fin</code> <span class="math inline">\(\ge a\)</span> y no hay solución en él, tampoco la hay en el derecho.</li>
+<li>Demuestra que el número esperado de rotaciones de una inserción en un treap (implementado con rotaciones en vez de <code>split</code>/<code>merge</code>) es menor que 2.</li>
+<li><strong>Josefo.</strong> <span class="math inline">\(n\)</span> personas en círculo; se elimina a cada <span class="math inline">\(m\)</span>-ésima. Da un algoritmo <span class="math inline">\(O(n\lg n)\)</span> con un árbol de estadísticos de orden para el orden de eliminación.</li>
+</ol>
+<p><strong>Implementación (C, C++ y Rust)</strong></p>
+<ol start="6" type="1">
+<li>Agrega <code>count_range(a, b)</code> en <span class="math inline">\(O(\lg n)\)</span> y <code>erase_kth(k)</code> en <span class="math inline">\(O(\lg n)\)</span>.</li>
+<li>Implementa un árbol de intervalos con <code>insert</code>, <code>erase</code> y <code>find_overlap(a, b)</code>, con tests contra un oráculo lineal.</li>
+<li>Implementa conteo de inversiones con tu <code>OrderStatSet</code> y verifica contra el conteo de L05 §2 en entradas aleatorias.</li>
+<li>Convierte tu treap (o AVL) en un <strong>árbol implícito</strong> que represente una secuencia (L02) con <code>insert(i, x)</code>, <code>erase(i)</code> y <code>get(i)</code> en <span class="math inline">\(O(\lg n)\)</span>, usando <code>size</code> como índice en lugar de la clave.</li>
+</ol>
+<hr/>
+<h2 id="referencias">Referencias</h2>
+<ul>
+<li>CLRS, <em>Introduction to Algorithms</em>, 4ª ed.: Cap. 17 (aumentación; 17.1 estadísticos de orden, 17.2 teorema, 17.3 árboles de intervalos).</li>
+<li>MIT 6.046 (Spring 2015), Lecture 3 (<em>Treaps</em>) y Recitation (<em>Augmentation</em>).</li>
+<li>Seidel, R. y Aragon, C. R. (1996). <em>Randomized search trees</em>. Algorithmica 16.</li>
+<li>Sedgewick, R. y Wayne, K. <em>Algorithms</em>, 4ª ed., §3.3 (BST con <code>size</code>, <code>rank</code> y <code>select</code>).</li>
+</ul>
+</main><footer>algolib · Estructuras de Datos y Algoritmos. Fuente: <code>notas/L08-arboles-aumentados.md</code>. Regenerar con <code>make html</code>.</footer><script>{
+
+const KEY='algolib-lang';let pref='cpp';try{pref=localStorage.getItem(KEY)||'cpp'}catch(e){}
+function pick(lang,save){
+  for(const g of document.querySelectorAll('.tabs')){
+    const btns=[...g.querySelectorAll('[role=tab]')];if(!btns.length)continue;
+    const b=btns.find(x=>x.dataset.lang===lang)||btns[0];
+    for(const x of btns){const on=x===b;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;
+      document.getElementById(x.getAttribute('aria-controls')).hidden=!on;}
+  }
+  if(save){try{localStorage.setItem(KEY,lang)}catch(e){}}
+}
+for(const g of document.querySelectorAll('.tablist')){
+  g.addEventListener('click',e=>{const b=e.target.closest('[role=tab]');if(b){const y=b.getBoundingClientRect().top;pick(b.dataset.lang,true);window.scrollBy(0,b.getBoundingClientRect().top-y);}});
+  g.addEventListener('keydown',e=>{const bs=[...g.querySelectorAll('[role=tab]')];const i=bs.indexOf(document.activeElement);
+    if(i<0)return;let j=i;if(e.key==='ArrowRight')j=(i+1)%bs.length;else if(e.key==='ArrowLeft')j=(i-1+bs.length)%bs.length;else return;
+    e.preventDefault();pick(bs[j].dataset.lang,true);bs[j].focus();});
+}
+pick(pref,false);
+for(const p of document.querySelectorAll('main pre:not(.pizarra):not(.salida)')){
+  const b=document.createElement('button');b.className='copy';b.type='button';b.textContent='Copiar';
+  b.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(p.innerText.replace(/Copiar$/,''));b.textContent='Copiado';}catch(e){b.textContent='No se pudo';}setTimeout(()=>b.textContent='Copiar',1600);});
+  p.appendChild(b);}
+}</script></body></html>

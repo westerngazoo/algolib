@@ -13,6 +13,7 @@ fn main() {
             knapsack_vs_subconjuntos,
             lis_vs_cuadratico,
             coin_change,
+            lis_grande_nlgn,
         ],
     );
 }
@@ -115,4 +116,12 @@ fn coin_change() {
     assert_eq!(coin_change_min(&[1, 2, 5], 0), Some(0));
     assert_eq!(coin_change_min(&[2], 3), None);
     assert_eq!(coin_change_min(&[186, 419, 83, 408], 6249), Some(20));
+}
+
+/// 1000 bloques de 200 valores DECRECIENTES, con los bloques en orden creciente:
+/// la LIS toma exactamente un valor por bloque ⇒ 1000. n = 200 000: el algoritmo
+/// cuadrático hace ~2·10¹⁰ comparaciones y no termina a tiempo.
+fn lis_grande_nlgn() {
+    let a: Vec<i64> = (0..1000i64).flat_map(|b| (0..200i64).rev().map(move |j| b * 200 + j)).collect();
+    assert_eq!(lis_length(&a), 1000);
 }

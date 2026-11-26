@@ -3,6 +3,7 @@ use algolib::lab04::{HashMap, RingQueue};
 use common::Lcg;
 use std::collections::{BTreeMap, VecDeque};
 use std::hash::{BuildHasher, Hasher};
+use std::rc::Rc;
 
 fn main() {
     common::run(
@@ -15,6 +16,8 @@ fn main() {
             hash_factor_de_carga_acotado,
             hash_colisiones_totales,
             hash_aleatorio_vs_btreemap,
+            ring_sin_fugas,
+            hash_muchos_borrados,
         ],
     );
 }
@@ -126,4 +129,29 @@ fn hash_aleatorio_vs_btreemap() {
         }
         assert_eq!(m.len(), o.len());
     }
+}
+
+fn ring_sin_fugas() {
+    let x = Rc::new(());
+    {
+        let mut q = RingQueue::new();
+        for _ in 0..37 { q.push_back(Rc::clone(&x)); }
+        for _ in 0..20 { drop(q.pop_front()); }
+        for _ in 0..50 { q.push_back(Rc::clone(&x)); } // da la vuelta y crece
+        assert_eq!(Rc::strong_count(&x), 68);
+    }
+    assert_eq!(Rc::strong_count(&x), 1);
+}
+
+/// 200 000 claves distintas pasan por la tabla, pero nunca hay más de 64 vivas.
+/// Con lápidas que nunca se limpian, las búsquedas fallidas no terminarían.
+fn hash_muchos_borrados() {
+    let mut m = HashMap::new();
+    for i in 0..200_000i64 {
+        assert_eq!(m.insert(i, i), None);
+        if i >= 64 { assert_eq!(m.remove(&(i - 64)), Some(i - 64)); }
+        assert!(!m.contains_key(&(-1 - i)));
+    }
+    assert_eq!(m.len(), 64);
+    for i in 200_000 - 64..200_000 { assert_eq!(m.get(&i), Some(&i)); }
 }

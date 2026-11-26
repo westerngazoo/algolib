@@ -4,7 +4,7 @@ use common::Lcg;
 use std::collections::BTreeSet;
 
 fn main() {
-    common::run("lab08", cases![ostat_basico, ostat_aleatorio_vs_btreeset]);
+    common::run("lab08", cases![ostat_basico, ostat_aleatorio_vs_btreeset, ostat_select_rank_logaritmicos]);
 }
 
 fn ostat_basico() {
@@ -42,5 +42,19 @@ fn ostat_aleatorio_vs_btreeset() {
                 assert_eq!(s.rank(&y), v.partition_point(|&e| e < y));
             }
         }
+    }
+}
+
+/// 200 000 claves insertadas EN ORDEN (exige balanceo) y 200 000 consultas de
+/// select y de rank. Con select/rank lineales serían ~4·10¹⁰ pasos: no termina.
+fn ostat_select_rank_logaritmicos() {
+    let n: u64 = 200_000;
+    let mut s = OrderStatSet::new();
+    for i in 0..n { s.insert(2 * i); }
+    let mut rng = Lcg::new(14);
+    for _ in 0..n {
+        let k = rng.below(n);
+        assert_eq!(s.select(k as usize), Some(&(2 * k)));
+        assert_eq!(s.rank(&(2 * k + 1)), k as usize + 1);
     }
 }

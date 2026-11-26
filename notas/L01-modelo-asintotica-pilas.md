@@ -1081,7 +1081,7 @@ Para la garantía fuerte se usa `std::move_if_noexcept`: si mover un `T` puede l
 2. `array_stack_push` sin crecer; luego el crecimiento. **No uses `realloc` directamente:** si `elem` apunta dentro de tu bloque (el test `stack_alias_push_top` lo hace), `realloc` puede liberarlo antes de que lo copies. Reserva el bloque nuevo, copia `elem` primero, luego los viejos, y solo entonces libera.
 3. `pop`, `top`, `size`, `capacity`, `empty`, `clear`. Corre `make c-lab01`.
 4. `MinStack` componiendo dos `ArrayStack` y usando el comparador `cmp`.
-5. Cuando todo pase, LeakSanitizer revisa que no tengas fugas: si olvidas un `free`, verás el reporte al final.
+5. Cuando todo pase, corre `make c-fugas-lab01` para buscar fugas: si olvidas un `free`, verás qué `malloc` nunca se liberó y en qué línea. (En Linux usa LeakSanitizer; en macOS, donde LeakSanitizer no existe, usa la herramienta `leaks` del sistema.)
 
 **Orden sugerido (C++):**
 1. `empty`, `size` y `capacity` ya están hechos. Empieza por el **destructor** y `clear()`: destruir `[0, size_)` y liberar.

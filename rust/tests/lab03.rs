@@ -43,10 +43,14 @@ fn lstack_reverse_e_iter() {
     assert_eq!(s.len(), 4);
 }
 
+/// Bajo Miri (un intérprete, ~1000× más lento) se usan tamaños menores: Miri busca
+/// UB, no desbordamientos de pila. Fuera de Miri, el millón de nodos es obligatorio.
+const N_GRANDE: usize = if cfg!(miri) { 2_000 } else { 1_000_000 };
+
 fn lstack_drop_iterativo_un_millon() {
     let mut s = LinkedStack::new();
-    for i in 0..1_000_000 { s.push(i); }
-    assert_eq!(s.len(), 1_000_000);
+    for i in 0..N_GRANDE { s.push(i); }
+    assert_eq!(s.len(), N_GRANDE);
 }
 
 fn lstack_sin_fugas() {
@@ -97,7 +101,7 @@ fn dlist_aleatorio_vs_vecdeque() {
     let mut rng = Lcg::new(3);
     let mut d = DList::new();
     let mut o = VecDeque::new();
-    for _ in 0..20000 {
+    for _ in 0..if cfg!(miri) { 2000 } else { 20000 } {
         let x = rng.range(0, 999);
         match rng.below(4) {
             0 => { d.push_front(x); o.push_front(x); }

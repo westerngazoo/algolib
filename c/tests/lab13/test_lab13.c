@@ -143,7 +143,57 @@ static void segtree_vs_ingenuo(void) {
     segtree_free(NULL);
 }
 
+/* "a" seguida de i en base 26 (letras a..z): una palabra distinta para cada i. */
+static void palabra(size_t i, char *w) {
+    size_t k = 0;
+    w[k++] = 'a';
+    do { w[k++] = (char)('a' + i % 26); i /= 26; } while (i > 0);
+    w[k] = '\0';
+}
+
+static void trie_conteo_es_O_L(void) {
+    /* 100 000 palabras con el prefijo "a" y 100 000 consultas de ese prefijo.
+     * Contar recorriendo el subárbol (Θ(nodos) por consulta) no termina a tiempo. */
+    enum { N = 100000 };
+    Trie *t = trie_new();
+    char w[16];
+    for (size_t i = 0; i < N; i++) {
+        palabra(i, w);
+        CHECK(trie_insert(t, w));
+    }
+    for (size_t q = 0; q < N; q++) CHECK_EQ(trie_count_with_prefix(t, "a"), N);
+    palabra(42, w);
+    CHECK(trie_contains(t, w));
+    CHECK_EQ(trie_count_with_prefix(t, "b"), 0);
+    trie_free(t);
+}
+
+static void rangos_grandes(void) {
+    /* n = 2²⁰ y 200 000 consultas de cada tipo: una suma o un mínimo lineales por
+     * consulta harían ~10¹¹ pasos. */
+    const size_t n = (size_t)1 << 20;
+    Lcg rng = {26};
+    FenwickTree *f = fenwick_new(n);
+    for (size_t i = 0; i < n; i++) fenwick_add(f, i, 1);
+    int64_t *a = malloc(n * sizeof *a);
+    for (size_t i = 0; i < n; i++) a[i] = (int64_t)(n - i);
+    SegmentTree *st = segtree_new(a, n);
+    for (int q = 0; q < 200000; q++) {
+        size_t l = lcg_below(&rng, n), r = lcg_below(&rng, n + 1);
+        if (l > r) { size_t x = l; l = r; r = x; }
+        CHECK_EQ(fenwick_range_sum(f, l, r), (int64_t)(r - l));
+        int64_t m;
+        if (l < r) {
+            CHECK(segtree_range_min(st, l, r, &m));
+            CHECK_EQ(m, (int64_t)(n - (r - 1)));
+        }
+    }
+    segtree_free(st);
+    free(a);
+    fenwick_free(f);
+}
+
 int main(void) {
     return algotest_run("lab13", (AlgoTest[]){
-        T(trie_basico), T(trie_erase_poda), T(trie_aleatorio), T(fenwick_vs_ingenuo), T(segtree_vs_ingenuo), {0}});
+        T(trie_basico), T(trie_erase_poda), T(trie_aleatorio), T(fenwick_vs_ingenuo), T(segtree_vs_ingenuo), T(trie_conteo_es_O_L), T(rangos_grandes), {0}});
 }

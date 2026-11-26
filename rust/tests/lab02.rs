@@ -13,6 +13,7 @@ fn main() {
             vector_reserve_shrink,
             vector_zst,
             vector_sin_fugas,
+            vector_clone_con_panic_sin_fugas,
             vector_aleatorio_vs_vec,
         ],
     );
@@ -121,4 +122,30 @@ fn vector_aleatorio_vs_vec() {
         assert_eq!(v.len(), o.len());
     }
     assert_eq!(v.as_slice(), o.as_slice());
+}
+
+/// Clone que hace panic al llegar a la n-ésima copia.
+struct Explota(Rc<()>, std::rc::Rc<std::cell::Cell<i32>>);
+impl Clone for Explota {
+    fn clone(&self) -> Self {
+        let n = self.1.get();
+        if n == 0 { panic!("boom"); }
+        self.1.set(n - 1);
+        Explota(Rc::clone(&self.0), Rc::clone(&self.1))
+    }
+}
+
+fn vector_clone_con_panic_sin_fugas() {
+    let x = Rc::new(());
+    let fuse = Rc::new(std::cell::Cell::new(i32::MAX));
+    let mut a = Vector::new();
+    for _ in 0..20 { a.push(Explota(Rc::clone(&x), Rc::clone(&fuse))); }
+    assert_eq!(Rc::strong_count(&x), 21);
+    fuse.set(7); // la 8.ª copia hace panic
+    let r = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| a.clone()));
+    assert!(r.is_err());
+    // Las 7 copias parciales se destruyeron al desenrollar: no hay fugas.
+    assert_eq!(Rc::strong_count(&x), 21);
+    drop(a);
+    assert_eq!(Rc::strong_count(&x), 1);
 }

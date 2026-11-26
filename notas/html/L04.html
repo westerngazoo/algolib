@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>L04 · Notas · Estructuras de Datos y Algoritmos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: apuntes de curso universitario, sobrios y precisos; el guion habla en voz de profesor.
+   IDEA: cuaderno de clase técnico con pizarrón: hoja limpia, recuadros de pizarra verde para lo que se escribe.
+   PICTURE: diagramas SVG propios de cada lección (cotas, arreglos, costos), sobre placa blanca.
+   COLOUR and TYPE: tira cobalto #1240e0, hoja blanca, zonas #eef2ff, acento naranja quemado; Space Grotesk + Inter + JetBrains Mono.
+   LAYOUT: tira de título a todo el ancho, fila de secciones, columna de lectura de 780px; figuras y tablas hasta 900px. */
+:root{color-scheme:light dark;
+ --bg:light-dark(#ffffff,#0b0e17);--ink:light-dark(#111827,#e6e9f2);--muted:light-dark(#5b6270,#9aa3b5);
+ --cob:#1240e0;--cob-ink:light-dark(#1240e0,#8fa8ff);--pale:light-dark(#eef2ff,#141b33);--line:light-dark(#dfe4f2,#252c44);
+ --acc:light-dark(#c2410c,#fb923c);--acc-pale:light-dark(#fff1e6,#2a1a10);--ok:light-dark(#15803d,#4ade80);
+ --chalk-bg:#1f3a2e;--chalk:#eef3e8;--chalk-dim:#a9c2b2;--wood:#7a5a33}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Inter,system-ui,sans-serif;overflow-x:clip}
+a{color:var(--cob-ink)}
+.strip{background:var(--cob);color:#fff;padding:clamp(22px,3.5vw,44px) max(5vw,16px) clamp(20px,3vw,34px)}
+.strip .curso{font:600 14px/1.3 'Space Grotesk',sans-serif;opacity:.85;margin:0 0 10px}
+.strip h1{font:700 clamp(30px,4.6vw,48px)/1.06 'Space Grotesk',sans-serif;margin:0;text-wrap:balance;max-width:24ch}
+.strip .desc{margin:14px 0 0;max-width:62ch;opacity:.92;font-size:16px}
+.pages{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.pages a{color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.45);border-radius:999px;padding:6px 14px;font-size:14px;line-height:1.3}
+.pages a[aria-current]{background:#fff;color:var(--cob)}
+.pages a:hover{background:rgba(255,255,255,.16)}
+nav.toc{border-bottom:1px solid var(--line);background:var(--bg);z-index:5}
+nav.toc .scroll{display:flex;gap:4px;padding:8px max(5vw,16px);white-space:nowrap}
+nav.toc a{flex:none;text-decoration:none;color:var(--muted);font-size:14px;padding:6px 10px;border-radius:8px}
+nav.toc a:hover{background:var(--pale);color:var(--ink)}
+@media(min-width:900px){nav.toc{position:sticky;top:0}}
+main{max-width:820px;margin:0 auto;padding:28px max(4vw,16px) 80px}
+main h1{font:700 32px/1.1 'Space Grotesk',sans-serif;margin:56px 0 12px;padding-top:18px;border-top:4px solid var(--cob);color:var(--cob-ink)}
+main h2{font:700 26px/1.2 'Space Grotesk',sans-serif;margin:48px 0 10px;text-wrap:balance}
+main h3{font:600 21px/1.25 'Space Grotesk',sans-serif;margin:36px 0 8px}
+main h4{font:600 18px/1.3 'Space Grotesk',sans-serif;margin:28px 0 6px}
+.tiempo{display:inline-block;vertical-align:middle;margin-left:8px;font:500 13px/1 Inter,sans-serif;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:4px 9px}
+p,li{max-width:70ch}
+hr{border:0;border-top:1px solid var(--line);margin:40px 0}
+blockquote{margin:16px 0;padding:12px 18px;border-left:4px solid var(--cob);background:var(--pale);border-radius:0 10px 10px 0}
+blockquote p{margin:6px 0}
+code{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.88em;background:var(--pale);padding:1px 5px;border-radius:5px;overflow-wrap:anywhere}
+pre{position:relative;overflow-x:auto;background:light-dark(#f6f7fb,#11162a);border:1px solid var(--line);border-radius:10px;padding:14px 16px;font:14px/1.55 'JetBrains Mono',ui-monospace,monospace}
+pre code{background:none;padding:0;font-size:inherit;overflow-wrap:normal}
+.copy{position:absolute;top:8px;right:8px;font:600 12px Inter,sans-serif;border:1px solid var(--line);background:var(--bg);color:var(--muted);border-radius:7px;padding:6px 10px;min-height:32px;cursor:pointer}
+.copy:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;margin:16px 0;font-size:15px;width:100%}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-weight:600;background:var(--pale)}
+figure{margin:26px 0;padding:0}
+figure svg{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:12px}
+figcaption{color:var(--muted);font-size:14px;margin-top:8px}
+details{margin:12px 0;border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:var(--bg)}
+summary{cursor:pointer;font-weight:600;color:var(--cob-ink);min-height:28px}
+.callout{margin:16px 0;padding:12px 16px 12px 16px;border-radius:10px;border:1px solid var(--line)}
+.callout>.lbl{display:block;font:700 12px/1.2 Inter,sans-serif;letter-spacing:.02em;margin-bottom:4px}
+.dice{background:light-dark(#f8fafc,#121726);border-left:5px solid var(--ink)}
+.dice>.lbl{color:var(--ink)}
+.pregunta{background:var(--pale);border-left:5px solid var(--cob)}
+.pregunta>.lbl{color:var(--cob-ink)}
+.pregunta+blockquote{margin-top:-10px;border-left-color:var(--ok);background:light-dark(#f0fdf4,#0f1f16)}
+.pregunta+blockquote::before{content:"Respuesta esperada";display:block;font:700 12px Inter,sans-serif;color:var(--ok);margin-bottom:2px}
+.nota{background:light-dark(#fffbea,#211d0c);border-left:5px solid #ca8a04}
+.nota>.lbl{color:light-dark(#a16207,#facc15)}
+.atencion{background:var(--acc-pale);border-left:5px solid var(--acc)}
+.atencion>.lbl{color:var(--acc)}
+.ejercicio{display:inline-block;font:700 12px Inter,sans-serif;color:#fff;background:var(--acc);border-radius:6px;padding:2px 8px;margin-right:6px;vertical-align:2px}
+.moneda{display:inline-block;width:.9em;height:.9em;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fde68a,#d97706);vertical-align:-1px;margin-right:4px}
+.pizarra-label{display:table!important;margin:22px 0 0;font:600 13px/1.3 Inter,sans-serif;color:var(--chalk-dim);background:var(--chalk-bg);display:inline-block;padding:6px 12px;border-radius:8px 8px 0 0;border:6px solid var(--wood);border-bottom:0}
+.pizarra-label b{color:#fff}
+pre.pizarra,div.pizarra{margin-top:0;background:var(--chalk-bg);color:var(--chalk);border:6px solid var(--wood);border-radius:0 10px 10px 10px;box-shadow:inset 0 0 40px rgba(0,0,0,.35);font:15px/1.6 'JetBrains Mono',ui-monospace,monospace;padding:16px 18px;overflow-x:auto;white-space:pre}
+table.pizarra{border:6px solid var(--wood);background:var(--chalk-bg);color:var(--chalk);margin-top:0}
+table.pizarra th{background:#2a4a3c;color:#fff}table.pizarra td,table.pizarra th{border-color:#3d5e4f}
+mjx-container[display=true]{overflow-x:auto;overflow-y:hidden;max-width:100%}
+mjx-container:not([display]){display:inline-block;max-width:100%;overflow-x:auto;overflow-y:hidden;vertical-align:middle}
+.lessons{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px;margin:24px 0}
+.lessons a{display:block;text-decoration:none;color:var(--ink);background:var(--pale);border:1px solid var(--line);border-radius:12px;padding:18px}
+.lessons a:hover{border-color:var(--cob)}
+.lessons b{display:block;font:700 19px/1.2 'Space Grotesk',sans-serif;color:var(--cob-ink);margin-bottom:6px}
+.lessons span{color:var(--muted);font-size:15px}
+footer{color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding:24px max(5vw,16px)}
+@media(max-width:600px){body{font-size:16px}table{font-size:13px}pre.pizarra,div.pizarra{font-size:13px}main h1{font-size:27px}main h2{font-size:23px}}
+
+/* pestañas de código */
+.tabs{margin:20px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:light-dark(#f6f7fb,#11162a)}
+.tablist{display:flex;gap:2px;padding:6px 6px 0;background:var(--pale);border-bottom:1px solid var(--line);overflow-x:auto}
+.tablist button{font:600 14px Inter,sans-serif;color:var(--muted);background:none;border:0;border-radius:8px 8px 0 0;padding:10px 16px;min-height:44px;cursor:pointer;white-space:nowrap}
+.tablist button[aria-selected=true]{background:light-dark(#f6f7fb,#11162a);color:var(--cob-ink);box-shadow:inset 0 3px 0 var(--cob)}
+.tablist button:focus-visible{outline:3px solid var(--acc);outline-offset:-3px}
+.tablist .badge{font:600 11px Inter,sans-serif;color:var(--acc);margin-left:6px}
+.tabs .panel pre{margin:0;border:0;border-radius:0}
+.tabs .panel[hidden]{display:none}
+pre.salida{background:light-dark(#0f172a,#05070d);color:#d1fae5;border-color:#0f172a;margin-top:-8px;padding-top:30px}
+pre.salida::before{content:"Salida";position:absolute;top:8px;left:16px;font:700 11px Inter,sans-serif;color:#6ee7b7;letter-spacing:.03em}
+pre.salida .copy{display:none}
+/* resaltado de sintaxis (clases de pandoc) */
+code span.kw,code span.cf{color:light-dark(#1d4ed8,#93b4ff);font-weight:600}
+code span.dt{color:light-dark(#7c3aed,#c4b5fd)}
+code span.dv,code span.bn,code span.fl,code span.cn{color:light-dark(#b45309,#fbbf24)}
+code span.st,code span.ch,code span.ss,code span.sc{color:light-dark(#047857,#6ee7b7)}
+code span.co,code span.do,code span.cv{color:light-dark(#6b7280,#8b95a7);font-style:italic}
+code span.pp,code span.im,code span.at{color:light-dark(#be185d,#f9a8d4)}
+code span.fu,code span.bu{color:light-dark(#0e7490,#67e8f9)}
+code span.op{color:light-dark(#374151,#cbd5e1)}
+code span.er,code span.al{color:var(--acc)}
+pre.sourceCode a{display:none}
+@media print{nav.toc,.copy,.tablist{display:none}.tabs .panel[hidden]{display:block}.strip{background:none;color:#000}}
+</style>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+</head><body>
+<header class="strip"><p class="curso">algolib · Estructuras de Datos y Algoritmos</p><h1>Lección 4 — Colas circulares y tablas hash</h1><p class="desc">Buffer circular, TAD Diccionario, encadenamiento, hashing universal, sondeo lineal y funciones hash reales.</p><div class="pages"><a href="index.html">Inicio</a><a href="L00.html">L00 · Prerrequisitos</a><a href="L01.html">L01 · Notas</a><a href="L02.html">L02 · Notas</a><a href="L03.html">L03 · Notas</a><a href="L04.html" aria-current="page">L04 · Notas</a><a href="L05.html">L05 · Notas</a><a href="L06.html">L06 · Notas</a><a href="L07.html">L07 · Notas</a><a href="L08.html">L08 · Notas</a><a href="L09.html">L09 · Notas</a><a href="L10.html">L10 · Notas</a><a href="L11.html">L11 · Notas</a><a href="L12.html">L12 · Notas</a><a href="L13.html">L13 · Notas</a></div></header><nav class="toc" aria-label="Secciones"><div class="scroll"><a href="#objetivos-de-aprendizaje">Objetivos de aprendizaje</a><a href="#mapa-de-la-lección">Mapa de la lección</a><a href="#la-cola-fifo">1. La cola FIFO</a><a href="#el-tad-diccionario">2. El TAD Diccionario</a><a href="#encadenamiento-separado">3. Encadenamiento separado</a><a href="#hashing-universal">4. Hashing universal</a><a href="#direccionamiento-abierto">5. Direccionamiento abierto</a><a href="#redimensionar">6. Redimensionar</a><a href="#funciones-hash-en-la-práctica">7. Funciones hash en la práctica</a><a href="#resumen-de-paradigmas-en-este-lab">8. Resumen de paradigmas en este…</a><a href="#guía-del-lab-04">9. Guía del Lab 04</a><a href="#comprueba-tu-comprensión">10. Comprueba tu comprensión</a><a href="#problem-set-4">11. Problem Set 4</a><a href="#referencias">Referencias</a></div></nav><main><blockquote>
+<p><strong>Prerrequisitos:</strong> Lección 0 (§4 probabilidad: variables indicadoras y linealidad de la esperanza; aritmética modular), Lección 1 (§6 análisis amortizado) y Lección 2 (§6–7 memoria cruda y reubicación).</p>
+<p><strong>Cómo estudiar esta lección:</strong> la primera mitad es un truco de representación (el buffer circular); la segunda es la primera vez en el curso que una cota depende del <strong>azar</strong>. Distingue en cada teorema qué es aleatorio: ¿las claves, o la función hash?</p>
+<p><strong>Lab asociado:</strong> <code>lab04</code>: <code>RingQueue</code> y <code>HashMap</code> (C, C++ y Rust).</p>
+</blockquote>
+<h2 id="objetivos-de-aprendizaje">Objetivos de aprendizaje</h2>
+<p>Al terminar esta lección deberías poder:</p>
+<ol type="1">
+<li>Implementar una cola FIFO sobre un <strong>buffer circular</strong> que crece, y demostrar que todas sus operaciones son <span class="math inline">\(O(1)\)</span> (amortizado para <code>push</code>).</li>
+<li>Especificar el <strong>TAD Diccionario</strong> y explicar por qué una tabla de acceso directo no basta.</li>
+<li>Demostrar el costo esperado de búsqueda con <strong>encadenamiento</strong> bajo hashing uniforme simple.</li>
+<li>Definir <strong>familia universal</strong> de funciones hash, demostrar que <span class="math inline">\(h_{a,b}(k) = ((ak+b)\bmod p)\bmod m\)</span> lo es, y explicar por qué esto elimina las entradas “malas”.</li>
+<li>Implementar <strong>direccionamiento abierto</strong> con sondeo lineal y borrado por corrimiento hacia atrás, y demostrar que el borrado preserva el invariante.</li>
+<li>Elegir una función hash en la práctica: identidad, Fibonacci, SipHash; y explicar el ataque de <strong>HashDoS</strong>.</li>
+</ol>
+<h2 id="mapa-de-la-lección">Mapa de la lección</h2>
+<figure>
+<svg aria-label="Mapa de la lección 4" fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" role="img" viewbox="0 0 760 300" xmlns="http://www.w3.org/2000/svg">
+<title>Mapa de la lección 4</title>
+<defs>
+<marker id="ar" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#111827"></path></marker>
+<marker id="arc" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#1240e0"></path></marker>
+<marker id="ara" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"></path></marker>
+</defs>
+<rect fill="#ffffff" height="300" rx="12" width="760"></rect>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="40" y="26"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="54" y="50">§1</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="54" y="70">Cola y buffer circular</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="290" y="26"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="304" y="50">§2</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="304" y="70">TAD Diccionario</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="540" y="26"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="554" y="50">§3</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="554" y="70">Encadenamiento</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="40" y="124"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="54" y="148">§6</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="54" y="168">Redimensionar</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="290" y="124"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="304" y="148">§5</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="304" y="168">Direccionamiento abierto</text>
+<rect fill="#1240e0" height="58" rx="10" stroke="#1240e0" stroke-width="2" width="200" x="540" y="124"></rect>
+<text fill="#dbe4ff" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="554" y="148">§4</text>
+<text fill="#ffffff" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="554" y="168">Hashing universal</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="40" y="222"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="54" y="246">§7</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="54" y="266">Funciones hash reales</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="290" y="222"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="304" y="246">§8–9</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="304" y="266">Paradigmas y lab</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="540" y="222"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="554" y="246">§10–11</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="554" y="266">Ejercicios</text>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="244" x2="286" y1="55.0" y2="55.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="494" x2="536" y1="55.0" y2="55.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="640.0" x2="640.0" y1="87" y2="120"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="536" x2="494" y1="153.0" y2="153.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="286" x2="244" y1="153.0" y2="153.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="140.0" x2="140.0" y1="185" y2="218"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="244" x2="286" y1="251.0" y2="251.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="494" x2="536" y1="251.0" y2="251.0"></line>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" text-anchor="start" x="650.0" y="204">aleatorizar h: núcleo de la lección</text>
+</svg>
+<figcaption aria-hidden="true">Mapa de la lección 4</figcaption>
+</figure>
+<hr/>
+<h2 id="la-cola-fifo">1. La cola FIFO</h2>
+<h3 id="el-problema">1.1 El problema</h3>
+<p>Una <strong>cola</strong> (<em>queue</em>) es la secuencia restringida a <code>push_back</code> y <code>pop_front</code>: el primero en entrar es el primero en salir. La usan el recorrido en amplitud de un grafo (L09), los buffers de red y de teclado, los planificadores de procesos.</p>
+<p>¿Sobre qué estructura? Con lo que ya tenemos:</p>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Implementación</th>
+<th><code>push_back</code></th>
+<th><code>pop_front</code></th>
+<th>Problema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Vector</code> (L02)</td>
+<td><span class="math inline">\(O(1)\)</span> amort.</td>
+<td><span class="math inline">\(\Theta(n)\)</span></td>
+<td><code>erase(0)</code> corre todo (PS2 ej. 2)</td>
+</tr>
+<tr>
+<td>Lista simple con cola (L03)</td>
+<td><span class="math inline">\(O(1)\)</span></td>
+<td><span class="math inline">\(O(1)\)</span></td>
+<td>un <code>malloc</code> por elemento, sin localidad</td>
+</tr>
+<tr>
+<td><strong>Buffer circular</strong></td>
+<td><span class="math inline">\(O(1)\)</span> amort.</td>
+<td><span class="math inline">\(O(1)\)</span></td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="el-buffer-circular">1.2 El buffer circular</h3>
+<p>Idea: en vez de correr los elementos cuando sale el primero, <strong>movemos el inicio</strong>. Guardamos un índice <code>head</code> al frente y el tamaño <code>size</code>; el elemento <span class="math inline">\(i\)</span> (con <span class="math inline">\(0\)</span> = frente) vive en <span class="math display">\[\text{celda}(i) = (\texttt{head} + i) \bmod m,\]</span> donde <span class="math inline">\(m\)</span> es la capacidad. Cuando el final llega a la última celda, el siguiente elemento se escribe en la celda 0: el arreglo se lee <strong>en círculo</strong>.</p>
+<figure>
+<svg aria-label="Buffer circular lleno con head = 2 y el mismo contenido tras crecer" fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" role="img" viewbox="0 0 820 270" xmlns="http://www.w3.org/2000/svg">
+<title>Buffer circular lleno con head = 2 y el mismo contenido tras crecer</title>
+<defs>
+<marker id="ar" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#111827"></path></marker>
+<marker id="arc" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#1240e0"></path></marker>
+<marker id="ara" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"></path></marker>
+</defs>
+<rect fill="#ffffff" height="270" rx="12" width="820"></rect>
+<text fill="#6b7280" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="400" text-anchor="end" x="106" y="67.0">m = 4, lleno</text>
+<rect fill="#eef2ff" height="44" rx="6" stroke="#1240e0" stroke-width="1.5" width="52" x="120" y="40"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="600" text-anchor="middle" x="146.0" y="67.0">e2</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="400" text-anchor="middle" x="146.0" y="34">0</text>
+<rect fill="#eef2ff" height="44" rx="6" stroke="#1240e0" stroke-width="1.5" width="52" x="178" y="40"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="600" text-anchor="middle" x="204.0" y="67.0">e3</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="400" text-anchor="middle" x="204.0" y="34">1</text>
+<rect fill="#eef2ff" height="44" rx="6" stroke="#1240e0" stroke-width="1.5" width="52" x="236" y="40"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="600" text-anchor="middle" x="262.0" y="67.0">e0</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="400" text-anchor="middle" x="262.0" y="34">2</text>
+<rect fill="#eef2ff" height="44" rx="6" stroke="#1240e0" stroke-width="1.5" width="52" x="294" y="40"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="600" text-anchor="middle" x="320.0" y="67.0">e1</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="400" text-anchor="middle" x="320.0" y="34">3</text>
+<line marker-end="url(#ara)" stroke="#c2410c" stroke-width="1.6" x1="262.0" x2="262.0" y1="110" y2="88"></line>
+<text fill="#c2410c" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="middle" x="262.0" y="124">head</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="600" text-anchor="start" x="372" y="58">el elemento i está en (head + i) mod m</text>
+<text fill="#6b7280" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" x="372" y="78">e2 y e3 dieron la vuelta a las celdas 0 y 1</text>
+<text fill="#6b7280" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="400" text-anchor="end" x="106" y="197.0">m = 8, tras push</text>
+<rect fill="#eef2ff" height="44" rx="6" stroke="#1240e0" stroke-width="1.5" width="52" x="120" y="170"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="600" text-anchor="middle" x="146.0" y="197.0">e0</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="400" text-anchor="middle" x="146.0" y="164">0</text>
+<rect fill="#eef2ff" height="44" rx="6" stroke="#1240e0" stroke-width="1.5" width="52" x="178" y="170"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="600" text-anchor="middle" x="204.0" y="197.0">e1</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="400" text-anchor="middle" x="204.0" y="164">1</text>
+<rect fill="#eef2ff" height="44" rx="6" stroke="#1240e0" stroke-width="1.5" width="52" x="236" y="170"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="600" text-anchor="middle" x="262.0" y="197.0">e2</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="400" text-anchor="middle" x="262.0" y="164">2</text>
+<rect fill="#eef2ff" height="44" rx="6" stroke="#1240e0" stroke-width="1.5" width="52" x="294" y="170"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="600" text-anchor="middle" x="320.0" y="197.0">e3</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="400" text-anchor="middle" x="320.0" y="164">3</text>
+<rect fill="#eef2ff" height="44" rx="6" stroke="#1240e0" stroke-width="1.5" width="52" x="352" y="170"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="600" text-anchor="middle" x="378.0" y="197.0">e4</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="400" text-anchor="middle" x="378.0" y="164">4</text>
+<rect fill="#ffffff" height="44" rx="6" stroke="#c7d2fe" stroke-dasharray="4 3" stroke-width="1.5" width="52" x="410" y="170"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="600" text-anchor="middle" x="436.0" y="197.0"></text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="400" text-anchor="middle" x="436.0" y="164">5</text>
+<rect fill="#ffffff" height="44" rx="6" stroke="#c7d2fe" stroke-dasharray="4 3" stroke-width="1.5" width="52" x="468" y="170"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="600" text-anchor="middle" x="494.0" y="197.0"></text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="400" text-anchor="middle" x="494.0" y="164">6</text>
+<rect fill="#ffffff" height="44" rx="6" stroke="#c7d2fe" stroke-dasharray="4 3" stroke-width="1.5" width="52" x="526" y="170"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="600" text-anchor="middle" x="552.0" y="197.0"></text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="11" font-weight="400" text-anchor="middle" x="552.0" y="164">7</text>
+<line marker-end="url(#ara)" stroke="#c2410c" stroke-width="1.6" x1="146.0" x2="146.0" y1="240" y2="218"></line>
+<text fill="#c2410c" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="middle" x="146.0" y="254">head</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="600" text-anchor="start" x="600" y="188">desenrollado:</text>
+<text fill="#6b7280" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" x="600" y="206">e_i en la celda i</text>
+<text fill="#6b7280" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" x="600" y="222">head = 0</text>
+</svg>
+<figcaption aria-hidden="true">Buffer circular antes y después de crecer</figcaption>
+</figure>
+<p><strong>Invariante de representación.</strong> <span class="math inline">\(0 \le \texttt{size} \le m\)</span>; si <span class="math inline">\(m &gt; 0\)</span>, <span class="math inline">\(0 \le \texttt{head} &lt; m\)</span>; las celdas <span class="math inline">\(\text{celda}(0), \dots, \text{celda}(\texttt{size}-1)\)</span> contienen los elementos y las demás están libres.</p>
+<p><strong>Operaciones.</strong></p>
+<pre><code>push_back(x):  si size = m: crecer()
+               data[celda(size)] ← x;  size ← size + 1
+pop_front():   x ← data[head];  head ← (head + 1) mod m;  size ← size − 1
+get(i):        data[celda(i)]            (precondición: i &lt; size)</code></pre>
+<blockquote>
+<p><strong>Proposición 1.</strong> Cada operación sin crecimiento preserva el invariante y cuesta <span class="math inline">\(O(1)\)</span>.</p>
+</blockquote>
+<p><em>Demostración (<code>pop_front</code>).</em> Antes, los elementos ocupan <span class="math inline">\(\text{celda}(0..\texttt{size}-1)\)</span> con el <code>head</code> viejo. Tras <code>head</code> <span class="math inline">\(\gets\)</span> <code>head</code> <span class="math inline">\(+1 \bmod m\)</span>, la celda <span class="math inline">\(i\)</span> nueva es <span class="math inline">\((\texttt{head}+1+i) \bmod m\)</span>, que es la celda <span class="math inline">\(i+1\)</span> vieja. Los <code>size</code><span class="math inline">\(-1\)</span> elementos restantes son exactamente los viejos <span class="math inline">\(1..\texttt{size}-1\)</span>, en orden. La celda del viejo frente queda libre. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Detalle de implementación.</strong> El operador <code>%</code> es una división entera (decenas de ciclos). Como <code>head</code> <span class="math inline">\(&lt; m\)</span> e <span class="math inline">\(i &lt; m\)</span>, la suma es menor que <span class="math inline">\(2m\)</span> y basta una resta condicional: <code>j = head + i; if (j &gt;= m) j -= m;</code>. Con <span class="math inline">\(m\)</span> potencia de 2, también sirve <code>j &amp; (m - 1)</code>.</p>
+<h3 id="crecer-desenrollar">1.3 Crecer: desenrollar</h3>
+<p>Cuando <code>size = m</code> hay que crecer a <span class="math inline">\(2m\)</span>. <strong>No</strong> basta con copiar el bloque tal cual: si <code>head</code> <span class="math inline">\(\ne 0\)</span>, los elementos están “partidos” en dos tramos, <span class="math inline">\([\texttt{head}, m)\)</span> y <span class="math inline">\([0, \texttt{head})\)</span>, y en un bloque de <span class="math inline">\(2m\)</span> la fórmula <span class="math inline">\((\texttt{head} + i)\bmod 2m\)</span> ya no los encuentra. Hay que <strong>desenrollar</strong>: copiar el elemento <span class="math inline">\(i\)</span> a la celda <span class="math inline">\(i\)</span> del bloque nuevo y poner <code>head</code> <span class="math inline">\(= 0\)</span>. En C son dos <code>memcpy</code>; en C++ y Rust, un ciclo de <span class="math inline">\(\texttt{size}\)</span> reubicaciones.</p>
+<p>El test <code>ring_envuelve_y_crece</code> fuerza exactamente este caso: llena la cola, saca dos (ahora <code>head</code> <span class="math inline">\(= 2\)</span>), mete dos (dan la vuelta) y luego una más (crece con <code>head</code> <span class="math inline">\(\ne 0\)</span>).</p>
+<p>El análisis amortizado es <strong>idéntico</strong> al de L01 §6: el potencial <span class="math inline">\(\Phi = \max(0, 2\,\texttt{size} - m)\)</span> da <code>push_back</code> en <span class="math inline">\(O(1)\)</span> amortizado; <code>pop_front</code> no cambia <span class="math inline">\(m\)</span> y baja <code>size</code>, así que <span class="math inline">\(\Delta\Phi\le 0\)</span>.</p>
+<p><code>std::deque</code> (C++) y <code>VecDeque</code> (Rust) son colas dobles (<em>deques</em>) sobre esta idea; <code>VecDeque</code> es exactamente un buffer circular.</p>
+<hr/>
+<h2 id="el-tad-diccionario">2. El TAD Diccionario</h2>
+<h3 id="interfaz">2.1 Interfaz</h3>
+<p>Un <strong>diccionario</strong> (o <em>mapa</em>, o <em>tabla de símbolos</em>) guarda pares clave–valor con claves distintas:</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th>Operación</th>
+<th>Efecto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>insert(k, v)</code></td>
+<td>asocia <span class="math inline">\(v\)</span> a <span class="math inline">\(k\)</span> (reemplaza si ya existía)</td>
+</tr>
+<tr>
+<td><code>find(k)</code></td>
+<td>el valor asociado a <span class="math inline">\(k\)</span>, o “no existe”</td>
+</tr>
+<tr>
+<td><code>erase(k)</code></td>
+<td>quita <span class="math inline">\(k\)</span> si existía</td>
+</tr>
+</tbody>
+</table></div>
+<p>A diferencia de la secuencia, el orden lo determinan las <strong>claves</strong>, no el usuario. Hay dos familias de implementaciones: las que solo usan <strong>igualdad</strong> de claves (tablas hash, esta lección) y las que usan <strong>orden</strong> (árboles de búsqueda, L07), que además permiten mínimo, sucesor y rangos.</p>
+<h3 id="tabla-de-acceso-directo">2.2 Tabla de acceso directo</h3>
+<p>Si las claves son enteros en un universo pequeño <span class="math inline">\(U = \{0, \dots, u-1\}\)</span>, un arreglo <code>T[0..u)</code> con <code>T[k]</code> = valor de <span class="math inline">\(k\)</span> (o vacío) da las tres operaciones en <span class="math inline">\(O(1)\)</span> <strong>en el peor caso</strong>. El problema: la memoria es <span class="math inline">\(\Theta(u)\)</span>, no <span class="math inline">\(\Theta(n)\)</span>. Para claves de 64 bits, <span class="math inline">\(u = 2^{64}\)</span>; para cadenas, <span class="math inline">\(U\)</span> es infinito.</p>
+<h3 id="hashing">2.3 Hashing</h3>
+<p>Una <strong>función hash</strong> <span class="math inline">\(h: U \to \{0, \dots, m-1\}\)</span> comprime el universo a <span class="math inline">\(m\)</span> celdas, con <span class="math inline">\(m = \Theta(n)\)</span>. Guardamos el par de clave <span class="math inline">\(k\)</span> en la celda <span class="math inline">\(h(k)\)</span>.</p>
+<p>Como <span class="math inline">\(|U| &gt; m\)</span>, por el <strong>principio del palomar</strong> hay claves distintas <span class="math inline">\(k \ne k'\)</span> con <span class="math inline">\(h(k) = h(k')\)</span>: una <strong>colisión</strong>. Peor: para <strong>toda</strong> función <span class="math inline">\(h\)</span> fija y todo <span class="math inline">\(n \le |U|/m\)</span>, existe un conjunto de <span class="math inline">\(n\)</span> claves que caen todas en la misma celda (el palomar, aplicado a la celda más poblada). Ninguna función hash fija es buena para todas las entradas. Hay dos respuestas:</p>
+<ol type="1">
+<li><strong>Suponer</strong> que las claves “se comportan bien” (hashing uniforme simple, §3.2): útil para entender, pero un adversario puede romperlo.</li>
+<li><strong>Elegir <span class="math inline">\(h\)</span> al azar</strong> de una familia, después de que el adversario elige las claves (hashing universal, §4): la garantía es sobre el azar de <em>nuestra</em> elección, no sobre la entrada.</li>
+</ol>
+<p>Y dos formas de manejar las colisiones: <strong>encadenamiento</strong> (§3) y <strong>direccionamiento abierto</strong> (§5).</p>
+<hr/>
+<h2 id="encadenamiento-separado">3. Encadenamiento separado</h2>
+<h3 id="estructura">3.1 Estructura</h3>
+<p>Cada celda (<em>cubo</em>, <em>bucket</em>) guarda una lista de los pares cuya clave cae ahí. <code>insert</code> busca en la lista de <span class="math inline">\(h(k)\)</span> y, si no está, agrega; <code>find</code> y <code>erase</code> recorren esa lista. El <strong>factor de carga</strong> es <span class="math display">\[\alpha = \frac{n}{m}\]</span> (pares por cubo, en promedio). El costo de una operación es <span class="math inline">\(\Theta(1 + \text{largo de la lista recorrida})\)</span>.</p>
+<p><strong>Peor caso:</strong> todas las claves en un cubo: <span class="math inline">\(\Theta(n)\)</span> por operación. El test <code>hash_colisiones_totales</code> usa un hash constante: tu tabla debe ser <strong>correcta</strong> (aunque lenta) también ahí.</p>
+<h3 id="hashing-uniforme-simple">3.2 Hashing uniforme simple</h3>
+<p><strong>Supuesto (HUS).</strong> Cada clave cae en cada uno de los <span class="math inline">\(m\)</span> cubos con probabilidad <span class="math inline">\(1/m\)</span>, independientemente de dónde caen las demás.</p>
+<blockquote>
+<p><strong>Teorema 2 (búsqueda fallida).</strong> Bajo HUS, buscar una clave que no está en la tabla examina en esperanza <span class="math inline">\(\alpha\)</span> elementos; el costo esperado es <span class="math inline">\(\Theta(1 + \alpha)\)</span>.</p>
+</blockquote>
+<p><em>Demostración.</em> La clave buscada <span class="math inline">\(k\)</span> cae en un cubo <span class="math inline">\(j\)</span> y recorremos toda su lista. Sea <span class="math inline">\(X_i\)</span> la indicadora de que la clave almacenada <span class="math inline">\(k_i\)</span> (<span class="math inline">\(i = 1..n\)</span>) está en el cubo <span class="math inline">\(h(k)\)</span>. Por HUS, <span class="math inline">\(\Pr[X_i = 1] = 1/m\)</span>. El número de elementos examinados es <span class="math inline">\(\sum_i X_i\)</span> y, por linealidad, <span class="math display">\[\mathbb E\Big[\sum_{i=1}^n X_i\Big] = \sum_{i=1}^n \frac1m = \frac nm = \alpha. \qquad\blacksquare\]</span></p>
+<blockquote>
+<p><strong>Teorema 3 (búsqueda exitosa).</strong> Bajo HUS, si la clave buscada es una de las <span class="math inline">\(n\)</span> almacenadas, elegida uniformemente, y cada <code>insert</code> agrega al <strong>frente</strong> de su lista, el número esperado de elementos examinados es <span class="math inline">\(1 + \frac{\alpha}{2} - \frac{\alpha}{2n} = \Theta(1+\alpha)\)</span>.</p>
+</blockquote>
+<p><em>Demostración.</em> Numeremos las claves en orden de inserción <span class="math inline">\(k_1, \dots, k_n\)</span>. Al buscar <span class="math inline">\(k_i\)</span> examinamos <span class="math inline">\(k_i\)</span> más las claves de su lista insertadas <strong>después</strong> de ella (que quedaron delante). Sea <span class="math inline">\(X_{ij}\)</span> (<span class="math inline">\(j &gt; i\)</span>) la indicadora de <span class="math inline">\(h(k_j) = h(k_i)\)</span>, con <span class="math inline">\(\Pr = 1/m\)</span>. Promediando sobre <span class="math inline">\(i\)</span>: <span class="math display">\[\mathbb E = \frac1n\sum_{i=1}^n\Big(1 + \sum_{j=i+1}^n \frac1m\Big) = 1 + \frac{1}{nm}\sum_{i=1}^n (n-i) = 1 + \frac{1}{nm}\cdot\frac{n(n-1)}{2} = 1 + \frac{\alpha}{2} - \frac{\alpha}{2n}. \qquad\blacksquare\]</span></p>
+<p><strong>Consecuencia.</strong> Si mantenemos <span class="math inline">\(\alpha \le c\)</span> constante (redimensionando, §6), todas las operaciones cuestan <span class="math inline">\(O(1)\)</span> esperado. El lab exige <span class="math inline">\(\alpha \le 1\)</span>.</p>
+<hr/>
+<h2 id="hashing-universal">4. Hashing universal</h2>
+<h3 id="la-idea">4.1 La idea</h3>
+<p>HUS es un supuesto sobre la <strong>entrada</strong>. Si un adversario conoce <span class="math inline">\(h\)</span>, elige claves que colisionan todas y lo rompe. La alternativa (Carter y Wegman, 1979): fijar una <strong>familia</strong> <span class="math inline">\(\mathcal H\)</span> de funciones y, al crear la tabla, elegir <span class="math inline">\(h \in \mathcal H\)</span> <strong>al azar</strong>. El adversario elige las claves sin saber cuál <span class="math inline">\(h\)</span> tocó.</p>
+<p><strong>Definición.</strong> Una familia <span class="math inline">\(\mathcal H\)</span> de funciones <span class="math inline">\(U \to \{0..m-1\}\)</span> es <strong>universal</strong> si para todo par de claves distintas <span class="math inline">\(k \ne \ell\)</span>: <span class="math display">\[\Pr_{h \in \mathcal H}\big[h(k) = h(\ell)\big] \le \frac1m.\]</span></p>
+<p>Es exactamente la probabilidad de colisión que tendría una función totalmente aleatoria, pero exigida solo <strong>por pares</strong>.</p>
+<blockquote>
+<p><strong>Teorema 4.</strong> Si <span class="math inline">\(h\)</span> se elige de una familia universal y la tabla tiene <span class="math inline">\(n\)</span> claves, para <strong>toda</strong> clave <span class="math inline">\(k\)</span> el número esperado de claves almacenadas en el cubo de <span class="math inline">\(k\)</span> es a lo más <span class="math inline">\(\alpha\)</span> si <span class="math inline">\(k\)</span> no está en la tabla, y a lo más <span class="math inline">\(1 + \alpha\)</span> si está.</p>
+</blockquote>
+<p><em>Demostración.</em> Para cada clave almacenada <span class="math inline">\(\ell \ne k\)</span>, sea <span class="math inline">\(X_\ell\)</span> la indicadora de <span class="math inline">\(h(\ell) = h(k)\)</span>. Por universalidad, <span class="math inline">\(\mathbb E[X_\ell] \le 1/m\)</span>. Si <span class="math inline">\(k\)</span> no está, el cubo tiene <span class="math inline">\(\sum_\ell X_\ell\)</span> claves, con esperanza <span class="math inline">\(\le n/m = \alpha\)</span>. Si está, son <span class="math inline">\(1 + \sum_{\ell \ne k} X_\ell\)</span>, con esperanza <span class="math inline">\(\le 1 + (n-1)/m &lt; 1 + \alpha\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<p>Compara con el Teorema 2: la misma cota, pero ahora vale <strong>para toda entrada</strong>; lo aleatorio es la elección de <span class="math inline">\(h\)</span>.</p>
+<h3 id="una-familia-universal-concreta">4.2 Una familia universal concreta</h3>
+<p>Sea <span class="math inline">\(p\)</span> un primo mayor que toda clave (<span class="math inline">\(U \subseteq \{0..p-1\}\)</span>) y <span class="math inline">\(m &lt; p\)</span>. Para <span class="math inline">\(a \in \{1..p-1\}\)</span> y <span class="math inline">\(b \in \{0..p-1\}\)</span>: <span class="math display">\[h_{a,b}(k) = \big((a k + b) \bmod p\big) \bmod m, \qquad \mathcal H_{p,m} = \{h_{a,b}\}.\]</span></p>
+<blockquote>
+<p><strong>Teorema 5 (CLRS 11.5).</strong> <span class="math inline">\(\mathcal H_{p,m}\)</span> es universal.</p>
+</blockquote>
+<p><em>Demostración.</em> Fijemos <span class="math inline">\(k \ne \ell\)</span> y escribamos <span class="math inline">\(r = (ak+b)\bmod p\)</span>, <span class="math inline">\(s = (a\ell+b)\bmod p\)</span>.</p>
+<p><em>Paso 1: <span class="math inline">\(r \ne s\)</span>.</em> <span class="math inline">\(r - s \equiv a(k - \ell) \pmod p\)</span>. Como <span class="math inline">\(p\)</span> es primo, <span class="math inline">\(a \not\equiv 0\)</span> y <span class="math inline">\(k - \ell\not\equiv 0\)</span>, su producto no es <span class="math inline">\(\equiv 0\)</span>: <span class="math inline">\(r \ne s\)</span>. Así que <strong>antes</strong> del <span class="math inline">\(\bmod m\)</span> no hay colisiones.</p>
+<p><em>Paso 2: <span class="math inline">\((a, b) \mapsto (r, s)\)</span> es una biyección</em> entre los <span class="math inline">\(p(p-1)\)</span> pares con <span class="math inline">\(a \ne 0\)</span> y los <span class="math inline">\(p(p-1)\)</span> pares <span class="math inline">\((r, s)\)</span> con <span class="math inline">\(r\ne s\)</span>. Dado <span class="math inline">\((r, s)\)</span> con <span class="math inline">\(r \ne s\)</span>, el sistema <span class="math inline">\(a \equiv (r-s)(k-\ell)^{-1}\)</span>, <span class="math inline">\(b \equiv r - ak \pmod p\)</span> tiene solución única (el inverso existe porque <span class="math inline">\(p\)</span> es primo), y da <span class="math inline">\(a \ne 0\)</span> porque <span class="math inline">\(r\ne s\)</span>. Por lo tanto, si <span class="math inline">\((a, b)\)</span> es uniforme, <span class="math inline">\((r, s)\)</span> es uniforme entre los pares de valores distintos.</p>
+<p><em>Paso 3: contar.</em> <span class="math inline">\(h(k) = h(\ell)\)</span> si y solo si <span class="math inline">\(r \equiv s \pmod m\)</span>. Fijado <span class="math inline">\(r\)</span>, ¿cuántos <span class="math inline">\(s \ne r\)</span> en <span class="math inline">\(\{0..p-1\}\)</span> cumplen <span class="math inline">\(s\equiv r\pmod m\)</span>? A lo más <span class="math inline">\(\lceil p/m\rceil - 1 \le (p + m - 1)/m - 1 = (p-1)/m\)</span>. Como <span class="math inline">\(s\)</span> es uniforme entre <span class="math inline">\(p - 1\)</span> valores, <span class="math display">\[\Pr[h(k) = h(\ell)] \le \frac{(p-1)/m}{p-1} = \frac1m. \qquad\blacksquare\]</span></p>
+<h3 id="en-la-práctica">4.3 En la práctica</h3>
+<p>Los lenguajes no usan exactamente <span class="math inline">\(h_{a,b}\)</span>, pero la idea de <strong>aleatorizar</strong> sí está:</p>
+<ul>
+<li><strong>Rust:</strong> <code>std::collections::HashMap</code> usa <code>RandomState</code>, que crea un <code>SipHash-1-3</code> con una <strong>semilla aleatoria por tabla</strong>. SipHash es una función pseudoaleatoria con clave: sin conocer la semilla, encontrar colisiones es computacionalmente difícil.</li>
+<li><strong>C++:</strong> <code>std::hash</code> <strong>no</strong> está aleatorizado, y para enteros es la <strong>identidad</strong> en libstdc++ y libc++. Por eso la solución de C++ del lab aplica una mezcla (§7).</li>
+<li><strong>C:</strong> no hay nada; la función hash la pasa el usuario (en el lab, <code>algolib_hash_int</code>, una mezcla de <em>splitmix64</em>).</li>
+</ul>
+<p><strong>HashDoS</strong> (Crosby y Wallach, 2003; Klink y Wälde, 2011): un servidor web que mete los parámetros de una petición en una tabla hash con función conocida puede recibir miles de claves que colisionan todas, y cada petición cuesta <span class="math inline">\(\Theta(n^2)\)</span>. Así se tumbaron servidores en PHP, Java, Python y Ruby en 2011. Las defensas: semillas aleatorias (Rust, Python ≥ 3.3), o árboles en vez de listas en los cubos muy largos (Java 8).</p>
+<hr/>
+<h2 id="direccionamiento-abierto">5. Direccionamiento abierto</h2>
+<h3 id="idea-y-sondeo-lineal">5.1 Idea y sondeo lineal</h3>
+<p>Sin listas: <strong>todos</strong> los pares viven en el arreglo de <span class="math inline">\(m\)</span> celdas. Para insertar <span class="math inline">\(k\)</span> se prueba la celda <span class="math inline">\(h(k)\)</span>; si está ocupada, la siguiente, y así (cíclicamente) hasta encontrar una libre. Para buscar, se recorre la misma secuencia hasta encontrar <span class="math inline">\(k\)</span> o una celda <strong>vacía</strong>. Esto se llama <strong>sondeo lineal</strong>. Requiere <span class="math inline">\(\alpha &lt; 1\)</span> (no caben más de <span class="math inline">\(m\)</span> pares).</p>
+<p>Ventajas: sin punteros ni <code>malloc</code> por elemento, y recorrer celdas consecutivas es lo más amigable con la caché que existe. Es lo que usan las tablas más rápidas en la práctica (<code>absl::flat_hash_map</code>, <code>hashbrown</code>, que es la base del <code>HashMap</code> de Rust).</p>
+<p>Desventaja: <strong>agrupamiento primario</strong>. Las claves forman cúmulos (<em>clusters</em>) de celdas ocupadas consecutivas, y una clave que cae en cualquier celda de un cúmulo lo alarga. Los cúmulos largos crecen más rápido que los cortos.</p>
+<p><strong>Costo esperado (Knuth, 1963).</strong> Bajo el supuesto de que <span class="math inline">\(h\)</span> es totalmente aleatoria, con factor de carga <span class="math inline">\(\alpha\)</span>: <span class="math display">\[\text{búsqueda exitosa} \approx \frac12\Big(1 + \frac1{1-\alpha}\Big), \qquad \text{búsqueda fallida} \approx \frac12\Big(1 + \frac1{(1-\alpha)^2}\Big).\]</span> Con <span class="math inline">\(\alpha = 1/2\)</span>: 1.5 y 2.5 sondeos. Con <span class="math inline">\(\alpha = 0.9\)</span>: 5.5 y 50.5. El costo explota cuando <span class="math inline">\(\alpha \to 1\)</span>; por eso la solución de C++ mantiene <span class="math inline">\(\alpha \le 1/2\)</span>. (La demostración es un análisis combinatorio largo; ver Knuth Vol. 3 §6.4.)</p>
+<h3 id="el-problema-del-borrado">5.2 El problema del borrado</h3>
+<p>No se puede simplemente vaciar la celda de la clave borrada. El invariante que hace funcionar la búsqueda es:</p>
+<blockquote>
+<p><strong>Invariante de sondeo.</strong> Si la clave <span class="math inline">\(k\)</span> está en la celda <span class="math inline">\(j\)</span>, entonces todas las celdas del camino <span class="math inline">\(h(k), h(k)+1, \dots, j\)</span> (cíclicamente) están ocupadas.</p>
+</blockquote>
+<p>Si borramos una clave del medio de un cúmulo dejando la celda vacía, cualquier clave más adelante cuyo camino pase por ahí se vuelve <strong>inalcanzable</strong>: la búsqueda se detiene en el hueco.</p>
+<p><strong>Solución 1: lápidas.</strong> Marcar la celda como “borrada”: la búsqueda la salta y la inserción puede reutilizarla. Problema: las lápidas <strong>no desaparecen</strong>; tras muchas inserciones y borrados la tabla se llena de lápidas, las búsquedas fallidas recorren casi toda la tabla y, si no se cuentan en el factor de carga, pueden no terminar. El test <code>hash_muchos_borrados</code> hace pasar 200 000 claves distintas por la tabla con solo 64 vivas a la vez.</p>
+<p><strong>Solución 2: corrimiento hacia atrás</strong> (Knuth Vol. 3, Algoritmo 6.4R). Tras vaciar la celda <span class="math inline">\(i\)</span> (el <strong>hueco</strong>), recorremos el cúmulo que sigue. Para cada clave <span class="math inline">\(x\)</span> en la celda <span class="math inline">\(j\)</span> con hogar <span class="math inline">\(h = h(x)\)</span>: si el hueco está en el camino de <span class="math inline">\(x\)</span>, es decir, si <span class="math inline">\(h\)</span> <strong>no</strong> está en el intervalo cíclico <span class="math inline">\((i, j]\)</span>, movemos <span class="math inline">\(x\)</span> al hueco y el hueco pasa a <span class="math inline">\(j\)</span>. Nos detenemos en la primera celda vacía.</p>
+<blockquote>
+<p><strong>Teorema 6.</strong> El borrado por corrimiento hacia atrás preserva el invariante de sondeo.</p>
+</blockquote>
+<p><em>Demostración.</em> Sea <span class="math inline">\(C\)</span> el cúmulo que empieza justo después del hueco inicial. Las claves fuera de <span class="math inline">\(C\)</span> y antes del hueco no se ven afectadas: sus caminos terminan antes del hueco o no lo cruzan (los caminos son tramos consecutivos de celdas ocupadas que terminan en la celda de la clave). Para una clave <span class="math inline">\(x\)</span> en <span class="math inline">\(C\)</span>, en la celda <span class="math inline">\(j\)</span>, distinguimos:</p>
+<ul>
+<li><em>Su hogar <span class="math inline">\(h\)</span> está en <span class="math inline">\((i, j]\)</span>:</em> su camino <span class="math inline">\(h..j\)</span> no incluye el hueco <span class="math inline">\(i\)</span>, y todas las celdas de <span class="math inline">\(h\)</span> a <span class="math inline">\(j\)</span> siguen ocupadas (solo se vacían celdas cuyo contenido se movió <strong>hacia atrás</strong>, a una posición anterior a ellas; ninguna celda entre <span class="math inline">\(h\)</span> y <span class="math inline">\(j\)</span> queda vacía mientras <span class="math inline">\(x\)</span> esté en <span class="math inline">\(j\)</span>, porque el hueco siempre está antes de la clave que examinamos). <span class="math inline">\(x\)</span> se queda y su invariante vale.</li>
+<li><em>Su hogar no está en <span class="math inline">\((i, j]\)</span>:</em> su camino pasa por <span class="math inline">\(i\)</span>. La movemos a <span class="math inline">\(i\)</span>; su nuevo camino <span class="math inline">\(h..i\)</span> es un prefijo del viejo, todo ocupado. Ahora el hueco está en <span class="math inline">\(j\)</span>, y continuamos con la misma situación desplazada.</li>
+</ul>
+<p>El proceso termina en la primera celda vacía después del cúmulo, porque ningún camino cruza una celda vacía. Al final, cada clave cumple el invariante y hay exactamente una celda vacía más que antes: la tabla es exactamente la que se obtendría insertando solo las claves vivas. <span class="math inline">\(\blacksquare\)</span></p>
+<p>La solución de C++ del lab implementa este algoritmo (función <code>erase</code> y el predicado <code>entre</code>).</p>
+<hr/>
+<h2 id="redimensionar">6. Redimensionar</h2>
+<p>Para mantener <span class="math inline">\(\alpha \le c\)</span>, cuando una inserción lo violaría se crea una tabla de <span class="math inline">\(2m\)</span> celdas y se <strong>reinsertan</strong> todos los pares (sus posiciones cambian, porque dependen de <span class="math inline">\(m\)</span>). Cuesta <span class="math inline">\(\Theta(n + m)\)</span>.</p>
+<blockquote>
+<p><strong>Proposición 7.</strong> Con duplicación al superar <span class="math inline">\(\alpha = c\)</span>, una secuencia de <span class="math inline">\(n\)</span> inserciones cuesta <span class="math inline">\(O(n)\)</span> esperado en total: <span class="math inline">\(O(1)\)</span> amortizado esperado por inserción.</p>
+</blockquote>
+<p><em>Demostración (esquema).</em> Es el argumento agregado de L01: los redimensionamientos ocurren cuando <span class="math inline">\(n\)</span> pasa por <span class="math inline">\(c m_0, 2cm_0, 4cm_0, \dots\)</span>, y cada uno cuesta <span class="math inline">\(O(n_\text{actual})\)</span>; la suma geométrica es <span class="math inline">\(O(n)\)</span>. Cada reinserción cuesta <span class="math inline">\(O(1)\)</span> esperado (Teoremas 2 y 4), y por linealidad de la esperanza el total esperado es <span class="math inline">\(O(n)\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<p>Observa la combinación de los dos tipos de análisis: <strong>amortizado</strong> (sobre la secuencia) y <strong>esperado</strong> (sobre el azar de <span class="math inline">\(h\)</span>).</p>
+<hr/>
+<h2 id="funciones-hash-en-la-práctica">7. Funciones hash en la práctica</h2>
+<h3 id="el-peligro-de-la-identidad">7.1 El peligro de la identidad</h3>
+<p>Con <span class="math inline">\(m\)</span> potencia de 2 y “cubo <span class="math inline">\(= h(k) \bmod m\)</span>”, solo importan los <strong>bits bajos</strong> de <span class="math inline">\(h(k)\)</span>. Si <span class="math inline">\(h\)</span> es la identidad y las claves son múltiplos de 1024, todas tienen sus 10 bits bajos en cero: en una tabla de 1024 cubos, <strong>todas</strong> caen en el cubo 0. Patrones así son comunes (direcciones de memoria alineadas, identificadores con pasos fijos).</p>
+<h3 id="mezclar">7.2 Mezclar</h3>
+<p>Una <strong>mezcla</strong> dispersa la información de todos los bits a todos los bits. Dos clásicas:</p>
+<ul>
+<li><strong>Hashing de Fibonacci</strong> (Knuth §6.4): multiplicar por <span class="math inline">\(\lfloor 2^{64}/\varphi\rfloor\)</span> = <code>0x9E3779B97F4A7C15</code> (módulo <span class="math inline">\(2^{64}\)</span>) y tomar los <span class="math inline">\(b\)</span> bits <strong>altos</strong> para una tabla de <span class="math inline">\(2^b\)</span> cubos. Una multiplicación y un corrimiento.</li>
+<li><strong>splitmix64</strong>: tres rondas de <code>x ^= x &gt;&gt; s; x *= c</code>, más robusta. Es la que usa <code>algolib_hash_int</code> en el lab de C.</li>
+</ul>
+<p>El programa cuenta el cubo más poblado al meter las claves <span class="math inline">\(0, 1024, 2048, \dots\)</span> en 1024 cubos:</p>
+<div class="tabs"><div aria-label="Lenguaje" class="tablist" role="tablist"><button aria-controls="t0-0" aria-selected="false" data-lang="c" id="t0-0-b" role="tab" tabindex="-1" type="button">C</button><button aria-controls="t0-1" aria-selected="false" data-lang="cpp" id="t0-1-b" role="tab" tabindex="-1" type="button">C++</button><button aria-controls="t0-2" aria-selected="false" data-lang="rust" id="t0-2-b" role="tab" tabindex="-1" type="button">Rust</button></div><div aria-labelledby="t0-0-b" class="panel" data-lang="c" id="t0-0" role="tabpanel"><div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a aria-hidden="true" href="#cb2-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdint.h&gt;</span></span>
+<span id="cb2-2"><a aria-hidden="true" href="#cb2-2" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb2-3"><a aria-hidden="true" href="#cb2-3" tabindex="-1"></a></span>
+<span id="cb2-4"><a aria-hidden="true" href="#cb2-4" tabindex="-1"></a><span class="pp">#define M </span><span class="dv">1024</span><span class="pp"> </span><span class="co">/* 2^10 cubos */</span></span>
+<span id="cb2-5"><a aria-hidden="true" href="#cb2-5" tabindex="-1"></a></span>
+<span id="cb2-6"><a aria-hidden="true" href="#cb2-6" tabindex="-1"></a><span class="dt">static</span> <span class="dt">uint64_t</span> identidad<span class="op">(</span><span class="dt">uint64_t</span> k<span class="op">)</span> <span class="op">{</span> <span class="cf">return</span> k <span class="op">%</span> M<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb2-7"><a aria-hidden="true" href="#cb2-7" tabindex="-1"></a><span class="dt">static</span> <span class="dt">uint64_t</span> fibonacci<span class="op">(</span><span class="dt">uint64_t</span> k<span class="op">)</span> <span class="op">{</span> <span class="cf">return</span> <span class="op">(</span>k <span class="op">*</span> <span class="bn">0x9E3779B97F4A7C15</span><span class="bu">ULL</span><span class="op">)</span> <span class="op">&gt;&gt;</span> <span class="op">(</span><span class="dv">64</span> <span class="op">-</span> <span class="dv">10</span><span class="op">);</span> <span class="op">}</span></span>
+<span id="cb2-8"><a aria-hidden="true" href="#cb2-8" tabindex="-1"></a></span>
+<span id="cb2-9"><a aria-hidden="true" href="#cb2-9" tabindex="-1"></a><span class="dt">static</span> <span class="dt">int</span> peor_cubo<span class="op">(</span><span class="dt">uint64_t</span> <span class="op">(*</span>h<span class="op">)(</span><span class="dt">uint64_t</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb2-10"><a aria-hidden="true" href="#cb2-10" tabindex="-1"></a>    <span class="dt">int</span> cuenta<span class="op">[</span>M<span class="op">]</span> <span class="op">=</span> <span class="op">{</span><span class="dv">0</span><span class="op">},</span> peor <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb2-11"><a aria-hidden="true" href="#cb2-11" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">uint64_t</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">1000</span><span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb2-12"><a aria-hidden="true" href="#cb2-12" tabindex="-1"></a>        <span class="dt">int</span> c <span class="op">=</span> <span class="op">++</span>cuenta<span class="op">[</span>h<span class="op">(</span>i <span class="op">*</span> <span class="dv">1024</span><span class="op">)];</span></span>
+<span id="cb2-13"><a aria-hidden="true" href="#cb2-13" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>c <span class="op">&gt;</span> peor<span class="op">)</span> peor <span class="op">=</span> c<span class="op">;</span></span>
+<span id="cb2-14"><a aria-hidden="true" href="#cb2-14" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-15"><a aria-hidden="true" href="#cb2-15" tabindex="-1"></a>    <span class="cf">return</span> peor<span class="op">;</span></span>
+<span id="cb2-16"><a aria-hidden="true" href="#cb2-16" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-17"><a aria-hidden="true" href="#cb2-17" tabindex="-1"></a></span>
+<span id="cb2-18"><a aria-hidden="true" href="#cb2-18" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-19"><a aria-hidden="true" href="#cb2-19" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">"identidad: el cubo más lleno tiene </span><span class="sc">%d</span><span class="st"> claves</span><span class="sc">\n</span><span class="st">"</span><span class="op">,</span> peor_cubo<span class="op">(</span>identidad<span class="op">));</span></span>
+<span id="cb2-20"><a aria-hidden="true" href="#cb2-20" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">"fibonacci: el cubo más lleno tiene </span><span class="sc">%d</span><span class="st"> claves</span><span class="sc">\n</span><span class="st">"</span><span class="op">,</span> peor_cubo<span class="op">(</span>fibonacci<span class="op">));</span></span>
+<span id="cb2-21"><a aria-hidden="true" href="#cb2-21" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb2-22"><a aria-hidden="true" href="#cb2-22" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div><div aria-labelledby="t0-1-b" class="panel" data-lang="cpp" id="t0-1" role="tabpanel"><div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a aria-hidden="true" href="#cb3-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;array&gt;</span></span>
+<span id="cb3-2"><a aria-hidden="true" href="#cb3-2" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;cstdint&gt;</span></span>
+<span id="cb3-3"><a aria-hidden="true" href="#cb3-3" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb3-4"><a aria-hidden="true" href="#cb3-4" tabindex="-1"></a></span>
+<span id="cb3-5"><a aria-hidden="true" href="#cb3-5" tabindex="-1"></a><span class="kw">constexpr</span> <span class="bu">std::</span>uint64_t M <span class="op">=</span> <span class="dv">1024</span><span class="op">;</span>  <span class="co">// 2^10 cubos</span></span>
+<span id="cb3-6"><a aria-hidden="true" href="#cb3-6" tabindex="-1"></a></span>
+<span id="cb3-7"><a aria-hidden="true" href="#cb3-7" tabindex="-1"></a><span class="bu">std::</span>uint64_t identidad<span class="op">(</span><span class="bu">std::</span>uint64_t k<span class="op">)</span> <span class="op">{</span> <span class="cf">return</span> k <span class="op">%</span> M<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb3-8"><a aria-hidden="true" href="#cb3-8" tabindex="-1"></a><span class="bu">std::</span>uint64_t fibonacci<span class="op">(</span><span class="bu">std::</span>uint64_t k<span class="op">)</span> <span class="op">{</span> <span class="cf">return</span> <span class="op">(</span>k <span class="op">*</span> <span class="bn">0x9E3779B97F4A7C15</span><span class="bu">ULL</span><span class="op">)</span> <span class="op">&gt;&gt;</span> <span class="op">(</span><span class="dv">64</span> <span class="op">-</span> <span class="dv">10</span><span class="op">);</span> <span class="op">}</span></span>
+<span id="cb3-9"><a aria-hidden="true" href="#cb3-9" tabindex="-1"></a></span>
+<span id="cb3-10"><a aria-hidden="true" href="#cb3-10" tabindex="-1"></a><span class="dt">int</span> peor_cubo<span class="op">(</span><span class="bu">std::</span>uint64_t <span class="op">(*</span>h<span class="op">)(</span><span class="bu">std::</span>uint64_t<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb3-11"><a aria-hidden="true" href="#cb3-11" tabindex="-1"></a>    <span class="bu">std::</span>array<span class="op">&lt;</span><span class="dt">int</span><span class="op">,</span> M<span class="op">&gt;</span> cuenta<span class="op">{};</span></span>
+<span id="cb3-12"><a aria-hidden="true" href="#cb3-12" tabindex="-1"></a>    <span class="dt">int</span> peor <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb3-13"><a aria-hidden="true" href="#cb3-13" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="bu">std::</span>uint64_t i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">1000</span><span class="op">;</span> <span class="op">++</span>i<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-14"><a aria-hidden="true" href="#cb3-14" tabindex="-1"></a>        <span class="dt">int</span> c <span class="op">=</span> <span class="op">++</span>cuenta<span class="op">[</span>h<span class="op">(</span>i <span class="op">*</span> <span class="dv">1024</span><span class="op">)];</span></span>
+<span id="cb3-15"><a aria-hidden="true" href="#cb3-15" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>c <span class="op">&gt;</span> peor<span class="op">)</span> peor <span class="op">=</span> c<span class="op">;</span></span>
+<span id="cb3-16"><a aria-hidden="true" href="#cb3-16" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb3-17"><a aria-hidden="true" href="#cb3-17" tabindex="-1"></a>    <span class="cf">return</span> peor<span class="op">;</span></span>
+<span id="cb3-18"><a aria-hidden="true" href="#cb3-18" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb3-19"><a aria-hidden="true" href="#cb3-19" tabindex="-1"></a></span>
+<span id="cb3-20"><a aria-hidden="true" href="#cb3-20" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb3-21"><a aria-hidden="true" href="#cb3-21" tabindex="-1"></a>    <span class="bu">std::</span>printf<span class="op">(</span><span class="st">"identidad: el cubo más lleno tiene </span><span class="sc">%d</span><span class="st"> claves</span><span class="sc">\n</span><span class="st">"</span><span class="op">,</span> peor_cubo<span class="op">(</span>identidad<span class="op">));</span></span>
+<span id="cb3-22"><a aria-hidden="true" href="#cb3-22" tabindex="-1"></a>    <span class="bu">std::</span>printf<span class="op">(</span><span class="st">"fibonacci: el cubo más lleno tiene </span><span class="sc">%d</span><span class="st"> claves</span><span class="sc">\n</span><span class="st">"</span><span class="op">,</span> peor_cubo<span class="op">(</span>fibonacci<span class="op">));</span></span>
+<span id="cb3-23"><a aria-hidden="true" href="#cb3-23" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div><div aria-labelledby="t0-2-b" class="panel" data-lang="rust" id="t0-2" role="tabpanel"><div class="sourceCode" id="cb4"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb4-1"><a aria-hidden="true" href="#cb4-1" tabindex="-1"></a><span class="kw">const</span> M<span class="op">:</span> <span class="dt">u64</span> <span class="op">=</span> <span class="dv">1024</span><span class="op">;</span> <span class="co">// 2^10 cubos</span></span>
+<span id="cb4-2"><a aria-hidden="true" href="#cb4-2" tabindex="-1"></a></span>
+<span id="cb4-3"><a aria-hidden="true" href="#cb4-3" tabindex="-1"></a><span class="kw">fn</span> identidad(k<span class="op">:</span> <span class="dt">u64</span>) <span class="op">-&gt;</span> <span class="dt">u64</span> <span class="op">{</span> k <span class="op">%</span> M <span class="op">}</span></span>
+<span id="cb4-4"><a aria-hidden="true" href="#cb4-4" tabindex="-1"></a><span class="kw">fn</span> fibonacci(k<span class="op">:</span> <span class="dt">u64</span>) <span class="op">-&gt;</span> <span class="dt">u64</span> <span class="op">{</span> k<span class="op">.</span>wrapping_mul(<span class="dv">0x9E3779B97F4A7C15</span>) <span class="op">&gt;&gt;</span> (<span class="dv">64</span> <span class="op">-</span> <span class="dv">10</span>) <span class="op">}</span></span>
+<span id="cb4-5"><a aria-hidden="true" href="#cb4-5" tabindex="-1"></a></span>
+<span id="cb4-6"><a aria-hidden="true" href="#cb4-6" tabindex="-1"></a><span class="kw">fn</span> peor_cubo(h<span class="op">:</span> <span class="kw">fn</span>(<span class="dt">u64</span>) <span class="op">-&gt;</span> <span class="dt">u64</span>) <span class="op">-&gt;</span> <span class="dt">u32</span> <span class="op">{</span></span>
+<span id="cb4-7"><a aria-hidden="true" href="#cb4-7" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> cuenta <span class="op">=</span> [<span class="dv">0u32</span><span class="op">;</span> M <span class="kw">as</span> <span class="dt">usize</span>]<span class="op">;</span></span>
+<span id="cb4-8"><a aria-hidden="true" href="#cb4-8" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> peor <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb4-9"><a aria-hidden="true" href="#cb4-9" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="dv">0</span><span class="op">..</span><span class="dv">1000u64</span> <span class="op">{</span></span>
+<span id="cb4-10"><a aria-hidden="true" href="#cb4-10" tabindex="-1"></a>        <span class="kw">let</span> c <span class="op">=</span> <span class="op">&amp;</span><span class="kw">mut</span> cuenta[h(i <span class="op">*</span> <span class="dv">1024</span>) <span class="kw">as</span> <span class="dt">usize</span>]<span class="op">;</span></span>
+<span id="cb4-11"><a aria-hidden="true" href="#cb4-11" tabindex="-1"></a>        <span class="op">*</span>c <span class="op">+=</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb4-12"><a aria-hidden="true" href="#cb4-12" tabindex="-1"></a>        peor <span class="op">=</span> peor<span class="op">.</span>max(<span class="op">*</span>c)<span class="op">;</span></span>
+<span id="cb4-13"><a aria-hidden="true" href="#cb4-13" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-14"><a aria-hidden="true" href="#cb4-14" tabindex="-1"></a>    peor</span>
+<span id="cb4-15"><a aria-hidden="true" href="#cb4-15" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-16"><a aria-hidden="true" href="#cb4-16" tabindex="-1"></a></span>
+<span id="cb4-17"><a aria-hidden="true" href="#cb4-17" tabindex="-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb4-18"><a aria-hidden="true" href="#cb4-18" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">"identidad: el cubo más lleno tiene {} claves"</span><span class="op">,</span> peor_cubo(identidad))<span class="op">;</span></span>
+<span id="cb4-19"><a aria-hidden="true" href="#cb4-19" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">"fibonacci: el cubo más lleno tiene {} claves"</span><span class="op">,</span> peor_cubo(fibonacci))<span class="op">;</span></span>
+<span id="cb4-20"><a aria-hidden="true" href="#cb4-20" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div></div>
+<pre class="text salida"><code>identidad: el cubo más lleno tiene 1000 claves
+fibonacci: el cubo más lleno tiene 2 claves</code></pre>
+<p>Observa el <code>wrapping_mul</code> de Rust: en modo debug, <code>*</code> hace <code>panic</code> si desborda; aquí el desbordamiento (aritmética módulo <span class="math inline">\(2^{64}\)</span>) es <strong>intencional</strong>, y hay que decirlo. En C y C++ la multiplicación de enteros sin signo siempre es modular.</p>
+<p>Con Fibonacci, las 1000 claves se reparten en 1024 cubos sin que ninguno tenga más de 2: casi lo mejor posible.</p>
+<div class="callout atencion"><span class="lbl">Atención</span>Que Fibonacci funcione aquí no significa que sea perfecta: es una función <strong>fija</strong>, y para toda función fija existe un conjunto malo de claves (§2.3). Mezclar protege contra patrones accidentales, no contra un adversario.</div>
+<h3 id="igualdad-y-hash-deben-ser-consistentes">7.3 Igualdad y hash deben ser consistentes</h3>
+<p>Toda tabla hash exige: <strong>si <span class="math inline">\(a = b\)</span> entonces <span class="math inline">\(h(a) = h(b)\)</span></strong>. Si defines tu propia igualdad (por ejemplo, cadenas sin distinguir mayúsculas), la función hash debe respetarla (convertir a minúsculas antes de hashear). En Rust esto es un contrato documentado de los traits <code>Hash</code> y <code>Eq</code>; <code>#[derive(Hash, PartialEq, Eq)]</code> lo cumple automáticamente. En C++ hay que especializar <code>std::hash&lt;T&gt;</code> y <code>operator==</code> en concordancia. En C, el usuario pasa <code>hash</code> y <code>eq</code> como punteros a función y nadie verifica nada.</p>
+<hr/>
+<h2 id="resumen-de-paradigmas-en-este-lab">8. Resumen de paradigmas en este lab</h2>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Aspecto</th>
+<th>C</th>
+<th>C++</th>
+<th>Rust</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cola: memoria</td>
+<td><code>malloc</code> de bytes; desenrollar con 2 <code>memcpy</code></td>
+<td><code>allocator</code> + <code>construct_at</code>; garantía fuerte</td>
+<td><code>Box&lt;[Option&lt;T&gt;]&gt;</code>, 100% seguro</td>
+</tr>
+<tr>
+<td>Tabla: estrategia en la solución</td>
+<td>encadenamiento (listas)</td>
+<td>sondeo lineal + corrimiento hacia atrás</td>
+<td>encadenamiento (<code>Vec&lt;Vec&lt;(K,V)&gt;&gt;</code>)</td>
+</tr>
+<tr>
+<td>Función hash</td>
+<td>puntero a función del usuario</td>
+<td>functor <code>Hash</code> (por defecto <code>std::hash</code>, identidad en enteros)</td>
+<td><code>BuildHasher</code> → <code>Hasher</code>; el tipo aporta <code>Hash</code></td>
+</tr>
+<tr>
+<td>Igualdad</td>
+<td>puntero a función <code>eq</code></td>
+<td><code>operator==</code></td>
+<td>trait <code>Eq</code></td>
+</tr>
+<tr>
+<td>Aleatorización</td>
+<td>ninguna</td>
+<td>ninguna</td>
+<td><code>RandomState</code>: SipHash con semilla por tabla</td>
+</tr>
+<tr>
+<td>Valor de retorno de <code>insert</code></td>
+<td><code>bool</code> (¿era nueva?)</td>
+<td><code>bool</code></td>
+<td><code>Option&lt;V&gt;</code> (el valor anterior)</td>
+</tr>
+<tr>
+<td>Búsqueda</td>
+<td><code>void *</code> o <code>NULL</code></td>
+<td><code>V*</code> o <code>nullptr</code></td>
+<td><code>Option&lt;&amp;V&gt;</code></td>
+</tr>
+</tbody>
+</table></div>
+<hr/>
+<h2 id="guía-del-lab-04">9. Guía del Lab 04</h2>
+<p><strong>Archivos:</strong> <code>c/src/lab04/{ring_queue,hash_map}.c</code>, <code>cpp/include/algolib/lab04/{ring_queue,hash_map}.hpp</code>, <code>rust/src/lab04/{ring_queue,hash_map}.rs</code>.</p>
+<p><strong>Orden sugerido:</strong></p>
+<ol type="1">
+<li><code>RingQueue</code>: una función privada <code>idx(i)</code> que calcule la celda del elemento <span class="math inline">\(i\)</span>. Con ella, <code>get</code>, <code>front</code> y <code>back</code> son triviales. Luego <code>push</code> sin crecer y <code>pop</code>. Por último <code>grow</code>, desenrollando. El test <code>ring_envuelve_y_crece</code> es el que distingue una implementación correcta.</li>
+<li><code>HashMap</code>: elige estrategia. <strong>Recomendación:</strong> encadenamiento primero (es más difícil equivocarse); si te sobra tiempo, reescríbela con sondeo lineal en el problem set.</li>
+<li><code>find</code> → <code>insert</code> sin redimensionar → redimensionar → <code>erase</code>.</li>
+<li>Corre <code>hash_colisiones_totales</code> (corrección con hash pésimo) y <code>hash_muchos_borrados</code> (lápidas).</li>
+<li>C: <code>make c-fugas-lab04</code>.</li>
+</ol>
+<p><strong>Errores frecuentes:</strong></p>
+<ul>
+<li>Crecer copiando el bloque tal cual sin desenrollar (falla <code>ring_envuelve_y_crece</code>).</li>
+<li>En C++, usar <code>cap_</code> como divisor cuando vale 0 (<code>% 0</code> es UB).</li>
+<li>Calcular el cubo con el número de cubos <strong>viejo</strong> al reinsertar durante el redimensionamiento.</li>
+<li>En C, olvidar que el valor dentro de la entrada debe quedar <strong>alineado</strong>: si la clave mide 1 byte y el valor es un <code>double</code>, el valor no puede empezar en el byte 1. La solución redondea el desplazamiento del valor a <code>_Alignof(max_align_t)</code>.</li>
+<li>Sondeo lineal: borrar vaciando la celda sin corrimiento (falla <code>hash_colisiones_totales</code>), o lápidas que nunca se limpian (no termina <code>hash_muchos_borrados</code>).</li>
+<li>En Rust, intentar <code>self.buckets[self.index(&amp;k)].push(...)</code>: el préstamo mutable de <code>self.buckets</code> choca con el inmutable de <code>self.index</code>. Calcula el índice primero en una variable.</li>
+</ul>
+<hr/>
+<h2 id="comprueba-tu-comprensión">10. Comprueba tu comprensión</h2>
+<ol type="1">
+<li>En un buffer circular con <span class="math inline">\(m = 8\)</span>, <code>head</code> <span class="math inline">\(= 6\)</span> y <code>size</code> <span class="math inline">\(= 5\)</span>, ¿en qué celdas están los elementos? ¿Dónde irá el siguiente <code>push</code>?</li>
+<li>¿Por qué el Teorema 4 no necesita suponer nada sobre las claves?</li>
+<li>Con encadenamiento y <span class="math inline">\(\alpha = 3\)</span>, ¿cuántos elementos examina en esperanza una búsqueda fallida? ¿Es <span class="math inline">\(O(1)\)</span>?</li>
+<li>Con sondeo lineal, ¿por qué no se puede tener <span class="math inline">\(\alpha &gt; 1\)</span>? ¿Y con encadenamiento?</li>
+<li>¿Qué pasa si una clase define <code>operator==</code> comparando solo un campo pero <code>std::hash</code> usa dos?</li>
+<li>¿Por qué la solución de C++ toma los bits <strong>altos</strong> del producto de Fibonacci y no los bajos?</li>
+</ol>
+<details>
+<summary>
+Respuestas
+</summary>
+<ol type="1">
+<li>Celdas 6, 7, 0, 1, 2. El siguiente <code>push</code> va a la celda <span class="math inline">\((6 + 5) \bmod 8 = 3\)</span>.</li>
+<li>Porque la probabilidad es sobre la elección aleatoria de <span class="math inline">\(h\)</span>, que ocurre después de que las claves están fijas. Vale para cualquier conjunto de claves.</li>
+<li><span class="math inline">\(\alpha = 3\)</span>. Es <span class="math inline">\(O(1)\)</span> porque 3 es una constante; lo que importa es que <span class="math inline">\(\alpha\)</span> esté acotado.</li>
+<li>Cada par ocupa una celda del arreglo, así que <span class="math inline">\(n \le m\)</span>. Con encadenamiento, las listas pueden tener cualquier largo: <span class="math inline">\(\alpha &gt; 1\)</span> es válido (pero más lento).</li>
+<li>Dos objetos iguales podrían tener hashes distintos, caer en cubos distintos y la tabla tendría “duplicados” o no encontraría claves que sí están.</li>
+<li>En el producto <span class="math inline">\(k\cdot A \bmod 2^{64}\)</span>, los bits bajos solo dependen de los bits bajos de <span class="math inline">\(k\)</span> (los altos de <span class="math inline">\(k\)</span> no pueden “bajar” en una multiplicación). Los bits altos dependen de todos los bits de <span class="math inline">\(k\)</span>.</li>
+</ol>
+</details>
+<hr/>
+<h2 id="problem-set-4">11. Problem Set 4</h2>
+<p><strong>Teoría</strong></p>
+<ol type="1">
+<li>Demuestra que con encadenamiento, HUS y <span class="math inline">\(n = m\)</span>, el largo esperado de la lista <strong>más larga</strong> es <span class="math inline">\(\Theta(\lg n / \lg\lg n)\)</span>. (Basta la cota superior: usa <span class="math inline">\(\Pr[\text{un cubo tiene} \ge t] \le \binom{n}{t} m^{-t}\)</span> y una cota de unión.)</li>
+<li>Demuestra que la familia <span class="math inline">\(h_a(k) = \big((a k) \bmod 2^w\big) \gg (w - b)\)</span> con <span class="math inline">\(a\)</span> impar aleatorio (multiplicar y desplazar, Dietzfelbinger et al. 1997) cumple <span class="math inline">\(\Pr[h(k) = h(\ell)] \le 2/2^b\)</span> (es “casi universal”). Puedes suponer el lema: si <span class="math inline">\(x \ne 0\)</span> y <span class="math inline">\(a\)</span> es impar uniforme, los bits <span class="math inline">\(w - b .. w-1\)</span> de <span class="math inline">\(a x\)</span> son casi uniformes.</li>
+<li><strong>Hashing perfecto (FKS).</strong> Demuestra que si se elige <span class="math inline">\(h\)</span> de una familia universal con <span class="math inline">\(m = n^2\)</span>, la probabilidad de que no haya <strong>ninguna</strong> colisión entre <span class="math inline">\(n\)</span> claves es al menos <span class="math inline">\(1/2\)</span>. Usa esto para diseñar un diccionario <strong>estático</strong> con búsqueda <span class="math inline">\(O(1)\)</span> en el peor caso y espacio <span class="math inline">\(O(n)\)</span> esperado.</li>
+<li>Demuestra que si se borran claves con lápidas y se reconstruye la tabla cuando (claves + lápidas) <span class="math inline">\(&gt; m/2\)</span>, todas las operaciones siguen siendo <span class="math inline">\(O(1)\)</span> amortizado esperado.</li>
+<li><strong>Cuckoo hashing.</strong> Con dos tablas y dos funciones hash, cada clave vive en <span class="math inline">\(T_1[h_1(k)]\)</span> o en <span class="math inline">\(T_2[h_2(k)]\)</span>. Explica por qué la búsqueda es <span class="math inline">\(O(1)\)</span> en el peor caso y describe qué hace la inserción cuando ambas celdas están ocupadas.</li>
+</ol>
+<p><strong>Implementación (C, C++ y Rust)</strong></p>
+<ol start="6" type="1">
+<li>Reescribe tu <code>HashMap</code> con la otra estrategia (si usaste encadenamiento, sondeo lineal con corrimiento hacia atrás, y viceversa). Mide con un <em>benchmark</em> el tiempo de <span class="math inline">\(10^6\)</span> inserciones y búsquedas para <span class="math inline">\(\alpha \in \{0.25, 0.5, 0.75, 0.9\}\)</span> y compara con las fórmulas de Knuth.</li>
+<li>Implementa la familia <span class="math inline">\(h_{a,b}\)</span> de §4.2 para claves enteras con <span class="math inline">\(p = 2^{61} - 1\)</span> (primo de Mersenne: <span class="math inline">\(x \bmod p\)</span> se calcula sin división). Escribe un test que verifique empíricamente la universalidad para pares de claves fijos.</li>
+<li>Agrega <code>RingQueue::push_front</code> y <code>pop_back</code> (cola doble) y un iterador. En Rust, implementa <code>Iterator</code> y <code>DoubleEndedIterator</code>.</li>
+<li>Implementa una caché LRU de capacidad <span class="math inline">\(k\)</span> con tu <code>HashMap</code> y una lista doble (reutiliza la del lab03 o adapta la de C++). Test contra un oráculo ingenuo.</li>
+</ol>
+<hr/>
+<h2 id="referencias">Referencias</h2>
+<ul>
+<li>CLRS, <em>Introduction to Algorithms</em>, 4ª ed.: §10.1 (colas sobre arreglos circulares), Cap. 11 (tablas hash; Teoremas 11.1, 11.2, 11.5), §11.5 (hashing perfecto).</li>
+<li>MIT 6.006 (Spring 2020), Lecture 4: <em>Hashing</em>. MIT 6.046 (Spring 2015), Lecture 8: <em>Randomization: Universal &amp; Perfect Hashing</em>.</li>
+<li>Knuth, D. E. <em>The Art of Computer Programming</em>, Vol. 3, §6.4 (sondeo lineal, Algoritmo R, hashing multiplicativo).</li>
+<li>Carter, J. L. y Wegman, M. N. (1979). <em>Universal classes of hash functions</em>. JCSS 18(2).</li>
+<li>Crosby, S. A. y Wallach, D. S. (2003). <em>Denial of Service via Algorithmic Complexity Attacks</em>. USENIX Security.</li>
+<li>Aumasson, J.-P. y Bernstein, D. J. (2012). <em>SipHash: a fast short-input PRF</em>.</li>
+</ul>
+</main><footer>algolib · Estructuras de Datos y Algoritmos. Fuente: <code>notas/L04-colas-hashing.md</code>. Regenerar con <code>make html</code>.</footer><script>{
+
+const KEY='algolib-lang';let pref='cpp';try{pref=localStorage.getItem(KEY)||'cpp'}catch(e){}
+function pick(lang,save){
+  for(const g of document.querySelectorAll('.tabs')){
+    const btns=[...g.querySelectorAll('[role=tab]')];if(!btns.length)continue;
+    const b=btns.find(x=>x.dataset.lang===lang)||btns[0];
+    for(const x of btns){const on=x===b;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;
+      document.getElementById(x.getAttribute('aria-controls')).hidden=!on;}
+  }
+  if(save){try{localStorage.setItem(KEY,lang)}catch(e){}}
+}
+for(const g of document.querySelectorAll('.tablist')){
+  g.addEventListener('click',e=>{const b=e.target.closest('[role=tab]');if(b){const y=b.getBoundingClientRect().top;pick(b.dataset.lang,true);window.scrollBy(0,b.getBoundingClientRect().top-y);}});
+  g.addEventListener('keydown',e=>{const bs=[...g.querySelectorAll('[role=tab]')];const i=bs.indexOf(document.activeElement);
+    if(i<0)return;let j=i;if(e.key==='ArrowRight')j=(i+1)%bs.length;else if(e.key==='ArrowLeft')j=(i-1+bs.length)%bs.length;else return;
+    e.preventDefault();pick(bs[j].dataset.lang,true);bs[j].focus();});
+}
+pick(pref,false);
+for(const p of document.querySelectorAll('main pre:not(.pizarra):not(.salida)')){
+  const b=document.createElement('button');b.className='copy';b.type='button';b.textContent='Copiar';
+  b.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(p.innerText.replace(/Copiar$/,''));b.textContent='Copiado';}catch(e){b.textContent='No se pudo';}setTimeout(()=>b.textContent='Copiar',1600);});
+  p.appendChild(b);}
+}</script></body></html>

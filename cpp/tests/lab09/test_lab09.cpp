@@ -129,3 +129,17 @@ TEST(recorridos_iterativos_200k) {
     auto comp = strongly_connected_components(path);
     CHECK(std::all_of(comp.begin(), comp.end(), [&](std::size_t c) { return c == comp[0]; }));
 }
+
+TEST(dfs_estrella_lineal) {
+    // 0 → i e i → 0 para todo i: el vértice 0 tiene 200 000 vecinos y se "retoma"
+    // 200 000 veces. Un DFS que vuelve a recorrer adj[0] desde el principio en cada
+    // retorno cuesta Θ(n²) y no termina; con (vértice, próximo índice) es Θ(n).
+    const std::size_t n = 200000;
+    Graph g(n);
+    for (std::size_t i = 1; i < n; ++i) { g.add_edge(0, i); g.add_edge(i, 0); }
+    auto ord = dfs_preorder(g, 0);
+    CHECK_EQ(ord.size(), n);
+    for (std::size_t i = 0; i < n; ++i) CHECK_EQ(ord[i], i);
+    auto comp = strongly_connected_components(g);
+    CHECK(std::all_of(comp.begin(), comp.end(), [&](std::size_t c) { return c == comp[0]; }));
+}

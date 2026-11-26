@@ -77,3 +77,16 @@ TEST(avl_aleatorio_vs_map) {
         }
     }
 }
+
+TEST(avl_borrar_rebalancea) {
+    // Borrar casi todo un lado: sin rotaciones al borrar, quedaría la columna derecha
+    // del árbol original (altura ~16 con ~500 claves) y violaría la cota.
+    AvlMap<int, int> m;
+    for (int i = 0; i < 65536; ++i) m.insert(i, i);
+    for (int i = 0; i < 65000; ++i) CHECK(m.erase(i));
+    CHECK_EQ(m.size(), 536u);
+    CHECK(cumple_cota_avl(m.height(), m.size()));
+    std::vector<int> esperado;
+    for (int i = 65000; i < 65536; ++i) esperado.push_back(i);
+    CHECK(m.keys() == esperado);
+}

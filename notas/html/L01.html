@@ -114,7 +114,7 @@ pre.sourceCode a{display:none}
 <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
 </head><body>
-<header class="strip"><p class="curso">algolib · Estructuras de Datos y Algoritmos</p><h1>Lección 1 — Modelo de cómputo, análisis asintótico y el TAD Pila</h1><p class="desc">Modelo de cómputo, notación asintótica con taller de demostraciones, TAD Pila y análisis amortizado.</p><div class="pages"><a href="index.html">Inicio</a><a href="L00.html">L00 · Prerrequisitos</a><a href="L01.html" aria-current="page">L01 · Notas</a></div></header><nav class="toc" aria-label="Secciones"><div class="scroll"><a href="#objetivos-de-aprendizaje">Objetivos de aprendizaje</a><a href="#mapa-de-la-lección">Mapa de la lección</a><a href="#motivación">1. Motivación</a><a href="#modelo-de-cómputo">2. Modelo de cómputo</a><a href="#notación-asintótica">3. Notación asintótica</a><a href="#interfaz-vs.-estructura-de-datos">4. Interfaz vs. estructura de da…</a><a href="#arreglo-estático">5. Arreglo estático</a><a href="#arreglo-dinámico-y-análisis-amortizado">6. Arreglo dinámico y análisis a…</a><a href="#del-papel-al-código">7. Del papel al código</a><a href="#guía-del-lab-01">8. Guía del Lab 01</a><a href="#comprueba-tu-comprensión">9. Comprueba tu comprensión</a><a href="#problem-set-1">10. Problem Set 1</a><a href="#referencias">Referencias</a></div></nav><main><blockquote>
+<header class="strip"><p class="curso">algolib · Estructuras de Datos y Algoritmos</p><h1>Lección 1 — Modelo de cómputo, análisis asintótico y el TAD Pila</h1><p class="desc">Modelo de cómputo, notación asintótica con taller de demostraciones, TAD Pila y análisis amortizado.</p><div class="pages"><a href="index.html">Inicio</a><a href="L00.html">L00 · Prerrequisitos</a><a href="L01.html" aria-current="page">L01 · Notas</a><a href="L02.html">L02 · Notas</a><a href="L03.html">L03 · Notas</a><a href="L04.html">L04 · Notas</a><a href="L05.html">L05 · Notas</a><a href="L06.html">L06 · Notas</a><a href="L07.html">L07 · Notas</a><a href="L08.html">L08 · Notas</a><a href="L09.html">L09 · Notas</a><a href="L10.html">L10 · Notas</a><a href="L11.html">L11 · Notas</a><a href="L12.html">L12 · Notas</a><a href="L13.html">L13 · Notas</a></div></header><nav class="toc" aria-label="Secciones"><div class="scroll"><a href="#objetivos-de-aprendizaje">Objetivos de aprendizaje</a><a href="#mapa-de-la-lección">Mapa de la lección</a><a href="#motivación">1. Motivación</a><a href="#modelo-de-cómputo">2. Modelo de cómputo</a><a href="#notación-asintótica">3. Notación asintótica</a><a href="#interfaz-vs.-estructura-de-datos">4. Interfaz vs. estructura de da…</a><a href="#arreglo-estático">5. Arreglo estático</a><a href="#arreglo-dinámico-y-análisis-amortizado">6. Arreglo dinámico y análisis a…</a><a href="#del-papel-al-código">7. Del papel al código</a><a href="#guía-del-lab-01">8. Guía del Lab 01</a><a href="#comprueba-tu-comprensión">9. Comprueba tu comprensión</a><a href="#problem-set-1">10. Problem Set 1</a><a href="#referencias">Referencias</a></div></nav><main><blockquote>
 <p><strong>Prerrequisitos:</strong> Lección 0 (§1 cuantificadores, inducción e invariantes; §2 logaritmos; §3 sumas geométricas y telescópicas; §7–9 memoria, C++ y Rust).</p>
 <p><strong>Cómo estudiar esta lección:</strong> cada demostración está escrita paso a paso con la justificación de cada renglón. Antes de leer la solución de un ejemplo, intenta el siguiente paso tú mismo.</p>
 <p><strong>Lab asociado:</strong> <code>lab01</code>: <code>ArrayStack&lt;T&gt;</code> y <code>MinStack&lt;T&gt;</code>.</p>
@@ -247,7 +247,7 @@ pre.sourceCode a{display:none}
 <col style="width: 25%"/>
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Notación</th>
 <th>Definición</th>
 <th>Se lee</th>
@@ -255,31 +255,31 @@ pre.sourceCode a{display:none}
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><span class="math inline">\(f \in O(g)\)</span></td>
 <td><span class="math inline">\(\exists c&gt;0,\ \exists n_0,\ \forall n\ge n_0:\ f(n)\le c\,g(n)\)</span></td>
 <td><span class="math inline">\(f\)</span> crece <strong>a lo más</strong> como <span class="math inline">\(g\)</span></td>
 <td><span class="math inline">\(\le\)</span></td>
 </tr>
-<tr class="even">
+<tr>
 <td><span class="math inline">\(f \in \Omega(g)\)</span></td>
 <td><span class="math inline">\(\exists c&gt;0,\ \exists n_0,\ \forall n\ge n_0:\ f(n)\ge c\,g(n)\)</span></td>
 <td><strong>al menos</strong> como <span class="math inline">\(g\)</span></td>
 <td><span class="math inline">\(\ge\)</span></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><span class="math inline">\(f \in \Theta(g)\)</span></td>
 <td><span class="math inline">\(f\in O(g)\)</span> y <span class="math inline">\(f\in\Omega(g)\)</span></td>
 <td><strong>igual</strong> que <span class="math inline">\(g\)</span></td>
 <td><span class="math inline">\(=\)</span></td>
 </tr>
-<tr class="even">
+<tr>
 <td><span class="math inline">\(f \in o(g)\)</span></td>
 <td><span class="math inline">\(\forall c&gt;0,\ \exists n_0,\ \forall n\ge n_0:\ f(n) &lt; c\,g(n)\)</span></td>
 <td><strong>estrictamente</strong> más lento</td>
 <td><span class="math inline">\(&lt;\)</span></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><span class="math inline">\(f \in \omega(g)\)</span></td>
 <td><span class="math inline">\(g\in o(f)\)</span></td>
 <td>estrictamente más rápido</td>
@@ -309,49 +309,49 @@ pre.sourceCode a{display:none}
 <col style="width: 33%"/>
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Regla</th>
 <th>Enunciado</th>
 <th>Ejemplo</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>R1. Sumar desigualdades</strong></td>
 <td>Si <span class="math inline">\(a\le b\)</span> y <span class="math inline">\(p\le q\)</span>, entonces <span class="math inline">\(a+p\le b+q\)</span></td>
 <td><span class="math inline">\(3\le 3n\)</span> y <span class="math inline">\(5n\le5n\)</span> implican <span class="math inline">\(5n+3\le 8n\)</span></td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>R2. Multiplicar por un positivo</strong></td>
 <td>Si <span class="math inline">\(a\le b\)</span> y <span class="math inline">\(k&gt;0\)</span>, entonces <span class="math inline">\(ka\le kb\)</span>. <strong>Si <span class="math inline">\(k&lt;0\)</span>, la desigualdad se invierte.</strong></td>
 <td><span class="math inline">\(1\le n\)</span> implica <span class="math inline">\(7\le 7n\)</span></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>R3. Transitividad</strong></td>
 <td>Si <span class="math inline">\(a\le b\)</span> y <span class="math inline">\(b\le c\)</span>, entonces <span class="math inline">\(a\le c\)</span></td>
 <td>encadenar pasos</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>R4. Potencias, para <span class="math inline">\(n\ge1\)</span></strong></td>
 <td><span class="math inline">\(1\le n\le n^2\le n^3\le\cdots\)</span></td>
 <td><span class="math inline">\(7 \le 7n^2\)</span> para <span class="math inline">\(n\ge1\)</span></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>R5. Logaritmo, para <span class="math inline">\(n\ge1\)</span></strong></td>
 <td><span class="math inline">\(0\le \lg n\le n\)</span></td>
 <td><span class="math inline">\(10n\lg n\le10n^2\)</span></td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>R6. Logaritmo, para <span class="math inline">\(n\ge2\)</span></strong></td>
 <td><span class="math inline">\(\lg n \ge 1\)</span></td>
 <td><span class="math inline">\(50n\le 50n\lg n\)</span> para <span class="math inline">\(n\ge2\)</span></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>R7. Quitar un término <span class="math inline">\(\ge0\)</span> hace la expresión más chica</strong></td>
 <td>Si <span class="math inline">\(b\ge0\)</span>, entonces <span class="math inline">\(a+b\ge a\)</span></td>
 <td><span class="math inline">\(5n+3\ge5n\)</span></td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>R8. Quitar un término <span class="math inline">\(\le0\)</span> hace la expresión más grande</strong></td>
 <td>Si <span class="math inline">\(b\le0\)</span>, entonces <span class="math inline">\(a+b\le a\)</span></td>
 <td><span class="math inline">\(n^2-10n\le n^2\)</span> para <span class="math inline">\(n\ge0\)</span></td>
@@ -428,34 +428,34 @@ pre.sourceCode a{display:none}
 <col style="width: 33%"/>
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Paso</th>
 <th>Desigualdad</th>
 <th>Qué hicimos</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>1</td>
 <td><span class="math inline">\(n^2-10n\ge\tfrac12n^2\)</span></td>
 <td>lo que queremos</td>
 </tr>
-<tr class="even">
+<tr>
 <td>2</td>
 <td><span class="math inline">\(n^2-\tfrac12n^2\ge 10n\)</span></td>
 <td>sumamos <span class="math inline">\(10n - \tfrac12 n^2\)</span> a ambos lados</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>3</td>
 <td><span class="math inline">\(\tfrac12 n^2\ge10n\)</span></td>
 <td>simplificamos</td>
 </tr>
-<tr class="even">
+<tr>
 <td>4</td>
 <td><span class="math inline">\(\tfrac12 n\ge 10\)</span></td>
 <td>dividimos entre <span class="math inline">\(n&gt;0\)</span> (R2 con <span class="math inline">\(k=1/n&gt;0\)</span>)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>5</td>
 <td><span class="math inline">\(n\ge20\)</span></td>
 <td>multiplicamos por 2</td>
@@ -529,7 +529,7 @@ n^2\notin O(n) &amp;\iff \forall c&gt;0\ \forall n_0\ \exists n\ge n_0:\ n^2&gt;
 Solución
 </summary>
 <p><em>Superior:</em> <span class="math inline">\(-5n^2\le0\)</span>, se quita (R8): <span class="math inline">\(f(n)\le2n^3+100\)</span>. Para <span class="math inline">\(n\ge1\)</span>, <span class="math inline">\(1\le n^3\)</span>, así que <span class="math inline">\(100\le100n^3\)</span> (R4, R2). Sumando: <span class="math inline">\(f(n)\le102n^3\)</span>. Entonces <span class="math inline">\(c=102\)</span> y <span class="math inline">\(n_0=1\)</span>.</p>
-<em>Inferior:</em> <span class="math inline">\(100\ge0\)</span>, se quita (R7): <span class="math inline">\(f(n)\ge2n^3-5n^2\)</span>. El negativo se paga con la mitad del principal: <span class="math inline">\(2n^3-5n^2\ge n^3\iff n^3\ge5n^2\iff n\ge5\)</span> (dividiendo entre <span class="math inline">\(n^2&gt;0\)</span>). Entonces <span class="math inline">\(c=1\)</span> y <span class="math inline">\(n_0=5\)</span>. Verificación con <span class="math inline">\(n=5\)</span>: <span class="math inline">\(250-125+100=225\ge125\)</span> ✓.
+<p><em>Inferior:</em> <span class="math inline">\(100\ge0\)</span>, se quita (R7): <span class="math inline">\(f(n)\ge2n^3-5n^2\)</span>. El negativo se paga con la mitad del principal: <span class="math inline">\(2n^3-5n^2\ge n^3\iff n^3\ge5n^2\iff n\ge5\)</span> (dividiendo entre <span class="math inline">\(n^2&gt;0\)</span>). Entonces <span class="math inline">\(c=1\)</span> y <span class="math inline">\(n_0=5\)</span>. Verificación con <span class="math inline">\(n=5\)</span>: <span class="math inline">\(250-125+100=225\ge125\)</span> ✓.</p>
 </details>
 <strong>P2.</strong> Demuestra <span class="math inline">\(n\lg n+50n\in O(n\lg n)\)</span>. ¿Por qué <strong>no</strong> funciona <span class="math inline">\(n_0=1\)</span>?
 <details>
@@ -537,28 +537,28 @@ Solución
 Solución
 </summary>
 <p>Para <span class="math inline">\(n\ge2\)</span>, <span class="math inline">\(\lg n\ge1\)</span> (R6). Multiplicando por <span class="math inline">\(50n&gt;0\)</span>: <span class="math inline">\(50n\le50n\lg n\)</span>. Sumando <span class="math inline">\(n\lg n\)</span>: <span class="math inline">\(f(n)\le51\,n\lg n\)</span>. Entonces <span class="math inline">\(c=51\)</span> y <span class="math inline">\(n_0=2\)</span>.</p>
-Con <span class="math inline">\(n_0=1\)</span> falla porque en <span class="math inline">\(n=1\)</span> se tiene <span class="math inline">\(g(1)=1\cdot\lg1=0\)</span>, pero <span class="math inline">\(f(1)=0+50=50&gt;0=c\cdot g(1)\)</span> para <strong>cualquier</strong> <span class="math inline">\(c\)</span>. Moraleja: si <span class="math inline">\(g\)</span> vale 0 en algún punto, <span class="math inline">\(n_0\)</span> debe saltárselo.
+<p>Con <span class="math inline">\(n_0=1\)</span> falla porque en <span class="math inline">\(n=1\)</span> se tiene <span class="math inline">\(g(1)=1\cdot\lg1=0\)</span>, pero <span class="math inline">\(f(1)=0+50=50&gt;0=c\cdot g(1)\)</span> para <strong>cualquier</strong> <span class="math inline">\(c\)</span>. Moraleja: si <span class="math inline">\(g\)</span> vale 0 en algún punto, <span class="math inline">\(n_0\)</span> debe saltárselo.</p>
 </details>
 <strong>P3.</strong> Demuestra <span class="math inline">\(n\notin O(\sqrt n)\)</span>.
 <details>
 <summary>
 Solución
 </summary>
-Negación: <span class="math inline">\(\forall c\ \forall n_0\ \exists n\ge n_0:\ n&gt;c\sqrt n\)</span>. Dividiendo entre <span class="math inline">\(\sqrt n&gt;0\)</span>, la condición es <span class="math inline">\(\sqrt n&gt;c\)</span>, es decir, <span class="math inline">\(n&gt;c^2\)</span>. Dados <span class="math inline">\(c\)</span> y <span class="math inline">\(n_0\)</span>, tomamos <span class="math inline">\(n=\max(n_0,\lfloor c^2\rfloor+1)\)</span>. Entonces <span class="math inline">\(n&gt;c^2\)</span>, así que <span class="math inline">\(\sqrt n&gt;c\)</span> (la raíz es creciente), y multiplicando por <span class="math inline">\(\sqrt n&gt;0\)</span> se obtiene <span class="math inline">\(n&gt;c\sqrt n\)</span>. <span class="math inline">\(\square\)</span>
+<p>Negación: <span class="math inline">\(\forall c\ \forall n_0\ \exists n\ge n_0:\ n&gt;c\sqrt n\)</span>. Dividiendo entre <span class="math inline">\(\sqrt n&gt;0\)</span>, la condición es <span class="math inline">\(\sqrt n&gt;c\)</span>, es decir, <span class="math inline">\(n&gt;c^2\)</span>. Dados <span class="math inline">\(c\)</span> y <span class="math inline">\(n_0\)</span>, tomamos <span class="math inline">\(n=\max(n_0,\lfloor c^2\rfloor+1)\)</span>. Entonces <span class="math inline">\(n&gt;c^2\)</span>, así que <span class="math inline">\(\sqrt n&gt;c\)</span> (la raíz es creciente), y multiplicando por <span class="math inline">\(\sqrt n&gt;0\)</span> se obtiene <span class="math inline">\(n&gt;c\sqrt n\)</span>. <span class="math inline">\(\square\)</span></p>
 </details>
 <strong>P4.</strong> Demuestra <span class="math inline">\(2^{n+1}\in\Theta(2^n)\)</span>.
 <details>
 <summary>
 Solución
 </summary>
-<span class="math inline">\(2^{n+1}=2\cdot2^n\)</span> exactamente. Superior con <span class="math inline">\(c=2\)</span>; inferior con <span class="math inline">\(c=2\)</span> (o cualquier <span class="math inline">\(c\le2\)</span>); <span class="math inline">\(n_0=0\)</span>.
+<p><span class="math inline">\(2^{n+1}=2\cdot2^n\)</span> exactamente. Superior con <span class="math inline">\(c=2\)</span>; inferior con <span class="math inline">\(c=2\)</span> (o cualquier <span class="math inline">\(c\le2\)</span>); <span class="math inline">\(n_0=0\)</span>.</p>
 </details>
 <strong>P5.</strong> ¿Dónde está el error? <em>“<span class="math inline">\(n^2-10n\ge n^2\)</span> porque quité el término <span class="math inline">\(-10n\)</span>; entonces <span class="math inline">\(c=1\)</span>.”</em>
 <details>
 <summary>
 Solución
 </summary>
-Se usó R8 (quitar un negativo <strong>agranda</strong>) en una cota <strong>inferior</strong>, que es la dirección equivocada. Quitar <span class="math inline">\(-10n\)</span> produce algo <strong>mayor o igual</strong> que <span class="math inline">\(f\)</span>, no menor. Ver Ejemplo C.
+<p>Se usó R8 (quitar un negativo <strong>agranda</strong>) en una cota <strong>inferior</strong>, que es la dirección equivocada. Quitar <span class="math inline">\(-10n\)</span> produce algo <strong>mayor o igual</strong> que <span class="math inline">\(f\)</span>, no menor. Ver Ejemplo C.</p>
 </details>
 <h4 id="el-criterio-del-límite-un-atajo-con-su-demostración">3.3.10 El criterio del límite: un atajo (con su demostración)</h4>
 <p>Hacer todo lo anterior a mano cada vez es tedioso. Cuando el límite del cociente existe, hay un atajo.</p>
@@ -572,44 +572,44 @@ Se usó R8 (quitar un negativo <strong>agranda</strong>) en una cota <strong>inf
 <col style="width: 33%"/>
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Paso</th>
 <th>Qué escribimos</th>
 <th>Por qué</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>1</td>
 <td>Elegimos <span class="math inline">\(\varepsilon=L/2\)</span></td>
 <td>Es positivo porque <span class="math inline">\(L&gt;0\)</span>. Queremos una tolerancia que mantenga el cociente <strong>lejos de 0</strong>; la mitad de <span class="math inline">\(L\)</span> lo logra.</td>
 </tr>
-<tr class="even">
+<tr>
 <td>2</td>
 <td>Existe <span class="math inline">\(N\)</span> con <span class="math inline">\(\big\lvert\frac{f(n)}{g(n)}-L\big\rvert&lt;\frac L2\)</span> para <span class="math inline">\(n\ge N\)</span></td>
 <td>definición de límite con ese <span class="math inline">\(\varepsilon\)</span></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>3</td>
 <td><span class="math inline">\(-\frac L2&lt;\frac{f(n)}{g(n)}-L&lt;\frac L2\)</span></td>
 <td><span class="math inline">\(\lvert x\rvert&lt;a\)</span> equivale a <span class="math inline">\(-a&lt;x&lt;a\)</span></td>
 </tr>
-<tr class="even">
+<tr>
 <td>4</td>
 <td><span class="math inline">\(\frac L2&lt;\frac{f(n)}{g(n)}&lt;\frac{3L}2\)</span></td>
 <td>sumamos <span class="math inline">\(L\)</span> a las tres partes</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>5</td>
 <td><span class="math inline">\(\frac L2\,g(n)&lt;f(n)&lt;\frac{3L}2\,g(n)\)</span></td>
 <td>multiplicamos por <span class="math inline">\(g(n)&gt;0\)</span> (R2)</td>
 </tr>
-<tr class="even">
+<tr>
 <td>6</td>
 <td>Lado derecho: <span class="math inline">\(f\in O(g)\)</span> con <span class="math inline">\(c=\frac{3L}2\)</span>, <span class="math inline">\(n_0=N\)</span></td>
 <td>definición de <span class="math inline">\(O\)</span></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>7</td>
 <td>Lado izquierdo: <span class="math inline">\(f\in\Omega(g)\)</span> con <span class="math inline">\(c=\frac L2\)</span>, <span class="math inline">\(n_0=N\)</span></td>
 <td>definición de <span class="math inline">\(\Omega\)</span> <span class="math inline">\(\square\)</span></td>
@@ -711,24 +711,24 @@ Se usó R8 (quitar un negativo <strong>agranda</strong>) en una cota <strong>inf
 <col style="width: 33%"/>
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th></th>
 <th><strong>Interfaz (TAD)</strong></th>
 <th><strong>Estructura de datos</strong></th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Responde a</td>
 <td><em>¿qué</em> operaciones hay y qué significan?</td>
 <td><em>¿cómo</em> se representan y cuánto cuestan?</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Ejemplos</td>
 <td>Pila, Cola, Conjunto, Diccionario, Cola de prioridad</td>
 <td>arreglo dinámico, lista ligada, heap, árbol AVL, tabla hash</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Quién la elige</td>
 <td>el problema</td>
 <td>el diseñador, según los costos que necesite</td>
@@ -847,14 +847,14 @@ Se usó R8 (quitar un negativo <strong>agranda</strong>) en una cota <strong>inf
 <col style="width: 33%"/>
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>C</th>
 <th>C++</th>
 <th>Rust</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><code>pop()</code> devuelve un <strong><code>bool</code></strong> (<code>false</code> si está vacía) y <code>top()</code> devuelve <strong><code>NULL</code></strong>. Nada obliga al llamador a revisarlo.</td>
 <td><code>pop()</code> en una pila vacía <strong>lanza</strong> <code>std::out_of_range</code>. (La STL elige otra cosa: en <code>std::stack</code> es <strong>UB</strong> y es una precondición del llamador.)</td>
 <td><code>pop()</code> devuelve <code>Option&lt;T&gt;</code>: la función parcial se vuelve <strong>total</strong> sobre <span class="math inline">\(\textsf{Elem}\cup\{\bot\}\)</span>. El compilador <strong>obliga</strong> al llamador a manejar <code>None</code>.</td>
@@ -932,7 +932,7 @@ Se usó R8 (quitar un negativo <strong>agranda</strong>) en una cota <strong>inf
 <col style="width: 16%"/>
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th style="text-align: right;">push #</th>
 <th style="text-align: center;">cap. antes → después</th>
 <th style="text-align: right;">copias</th>
@@ -942,7 +942,7 @@ Se usó R8 (quitar un negativo <strong>agranda</strong>) en una cota <strong>inf
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td style="text-align: right;">1</td>
 <td style="text-align: center;">0 → 1</td>
 <td style="text-align: right;">0</td>
@@ -950,7 +950,7 @@ Se usó R8 (quitar un negativo <strong>agranda</strong>) en una cota <strong>inf
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1.00</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: right;">2</td>
 <td style="text-align: center;">1 → 2</td>
 <td style="text-align: right;">1</td>
@@ -958,7 +958,7 @@ Se usó R8 (quitar un negativo <strong>agranda</strong>) en una cota <strong>inf
 <td style="text-align: right;">3</td>
 <td style="text-align: right;">1.50</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: right;">3</td>
 <td style="text-align: center;">2 → 4</td>
 <td style="text-align: right;">2</td>
@@ -966,7 +966,7 @@ Se usó R8 (quitar un negativo <strong>agranda</strong>) en una cota <strong>inf
 <td style="text-align: right;">6</td>
 <td style="text-align: right;">2.00</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: right;">4</td>
 <td style="text-align: center;">4</td>
 <td style="text-align: right;">0</td>
@@ -974,7 +974,7 @@ Se usó R8 (quitar un negativo <strong>agranda</strong>) en una cota <strong>inf
 <td style="text-align: right;">7</td>
 <td style="text-align: right;">1.75</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: right;">5</td>
 <td style="text-align: center;">4 → 8</td>
 <td style="text-align: right;">4</td>
@@ -982,7 +982,7 @@ Se usó R8 (quitar un negativo <strong>agranda</strong>) en una cota <strong>inf
 <td style="text-align: right;">12</td>
 <td style="text-align: right;">2.40</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: right;">6</td>
 <td style="text-align: center;">8</td>
 <td style="text-align: right;">0</td>
@@ -990,7 +990,7 @@ Se usó R8 (quitar un negativo <strong>agranda</strong>) en una cota <strong>inf
 <td style="text-align: right;">13</td>
 <td style="text-align: right;">2.17</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: right;">7</td>
 <td style="text-align: center;">8</td>
 <td style="text-align: right;">0</td>
@@ -998,7 +998,7 @@ Se usó R8 (quitar un negativo <strong>agranda</strong>) en una cota <strong>inf
 <td style="text-align: right;">14</td>
 <td style="text-align: right;">2.00</td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: right;">8</td>
 <td style="text-align: center;">8</td>
 <td style="text-align: right;">0</td>
@@ -1006,7 +1006,7 @@ Se usó R8 (quitar un negativo <strong>agranda</strong>) en una cota <strong>inf
 <td style="text-align: right;">15</td>
 <td style="text-align: right;">1.88</td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: right;">9</td>
 <td style="text-align: center;">8 → 16</td>
 <td style="text-align: right;">8</td>
@@ -1343,17 +1343,17 @@ Se usó R8 (quitar un negativo <strong>agranda</strong>) en una cota <strong>inf
 <p><strong>En números</strong>, para <span class="math inline">\(n=10^6\)</span>:</p>
 <div class="scroll"><table>
 <thead>
-<tr class="header">
+<tr>
 <th>Política</th>
 <th>Copias totales</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>duplicar (<span class="math inline">\(\times 2\)</span>)</td>
 <td><span class="math inline">\(&lt; 2\times10^{6}\)</span></td>
 </tr>
-<tr class="even">
+<tr>
 <td>sumar 10 (<span class="math inline">\(+10\)</span>)</td>
 <td><span class="math inline">\(\approx 5\times10^{10}\)</span> (<strong>25 000 veces más</strong>)</td>
 </tr>
@@ -1370,7 +1370,7 @@ Se usó R8 (quitar un negativo <strong>agranda</strong>) en una cota <strong>inf
 <p><strong>Demostración (memoria).</strong> Justo después de ampliar de <span class="math inline">\(m\)</span> a <span class="math inline">\(\lceil\alpha m\rceil\)</span> hay <span class="math inline">\(m+1\)</span> elementos. Como <span class="math inline">\(\lceil\alpha m\rceil&lt;\alpha m+1\)</span>, la fracción ocupada es <span class="math display">\[\frac{m+1}{\lceil\alpha m\rceil}&gt;\frac{m+1}{\alpha m+1}\ge\frac1\alpha,\]</span> donde la última desigualdad equivale a <span class="math inline">\(\alpha(m+1)\ge\alpha m+1\)</span>, es decir, a <span class="math inline">\(\alpha\ge1\)</span> ✓. Sin <code>pop</code>, <span class="math inline">\(k\)</span> solo crece hasta la siguiente ampliación, así que la fracción ocupada nunca baja de <span class="math inline">\(\frac1\alpha\)</span> y la vacía nunca supera <span class="math inline">\(1-\frac1\alpha\)</span>. <span class="math inline">\(\square\)</span></p>
 <div class="scroll"><table>
 <thead>
-<tr class="header">
+<tr>
 <th><span class="math inline">\(\alpha\)</span></th>
 <th>costo amortizado <span class="math inline">\(\le\)</span></th>
 <th>desperdicio <span class="math inline">\(\le\)</span></th>
@@ -1378,13 +1378,13 @@ Se usó R8 (quitar un negativo <strong>agranda</strong>) en una cota <strong>inf
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>2</td>
 <td>3</td>
 <td>50%</td>
 <td>libstdc++ (GCC), <code>Vec</code> de Rust</td>
 </tr>
-<tr class="even">
+<tr>
 <td>1.5</td>
 <td>4</td>
 <td>33%</td>
@@ -1494,24 +1494,24 @@ Se usó R8 (quitar un negativo <strong>agranda</strong>) en una cota <strong>inf
 <col style="width: 33%"/>
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Garantía</th>
 <th>Significado</th>
 <th>Ejemplo</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Peor caso por operación</td>
 <td><em>cada</em> operación cuesta <span class="math inline">\(\le T\)</span></td>
 <td><code>pop</code> de la pila</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Amortizado</strong></td>
 <td><em>cada secuencia</em> de <span class="math inline">\(n\)</span> operaciones cuesta <span class="math inline">\(\le nT\)</span></td>
 <td><code>push</code> del arreglo dinámico</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Esperado</td>
 <td>en promedio sobre el azar <strong>del algoritmo</strong></td>
 <td>tablas hash (L04), quicksort (L05)</td>
@@ -1529,17 +1529,17 @@ Se usó R8 (quitar un negativo <strong>agranda</strong>) en una cota <strong>inf
 <col style="width: 50%"/>
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th></th>
 <th>Invariante de representación</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>C++</strong></td>
 <td><code>size_ &lt;= cap_</code>; en <code>[data_, data_+size_)</code> hay objetos <strong>construidos</strong>; en <code>[data_+size_, data_+cap_)</code> hay <strong>memoria cruda</strong>; <code>data_ == nullptr</code> si y solo si <code>cap_ == 0</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Rust</strong></td>
 <td><code>len &lt;= buf.len()</code>; <code>buf[i].is_some()</code> si y solo si <code>i &lt; len</code></td>
 </tr>
@@ -1632,21 +1632,21 @@ memoria devuelta</code></pre>
 <p><strong>Trampa 2: excepciones a medio camino.</strong> Si al copiar el elemento 37 de 64 se lanza una excepción, ¿en qué estado queda la pila? Abrahams define tres niveles de garantía:</p>
 <div class="scroll"><table>
 <thead>
-<tr class="header">
+<tr>
 <th>Garantía</th>
 <th>Promesa</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>básica</td>
 <td>sin fugas e invariantes intactos</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>fuerte</strong></td>
 <td>transaccional: o se completa o el estado no cambia</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>no-throw</td>
 <td>nunca lanza</td>
 </tr>
@@ -1669,7 +1669,7 @@ memoria devuelta</code></pre>
 <col style="width: 25%"/>
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Aspecto</th>
 <th>C</th>
 <th>C++</th>
@@ -1677,49 +1677,49 @@ memoria devuelta</code></pre>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Pila vacía</td>
 <td><code>bool</code> / <code>NULL</code></td>
 <td>excepción</td>
 <td><code>Option&lt;T&gt;</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td>Genérico</td>
 <td><code>void*</code> + <code>elem_size</code> (como <code>qsort</code>)</td>
 <td>plantilla <code>template &lt;class T&gt;</code></td>
 <td>genérico <code>ArrayStack&lt;T&gt;</code></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Memoria no inicializada</td>
 <td>natural (<code>malloc</code> da bytes; no hay constructores)</td>
 <td>natural (<code>allocator</code> + <code>construct_at</code>)</td>
 <td>requiere <code>unsafe</code> (<code>MaybeUninit</code>); en el lab01 la evitamos con <code>Option&lt;T&gt;</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td>Copia / movimiento</td>
 <td><code>memcpy</code> de bytes (copia superficial)</td>
 <td>regla de los cinco, a mano</td>
 <td>movimiento implícito; <code>Clone</code> opt-in</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Aliasing <code>push(top())</code></td>
 <td>UB si usas <code>realloc</code> antes de copiar</td>
 <td>UB si no se tiene cuidado</td>
 <td>error de compilación</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Si falla la memoria</td>
 <td>devolver <code>false</code> sin tocar el estado</td>
 <td>garantía fuerte, a mano</td>
 <td>por construcción</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Liberar</td>
 <td><code>array_stack_free</code>, a mano</td>
 <td>destructor (RAII)</td>
 <td><code>Drop</code>, automático</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Quién verifica el invariante</td>
 <td>tú + sanitizers en ejecución</td>
 <td>tú + sanitizers en ejecución</td>
@@ -1736,7 +1736,7 @@ memoria devuelta</code></pre>
 <li><code>array_stack_push</code> sin crecer; luego el crecimiento. <strong>No uses <code>realloc</code> directamente:</strong> si <code>elem</code> apunta dentro de tu bloque (el test <code>stack_alias_push_top</code> lo hace), <code>realloc</code> puede liberarlo antes de que lo copies. Reserva el bloque nuevo, copia <code>elem</code> primero, luego los viejos, y solo entonces libera.</li>
 <li><code>pop</code>, <code>top</code>, <code>size</code>, <code>capacity</code>, <code>empty</code>, <code>clear</code>. Corre <code>make c-lab01</code>.</li>
 <li><code>MinStack</code> componiendo dos <code>ArrayStack</code> y usando el comparador <code>cmp</code>.</li>
-<li>Cuando todo pase, LeakSanitizer revisa que no tengas fugas: si olvidas un <code>free</code>, verás el reporte al final.</li>
+<li>Cuando todo pase, corre <code>make c-fugas-lab01</code> para buscar fugas: si olvidas un <code>free</code>, verás qué <code>malloc</code> nunca se liberó y en qué línea. (En Linux usa LeakSanitizer; en macOS, donde LeakSanitizer no existe, usa la herramienta <code>leaks</code> del sistema.)</li>
 </ol>
 <p><strong>Orden sugerido (C++):</strong></p>
 <ol type="1">

@@ -13,6 +13,7 @@ fn main() {
             bellman_ford_ciclo_negativo,
             dag_aleatorio_con_negativos,
             floyd_warshall_vs_oraculo,
+            dijkstra_grande_pesos_unitarios,
         ],
     );
 }
@@ -99,4 +100,27 @@ fn floyd_warshall_vs_oraculo() {
         assert_eq!(all.len(), 40);
         for s in 0..40 { assert_eq!(all[s], oraculo(40, &es, s)); }
     }
+}
+
+/// 200 000 vértices, 10⁶ aristas de peso 1: Dijkstra debe coincidir con BFS.
+/// Un Dijkstra que busca el mínimo recorriendo todos los vértices es Θ(V²) ≈ 4·10¹⁰.
+fn dijkstra_grande_pesos_unitarios() {
+    let n = 200_000usize;
+    let mut rng = Lcg::new(19);
+    let mut g = WeightedGraph::new(n);
+    let mut adj = vec![Vec::new(); n];
+    for _ in 0..1_000_000 {
+        let (u, v) = (rng.below(n as u64) as usize, rng.below(n as u64) as usize);
+        g.add_edge(u, v, 1);
+        adj[u].push(v);
+    }
+    let mut bfs: Vec<Dist> = vec![None; n];
+    let mut q = std::collections::VecDeque::from([0usize]);
+    bfs[0] = Some(0);
+    while let Some(u) = q.pop_front() {
+        for &v in &adj[u] {
+            if bfs[v].is_none() { bfs[v] = Some(bfs[u].unwrap() + 1); q.push_back(v); }
+        }
+    }
+    assert!(dijkstra(&g, 0) == bfs);
 }

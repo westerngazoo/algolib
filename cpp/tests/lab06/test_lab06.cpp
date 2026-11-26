@@ -56,3 +56,22 @@ TEST(heap_aleatorio_vs_priority_queue) {
         CHECK_EQ(h.size(), o.size());
     }
 }
+
+namespace {
+long comparaciones = 0;
+struct MenorContando {
+    bool operator()(int a, int b) const { ++comparaciones; return a < b; }
+};
+}  // namespace
+
+TEST(heap_heapify_es_lineal) {
+    // Construir desde un vector debe costar O(n): a lo más 2n comparaciones (L06 §4).
+    // Hacer n push sobre la entrada descendente costaría ~n lg n ≈ 16n.
+    const int n = 1 << 16;
+    std::vector<int> v(n);
+    for (int i = 0; i < n; ++i) v[i] = n - i;
+    comparaciones = 0;
+    BinaryHeap<int, MenorContando> h(v);
+    CHECK(comparaciones <= 2L * n);
+    CHECK_EQ(h.top(), 1);
+}

@@ -106,3 +106,41 @@ TEST(segtree_vs_ingenuo) {
     }
     CHECK(!SegmentTree({}).range_min(0, 0).has_value());
 }
+
+namespace {
+// Palabra distinta para cada i: "a" seguida de i en base 26 (letras a..z).
+std::string palabra(std::size_t i) {
+    std::string w = "a";
+    do { w += char('a' + i % 26); i /= 26; } while (i > 0);
+    return w;
+}
+}  // namespace
+
+TEST(trie_conteo_es_O_L) {
+    // 100 000 palabras con el prefijo "a" y 100 000 consultas de ese prefijo.
+    // Contar recorriendo el subárbol (Θ(nodos) por consulta) no termina a tiempo.
+    Trie t;
+    const std::size_t n = 100000;
+    for (std::size_t i = 0; i < n; ++i) CHECK(t.insert(palabra(i)));
+    for (std::size_t q = 0; q < n; ++q) CHECK_EQ(t.count_with_prefix("a"), n);
+    CHECK(t.contains(palabra(42)));
+    CHECK_EQ(t.count_with_prefix("b"), 0u);
+}
+
+TEST(rangos_grandes) {
+    // n = 2²⁰ y 200 000 consultas de cada tipo: una suma o un mínimo lineales por
+    // consulta harían ~10¹¹ pasos.
+    const std::size_t n = 1u << 20;
+    algotest::Lcg rng(26);
+    FenwickTree f(n);
+    for (std::size_t i = 0; i < n; ++i) f.add(i, 1);
+    std::vector<std::int64_t> a(n);
+    for (std::size_t i = 0; i < n; ++i) a[i] = (std::int64_t)(n - i);  // decreciente
+    SegmentTree st(a);
+    for (int q = 0; q < 200000; ++q) {
+        auto l = rng.below(n), r = rng.below(n + 1);
+        if (l > r) std::swap(l, r);
+        CHECK_EQ(f.range_sum(l, r), (std::int64_t)(r - l));
+        if (l < r) CHECK_EQ(*st.range_min(l, r), (std::int64_t)(n - (r - 1)));
+    }
+}

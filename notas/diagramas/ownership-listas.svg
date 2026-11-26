@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 300" width="760" height="300" role="img" aria-label="Grafos de ownership de la lista simple y de la lista doble" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#111827">
+<title>Grafos de ownership de la lista simple y de la lista doble</title>
+<defs>
+  <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#111827"/></marker>
+  <marker id="arc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1240e0"/></marker>
+  <marker id="ara" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"/></marker>
+</defs>
+<rect width="760" height="300" rx="12" fill="#ffffff"/>
+<text x="30" y="34" font-size="14" text-anchor="start" fill="#111827" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">Lista simple: el grafo de ownership es una cadena (un árbol)</text>
+<rect x="60" y="52" width="90" height="40" rx="6" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="105" y="77" font-size="13" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">lista</text>
+<rect x="210" y="52" width="90" height="40" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="255" y="77" font-size="13" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">nodo 0</text>
+<rect x="360" y="52" width="90" height="40" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="405" y="77" font-size="13" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">nodo 1</text>
+<rect x="510" y="52" width="90" height="40" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="555" y="77" font-size="13" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">nodo 2</text>
+<line x1="152" y1="72" x2="206" y2="72" stroke="#1240e0" stroke-width="2" marker-end="url(#arc)"/>
+<line x1="302" y1="72" x2="356" y2="72" stroke="#1240e0" stroke-width="2" marker-end="url(#arc)"/>
+<line x1="452" y1="72" x2="506" y2="72" stroke="#1240e0" stroke-width="2" marker-end="url(#arc)"/>
+<text x="640" y="70" font-size="12" text-anchor="start" fill="#1240e0" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">flecha = posee</text>
+<text x="30" y="150" font-size="14" text-anchor="start" fill="#111827" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">Lista doble: apuntar ≠ poseer</text>
+<rect x="60" y="230" width="90" height="40" rx="6" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="105" y="255" font-size="13" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">lista</text>
+<rect x="210" y="168" width="90" height="40" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="255" y="193" font-size="13" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">nodo 0</text>
+<rect x="360" y="168" width="90" height="40" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="405" y="193" font-size="13" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">nodo 1</text>
+<rect x="510" y="168" width="90" height="40" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="555" y="193" font-size="13" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">nodo 2</text>
+<line x1="302" y1="182" x2="356" y2="182" stroke="#6b7280" stroke-width="1.3" marker-end="url(#ar)"/>
+<line x1="356" y1="196" x2="302" y2="196" stroke="#6b7280" stroke-width="1.3" marker-end="url(#ar)"/>
+<line x1="452" y1="182" x2="506" y2="182" stroke="#6b7280" stroke-width="1.3" marker-end="url(#ar)"/>
+<line x1="506" y1="196" x2="452" y2="196" stroke="#6b7280" stroke-width="1.3" marker-end="url(#ar)"/>
+<line x1="152" y1="250" x2="255" y2="212" stroke="#1240e0" stroke-width="2" marker-end="url(#arc)"/>
+<line x1="152" y1="250" x2="405" y2="212" stroke="#1240e0" stroke-width="2" marker-end="url(#arc)"/>
+<line x1="152" y1="250" x2="555" y2="212" stroke="#1240e0" stroke-width="2" marker-end="url(#arc)"/>
+<text x="640" y="186" font-size="12" text-anchor="start" fill="#6b7280" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">prev / next:</text>
+<text x="640" y="203" font-size="12" text-anchor="start" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">solo apuntan</text>
+<text x="640" y="245" font-size="12" text-anchor="start" fill="#1240e0" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">la lista posee</text>
+<text x="640" y="262" font-size="12" text-anchor="start" fill="#1240e0" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">todos los nodos</text>
+</svg>

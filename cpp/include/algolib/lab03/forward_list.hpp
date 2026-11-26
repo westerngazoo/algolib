@@ -14,6 +14,7 @@
 #include <cstddef>
 #include <memory>
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 namespace algolib {
@@ -30,8 +31,19 @@ public:
     ~ForwardList() { /* TODO: destrucción iterativa */ }
     ForwardList(const ForwardList&) = delete;            // (ejercicio opcional)
     ForwardList& operator=(const ForwardList&) = delete;
-    ForwardList(ForwardList&& o) noexcept = default;
-    ForwardList& operator=(ForwardList&& o) noexcept = default;
+    // ¡No uses `= default` para el movimiento! El defaulted copiaría size_ (dejando
+    // a `o` vacía pero con size() != 0) y el operator= defaulted liberaría la lista
+    // vieja con la destrucción RECURSIVA de unique_ptr.
+    ForwardList(ForwardList&& o) noexcept { (void)o; /* TODO: robar head_ y size_; o queda vacía */ }
+    ForwardList& operator=(ForwardList&& o) noexcept {
+        ForwardList tmp(std::move(o));  // tmp se lleva lo de o...
+        swap(tmp);                      // ...lo intercambia con lo nuestro...
+        return *this;                   // ...y al morir tmp libera la lista vieja (con TU destructor)
+    }
+    void swap(ForwardList& o) noexcept {
+        std::swap(head_, o.head_);
+        std::swap(size_, o.size_);
+    }
 
     void push_front(const T& x) { (void)x; ALGOLIB_TODO(); }
     void pop_front() { ALGOLIB_TODO(); }            // std::out_of_range si vacía

@@ -67,6 +67,20 @@ static void vector_insert_alias(void) {
     vector_free(v);
 }
 
+static void vector_insert_alias_sin_realojar(void) {
+    /* Hay espacio: el corrimiento mueve el elemento al que apunta elem. */
+    Vector *v = vector_new(sizeof(int));
+    CHECK(vector_reserve(v, 8));
+    for (int i = 0; i < 4; i++) vector_push_back(v, &(int){10 * i});
+    CHECK(vector_insert(v, 1, vector_get(v, 2)));   /* inserta una copia de 20 */
+    int e[] = {0, 20, 10, 20, 30};
+    CHECK_EQ(vector_size(v), 5);
+    CHECK(memcmp(vector_data(v), e, sizeof e) == 0);
+    CHECK(vector_push_back(v, vector_get(v, 0)));   /* alias al final, sin corrimiento */
+    CHECK_EQ(*(int *)vector_get(v, 5), 0);
+    vector_free(v);
+}
+
 static void vector_reserve_shrink(void) {
     Vector *v = vector_new(sizeof(int));
     CHECK(vector_reserve(v, 100));
@@ -124,5 +138,6 @@ static void vector_aleatorio_vs_arreglo(void) {
 int main(void) {
     return algotest_run("lab02", (AlgoTest[]){
         T(vector_push_get), T(vector_data_con_qsort), T(vector_insert_erase), T(vector_insert_alias),
+        T(vector_insert_alias_sin_realojar),
         T(vector_reserve_shrink), T(vector_aleatorio_vs_arreglo), {0}});
 }

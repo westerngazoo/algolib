@@ -150,8 +150,28 @@ static void recorridos_iterativos_200k(void) {
     free(buf);
 }
 
+static void dfs_estrella_lineal(void) {
+    /* 0 → i e i → 0 para todo i: el vértice 0 tiene 200 000 vecinos y se "retoma"
+     * 200 000 veces. Un DFS que vuelve a recorrer adj[0] desde el principio en cada
+     * retorno cuesta Θ(n²) y no termina; con (vértice, próximo índice) es Θ(n). */
+    enum { N = 200000 };
+    Graph *g = graph_new(N);
+    for (size_t i = 1; i < N; i++) {
+        graph_add_edge(g, 0, i);
+        graph_add_edge(g, i, 0);
+    }
+    size_t *ord = malloc(N * sizeof *ord), *comp = malloc(N * sizeof *comp);
+    CHECK_EQ(graph_dfs_preorder(g, 0, ord), N);
+    for (size_t i = 0; i < N; i++) CHECK_EQ(ord[i], i);
+    graph_scc(g, comp);
+    for (size_t i = 0; i < N; i++) CHECK_EQ(comp[i], comp[0]);
+    free(comp);
+    free(ord);
+    graph_free(g);
+}
+
 int main(void) {
     return algotest_run("lab09", (AlgoTest[]){
         T(grafo_representacion), T(bfs_distancias), T(dfs_preorden_semantica_recursiva),
-        T(topo_dag_aleatorio_y_ciclo), T(scc_vs_cierre_transitivo), T(recorridos_iterativos_200k), {0}});
+        T(topo_dag_aleatorio_y_ciclo), T(scc_vs_cierre_transitivo), T(recorridos_iterativos_200k), T(dfs_estrella_lineal), {0}});
 }

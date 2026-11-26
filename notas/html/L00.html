@@ -114,7 +114,7 @@ pre.sourceCode a{display:none}
 <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
 </head><body>
-<header class="strip"><p class="curso">algolib · Estructuras de Datos y Algoritmos</p><h1>Lección 0 — Prerrequisitos: las herramientas que usaremos todo el curso</h1><p class="desc">Repaso de lógica, inducción, logaritmos, sumas, recurrencias, probabilidad, memoria, C, C++ y Rust.</p><div class="pages"><a href="index.html">Inicio</a><a href="L00.html" aria-current="page">L00 · Prerrequisitos</a><a href="L01.html">L01 · Notas</a></div></header><nav class="toc" aria-label="Secciones"><div class="scroll"><a href="#cómo-funciona-el-curso">0. Cómo funciona el curso</a><a href="#lógica-el-idioma-de-las-definiciones">1. Lógica: el idioma de las defi…</a><a href="#cómo-se-escribe-una-demostración">2. Cómo se escribe una demostrac…</a><a href="#inducción-matemática">3. Inducción matemática</a><a href="#invariantes-de-ciclo-inducción-para-ciclos-for-y-while">4. Invariantes de ciclo: inducci…</a><a href="#potencias-y-logaritmos">5. Potencias y logaritmos</a><a href="#pisos-techos-y-la-división-entera-de-los-lenguajes">6. Pisos, techos y la división e…</a><a href="#sumatorias">7. Sumatorias</a><a href="#recurrencias-el-costo-de-un-algoritmo-recursivo">8. Recurrencias: el costo de un…</a><a href="#contar-y-probabilidad">9. Contar y probabilidad</a><a href="#vocabulario-de-grafos-para-las-lecciones-9-a-11">10. Vocabulario de grafos</a><a href="#cómo-se-guardan-los-datos-la-memoria">11. Cómo se guardan los datos: l…</a><a href="#los-tres-lenguajes-idea-por-idea">12. Los tres lenguajes, idea por…</a><a href="#la-pregunta-que-nos-acompañará-todo-el-curso">13. La pregunta que nos acompaña…</a><a href="#autoevaluación">14. Autoevaluación</a><a href="#bibliografía-de-repaso">Bibliografía de repaso</a></div></nav><main><blockquote>
+<header class="strip"><p class="curso">algolib · Estructuras de Datos y Algoritmos</p><h1>Lección 0 — Prerrequisitos: las herramientas que usaremos todo el curso</h1><p class="desc">Repaso de lógica, inducción, logaritmos, sumas, recurrencias, probabilidad, memoria, C, C++ y Rust.</p><div class="pages"><a href="index.html">Inicio</a><a href="L00.html" aria-current="page">L00 · Prerrequisitos</a><a href="L01.html">L01 · Notas</a><a href="L02.html">L02 · Notas</a><a href="L03.html">L03 · Notas</a><a href="L04.html">L04 · Notas</a><a href="L05.html">L05 · Notas</a><a href="L06.html">L06 · Notas</a><a href="L07.html">L07 · Notas</a><a href="L08.html">L08 · Notas</a><a href="L09.html">L09 · Notas</a><a href="L10.html">L10 · Notas</a><a href="L11.html">L11 · Notas</a><a href="L12.html">L12 · Notas</a><a href="L13.html">L13 · Notas</a></div></header><nav class="toc" aria-label="Secciones"><div class="scroll"><a href="#cómo-funciona-el-curso">0. Cómo funciona el curso</a><a href="#lógica-el-idioma-de-las-definiciones">1. Lógica: el idioma de las defi…</a><a href="#cómo-se-escribe-una-demostración">2. Cómo se escribe una demostrac…</a><a href="#inducción-matemática">3. Inducción matemática</a><a href="#invariantes-de-ciclo-inducción-para-ciclos-for-y-while">4. Invariantes de ciclo: inducci…</a><a href="#potencias-y-logaritmos">5. Potencias y logaritmos</a><a href="#pisos-techos-y-la-división-entera-de-los-lenguajes">6. Pisos, techos y la división e…</a><a href="#sumatorias">7. Sumatorias</a><a href="#recurrencias-el-costo-de-un-algoritmo-recursivo">8. Recurrencias: el costo de un…</a><a href="#contar-y-probabilidad">9. Contar y probabilidad</a><a href="#vocabulario-de-grafos-para-las-lecciones-9-a-11">10. Vocabulario de grafos</a><a href="#cómo-se-guardan-los-datos-la-memoria">11. Cómo se guardan los datos: l…</a><a href="#los-tres-lenguajes-idea-por-idea">12. Los tres lenguajes, idea por…</a><a href="#la-pregunta-que-nos-acompañará-todo-el-curso">13. La pregunta que nos acompaña…</a><a href="#autoevaluación">14. Autoevaluación</a><a href="#bibliografía-de-repaso">Bibliografía de repaso</a></div></nav><main><blockquote>
 <p><strong>Qué es esta lección.</strong> Antes de estudiar algoritmos necesitamos tres cosas: un <strong>idioma</strong> para escribir afirmaciones precisas (lógica), unas <strong>herramientas</strong> para demostrarlas (inducción, invariantes) y para contar (logaritmos, sumas, recurrencias, probabilidad), y un <strong>modelo mental</strong> de cómo la computadora guarda los datos (memoria, C, C++ y Rust).</p>
 <p><strong>Cómo leerla.</strong> Cada tema sigue el mismo orden: <em>para qué sirve en el curso</em> → <em>la idea con un ejemplo cotidiano</em> → <em>la definición precisa</em> → <em>un ejemplo resuelto paso a paso</em> → <em>un programa que puedes compilar y correr</em> → <em>errores típicos</em> → <em>ejercicios con solución</em>.</p>
 <p><strong>Los programas</strong> vienen en tres pestañas: <strong>C</strong>, <strong>C++</strong> y <strong>Rust</strong>. Los tres hacen exactamente lo mismo e imprimen exactamente la misma salida; elige el lenguaje que conozcas mejor y compara con los otros dos. Todos los programas de esta lección se compilan y ejecutan automáticamente (<code>make ejemplos</code>), así que puedes copiarlos con confianza.</p>
@@ -178,24 +178,24 @@ pre.sourceCode a{display:none}
 <col style="width: 33%"/>
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Sistema</th>
 <th>Compiladores de C y C++, CMake</th>
 <th>Rust</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Ubuntu / Debian / WSL</td>
 <td><code>sudo apt install build-essential cmake</code></td>
 <td><code>curl https://sh.rustup.rs -sSf \| sh</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td>macOS</td>
 <td><code>xcode-select --install</code> y <code>brew install cmake</code></td>
 <td>igual que arriba</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Windows</td>
 <td>usa WSL (Ubuntu) y sigue la primera fila</td>
 <td>igual que arriba</td>
@@ -235,7 +235,7 @@ pre.sourceCode a{display:none}
 <col style="width: 25%"/>
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Símbolo</th>
 <th>Se lee</th>
 <th>Es verdadera cuando…</th>
@@ -243,31 +243,31 @@ pre.sourceCode a{display:none}
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><span class="math inline">\(\neg P\)</span></td>
 <td>“no <span class="math inline">\(P\)</span>”</td>
 <td><span class="math inline">\(P\)</span> es falsa</td>
 <td><code>!p</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td><span class="math inline">\(P\land Q\)</span></td>
 <td>“<span class="math inline">\(P\)</span> y <span class="math inline">\(Q\)</span>”</td>
 <td>las dos son verdaderas</td>
 <td><code>p &amp;&amp; q</code></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><span class="math inline">\(P\lor Q\)</span></td>
 <td>“<span class="math inline">\(P\)</span> o <span class="math inline">\(Q\)</span>”</td>
 <td>al menos una es verdadera</td>
 <td><code>p \|\| q</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td><span class="math inline">\(P\Rightarrow Q\)</span></td>
 <td>“si <span class="math inline">\(P\)</span>, entonces <span class="math inline">\(Q\)</span>”</td>
 <td><strong>todos los casos excepto</strong> <span class="math inline">\(P\)</span> verdadera y <span class="math inline">\(Q\)</span> falsa</td>
 <td><code>!p \|\| q</code></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><span class="math inline">\(P\iff Q\)</span></td>
 <td>“<span class="math inline">\(P\)</span> si y solo si <span class="math inline">\(Q\)</span>”</td>
 <td>las dos tienen el mismo valor</td>
@@ -278,7 +278,7 @@ pre.sourceCode a{display:none}
 <p><strong>La implicación es la que confunde.</strong> Piensa en una promesa: <em>“si llueve, llevo paraguas”</em>. ¿Cuándo <strong>rompí</strong> la promesa? Solo si llovió <strong>y</strong> no llevé paraguas. Si no llovió, no rompí nada, lleve o no paraguas. Por eso <span class="math inline">\(P\Rightarrow Q\)</span> es falsa <strong>solo</strong> cuando <span class="math inline">\(P\)</span> es verdadera y <span class="math inline">\(Q\)</span> es falsa:</p>
 <div class="scroll"><table>
 <thead>
-<tr class="header">
+<tr>
 <th><span class="math inline">\(P\)</span></th>
 <th><span class="math inline">\(Q\)</span></th>
 <th><span class="math inline">\(P\Rightarrow Q\)</span></th>
@@ -286,25 +286,25 @@ pre.sourceCode a{display:none}
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>V</td>
 <td>V</td>
 <td>V</td>
 <td>no: llovió y llevé paraguas</td>
 </tr>
-<tr class="even">
+<tr>
 <td>V</td>
 <td>F</td>
 <td><strong>F</strong></td>
 <td><strong>sí</strong>: llovió y no llevé</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>F</td>
 <td>V</td>
 <td>V</td>
 <td>no: no llovió (llevar paraguas no rompe nada)</td>
 </tr>
-<tr class="even">
+<tr>
 <td>F</td>
 <td>F</td>
 <td>V</td>
@@ -415,34 +415,34 @@ existe negativo: sí</code></pre>
 <col style="width: 33%"/>
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Paso</th>
 <th>Frase</th>
 <th>Qué hicimos</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>0</td>
 <td><span class="math inline">\(\neg\big(\exists c&gt;0\ \exists n_0\ \forall n\ge n_0:\ f(n)\le c\,g(n)\big)\)</span></td>
 <td>la negación de la definición</td>
 </tr>
-<tr class="even">
+<tr>
 <td>1</td>
 <td><span class="math inline">\(\forall c&gt;0\ \neg\big(\exists n_0\ \forall n\ge n_0:\ f(n)\le c\,g(n)\big)\)</span></td>
 <td>primer <span class="math inline">\(\exists\)</span> → <span class="math inline">\(\forall\)</span>, la negación avanza</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>2</td>
 <td><span class="math inline">\(\forall c&gt;0\ \forall n_0\ \neg\big(\forall n\ge n_0:\ f(n)\le c\,g(n)\big)\)</span></td>
 <td>segundo <span class="math inline">\(\exists\)</span> → <span class="math inline">\(\forall\)</span></td>
 </tr>
-<tr class="even">
+<tr>
 <td>3</td>
 <td><span class="math inline">\(\forall c&gt;0\ \forall n_0\ \exists n\ge n_0:\ \neg\big(f(n)\le c\,g(n)\big)\)</span></td>
 <td><span class="math inline">\(\forall\)</span> → <span class="math inline">\(\exists\)</span></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>4</td>
 <td><span class="math inline">\(\forall c&gt;0\ \forall n_0\ \exists n\ge n_0:\ f(n)&gt; c\,g(n)\)</span></td>
 <td>negar “<span class="math inline">\(\le\)</span>” da “<span class="math inline">\(&gt;\)</span>”</td>
@@ -465,7 +465,7 @@ existe negativo: sí</code></pre>
 <summary>
 Solución
 </summary>
-Paso a paso: <span class="math inline">\(\exists\varepsilon&gt;0\ \forall\delta&gt;0\ \exists x:\ \neg\big(|x|&lt;\delta\Rightarrow|f(x)|&lt;\varepsilon\big)\)</span>. Y la negación de una implicación <span class="math inline">\(P\Rightarrow Q\)</span> es <span class="math inline">\(P\land\neg Q\)</span> (la promesa se rompe cuando <span class="math inline">\(P\)</span> ocurre y <span class="math inline">\(Q\)</span> no). Resultado: <span class="math display">\[\exists\varepsilon&gt;0\ \forall\delta&gt;0\ \exists x:\ |x|&lt;\delta\ \land\ |f(x)|\ge\varepsilon.\]</span>
+<p>Paso a paso: <span class="math inline">\(\exists\varepsilon&gt;0\ \forall\delta&gt;0\ \exists x:\ \neg\big(|x|&lt;\delta\Rightarrow|f(x)|&lt;\varepsilon\big)\)</span>. Y la negación de una implicación <span class="math inline">\(P\Rightarrow Q\)</span> es <span class="math inline">\(P\land\neg Q\)</span> (la promesa se rompe cuando <span class="math inline">\(P\)</span> ocurre y <span class="math inline">\(Q\)</span> no). Resultado: <span class="math display">\[\exists\varepsilon&gt;0\ \forall\delta&gt;0\ \exists x:\ |x|&lt;\delta\ \land\ |f(x)|\ge\varepsilon.\]</span></p>
 </details>
 <hr/>
 <h2 id="cómo-se-escribe-una-demostración">2. Cómo se escribe una demostración</h2>
@@ -588,34 +588,34 @@ Paso a paso: <span class="math inline">\(\exists\varepsilon&gt;0\ \forall\delta&
 <col style="width: 33%"/>
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Renglón</th>
 <th>Expresión</th>
 <th>Justificación</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>1</td>
 <td><span class="math inline">\(1+2+\dots+k+(k+1)\)</span></td>
 <td>lado izquierdo de <span class="math inline">\(P(k+1)\)</span></td>
 </tr>
-<tr class="even">
+<tr>
 <td>2</td>
 <td><span class="math inline">\(=\dfrac{k(k+1)}{2}+(k+1)\)</span></td>
 <td><strong>aquí uso la HI</strong> para los primeros <span class="math inline">\(k\)</span> términos</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>3</td>
 <td><span class="math inline">\(=\dfrac{k(k+1)}{2}+\dfrac{2(k+1)}{2}\)</span></td>
 <td>escribo <span class="math inline">\((k+1)\)</span> con denominador 2</td>
 </tr>
-<tr class="even">
+<tr>
 <td>4</td>
 <td><span class="math inline">\(=\dfrac{k(k+1)+2(k+1)}{2}\)</span></td>
 <td>sumo fracciones</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>5</td>
 <td><span class="math inline">\(=\dfrac{(k+1)(k+2)}{2}\)</span></td>
 <td>factorizo <span class="math inline">\((k+1)\)</span></td>
@@ -791,7 +791,7 @@ Paso a paso: <span class="math inline">\(\exists\varepsilon&gt;0\ \forall\delta&
 <summary>
 Solución
 </summary>
-<em>Base</em> <span class="math inline">\(k=0\)</span>: <span class="math inline">\(2^0=1=2^1-1\)</span> ✓. <em>HI:</em> <span class="math inline">\(\sum_{i=0}^{k}2^i=2^{k+1}-1\)</span>. <em>Paso:</em> <span class="math inline">\(\sum_{i=0}^{k+1}2^i=\Big(\sum_{i=0}^{k}2^i\Big)+2^{k+1}\overset{\text{HI}}{=}(2^{k+1}-1)+2^{k+1}=2\cdot2^{k+1}-1=2^{k+2}-1\)</span> ✓. <span class="math inline">\(\square\)</span>
+<p><em>Base</em> <span class="math inline">\(k=0\)</span>: <span class="math inline">\(2^0=1=2^1-1\)</span> ✓. <em>HI:</em> <span class="math inline">\(\sum_{i=0}^{k}2^i=2^{k+1}-1\)</span>. <em>Paso:</em> <span class="math inline">\(\sum_{i=0}^{k+1}2^i=\Big(\sum_{i=0}^{k}2^i\Big)+2^{k+1}\overset{\text{HI}}{=}(2^{k+1}-1)+2^{k+1}=2\cdot2^{k+1}-1=2^{k+2}-1\)</span> ✓. <span class="math inline">\(\square\)</span></p>
 </details>
 <hr/>
 <h2 id="invariantes-de-ciclo-inducción-para-ciclos-for-y-while">4. Invariantes de ciclo: inducción para ciclos <code>for</code> y <code>while</code></h2>
@@ -805,24 +805,24 @@ Solución
 <col style="width: 33%"/>
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Parte</th>
 <th>Qué se demuestra</th>
 <th>Analogía con la inducción</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>Inicialización</strong></td>
 <td>el invariante vale antes de la primera vuelta</td>
 <td>base</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Mantenimiento</strong></td>
 <td>si vale al inicio de una vuelta, vale al inicio de la siguiente</td>
 <td>paso</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Terminación</strong></td>
 <td>el ciclo termina, y al terminar, <em>invariante + condición de salida</em> dan el resultado</td>
 <td>conclusión</td>
@@ -835,7 +835,7 @@ Solución
 <p>Seguimos el ciclo a mano con <code>a = [4, 2, 7, 1]</code>:</p>
 <div class="scroll"><table>
 <thead>
-<tr class="header">
+<tr>
 <th>Inicio de la vuelta</th>
 <th><span class="math inline">\(i\)</span></th>
 <th><span class="math inline">\(s\)</span></th>
@@ -843,31 +843,31 @@ Solución
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>1ª</td>
 <td>0</td>
 <td>0</td>
 <td>suma vacía = 0 ✓</td>
 </tr>
-<tr class="even">
+<tr>
 <td>2ª</td>
 <td>1</td>
 <td>4</td>
 <td><span class="math inline">\(4\)</span> ✓</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>3ª</td>
 <td>2</td>
 <td>6</td>
 <td><span class="math inline">\(4+2\)</span> ✓</td>
 </tr>
-<tr class="even">
+<tr>
 <td>4ª</td>
 <td>3</td>
 <td>13</td>
 <td><span class="math inline">\(4+2+7\)</span> ✓</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>salida</td>
 <td>4</td>
 <td>14</td>
@@ -1007,7 +1007,7 @@ lower_bound(20) = 6</code></pre>
 <p><strong>Traza a mano</strong> con <code>a = [1, 3, 3, 5, 8, 13]</code> y <code>x = 5</code>:</p>
 <div class="scroll"><table>
 <thead>
-<tr class="header">
+<tr>
 <th>Vuelta</th>
 <th><code>lo</code></th>
 <th><code>hi</code></th>
@@ -1018,7 +1018,7 @@ lower_bound(20) = 6</code></pre>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>1</td>
 <td>0</td>
 <td>6</td>
@@ -1027,7 +1027,7 @@ lower_bound(20) = 6</code></pre>
 <td>no</td>
 <td><code>hi = 3</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td>2</td>
 <td>0</td>
 <td>3</td>
@@ -1036,7 +1036,7 @@ lower_bound(20) = 6</code></pre>
 <td>sí</td>
 <td><code>lo = 2</code></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>3</td>
 <td>2</td>
 <td>3</td>
@@ -1045,7 +1045,7 @@ lower_bound(20) = 6</code></pre>
 <td>sí</td>
 <td><code>lo = 3</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td>fin</td>
 <td>3</td>
 <td>3</td>
@@ -1110,7 +1110,7 @@ lo + (hi - lo) / 2 = 3500000000</code></pre>
 <summary>
 Solución
 </summary>
-Con <code>a = [1, 2]</code> y <code>x = 5</code>: <code>lo = 0</code>, <code>hi = 2</code>, <code>mid = 1</code>, <code>a[1] = 2 &lt; 5</code>, así que <code>lo = 1</code>. Luego <code>mid = 1 + (2-1)/2 = 1</code>, <code>a[1] &lt; 5</code>, <code>lo = 1</code>… <strong>no avanza nunca</strong>. La demostración de terminación usaba que <code>hi - lo</code> <strong>decrece estrictamente</strong>; con <code>lo = mid</code> eso falla cuando <code>mid == lo</code>.
+<p>Con <code>a = [1, 2]</code> y <code>x = 5</code>: <code>lo = 0</code>, <code>hi = 2</code>, <code>mid = 1</code>, <code>a[1] = 2 &lt; 5</code>, así que <code>lo = 1</code>. Luego <code>mid = 1 + (2-1)/2 = 1</code>, <code>a[1] &lt; 5</code>, <code>lo = 1</code>… <strong>no avanza nunca</strong>. La demostración de terminación usaba que <code>hi - lo</code> <strong>decrece estrictamente</strong>; con <code>lo = mid</code> eso falla cuando <code>mid == lo</code>.</p>
 </details>
 <hr/>
 <h2 id="potencias-y-logaritmos">5. Potencias y logaritmos</h2>
@@ -1118,54 +1118,54 @@ Con <code>a = [1, 2]</code> y <code>x = 5</code>: <code>lo = 0</code>, <code>hi 
 <h3 id="potencias-de-2-que-conviene-saber-de-memoria">5.1 Potencias de 2 que conviene saber de memoria</h3>
 <div class="scroll"><table>
 <thead>
-<tr class="header">
+<tr>
 <th><span class="math inline">\(n\)</span></th>
 <th><span class="math inline">\(2^n\)</span></th>
 <th>Para ubicarte</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>0</td>
 <td>1</td>
 <td></td>
 </tr>
-<tr class="even">
+<tr>
 <td>1</td>
 <td>2</td>
 <td></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>8</td>
 <td>256</td>
 <td>valores de un byte</td>
 </tr>
-<tr class="even">
+<tr>
 <td>10</td>
 <td>1 024</td>
 <td>≈ mil (<span class="math inline">\(10^3\)</span>)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>16</td>
 <td>65 536</td>
 <td></td>
 </tr>
-<tr class="even">
+<tr>
 <td>20</td>
 <td>1 048 576</td>
 <td>≈ un millón (<span class="math inline">\(10^6\)</span>)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>30</td>
 <td>≈ <span class="math inline">\(1.07\times10^9\)</span></td>
 <td>≈ mil millones</td>
 </tr>
-<tr class="even">
+<tr>
 <td>32</td>
 <td>4 294 967 296</td>
 <td>valores de <code>uint32_t</code></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>64</td>
 <td>≈ <span class="math inline">\(1.8\times10^{19}\)</span></td>
 <td>valores de <code>uint64_t</code></td>
@@ -1246,34 +1246,34 @@ n = 1000000  -&gt;  19 mitades</code></pre>
 <col style="width: 33%"/>
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Regla</th>
 <th>Ejemplo numérico</th>
 <th>Por qué es cierta</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><span class="math inline">\(\lg(xy)=\lg x+\lg y\)</span></td>
 <td><span class="math inline">\(\lg(8\cdot4)=\lg32=5=3+2\)</span></td>
 <td><span class="math inline">\(2^a\cdot2^b=2^{a+b}\)</span>: multiplicar suma exponentes</td>
 </tr>
-<tr class="even">
+<tr>
 <td><span class="math inline">\(\lg(x/y)=\lg x-\lg y\)</span></td>
 <td><span class="math inline">\(\lg(32/4)=\lg 8=3=5-2\)</span></td>
 <td><span class="math inline">\(2^a/2^b=2^{a-b}\)</span></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><span class="math inline">\(\lg(x^k)=k\lg x\)</span></td>
 <td><span class="math inline">\(\lg(8^2)=\lg64=6=2\cdot3\)</span></td>
 <td><span class="math inline">\(x^k\)</span> es multiplicar <span class="math inline">\(x\)</span> por sí mismo <span class="math inline">\(k\)</span> veces</td>
 </tr>
-<tr class="even">
+<tr>
 <td><span class="math inline">\(\log_b x=\dfrac{\lg x}{\lg b}\)</span> (cambio de base)</td>
 <td><span class="math inline">\(\log_4 64=\dfrac{\lg64}{\lg4}=\dfrac62=3\)</span> ✓ (<span class="math inline">\(4^3=64\)</span>)</td>
 <td>si <span class="math inline">\(b^y=x\)</span>, aplicar <span class="math inline">\(\lg\)</span>: <span class="math inline">\(y\lg b=\lg x\)</span></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><span class="math inline">\(a^{\lg n}=n^{\lg a}\)</span></td>
 <td><span class="math inline">\(4^{\lg n}=n^{\lg4}=n^2\)</span></td>
 <td>aplicar <span class="math inline">\(\lg\)</span> a ambos lados: <span class="math inline">\(\lg n\cdot\lg a\)</span> en los dos</td>
@@ -1294,7 +1294,7 @@ n = 1000000  -&gt;  19 mitades</code></pre>
 <col style="width: 16%"/>
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th><span class="math inline">\(n\)</span></th>
 <th><span class="math inline">\(\lg n\)</span></th>
 <th><span class="math inline">\(\sqrt n\)</span></th>
@@ -1304,7 +1304,7 @@ n = 1000000  -&gt;  19 mitades</code></pre>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>10</td>
 <td>3.3</td>
 <td>3.2</td>
@@ -1312,7 +1312,7 @@ n = 1000000  -&gt;  19 mitades</code></pre>
 <td>100</td>
 <td>1 024</td>
 </tr>
-<tr class="even">
+<tr>
 <td>1 000</td>
 <td>10</td>
 <td>32</td>
@@ -1320,7 +1320,7 @@ n = 1000000  -&gt;  19 mitades</code></pre>
 <td><span class="math inline">\(10^6\)</span></td>
 <td>≈ <span class="math inline">\(10^{301}\)</span></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><span class="math inline">\(10^6\)</span></td>
 <td>20</td>
 <td>1 000</td>
@@ -1328,7 +1328,7 @@ n = 1000000  -&gt;  19 mitades</code></pre>
 <td><span class="math inline">\(10^{12}\)</span></td>
 <td>—</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Tiempo con <span class="math inline">\(n=10^6\)</span></strong></td>
 <td>20 ns</td>
 <td>1 µs</td>
@@ -1348,7 +1348,7 @@ n = 1000000  -&gt;  19 mitades</code></pre>
 <summary>
 Solución
 </summary>
-Primero simplifica con las reglas de §5.3: <span class="math inline">\(2^{\lg n}=n\)</span> y <span class="math inline">\(4^{\lg n}=n^2\)</span>. Orden: <span class="math inline">\(\lg\lg n\ \prec\ \lg^3 n\ \prec\ n^{1/2}\ \prec\ 2^{\lg n}=n\ \prec\ n\lg n\ \prec\ 4^{\lg n}=n^2\ \prec\ 1.01^n\ \prec\ n!\)</span>.
+<p>Primero simplifica con las reglas de §5.3: <span class="math inline">\(2^{\lg n}=n\)</span> y <span class="math inline">\(4^{\lg n}=n^2\)</span>. Orden: <span class="math inline">\(\lg\lg n\ \prec\ \lg^3 n\ \prec\ n^{1/2}\ \prec\ 2^{\lg n}=n\ \prec\ n\lg n\ \prec\ 4^{\lg n}=n^2\ \prec\ 1.01^n\ \prec\ n!\)</span>.</p>
 </details>
 <hr/>
 <h2 id="pisos-techos-y-la-división-entera-de-los-lenguajes">6. Pisos, techos y la división entera de los lenguajes</h2>
@@ -1561,7 +1561,7 @@ n = 1000000   H_n = 14.3927   ln n = 13.8155</code></pre>
 <summary>
 Solución
 </summary>
-Por las reglas de §5.3, <span class="math inline">\(\sum_{i=1}^n\lg i=\lg(1\cdot2\cdots n)=\lg(n!)\)</span>, que es <span class="math inline">\(\Theta(n\lg n)\)</span> por §5.5.
+<p>Por las reglas de §5.3, <span class="math inline">\(\sum_{i=1}^n\lg i=\lg(1\cdot2\cdots n)=\lg(n!)\)</span>, que es <span class="math inline">\(\Theta(n\lg n)\)</span> por §5.5.</p>
 </details>
 <hr/>
 <h2 id="recurrencias-el-costo-de-un-algoritmo-recursivo">8. Recurrencias: el costo de un algoritmo recursivo</h2>
@@ -1658,7 +1658,7 @@ nivel 3:     [1] [1] [1] [1] [1] [1] [1] [1]         → 8 nodos × 1 = 8
 <p>En general, para <span class="math inline">\(n\)</span> potencia de 2:</p>
 <div class="scroll"><table>
 <thead>
-<tr class="header">
+<tr>
 <th>Nivel <span class="math inline">\(i\)</span></th>
 <th>Nodos</th>
 <th>Tamaño de cada uno</th>
@@ -1666,25 +1666,25 @@ nivel 3:     [1] [1] [1] [1] [1] [1] [1] [1]         → 8 nodos × 1 = 8
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><span class="math inline">\(0\)</span></td>
 <td><span class="math inline">\(1\)</span></td>
 <td><span class="math inline">\(n\)</span></td>
 <td><span class="math inline">\(n\)</span></td>
 </tr>
-<tr class="even">
+<tr>
 <td><span class="math inline">\(1\)</span></td>
 <td><span class="math inline">\(2\)</span></td>
 <td><span class="math inline">\(n/2\)</span></td>
 <td><span class="math inline">\(n\)</span></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><span class="math inline">\(i\)</span></td>
 <td><span class="math inline">\(2^i\)</span></td>
 <td><span class="math inline">\(n/2^i\)</span></td>
 <td><span class="math inline">\(2^i\cdot\frac{n}{2^i}=n\)</span></td>
 </tr>
-<tr class="even">
+<tr>
 <td><span class="math inline">\(\lg n\)</span> (hojas)</td>
 <td><span class="math inline">\(n\)</span></td>
 <td><span class="math inline">\(1\)</span></td>
@@ -1715,7 +1715,7 @@ nivel 3:     [1] [1] [1] [1] [1] [1] [1] [1]         → 8 nodos × 1 = 8
 <col style="width: 25%"/>
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Caso</th>
 <th>Comparación</th>
 <th>Quién domina</th>
@@ -1723,19 +1723,19 @@ nivel 3:     [1] [1] [1] [1] [1] [1] [1] [1]         → 8 nodos × 1 = 8
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>1</td>
 <td><span class="math inline">\(f(n)\)</span> es polinomialmente <strong>menor</strong>: <span class="math inline">\(f(n)=O(n^{\log_b a-\varepsilon})\)</span></td>
 <td>las hojas</td>
 <td><span class="math inline">\(T(n)=\Theta(n^{\log_b a})\)</span></td>
 </tr>
-<tr class="even">
+<tr>
 <td>2</td>
 <td><span class="math inline">\(f(n)=\Theta(n^{\log_b a}\lg^k n)\)</span>, con <span class="math inline">\(k\ge0\)</span></td>
 <td>todos los niveles por igual</td>
 <td><span class="math inline">\(T(n)=\Theta(n^{\log_b a}\lg^{k+1}n)\)</span></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>3</td>
 <td><span class="math inline">\(f(n)\)</span> es polinomialmente <strong>mayor</strong>: <span class="math inline">\(f(n)=\Omega(n^{\log_b a+\varepsilon})\)</span>, y además <span class="math inline">\(a\,f(n/b)\le c\,f(n)\)</span> con <span class="math inline">\(c&lt;1\)</span></td>
 <td>la raíz</td>
@@ -1753,7 +1753,7 @@ nivel 3:     [1] [1] [1] [1] [1] [1] [1] [1]         → 8 nodos × 1 = 8
 <col style="width: 20%"/>
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Recurrencia</th>
 <th>Algoritmo</th>
 <th>Paso 1: <span class="math inline">\(n^{\log_b a}\)</span></th>
@@ -1762,28 +1762,28 @@ nivel 3:     [1] [1] [1] [1] [1] [1] [1] [1]         → 8 nodos × 1 = 8
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><span class="math inline">\(T(n)=T(n/2)+1\)</span></td>
 <td>búsqueda binaria</td>
 <td><span class="math inline">\(a=1,b=2\)</span>: <span class="math inline">\(n^{0}=1\)</span></td>
 <td><span class="math inline">\(f=1=\Theta(1\cdot\lg^0n)\)</span></td>
 <td>caso 2: <span class="math inline">\(\Theta(\lg n)\)</span></td>
 </tr>
-<tr class="even">
+<tr>
 <td><span class="math inline">\(T(n)=2T(n/2)+n\)</span></td>
 <td>merge sort</td>
 <td><span class="math inline">\(n^{\lg2}=n\)</span></td>
 <td><span class="math inline">\(f=n=\Theta(n\lg^0n)\)</span></td>
 <td>caso 2: <span class="math inline">\(\Theta(n\lg n)\)</span> ✓ §8.2</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><span class="math inline">\(T(n)=2T(n/2)+1\)</span></td>
 <td>recorrer un árbol balanceado</td>
 <td><span class="math inline">\(n^{1}=n\)</span></td>
 <td><span class="math inline">\(f=1=O(n^{1-\varepsilon})\)</span></td>
 <td>caso 1: <span class="math inline">\(\Theta(n)\)</span></td>
 </tr>
-<tr class="even">
+<tr>
 <td><span class="math inline">\(T(n)=3T(n/2)+n\)</span></td>
 <td>multiplicación de Karatsuba</td>
 <td><span class="math inline">\(n^{\lg3}\approx n^{1.585}\)</span></td>
@@ -1800,7 +1800,7 @@ nivel 3:     [1] [1] [1] [1] [1] [1] [1] [1]         → 8 nodos × 1 = 8
 <summary>
 Solución
 </summary>
-Paso 1: <span class="math inline">\(a=4\)</span>, <span class="math inline">\(b=2\)</span>, <span class="math inline">\(n^{\log_2 4}=n^2\)</span>. Paso 2: <span class="math inline">\(f(n)=n^2=\Theta(n^2\lg^0 n)\)</span>. Paso 3: caso 2 con <span class="math inline">\(k=0\)</span>, así que <span class="math inline">\(T(n)=\Theta(n^2\lg n)\)</span>.
+<p>Paso 1: <span class="math inline">\(a=4\)</span>, <span class="math inline">\(b=2\)</span>, <span class="math inline">\(n^{\log_2 4}=n^2\)</span>. Paso 2: <span class="math inline">\(f(n)=n^2=\Theta(n^2\lg^0 n)\)</span>. Paso 3: caso 2 con <span class="math inline">\(k=0\)</span>, así que <span class="math inline">\(T(n)=\Theta(n^2\lg n)\)</span>.</p>
 </details>
 <hr/>
 <h2 id="contar-y-probabilidad">9. Contar y probabilidad</h2>
@@ -1813,29 +1813,29 @@ Paso 1: <span class="math inline">\(a=4\)</span>, <span class="math inline">\(b=
 <col style="width: 33%"/>
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>¿Cuántos…?</th>
 <th>Fórmula</th>
 <th>El ciclo que los recorre</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>pares ordenados <span class="math inline">\((i,j)\)</span> con <span class="math inline">\(i,j&lt;n\)</span></td>
 <td><span class="math inline">\(n^2\)</span></td>
 <td><code>for i &lt; n: for j &lt; n</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td>pares <strong>sin orden</strong> <span class="math inline">\(\{i,j\}\)</span>, <span class="math inline">\(i\neq j\)</span></td>
 <td><span class="math inline">\(\binom n2=\frac{n(n-1)}2\)</span></td>
 <td><code>for i &lt; n: for j &lt; i</code></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>subconjuntos de <span class="math inline">\(n\)</span> elementos</td>
 <td><span class="math inline">\(2^n\)</span></td>
 <td><code>for mask &lt; 2^n</code> (bits)</td>
 </tr>
-<tr class="even">
+<tr>
 <td>ordenamientos (permutaciones)</td>
 <td><span class="math inline">\(n!\)</span></td>
 <td>backtracking (L12)</td>
@@ -2018,7 +2018,7 @@ simulacion: 49.51</code></pre>
 <summary>
 Solución
 </summary>
-Indicadora <span class="math inline">\(I_i=1\)</span> si <span class="math inline">\(\pi(i)=i\)</span>, con <span class="math inline">\(\Pr=\frac1n\)</span> (el elemento <span class="math inline">\(i\)</span> tiene <span class="math inline">\(n\)</span> lugares posibles). Por linealidad, <span class="math inline">\(E=\sum_{i=1}^n\frac1n=1\)</span>. ¡Siempre 1, sin importar <span class="math inline">\(n\)</span>!
+<p>Indicadora <span class="math inline">\(I_i=1\)</span> si <span class="math inline">\(\pi(i)=i\)</span>, con <span class="math inline">\(\Pr=\frac1n\)</span> (el elemento <span class="math inline">\(i\)</span> tiene <span class="math inline">\(n\)</span> lugares posibles). Por linealidad, <span class="math inline">\(E=\sum_{i=1}^n\frac1n=1\)</span>. ¡Siempre 1, sin importar <span class="math inline">\(n\)</span>!</p>
 </details>
 <hr/>
 <h2 id="vocabulario-de-grafos-para-las-lecciones-9-a-11">10. Vocabulario de grafos (para las lecciones 9 a 11)</h2>
@@ -2093,37 +2093,37 @@ Indicadora <span class="math inline">\(I_i=1\)</span> si <span class="math inlin
 <col style="width: 50%"/>
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Término</th>
 <th>Significado</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Grafo <span class="math inline">\(G=(V,E)\)</span></td>
 <td>vértices <span class="math inline">\(V\)</span> y aristas <span class="math inline">\(E\)</span>; <span class="math inline">\(n=\lvert V\rvert\)</span>, <span class="math inline">\(m=\lvert E\rvert\)</span></td>
 </tr>
-<tr class="even">
+<tr>
 <td>No dirigido / dirigido</td>
 <td>la arista <span class="math inline">\(\{u,v\}\)</span> va en ambos sentidos / la arista <span class="math inline">\((u,v)\)</span> va de <span class="math inline">\(u\)</span> a <span class="math inline">\(v\)</span></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Grado de <span class="math inline">\(v\)</span></td>
 <td>número de aristas que tocan a <span class="math inline">\(v\)</span> (en el dibujo, <span class="math inline">\(\text{grado}(2)=3\)</span>)</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Camino / ciclo</td>
 <td>sucesión de aristas consecutivas / camino que vuelve al inicio</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Conexo</td>
 <td>hay camino entre cualquier par de vértices</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Árbol</td>
 <td>conexo y sin ciclos; tiene exactamente <span class="math inline">\(n-1\)</span> aristas</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>DAG</td>
 <td>dirigido y sin ciclos dirigidos; admite un <strong>orden topológico</strong></td>
 </tr>
@@ -2220,7 +2220,7 @@ suma de grados = 10 = 2 x 5 aristas</code></pre>
 <col style="width: 25%"/>
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Zona</th>
 <th>Qué guarda</th>
 <th>Cuánto vive</th>
@@ -2228,19 +2228,19 @@ suma de grados = 10 = 2 x 5 aristas</code></pre>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>Stack</strong> (pila)</td>
 <td>variables locales, parámetros, direcciones de retorno</td>
 <td>hasta que <strong>termina la función</strong></td>
 <td>pequeño y fijo (~8 MiB): la recursión muy profunda lo <strong>desborda</strong></td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Heap</strong> (montículo)</td>
 <td>lo que pides en tiempo de ejecución (<code>malloc</code>, <code>new</code>, <code>Vec</code>)</td>
 <td>hasta que <strong>lo liberas</strong> (o lo libera su dueño)</td>
 <td>tan grande como la RAM</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Datos estáticos</td>
 <td>variables globales, cadenas literales</td>
 <td>todo el programa</td>
@@ -2560,39 +2560,39 @@ max(2.5, 1.5) = 2.5</code></pre>
 <col style="width: 33%"/>
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Regla</th>
 <th>Qué significa</th>
 <th>Qué error de C/C++ evita</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>Un solo dueño</strong></td>
 <td>cada valor tiene exactamente un dueño; al salir de su ámbito, se libera</td>
 <td>fugas y dobles liberaciones</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Mover por defecto</strong></td>
 <td><code>let b = a;</code> mueve: <code>a</code> ya no se puede usar. Para copiar hay que pedirlo con <code>.clone()</code> (salvo tipos simples como <code>i32</code>, que son <code>Copy</code>)</td>
 <td>copias caras accidentales</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Préstamos: muchos lectores O un escritor</strong></td>
 <td>puedes tener muchas <code>&amp;T</code> <strong>o</strong> una sola <code>&amp;mut T</code>, nunca ambas a la vez</td>
 <td>punteros colgantes (§11.3), <em>data races</em></td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Los préstamos no sobreviven al dueño</strong></td>
 <td>el compilador verifica los <em>lifetimes</em></td>
 <td>referencias a variables locales ya destruidas</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Sin <code>null</code></strong></td>
 <td>la ausencia se escribe <code>Option&lt;T&gt;</code></td>
 <td>desreferenciar nulos</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong><code>unsafe</code></strong></td>
 <td>desactiva algunas verificaciones; <strong>tú</strong> garantizas las reglas (lo usaremos en L02 y L03)</td>
 <td>— es la puerta de escape, a propósito</td>
@@ -2612,7 +2612,7 @@ max(2.5, 1.5) = 2.5</code></pre>
 <col style="width: 25%"/>
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th></th>
 <th>C</th>
 <th>C++</th>
@@ -2620,31 +2620,31 @@ max(2.5, 1.5) = 2.5</code></pre>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Memoria</td>
 <td>el programador, a mano</td>
 <td>el programador, con ayuda (RAII, <em>smart pointers</em>, sanitizers)</td>
 <td>el compilador (<em>ownership</em> + <em>borrow checker</em>), salvo en <code>unsafe</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td>Errores (pila vacía, etc.)</td>
 <td>códigos de retorno</td>
 <td>excepciones, <code>std::optional</code> o UB documentado</td>
 <td><code>Option</code> / <code>Result</code> en el tipo, o <code>panic!</code></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Genéricos</td>
 <td>macros, <code>void*</code>, <code>_Generic</code></td>
 <td>plantillas (+ <code>concepts</code> en C++20)</td>
 <td>genéricos con <em>trait bounds</em></td>
 </tr>
-<tr class="even">
+<tr>
 <td>Copias</td>
 <td>implícitas (copiar bytes)</td>
 <td>implícitas (constructor de copia)</td>
 <td>explícitas (<code>.clone()</code>)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Punteros con ciclos (listas dobles, grafos)</td>
 <td>naturales</td>
 <td>naturales</td>

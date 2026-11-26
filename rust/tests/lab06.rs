@@ -6,7 +6,7 @@ use std::cmp::Reverse;
 fn main() {
     common::run(
         "lab06",
-        cases![heap_min_basico, heap_reverse_es_max, heap_from_vec, heap_aleatorio_vs_std],
+        cases![heap_min_basico, heap_reverse_es_max, heap_from_vec, heap_aleatorio_vs_std, heap_from_vec_es_lineal],
     );
 }
 
@@ -54,4 +54,31 @@ fn heap_aleatorio_vs_std() {
         }
         assert_eq!(h.len(), o.len());
     }
+}
+
+thread_local! { static COMPARACIONES: std::cell::Cell<u64> = const { std::cell::Cell::new(0) }; }
+
+/// Entero cuyo `Ord` cuenta las comparaciones.
+#[derive(PartialEq, Eq, Debug)]
+struct Contado(i64);
+impl PartialOrd for Contado {
+    fn partial_cmp(&self, o: &Self) -> Option<std::cmp::Ordering> { Some(self.cmp(o)) }
+}
+impl Ord for Contado {
+    fn cmp(&self, o: &Self) -> std::cmp::Ordering {
+        COMPARACIONES.with(|c| c.set(c.get() + 1));
+        self.0.cmp(&o.0)
+    }
+}
+
+/// `from_vec` debe costar O(n): a lo más 2n comparaciones (L06 §4). Con n `push`
+/// sobre la entrada descendente costaría ~n lg n ≈ 16n.
+fn heap_from_vec_es_lineal() {
+    let n: i64 = 1 << 16;
+    let v: Vec<Contado> = (0..n).map(|i| Contado(n - i)).collect();
+    COMPARACIONES.with(|c| c.set(0));
+    let h = BinaryHeap::from_vec(v);
+    let c = COMPARACIONES.with(|c| c.get());
+    assert!(c <= 2 * n as u64, "heapify hizo {c} comparaciones; se esperaban ≤ {}", 2 * n);
+    assert_eq!(h.peek(), Some(&Contado(1)));
 }

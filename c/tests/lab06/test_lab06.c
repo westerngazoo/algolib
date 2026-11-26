@@ -79,7 +79,27 @@ static void heap_aleatorio(void) {
     binary_heap_free(h);
 }
 
+static long comparaciones;
+static int cmp_int_contando(const void *a, const void *b) {
+    comparaciones++;
+    return cmp_int(a, b);
+}
+
+static void heap_from_array_es_lineal(void) {
+    /* Construir desde un arreglo debe costar O(n): a lo más 2n comparaciones (L06 §4).
+     * Hacer n push sobre la entrada descendente costaría ~n lg n ≈ 16n. */
+    enum { N = 1 << 16 };
+    int *v = malloc(N * sizeof *v);
+    for (int i = 0; i < N; i++) v[i] = N - i;
+    comparaciones = 0;
+    BinaryHeap *h = binary_heap_from_array(sizeof(int), cmp_int_contando, v, N);
+    CHECK(comparaciones <= 2L * N);
+    CHECK_EQ(*(int *)binary_heap_top(h), 1);
+    binary_heap_free(h);
+    free(v);
+}
+
 int main(void) {
     return algotest_run("lab06", (AlgoTest[]){
-        T(heap_min_basico), T(heap_comparador_invertido_es_max), T(heap_from_array), T(heap_aleatorio), {0}});
+        T(heap_min_basico), T(heap_comparador_invertido_es_max), T(heap_from_array), T(heap_aleatorio), T(heap_from_array_es_lineal), {0}});
 }

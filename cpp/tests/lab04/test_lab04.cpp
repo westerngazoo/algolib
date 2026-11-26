@@ -54,6 +54,43 @@ TEST(ring_aleatorio_vs_deque) {
     }
 }
 
+namespace {
+struct Tracked {
+    static inline int alive = 0;
+    int v;
+    Tracked(int x) : v(x) { ++alive; }
+    Tracked(const Tracked& o) : v(o.v) { ++alive; }
+    Tracked(Tracked&& o) noexcept : v(o.v) { ++alive; }
+    ~Tracked() { --alive; }
+};
+}  // namespace
+
+TEST(ring_sin_fugas) {
+    Tracked::alive = 0;
+    {
+        RingQueue<Tracked> q;
+        for (int i = 0; i < 37; ++i) q.push(Tracked(i));
+        for (int i = 0; i < 20; ++i) q.pop();
+        for (int i = 0; i < 50; ++i) q.push(Tracked(i));  // da la vuelta y crece
+        CHECK_EQ(Tracked::alive, 67);
+    }
+    CHECK_EQ(Tracked::alive, 0);
+}
+
+TEST(hash_muchos_borrados) {
+    // 200 000 claves distintas pasan por la tabla, pero nunca hay más de 64 vivas.
+    // Con lápidas que nunca se limpian, la tabla se llena de lápidas y las búsquedas
+    // fallidas no terminan (o el factor de carga real se dispara).
+    HashMap<int, int> m;
+    for (int i = 0; i < 200000; ++i) {
+        CHECK(m.insert(i, i));
+        if (i >= 64) CHECK(m.erase(i - 64));
+        CHECK(!m.contains(-1 - i));  // búsqueda fallida: debe terminar
+    }
+    CHECK_EQ(m.size(), 64u);
+    for (int i = 200000 - 64; i < 200000; ++i) CHECK_EQ(*m.find(i), i);
+}
+
 TEST(hash_basico) {
     HashMap<std::string, int> m;
     CHECK(m.insert("uno", 1));

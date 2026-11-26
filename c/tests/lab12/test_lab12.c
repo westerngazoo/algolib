@@ -111,8 +111,21 @@ static void coin_change(void) {
     CHECK(coin_change_min(c4, 4, 6249, &out)); CHECK_EQ(out, 20);
 }
 
+static void lis_grande_nlgn(void) {
+    /* 1000 bloques de 200 valores DECRECIENTES, con los bloques en orden creciente:
+     * la LIS toma exactamente un valor por bloque ⇒ 1000. n = 200 000: el algoritmo
+     * cuadrático hace ~2·10¹⁰ comparaciones y no termina a tiempo. */
+    enum { BLOQUES = 1000, LARGO = 200 };
+    int64_t *a = malloc(BLOQUES * LARGO * sizeof *a);
+    size_t n = 0;
+    for (int64_t b = 0; b < BLOQUES; b++)
+        for (int64_t j = LARGO - 1; j >= 0; j--) a[n++] = b * LARGO + j;
+    CHECK_EQ(lis_length(a, n), BLOQUES);
+    free(a);
+}
+
 int main(void) {
     return algotest_run("lab12", (AlgoTest[]){
         T(fibonacci_valores), T(lcs_clasicos), T(edit_distance_clasicos), T(lcs_y_edit_aleatorio),
-        T(knapsack_vs_subconjuntos), T(lis_vs_cuadratico), T(coin_change), {0}});
+        T(knapsack_vs_subconjuntos), T(lis_vs_cuadratico), T(coin_change), T(lis_grande_nlgn), {0}});
 }

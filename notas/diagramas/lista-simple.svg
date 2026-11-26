@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 150" width="760" height="150" role="img" aria-label="Lista simplemente ligada de 4 nodos" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#111827">
+<title>Lista simplemente ligada de 4 nodos</title>
+<defs>
+  <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#111827"/></marker>
+  <marker id="arc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1240e0"/></marker>
+  <marker id="ara" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"/></marker>
+</defs>
+<rect width="760" height="150" rx="12" fill="#ffffff"/>
+<rect x="24" y="50" width="70" height="44" rx="6" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+<text x="59" y="77" font-size="14" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">head</text>
+<text x="59" y="116" font-size="12" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">size = 4</text>
+<line x1="94" y1="72" x2="136" y2="72" stroke="#111827" stroke-width="1.6" marker-end="url(#ar)"/>
+<rect x="140" y="50" width="96" height="44" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<line x1="192.8" y1="50" x2="192.8" y2="94" stroke="#1240e0" stroke-width="1.2"/>
+<text x="166.4" y="77.0" font-size="15" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">v0</text>
+<circle cx="214.4" cy="72" r="3.5" fill="#111827"/>
+<line x1="214.4" y1="72" x2="286" y2="72" stroke="#111827" stroke-width="1.6" marker-end="url(#ar)"/>
+<rect x="290" y="50" width="96" height="44" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<line x1="342.8" y1="50" x2="342.8" y2="94" stroke="#1240e0" stroke-width="1.2"/>
+<text x="316.4" y="77.0" font-size="15" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">v1</text>
+<circle cx="364.4" cy="72" r="3.5" fill="#111827"/>
+<line x1="364.4" y1="72" x2="436" y2="72" stroke="#111827" stroke-width="1.6" marker-end="url(#ar)"/>
+<rect x="440" y="50" width="96" height="44" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<line x1="492.8" y1="50" x2="492.8" y2="94" stroke="#1240e0" stroke-width="1.2"/>
+<text x="466.4" y="77.0" font-size="15" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">v2</text>
+<circle cx="514.4" cy="72" r="3.5" fill="#111827"/>
+<line x1="514.4" y1="72" x2="586" y2="72" stroke="#111827" stroke-width="1.6" marker-end="url(#ar)"/>
+<rect x="590" y="50" width="96" height="44" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<line x1="642.8" y1="50" x2="642.8" y2="94" stroke="#1240e0" stroke-width="1.2"/>
+<text x="616.4" y="77.0" font-size="15" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">v3</text>
+<text x="664.4" y="77" font-size="16" text-anchor="middle" fill="#c2410c" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">∅</text>
+<text x="380" y="30" font-size="13" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">cada nodo es DUEÑO del siguiente (unique_ptr / Box)</text>
+</svg>

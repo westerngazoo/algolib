@@ -3,6 +3,8 @@
 
 #include "algotest.h"
 
+#include <stdlib.h>
+
 /* Oráculo exponencial: prueba todos los subconjuntos de n-1 aristas (n y m pequeños). */
 static bool mst_fuerza_bruta(size_t n, const Edge *es, size_t m, int64_t *best) {
     if (n <= 1) { *best = 0; return true; }
@@ -85,8 +87,27 @@ static void mst_aleatorio_vs_fuerza_bruta(void) {
     }
 }
 
+static void mst_grande_kruskal_igual_prim(void) {
+    /* 200 000 vértices, ~10⁶ aristas (con un camino que garantiza conexidad).
+     * Kruskal y Prim deben coincidir; un Prim Θ(V²) no termina a tiempo. */
+    enum { N = 200000, EXTRA = 800000 };
+    Lcg rng = {20};
+    Edge *es = malloc((N - 1 + EXTRA) * sizeof *es);
+    size_t m = 0;
+    for (size_t i = 0; i + 1 < N; i++) es[m++] = (Edge){i, i + 1, 1000000 + lcg_range(&rng, 0, 1000)};
+    for (int i = 0; i < EXTRA; i++) {
+        size_t u = lcg_below(&rng, N), v = lcg_below(&rng, N);
+        es[m++] = (Edge){u, v, lcg_range(&rng, -1000, 1000000)};
+    }
+    int64_t tk = 0, tp = 0;
+    CHECK(kruskal(N, es, m, &tk));
+    CHECK(prim(N, es, m, &tp));
+    CHECK_EQ(tk, tp);
+    free(es);
+}
+
 int main(void) {
     return algotest_run("lab11", (AlgoTest[]){
         T(dsu_basico), T(dsu_grande_y_profundo), T(mst_clrs_23_1), T(mst_no_conexo),
-        T(mst_aleatorio_vs_fuerza_bruta), {0}});
+        T(mst_aleatorio_vs_fuerza_bruta), T(mst_grande_kruskal_igual_prim), {0}});
 }

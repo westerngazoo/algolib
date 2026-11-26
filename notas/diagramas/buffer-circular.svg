@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 270" width="820" height="270" role="img" aria-label="Buffer circular lleno con head = 2 y el mismo contenido tras crecer" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#111827">
+<title>Buffer circular lleno con head = 2 y el mismo contenido tras crecer</title>
+<defs>
+  <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#111827"/></marker>
+  <marker id="arc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1240e0"/></marker>
+  <marker id="ara" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"/></marker>
+</defs>
+<rect width="820" height="270" rx="12" fill="#ffffff"/>
+<text x="106" y="67.0" font-size="13" text-anchor="end" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">m = 4, lleno</text>
+<rect x="120" y="40" width="52" height="44" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="146.0" y="67.0" font-size="14" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">e2</text>
+<text x="146.0" y="34" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">0</text>
+<rect x="178" y="40" width="52" height="44" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="204.0" y="67.0" font-size="14" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">e3</text>
+<text x="204.0" y="34" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">1</text>
+<rect x="236" y="40" width="52" height="44" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="262.0" y="67.0" font-size="14" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">e0</text>
+<text x="262.0" y="34" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">2</text>
+<rect x="294" y="40" width="52" height="44" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="320.0" y="67.0" font-size="14" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">e1</text>
+<text x="320.0" y="34" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">3</text>
+<line x1="262.0" y1="110" x2="262.0" y2="88" stroke="#c2410c" stroke-width="1.6" marker-end="url(#ara)"/>
+<text x="262.0" y="124" font-size="12" text-anchor="middle" fill="#c2410c" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">head</text>
+<text x="372" y="58" font-size="13" text-anchor="start" fill="#111827" font-weight="600" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">el elemento i está en (head + i) mod m</text>
+<text x="372" y="78" font-size="12" text-anchor="start" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">e2 y e3 dieron la vuelta a las celdas 0 y 1</text>
+<text x="106" y="197.0" font-size="13" text-anchor="end" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">m = 8, tras push</text>
+<rect x="120" y="170" width="52" height="44" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="146.0" y="197.0" font-size="14" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">e0</text>
+<text x="146.0" y="164" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">0</text>
+<rect x="178" y="170" width="52" height="44" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="204.0" y="197.0" font-size="14" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">e1</text>
+<text x="204.0" y="164" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">1</text>
+<rect x="236" y="170" width="52" height="44" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="262.0" y="197.0" font-size="14" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">e2</text>
+<text x="262.0" y="164" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">2</text>
+<rect x="294" y="170" width="52" height="44" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="320.0" y="197.0" font-size="14" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">e3</text>
+<text x="320.0" y="164" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">3</text>
+<rect x="352" y="170" width="52" height="44" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="378.0" y="197.0" font-size="14" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">e4</text>
+<text x="378.0" y="164" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">4</text>
+<rect x="410" y="170" width="52" height="44" rx="6" fill="#ffffff" stroke="#c7d2fe" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="436.0" y="197.0" font-size="14" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace"></text>
+<text x="436.0" y="164" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">5</text>
+<rect x="468" y="170" width="52" height="44" rx="6" fill="#ffffff" stroke="#c7d2fe" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="494.0" y="197.0" font-size="14" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace"></text>
+<text x="494.0" y="164" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">6</text>
+<rect x="526" y="170" width="52" height="44" rx="6" fill="#ffffff" stroke="#c7d2fe" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="552.0" y="197.0" font-size="14" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace"></text>
+<text x="552.0" y="164" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">7</text>
+<line x1="146.0" y1="240" x2="146.0" y2="218" stroke="#c2410c" stroke-width="1.6" marker-end="url(#ara)"/>
+<text x="146.0" y="254" font-size="12" text-anchor="middle" fill="#c2410c" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">head</text>
+<text x="600" y="188" font-size="13" text-anchor="start" fill="#111827" font-weight="600" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">desenrollado:</text>
+<text x="600" y="206" font-size="12" text-anchor="start" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">e_i en la celda i</text>
+<text x="600" y="222" font-size="12" text-anchor="start" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">head = 0</text>
+</svg>

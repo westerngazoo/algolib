@@ -61,6 +61,22 @@ static void ostat_aleatorio(void) {
     order_stat_set_free(s);
 }
 
+static void ostat_select_rank_logaritmicos(void) {
+    /* 200 000 claves insertadas EN ORDEN (exige balanceo) y 200 000 consultas de
+     * select y de rank. Con select/rank lineales serían ~4·10¹⁰ pasos: no termina. */
+    enum { N = 200000 };
+    OrderStatSet *s = order_stat_set_new(sizeof(int), cmp_int);
+    for (int i = 0; i < N; i++) order_stat_set_insert(s, &(int){2 * i});
+    Lcg rng = {14};
+    for (int q = 0; q < N; q++) {
+        int k = (int)lcg_below(&rng, N), x;
+        CHECK(order_stat_set_select(s, (size_t)k, &x));
+        CHECK_EQ(x, 2 * k);
+        CHECK_EQ(order_stat_set_rank(s, &(int){2 * k + 1}), (size_t)k + 1);
+    }
+    order_stat_set_free(s);
+}
+
 int main(void) {
-    return algotest_run("lab08", (AlgoTest[]){T(ostat_basico), T(ostat_aleatorio), {0}});
+    return algotest_run("lab08", (AlgoTest[]){T(ostat_basico), T(ostat_aleatorio), T(ostat_select_rank_logaritmicos), {0}});
 }

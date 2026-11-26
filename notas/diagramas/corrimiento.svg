@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 250" width="860" height="250" role="img" aria-label="Corrimiento a la derecha al insertar en la posición 2" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#111827">
+<title>Corrimiento a la derecha al insertar en la posición 2</title>
+<defs>
+  <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#111827"/></marker>
+  <marker id="arc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1240e0"/></marker>
+  <marker id="ara" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"/></marker>
+</defs>
+<rect width="860" height="250" rx="12" fill="#ffffff"/>
+<text x="82" y="68.0" font-size="13" text-anchor="end" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">antes</text>
+<rect x="96" y="40" width="52" height="46" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="122.0" y="68.0" font-size="15" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">x0</text>
+<text x="122.0" y="34" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">0</text>
+<rect x="154" y="40" width="52" height="46" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="180.0" y="68.0" font-size="15" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">x1</text>
+<text x="180.0" y="34" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">1</text>
+<rect x="212" y="40" width="52" height="46" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="238.0" y="68.0" font-size="15" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">x2</text>
+<text x="238.0" y="34" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">2</text>
+<rect x="270" y="40" width="52" height="46" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="296.0" y="68.0" font-size="15" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">x3</text>
+<text x="296.0" y="34" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">3</text>
+<rect x="328" y="40" width="52" height="46" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="354.0" y="68.0" font-size="15" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">x4</text>
+<text x="354.0" y="34" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">4</text>
+<rect x="386" y="40" width="52" height="46" rx="6" fill="#ffffff" stroke="#c7d2fe" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="412.0" y="68.0" font-size="15" text-anchor="middle" fill="#6b7280" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace"></text>
+<text x="412.0" y="34" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">5</text>
+<rect x="444" y="40" width="52" height="46" rx="6" fill="#ffffff" stroke="#c7d2fe" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="470.0" y="68.0" font-size="15" text-anchor="middle" fill="#6b7280" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace"></text>
+<text x="470.0" y="34" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">6</text>
+<rect x="502" y="40" width="52" height="46" rx="6" fill="#ffffff" stroke="#c7d2fe" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="528.0" y="68.0" font-size="15" text-anchor="middle" fill="#6b7280" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace"></text>
+<text x="528.0" y="34" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">7</text>
+<text x="82" y="188.0" font-size="13" text-anchor="end" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">después</text>
+<rect x="96" y="160" width="52" height="46" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="122.0" y="188.0" font-size="15" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">x0</text>
+<text x="122.0" y="154" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">0</text>
+<rect x="154" y="160" width="52" height="46" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="180.0" y="188.0" font-size="15" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">x1</text>
+<text x="180.0" y="154" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">1</text>
+<rect x="212" y="160" width="52" height="46" rx="6" fill="#ffedd5" stroke="#c2410c" stroke-width="1.5"/>
+<text x="238.0" y="188.0" font-size="15" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">x</text>
+<text x="238.0" y="154" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">2</text>
+<rect x="270" y="160" width="52" height="46" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="296.0" y="188.0" font-size="15" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">x2</text>
+<text x="296.0" y="154" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">3</text>
+<rect x="328" y="160" width="52" height="46" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="354.0" y="188.0" font-size="15" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">x3</text>
+<text x="354.0" y="154" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">4</text>
+<rect x="386" y="160" width="52" height="46" rx="6" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="412.0" y="188.0" font-size="15" text-anchor="middle" fill="#111827" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">x4</text>
+<text x="412.0" y="154" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">5</text>
+<rect x="444" y="160" width="52" height="46" rx="6" fill="#ffffff" stroke="#c7d2fe" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="470.0" y="188.0" font-size="15" text-anchor="middle" fill="#6b7280" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace"></text>
+<text x="470.0" y="154" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">6</text>
+<rect x="502" y="160" width="52" height="46" rx="6" fill="#ffffff" stroke="#c7d2fe" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="528.0" y="188.0" font-size="15" text-anchor="middle" fill="#6b7280" font-weight="600" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace"></text>
+<text x="528.0" y="154" font-size="11" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">7</text>
+<line x1="354.0" y1="90" x2="412.0" y2="142" stroke="#1240e0" stroke-width="1.6" marker-end="url(#arc)"/>
+<text x="391.0" y="118" font-size="12" text-anchor="start" fill="#1240e0" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">1.º</text>
+<line x1="296.0" y1="90" x2="354.0" y2="142" stroke="#1240e0" stroke-width="1.6" marker-end="url(#arc)"/>
+<text x="333.0" y="118" font-size="12" text-anchor="start" fill="#1240e0" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">2.º</text>
+<line x1="238.0" y1="90" x2="296.0" y2="142" stroke="#1240e0" stroke-width="1.6" marker-end="url(#arc)"/>
+<text x="275.0" y="118" font-size="12" text-anchor="start" fill="#1240e0" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">3.º</text>
+<text x="584" y="70" font-size="14" text-anchor="start" fill="#111827" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">insert(2, x) con k = 5, m = 8</text>
+<text x="584" y="92" font-size="13" text-anchor="start" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">se mueven k − i = 3 elementos,</text>
+<text x="584" y="110" font-size="13" text-anchor="start" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">empezando por el último</text>
+<text x="584" y="190" font-size="13" text-anchor="start" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">la celda 5 estaba cruda:</text>
+<text x="584" y="208" font-size="13" text-anchor="start" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">en C++ se construye, no se asigna</text>
+</svg>

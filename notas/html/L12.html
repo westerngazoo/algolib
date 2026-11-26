@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>L12 · Notas · Estructuras de Datos y Algoritmos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: apuntes de curso universitario, sobrios y precisos; el guion habla en voz de profesor.
+   IDEA: cuaderno de clase técnico con pizarrón: hoja limpia, recuadros de pizarra verde para lo que se escribe.
+   PICTURE: diagramas SVG propios de cada lección (cotas, arreglos, costos), sobre placa blanca.
+   COLOUR and TYPE: tira cobalto #1240e0, hoja blanca, zonas #eef2ff, acento naranja quemado; Space Grotesk + Inter + JetBrains Mono.
+   LAYOUT: tira de título a todo el ancho, fila de secciones, columna de lectura de 780px; figuras y tablas hasta 900px. */
+:root{color-scheme:light dark;
+ --bg:light-dark(#ffffff,#0b0e17);--ink:light-dark(#111827,#e6e9f2);--muted:light-dark(#5b6270,#9aa3b5);
+ --cob:#1240e0;--cob-ink:light-dark(#1240e0,#8fa8ff);--pale:light-dark(#eef2ff,#141b33);--line:light-dark(#dfe4f2,#252c44);
+ --acc:light-dark(#c2410c,#fb923c);--acc-pale:light-dark(#fff1e6,#2a1a10);--ok:light-dark(#15803d,#4ade80);
+ --chalk-bg:#1f3a2e;--chalk:#eef3e8;--chalk-dim:#a9c2b2;--wood:#7a5a33}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Inter,system-ui,sans-serif;overflow-x:clip}
+a{color:var(--cob-ink)}
+.strip{background:var(--cob);color:#fff;padding:clamp(22px,3.5vw,44px) max(5vw,16px) clamp(20px,3vw,34px)}
+.strip .curso{font:600 14px/1.3 'Space Grotesk',sans-serif;opacity:.85;margin:0 0 10px}
+.strip h1{font:700 clamp(30px,4.6vw,48px)/1.06 'Space Grotesk',sans-serif;margin:0;text-wrap:balance;max-width:24ch}
+.strip .desc{margin:14px 0 0;max-width:62ch;opacity:.92;font-size:16px}
+.pages{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.pages a{color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.45);border-radius:999px;padding:6px 14px;font-size:14px;line-height:1.3}
+.pages a[aria-current]{background:#fff;color:var(--cob)}
+.pages a:hover{background:rgba(255,255,255,.16)}
+nav.toc{border-bottom:1px solid var(--line);background:var(--bg);z-index:5}
+nav.toc .scroll{display:flex;gap:4px;padding:8px max(5vw,16px);white-space:nowrap}
+nav.toc a{flex:none;text-decoration:none;color:var(--muted);font-size:14px;padding:6px 10px;border-radius:8px}
+nav.toc a:hover{background:var(--pale);color:var(--ink)}
+@media(min-width:900px){nav.toc{position:sticky;top:0}}
+main{max-width:820px;margin:0 auto;padding:28px max(4vw,16px) 80px}
+main h1{font:700 32px/1.1 'Space Grotesk',sans-serif;margin:56px 0 12px;padding-top:18px;border-top:4px solid var(--cob);color:var(--cob-ink)}
+main h2{font:700 26px/1.2 'Space Grotesk',sans-serif;margin:48px 0 10px;text-wrap:balance}
+main h3{font:600 21px/1.25 'Space Grotesk',sans-serif;margin:36px 0 8px}
+main h4{font:600 18px/1.3 'Space Grotesk',sans-serif;margin:28px 0 6px}
+.tiempo{display:inline-block;vertical-align:middle;margin-left:8px;font:500 13px/1 Inter,sans-serif;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:4px 9px}
+p,li{max-width:70ch}
+hr{border:0;border-top:1px solid var(--line);margin:40px 0}
+blockquote{margin:16px 0;padding:12px 18px;border-left:4px solid var(--cob);background:var(--pale);border-radius:0 10px 10px 0}
+blockquote p{margin:6px 0}
+code{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.88em;background:var(--pale);padding:1px 5px;border-radius:5px;overflow-wrap:anywhere}
+pre{position:relative;overflow-x:auto;background:light-dark(#f6f7fb,#11162a);border:1px solid var(--line);border-radius:10px;padding:14px 16px;font:14px/1.55 'JetBrains Mono',ui-monospace,monospace}
+pre code{background:none;padding:0;font-size:inherit;overflow-wrap:normal}
+.copy{position:absolute;top:8px;right:8px;font:600 12px Inter,sans-serif;border:1px solid var(--line);background:var(--bg);color:var(--muted);border-radius:7px;padding:6px 10px;min-height:32px;cursor:pointer}
+.copy:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;margin:16px 0;font-size:15px;width:100%}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-weight:600;background:var(--pale)}
+figure{margin:26px 0;padding:0}
+figure svg{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:12px}
+figcaption{color:var(--muted);font-size:14px;margin-top:8px}
+details{margin:12px 0;border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:var(--bg)}
+summary{cursor:pointer;font-weight:600;color:var(--cob-ink);min-height:28px}
+.callout{margin:16px 0;padding:12px 16px 12px 16px;border-radius:10px;border:1px solid var(--line)}
+.callout>.lbl{display:block;font:700 12px/1.2 Inter,sans-serif;letter-spacing:.02em;margin-bottom:4px}
+.dice{background:light-dark(#f8fafc,#121726);border-left:5px solid var(--ink)}
+.dice>.lbl{color:var(--ink)}
+.pregunta{background:var(--pale);border-left:5px solid var(--cob)}
+.pregunta>.lbl{color:var(--cob-ink)}
+.pregunta+blockquote{margin-top:-10px;border-left-color:var(--ok);background:light-dark(#f0fdf4,#0f1f16)}
+.pregunta+blockquote::before{content:"Respuesta esperada";display:block;font:700 12px Inter,sans-serif;color:var(--ok);margin-bottom:2px}
+.nota{background:light-dark(#fffbea,#211d0c);border-left:5px solid #ca8a04}
+.nota>.lbl{color:light-dark(#a16207,#facc15)}
+.atencion{background:var(--acc-pale);border-left:5px solid var(--acc)}
+.atencion>.lbl{color:var(--acc)}
+.ejercicio{display:inline-block;font:700 12px Inter,sans-serif;color:#fff;background:var(--acc);border-radius:6px;padding:2px 8px;margin-right:6px;vertical-align:2px}
+.moneda{display:inline-block;width:.9em;height:.9em;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fde68a,#d97706);vertical-align:-1px;margin-right:4px}
+.pizarra-label{display:table!important;margin:22px 0 0;font:600 13px/1.3 Inter,sans-serif;color:var(--chalk-dim);background:var(--chalk-bg);display:inline-block;padding:6px 12px;border-radius:8px 8px 0 0;border:6px solid var(--wood);border-bottom:0}
+.pizarra-label b{color:#fff}
+pre.pizarra,div.pizarra{margin-top:0;background:var(--chalk-bg);color:var(--chalk);border:6px solid var(--wood);border-radius:0 10px 10px 10px;box-shadow:inset 0 0 40px rgba(0,0,0,.35);font:15px/1.6 'JetBrains Mono',ui-monospace,monospace;padding:16px 18px;overflow-x:auto;white-space:pre}
+table.pizarra{border:6px solid var(--wood);background:var(--chalk-bg);color:var(--chalk);margin-top:0}
+table.pizarra th{background:#2a4a3c;color:#fff}table.pizarra td,table.pizarra th{border-color:#3d5e4f}
+mjx-container[display=true]{overflow-x:auto;overflow-y:hidden;max-width:100%}
+mjx-container:not([display]){display:inline-block;max-width:100%;overflow-x:auto;overflow-y:hidden;vertical-align:middle}
+.lessons{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px;margin:24px 0}
+.lessons a{display:block;text-decoration:none;color:var(--ink);background:var(--pale);border:1px solid var(--line);border-radius:12px;padding:18px}
+.lessons a:hover{border-color:var(--cob)}
+.lessons b{display:block;font:700 19px/1.2 'Space Grotesk',sans-serif;color:var(--cob-ink);margin-bottom:6px}
+.lessons span{color:var(--muted);font-size:15px}
+footer{color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding:24px max(5vw,16px)}
+@media(max-width:600px){body{font-size:16px}table{font-size:13px}pre.pizarra,div.pizarra{font-size:13px}main h1{font-size:27px}main h2{font-size:23px}}
+
+/* pestañas de código */
+.tabs{margin:20px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:light-dark(#f6f7fb,#11162a)}
+.tablist{display:flex;gap:2px;padding:6px 6px 0;background:var(--pale);border-bottom:1px solid var(--line);overflow-x:auto}
+.tablist button{font:600 14px Inter,sans-serif;color:var(--muted);background:none;border:0;border-radius:8px 8px 0 0;padding:10px 16px;min-height:44px;cursor:pointer;white-space:nowrap}
+.tablist button[aria-selected=true]{background:light-dark(#f6f7fb,#11162a);color:var(--cob-ink);box-shadow:inset 0 3px 0 var(--cob)}
+.tablist button:focus-visible{outline:3px solid var(--acc);outline-offset:-3px}
+.tablist .badge{font:600 11px Inter,sans-serif;color:var(--acc);margin-left:6px}
+.tabs .panel pre{margin:0;border:0;border-radius:0}
+.tabs .panel[hidden]{display:none}
+pre.salida{background:light-dark(#0f172a,#05070d);color:#d1fae5;border-color:#0f172a;margin-top:-8px;padding-top:30px}
+pre.salida::before{content:"Salida";position:absolute;top:8px;left:16px;font:700 11px Inter,sans-serif;color:#6ee7b7;letter-spacing:.03em}
+pre.salida .copy{display:none}
+/* resaltado de sintaxis (clases de pandoc) */
+code span.kw,code span.cf{color:light-dark(#1d4ed8,#93b4ff);font-weight:600}
+code span.dt{color:light-dark(#7c3aed,#c4b5fd)}
+code span.dv,code span.bn,code span.fl,code span.cn{color:light-dark(#b45309,#fbbf24)}
+code span.st,code span.ch,code span.ss,code span.sc{color:light-dark(#047857,#6ee7b7)}
+code span.co,code span.do,code span.cv{color:light-dark(#6b7280,#8b95a7);font-style:italic}
+code span.pp,code span.im,code span.at{color:light-dark(#be185d,#f9a8d4)}
+code span.fu,code span.bu{color:light-dark(#0e7490,#67e8f9)}
+code span.op{color:light-dark(#374151,#cbd5e1)}
+code span.er,code span.al{color:var(--acc)}
+pre.sourceCode a{display:none}
+@media print{nav.toc,.copy,.tablist{display:none}.tabs .panel[hidden]{display:block}.strip{background:none;color:#000}}
+</style>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+</head><body>
+<header class="strip"><p class="curso">algolib · Estructuras de Datos y Algoritmos</p><h1>Lección 12 — Programación dinámica</h1><p class="desc">SRTBOT, memoización y tablas, LCS, distancia de edición, mochila, cambio de monedas, LIS y UTF-8.</p><div class="pages"><a href="index.html">Inicio</a><a href="L00.html">L00 · Prerrequisitos</a><a href="L01.html">L01 · Notas</a><a href="L02.html">L02 · Notas</a><a href="L03.html">L03 · Notas</a><a href="L04.html">L04 · Notas</a><a href="L05.html">L05 · Notas</a><a href="L06.html">L06 · Notas</a><a href="L07.html">L07 · Notas</a><a href="L08.html">L08 · Notas</a><a href="L09.html">L09 · Notas</a><a href="L10.html">L10 · Notas</a><a href="L11.html">L11 · Notas</a><a href="L12.html" aria-current="page">L12 · Notas</a><a href="L13.html">L13 · Notas</a></div></header><nav class="toc" aria-label="Secciones"><div class="scroll"><a href="#objetivos-de-aprendizaje">Objetivos de aprendizaje</a><a href="#mapa-de-la-lección">Mapa de la lección</a><a href="#motivación-recursión-que-repite-trabajo">1. Motivación: recursión que rep…</a><a href="#el-marco-srtbot">2. El marco SRTBOT</a><a href="#subsecuencia-común-más-larga-lcs">3. Subsecuencia común más larga</a><a href="#distancia-de-edición">4. Distancia de edición</a><a href="#mochila-01-y-cambio-de-monedas">5. Mochila 0/1 y cambio de monedas</a><a href="#subsecuencia-creciente-más-larga-lis">6. Subsecuencia creciente más la…</a><a href="#resumen-los-subproblemas-típicos">7. Resumen: los subproblemas típ…</a><a href="#texto-y-utf-8">8. Texto y UTF-8</a><a href="#guía-del-lab-12">9. Guía del Lab 12</a><a href="#comprueba-tu-comprensión">10. Comprueba tu comprensión</a><a href="#problem-set-12">11. Problem Set 12</a><a href="#referencias">Referencias</a></div></nav><main><blockquote>
+<p><strong>Prerrequisitos:</strong> Lección 0 (§1 inducción fuerte), Lección 5 (divide y vencerás, recurrencias, búsqueda binaria), Lección 9 (DAG y orden topológico) y Lección 10 (Floyd-Warshall, caminos en DAG).</p>
+<p><strong>Cómo estudiar esta lección:</strong> la programación dinámica no es un algoritmo sino un <strong>método de diseño</strong>. Lo que se aprende es a encontrar los <strong>subproblemas</strong>. Para cada problema, intenta escribir tú el SRTBOT antes de leer la solución; si los subproblemas son correctos, el resto sale casi solo.</p>
+<p><strong>Lab asociado:</strong> <code>lab12</code>: Fibonacci, LCS, distancia de edición, mochila 0/1, LIS y cambio de monedas (C, C++ y Rust).</p>
+</blockquote>
+<h2 id="objetivos-de-aprendizaje">Objetivos de aprendizaje</h2>
+<p>Al terminar esta lección deberías poder:</p>
+<ol type="1">
+<li>Reconocer cuándo un problema tiene <strong>subproblemas superpuestos</strong> y <strong>subestructura óptima</strong>.</li>
+<li>Diseñar un algoritmo con el marco <strong>SRTBOT</strong> y demostrar su corrección por inducción sobre el orden topológico de los subproblemas.</li>
+<li>Implementar la misma recurrencia <strong>de arriba hacia abajo</strong> (memoización) y <strong>de abajo hacia arriba</strong> (tabla), y reducir la memoria cuando la recurrencia solo mira la fila anterior.</li>
+<li>Resolver LCS, distancia de edición, mochila 0/1, cambio de monedas y LIS, y <strong>reconstruir</strong> la solución, no solo su valor.</li>
+<li>Explicar por qué <span class="math inline">\(O(nW)\)</span> es <strong>pseudo-polinomial</strong>.</li>
+<li>Explicar por qué la distancia de edición sobre texto UTF-8 depende de qué se considera un “carácter”.</li>
+</ol>
+<h2 id="mapa-de-la-lección">Mapa de la lección</h2>
+<figure>
+<svg aria-label="Mapa de la lección 12" fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" role="img" viewbox="0 0 760 300" xmlns="http://www.w3.org/2000/svg">
+<title>Mapa de la lección 12</title>
+<defs>
+<marker id="ar" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#111827"></path></marker>
+<marker id="arc" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#1240e0"></path></marker>
+<marker id="ara" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"></path></marker>
+</defs>
+<rect fill="#ffffff" height="300" rx="12" width="760"></rect>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="40" y="26"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="54" y="50">§1</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="54" y="70">Recursión que repite</text>
+<rect fill="#1240e0" height="58" rx="10" stroke="#1240e0" stroke-width="2" width="200" x="290" y="26"></rect>
+<text fill="#dbe4ff" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="304" y="50">§2</text>
+<text fill="#ffffff" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="304" y="70">SRTBOT</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="540" y="26"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="554" y="50">§3</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="554" y="70">LCS</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="40" y="124"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="54" y="148">§6</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="54" y="168">LIS</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="290" y="124"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="304" y="148">§5</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="304" y="168">Mochila y monedas</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="540" y="124"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="554" y="148">§4</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="554" y="168">Distancia de edición</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="40" y="222"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="54" y="246">§7</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="54" y="266">Subproblemas típicos</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="290" y="222"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="304" y="246">§8</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="304" y="266">UTF-8</text>
+<rect fill="#eef2ff" height="58" rx="10" stroke="#1240e0" stroke-width="1.4" width="200" x="540" y="222"></rect>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" x="554" y="246">§9–11</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" x="554" y="266">Lab y ejercicios</text>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="244" x2="286" y1="55.0" y2="55.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="494" x2="536" y1="55.0" y2="55.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="640.0" x2="640.0" y1="87" y2="120"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="536" x2="494" y1="153.0" y2="153.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="286" x2="244" y1="153.0" y2="153.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="140.0" x2="140.0" y1="185" y2="218"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="244" x2="286" y1="251.0" y2="251.0"></line>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="494" x2="536" y1="251.0" y2="251.0"></line>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" text-anchor="start" x="400.0" y="106">encontrar los subproblemas: núcleo</text>
+</svg>
+<figcaption aria-hidden="true">Mapa de la lección 12</figcaption>
+</figure>
+<hr/>
+<h2 id="motivación-recursión-que-repite-trabajo">1. Motivación: recursión que repite trabajo</h2>
+<p>La definición <span class="math inline">\(F(n) = F(n-1) + F(n-2)\)</span> se traduce directo a una función recursiva. Es correcta y desastrosa: <span class="math inline">\(F(n-2)\)</span> se calcula dentro de <span class="math inline">\(F(n-1)\)</span> <strong>y</strong> otra vez directamente, y así en cada nivel.</p>
+<blockquote>
+<p><strong>Proposición 1.</strong> La recursión ingenua para <span class="math inline">\(F(n)\)</span> hace <span class="math inline">\(2F(n+1) - 1\)</span> llamadas, que es <span class="math inline">\(\Theta(\varphi^n)\)</span>.</p>
+</blockquote>
+<p><em>Demostración.</em> Sea <span class="math inline">\(L(n)\)</span> el número de llamadas. <span class="math inline">\(L(0) = L(1) = 1\)</span> y <span class="math inline">\(L(n) = 1 + L(n-1) + L(n-2)\)</span>. Con <span class="math inline">\(L'(n) = L(n) + 1\)</span>: <span class="math inline">\(L'(n) = L'(n-1) + L'(n-2)\)</span>, <span class="math inline">\(L'(0) = L'(1) = 2\)</span>, así que <span class="math inline">\(L'(n) = 2F(n+1)\)</span>. <span class="math inline">\(\blacksquare\)</span></p>
+<p>Pero solo hay <span class="math inline">\(n + 1\)</span> subproblemas <strong>distintos</strong>: <span class="math inline">\(F(0), \dots, F(n)\)</span>. Si guardamos cada uno la primera vez que lo calculamos (<strong>memoización</strong>), el costo baja a <span class="math inline">\(O(n)\)</span>:</p>
+<div class="tabs"><div aria-label="Lenguaje" class="tablist" role="tablist"><button aria-controls="t0-0" aria-selected="false" data-lang="c" id="t0-0-b" role="tab" tabindex="-1" type="button">C</button><button aria-controls="t0-1" aria-selected="false" data-lang="cpp" id="t0-1-b" role="tab" tabindex="-1" type="button">C++</button><button aria-controls="t0-2" aria-selected="false" data-lang="rust" id="t0-2-b" role="tab" tabindex="-1" type="button">Rust</button></div><div aria-labelledby="t0-0-b" class="panel" data-lang="c" id="t0-0" role="tabpanel"><div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a aria-hidden="true" href="#cb1-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdint.h&gt;</span></span>
+<span id="cb1-2"><a aria-hidden="true" href="#cb1-2" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb1-3"><a aria-hidden="true" href="#cb1-3" tabindex="-1"></a></span>
+<span id="cb1-4"><a aria-hidden="true" href="#cb1-4" tabindex="-1"></a><span class="dt">static</span> <span class="dt">long</span> llamadas<span class="op">;</span></span>
+<span id="cb1-5"><a aria-hidden="true" href="#cb1-5" tabindex="-1"></a></span>
+<span id="cb1-6"><a aria-hidden="true" href="#cb1-6" tabindex="-1"></a><span class="dt">static</span> <span class="dt">uint64_t</span> fib_ingenuo<span class="op">(</span><span class="dt">int</span> n<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-7"><a aria-hidden="true" href="#cb1-7" tabindex="-1"></a>    llamadas<span class="op">++;</span></span>
+<span id="cb1-8"><a aria-hidden="true" href="#cb1-8" tabindex="-1"></a>    <span class="cf">return</span> n <span class="op">&lt;</span> <span class="dv">2</span> <span class="op">?</span> <span class="op">(</span><span class="dt">uint64_t</span><span class="op">)</span>n <span class="op">:</span> fib_ingenuo<span class="op">(</span>n <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">+</span> fib_ingenuo<span class="op">(</span>n <span class="op">-</span> <span class="dv">2</span><span class="op">);</span></span>
+<span id="cb1-9"><a aria-hidden="true" href="#cb1-9" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-10"><a aria-hidden="true" href="#cb1-10" tabindex="-1"></a></span>
+<span id="cb1-11"><a aria-hidden="true" href="#cb1-11" tabindex="-1"></a><span class="dt">static</span> <span class="dt">uint64_t</span> memo<span class="op">[</span><span class="dv">100</span><span class="op">];</span></span>
+<span id="cb1-12"><a aria-hidden="true" href="#cb1-12" tabindex="-1"></a><span class="dt">static</span> <span class="dt">int</span> calculado<span class="op">[</span><span class="dv">100</span><span class="op">];</span></span>
+<span id="cb1-13"><a aria-hidden="true" href="#cb1-13" tabindex="-1"></a></span>
+<span id="cb1-14"><a aria-hidden="true" href="#cb1-14" tabindex="-1"></a><span class="dt">static</span> <span class="dt">uint64_t</span> fib_memo<span class="op">(</span><span class="dt">int</span> n<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-15"><a aria-hidden="true" href="#cb1-15" tabindex="-1"></a>    llamadas<span class="op">++;</span></span>
+<span id="cb1-16"><a aria-hidden="true" href="#cb1-16" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>n <span class="op">&lt;</span> <span class="dv">2</span><span class="op">)</span> <span class="cf">return</span> <span class="op">(</span><span class="dt">uint64_t</span><span class="op">)</span>n<span class="op">;</span></span>
+<span id="cb1-17"><a aria-hidden="true" href="#cb1-17" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(!</span>calculado<span class="op">[</span>n<span class="op">])</span> <span class="op">{</span> memo<span class="op">[</span>n<span class="op">]</span> <span class="op">=</span> fib_memo<span class="op">(</span>n <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">+</span> fib_memo<span class="op">(</span>n <span class="op">-</span> <span class="dv">2</span><span class="op">);</span> calculado<span class="op">[</span>n<span class="op">]</span> <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb1-18"><a aria-hidden="true" href="#cb1-18" tabindex="-1"></a>    <span class="cf">return</span> memo<span class="op">[</span>n<span class="op">];</span></span>
+<span id="cb1-19"><a aria-hidden="true" href="#cb1-19" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-20"><a aria-hidden="true" href="#cb1-20" tabindex="-1"></a></span>
+<span id="cb1-21"><a aria-hidden="true" href="#cb1-21" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-22"><a aria-hidden="true" href="#cb1-22" tabindex="-1"></a>    llamadas <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-23"><a aria-hidden="true" href="#cb1-23" tabindex="-1"></a>    <span class="dt">uint64_t</span> a <span class="op">=</span> fib_ingenuo<span class="op">(</span><span class="dv">30</span><span class="op">);</span></span>
+<span id="cb1-24"><a aria-hidden="true" href="#cb1-24" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">"ingenuo:    F(30) = </span><span class="sc">%llu</span><span class="st"> con </span><span class="sc">%ld</span><span class="st"> llamadas</span><span class="sc">\n</span><span class="st">"</span><span class="op">,</span> <span class="op">(</span><span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span><span class="op">)</span>a<span class="op">,</span> llamadas<span class="op">);</span></span>
+<span id="cb1-25"><a aria-hidden="true" href="#cb1-25" tabindex="-1"></a>    llamadas <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-26"><a aria-hidden="true" href="#cb1-26" tabindex="-1"></a>    <span class="dt">uint64_t</span> b <span class="op">=</span> fib_memo<span class="op">(</span><span class="dv">30</span><span class="op">);</span></span>
+<span id="cb1-27"><a aria-hidden="true" href="#cb1-27" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">"memoizado:  F(30) = </span><span class="sc">%llu</span><span class="st"> con </span><span class="sc">%ld</span><span class="st"> llamadas</span><span class="sc">\n</span><span class="st">"</span><span class="op">,</span> <span class="op">(</span><span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span><span class="op">)</span>b<span class="op">,</span> llamadas<span class="op">);</span></span>
+<span id="cb1-28"><a aria-hidden="true" href="#cb1-28" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-29"><a aria-hidden="true" href="#cb1-29" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div><div aria-labelledby="t0-1-b" class="panel" data-lang="cpp" id="t0-1" role="tabpanel"><div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a aria-hidden="true" href="#cb2-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;cstdint&gt;</span></span>
+<span id="cb2-2"><a aria-hidden="true" href="#cb2-2" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb2-3"><a aria-hidden="true" href="#cb2-3" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;optional&gt;</span></span>
+<span id="cb2-4"><a aria-hidden="true" href="#cb2-4" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;vector&gt;</span></span>
+<span id="cb2-5"><a aria-hidden="true" href="#cb2-5" tabindex="-1"></a></span>
+<span id="cb2-6"><a aria-hidden="true" href="#cb2-6" tabindex="-1"></a><span class="dt">long</span> llamadas <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb2-7"><a aria-hidden="true" href="#cb2-7" tabindex="-1"></a></span>
+<span id="cb2-8"><a aria-hidden="true" href="#cb2-8" tabindex="-1"></a><span class="bu">std::</span>uint64_t fib_ingenuo<span class="op">(</span><span class="dt">int</span> n<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-9"><a aria-hidden="true" href="#cb2-9" tabindex="-1"></a>    <span class="op">++</span>llamadas<span class="op">;</span></span>
+<span id="cb2-10"><a aria-hidden="true" href="#cb2-10" tabindex="-1"></a>    <span class="cf">return</span> n <span class="op">&lt;</span> <span class="dv">2</span> <span class="op">?</span> n <span class="op">:</span> fib_ingenuo<span class="op">(</span>n <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">+</span> fib_ingenuo<span class="op">(</span>n <span class="op">-</span> <span class="dv">2</span><span class="op">);</span></span>
+<span id="cb2-11"><a aria-hidden="true" href="#cb2-11" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-12"><a aria-hidden="true" href="#cb2-12" tabindex="-1"></a></span>
+<span id="cb2-13"><a aria-hidden="true" href="#cb2-13" tabindex="-1"></a><span class="bu">std::</span>uint64_t fib_memo<span class="op">(</span><span class="dt">int</span> n<span class="op">,</span> <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="bu">std::</span>optional<span class="op">&lt;</span><span class="bu">std::</span>uint64_t<span class="op">&gt;&gt;&amp;</span> memo<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-14"><a aria-hidden="true" href="#cb2-14" tabindex="-1"></a>    <span class="op">++</span>llamadas<span class="op">;</span></span>
+<span id="cb2-15"><a aria-hidden="true" href="#cb2-15" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>n <span class="op">&lt;</span> <span class="dv">2</span><span class="op">)</span> <span class="cf">return</span> n<span class="op">;</span></span>
+<span id="cb2-16"><a aria-hidden="true" href="#cb2-16" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(!</span>memo<span class="op">[</span>n<span class="op">])</span> memo<span class="op">[</span>n<span class="op">]</span> <span class="op">=</span> fib_memo<span class="op">(</span>n <span class="op">-</span> <span class="dv">1</span><span class="op">,</span> memo<span class="op">)</span> <span class="op">+</span> fib_memo<span class="op">(</span>n <span class="op">-</span> <span class="dv">2</span><span class="op">,</span> memo<span class="op">);</span></span>
+<span id="cb2-17"><a aria-hidden="true" href="#cb2-17" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">*</span>memo<span class="op">[</span>n<span class="op">];</span></span>
+<span id="cb2-18"><a aria-hidden="true" href="#cb2-18" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-19"><a aria-hidden="true" href="#cb2-19" tabindex="-1"></a></span>
+<span id="cb2-20"><a aria-hidden="true" href="#cb2-20" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb2-21"><a aria-hidden="true" href="#cb2-21" tabindex="-1"></a>    <span class="bu">std::</span>uint64_t a <span class="op">=</span> fib_ingenuo<span class="op">(</span><span class="dv">30</span><span class="op">);</span></span>
+<span id="cb2-22"><a aria-hidden="true" href="#cb2-22" tabindex="-1"></a>    <span class="bu">std::</span>printf<span class="op">(</span><span class="st">"ingenuo:    F(30) = </span><span class="sc">%llu</span><span class="st"> con </span><span class="sc">%ld</span><span class="st"> llamadas</span><span class="sc">\n</span><span class="st">"</span><span class="op">,</span> <span class="op">(</span><span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span><span class="op">)</span>a<span class="op">,</span> llamadas<span class="op">);</span></span>
+<span id="cb2-23"><a aria-hidden="true" href="#cb2-23" tabindex="-1"></a>    llamadas <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb2-24"><a aria-hidden="true" href="#cb2-24" tabindex="-1"></a>    <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="bu">std::</span>optional<span class="op">&lt;</span><span class="bu">std::</span>uint64_t<span class="op">&gt;&gt;</span> memo<span class="op">(</span><span class="dv">31</span><span class="op">);</span></span>
+<span id="cb2-25"><a aria-hidden="true" href="#cb2-25" tabindex="-1"></a>    <span class="bu">std::</span>uint64_t b <span class="op">=</span> fib_memo<span class="op">(</span><span class="dv">30</span><span class="op">,</span> memo<span class="op">);</span></span>
+<span id="cb2-26"><a aria-hidden="true" href="#cb2-26" tabindex="-1"></a>    <span class="bu">std::</span>printf<span class="op">(</span><span class="st">"memoizado:  F(30) = </span><span class="sc">%llu</span><span class="st"> con </span><span class="sc">%ld</span><span class="st"> llamadas</span><span class="sc">\n</span><span class="st">"</span><span class="op">,</span> <span class="op">(</span><span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span><span class="op">)</span>b<span class="op">,</span> llamadas<span class="op">);</span></span>
+<span id="cb2-27"><a aria-hidden="true" href="#cb2-27" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div><div aria-labelledby="t0-2-b" class="panel" data-lang="rust" id="t0-2" role="tabpanel"><div class="sourceCode" id="cb3"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb3-1"><a aria-hidden="true" href="#cb3-1" tabindex="-1"></a><span class="kw">fn</span> fib_ingenuo(n<span class="op">:</span> <span class="dt">u64</span><span class="op">,</span> llamadas<span class="op">:</span> <span class="op">&amp;</span><span class="kw">mut</span> <span class="dt">u64</span>) <span class="op">-&gt;</span> <span class="dt">u64</span> <span class="op">{</span></span>
+<span id="cb3-2"><a aria-hidden="true" href="#cb3-2" tabindex="-1"></a>    <span class="op">*</span>llamadas <span class="op">+=</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb3-3"><a aria-hidden="true" href="#cb3-3" tabindex="-1"></a>    <span class="cf">if</span> n <span class="op">&lt;</span> <span class="dv">2</span> <span class="op">{</span> n <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span> fib_ingenuo(n <span class="op">-</span> <span class="dv">1</span><span class="op">,</span> llamadas) <span class="op">+</span> fib_ingenuo(n <span class="op">-</span> <span class="dv">2</span><span class="op">,</span> llamadas) <span class="op">}</span></span>
+<span id="cb3-4"><a aria-hidden="true" href="#cb3-4" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb3-5"><a aria-hidden="true" href="#cb3-5" tabindex="-1"></a></span>
+<span id="cb3-6"><a aria-hidden="true" href="#cb3-6" tabindex="-1"></a><span class="kw">fn</span> fib_memo(n<span class="op">:</span> <span class="dt">usize</span><span class="op">,</span> memo<span class="op">:</span> <span class="op">&amp;</span><span class="kw">mut</span> <span class="dt">Vec</span><span class="op">&lt;</span><span class="dt">Option</span><span class="op">&lt;</span><span class="dt">u64</span><span class="op">&gt;&gt;,</span> llamadas<span class="op">:</span> <span class="op">&amp;</span><span class="kw">mut</span> <span class="dt">u64</span>) <span class="op">-&gt;</span> <span class="dt">u64</span> <span class="op">{</span></span>
+<span id="cb3-7"><a aria-hidden="true" href="#cb3-7" tabindex="-1"></a>    <span class="op">*</span>llamadas <span class="op">+=</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb3-8"><a aria-hidden="true" href="#cb3-8" tabindex="-1"></a>    <span class="cf">if</span> n <span class="op">&lt;</span> <span class="dv">2</span> <span class="op">{</span> <span class="cf">return</span> n <span class="kw">as</span> <span class="dt">u64</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb3-9"><a aria-hidden="true" href="#cb3-9" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">let</span> <span class="cn">Some</span>(v) <span class="op">=</span> memo[n] <span class="op">{</span> <span class="cf">return</span> v<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb3-10"><a aria-hidden="true" href="#cb3-10" tabindex="-1"></a>    <span class="kw">let</span> v <span class="op">=</span> fib_memo(n <span class="op">-</span> <span class="dv">1</span><span class="op">,</span> memo<span class="op">,</span> llamadas) <span class="op">+</span> fib_memo(n <span class="op">-</span> <span class="dv">2</span><span class="op">,</span> memo<span class="op">,</span> llamadas)<span class="op">;</span></span>
+<span id="cb3-11"><a aria-hidden="true" href="#cb3-11" tabindex="-1"></a>    memo[n] <span class="op">=</span> <span class="cn">Some</span>(v)<span class="op">;</span></span>
+<span id="cb3-12"><a aria-hidden="true" href="#cb3-12" tabindex="-1"></a>    v</span>
+<span id="cb3-13"><a aria-hidden="true" href="#cb3-13" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb3-14"><a aria-hidden="true" href="#cb3-14" tabindex="-1"></a></span>
+<span id="cb3-15"><a aria-hidden="true" href="#cb3-15" tabindex="-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb3-16"><a aria-hidden="true" href="#cb3-16" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> c <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb3-17"><a aria-hidden="true" href="#cb3-17" tabindex="-1"></a>    <span class="kw">let</span> a <span class="op">=</span> fib_ingenuo(<span class="dv">30</span><span class="op">,</span> <span class="op">&amp;</span><span class="kw">mut</span> c)<span class="op">;</span></span>
+<span id="cb3-18"><a aria-hidden="true" href="#cb3-18" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">"ingenuo:    F(30) = {a} con {c} llamadas"</span>)<span class="op">;</span></span>
+<span id="cb3-19"><a aria-hidden="true" href="#cb3-19" tabindex="-1"></a>    c <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb3-20"><a aria-hidden="true" href="#cb3-20" tabindex="-1"></a>    <span class="kw">let</span> b <span class="op">=</span> fib_memo(<span class="dv">30</span><span class="op">,</span> <span class="op">&amp;</span><span class="kw">mut</span> <span class="pp">vec!</span>[<span class="cn">None</span><span class="op">;</span> <span class="dv">31</span>]<span class="op">,</span> <span class="op">&amp;</span><span class="kw">mut</span> c)<span class="op">;</span></span>
+<span id="cb3-21"><a aria-hidden="true" href="#cb3-21" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">"memoizado:  F(30) = {b} con {c} llamadas"</span>)<span class="op">;</span></span>
+<span id="cb3-22"><a aria-hidden="true" href="#cb3-22" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div></div>
+<pre class="text salida"><code>ingenuo:    F(30) = 832040 con 2692537 llamadas
+memoizado:  F(30) = 832040 con 59 llamadas</code></pre>
+<p>(<span class="math inline">\(2F(31) - 1 = 2\cdot 1\,346\,269 - 1 = 2\,692\,537\)</span>, como predice la Proposición 1.)</p>
+<p><strong>Programación dinámica</strong> = recursión + reutilizar los subproblemas. Funciona cuando:</p>
+<ol type="1">
+<li>el problema se descompone en <strong>subproblemas del mismo tipo</strong> (subestructura óptima, como en el Lema 1 de L10), y</li>
+<li>esos subproblemas <strong>se repiten</strong> (si no se repiten, es divide y vencerás, L05).</li>
+</ol>
+<p>El nombre es histórico (Bellman, 1950s): “programación” en el sentido de planificar en una tabla, como “programación lineal”.</p>
+<hr/>
+<h2 id="el-marco-srtbot">2. El marco SRTBOT</h2>
+<p>MIT 6.006 propone seis pasos. Los usaremos para cada problema:</p>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 50%"/>
+<col style="width: 50%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Paso</th>
+<th>Pregunta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>S</strong>ubproblemas</td>
+<td>¿Qué familia de problemas más pequeños resuelvo? Típicamente prefijos, sufijos o subcadenas de la entrada, a veces con un parámetro extra.</td>
+</tr>
+<tr>
+<td><strong>R</strong>elación</td>
+<td>¿Cómo resuelvo un subproblema a partir de otros <strong>más pequeños</strong>? Es una recurrencia, y casi siempre “probar todas las opciones para la primera decisión y quedarse con la mejor”.</td>
+</tr>
+<tr>
+<td><strong>T</strong>opológico</td>
+<td>¿En qué orden resolverlos para que, al calcular uno, los que necesita ya estén? Los subproblemas y sus dependencias forman un <strong>DAG</strong>.</td>
+</tr>
+<tr>
+<td><strong>B</strong>ase</td>
+<td>¿Cuáles se resuelven sin recursión?</td>
+</tr>
+<tr>
+<td><strong>O</strong>riginal</td>
+<td>¿Cuál subproblema (o combinación) es la respuesta pedida?</td>
+</tr>
+<tr>
+<td><strong>T</strong>iempo</td>
+<td>(número de subproblemas) × (trabajo de la relación por subproblema), más el trabajo para la original.</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p><strong>Teorema 2 (corrección genérica).</strong> Si la relación es correcta (expresa el valor óptimo de cada subproblema en función de subproblemas menores) y los casos base son correctos, calcular los subproblemas en orden topológico produce el valor correcto de todos ellos.</p>
+</blockquote>
+<p><em>Demostración.</em> Inducción sobre el orden topológico: cuando se calcula un subproblema, todos de los que depende ya fueron calculados correctamente (hipótesis de inducción), y la relación da su valor correcto. <span class="math inline">\(\blacksquare\)</span></p>
+<p>Así, <strong>toda</strong> demostración de un algoritmo de PD se reduce a demostrar que la <strong>relación</strong> es correcta. Eso es lo que haremos en cada problema. La relación se justifica casi siempre con el mismo patrón: <em>“la solución óptima toma alguna decisión sobre el primer elemento; considero todas; y lo que queda es un subproblema, que por subestructura óptima debe resolverse de manera óptima”</em>.</p>
+<h3 id="arriba-abajo-y-abajo-arriba">2.1 Arriba-abajo y abajo-arriba</h3>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>Memoización (arriba-abajo)</th>
+<th>Tabla (abajo-arriba)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Código</td>
+<td>la recursión + un diccionario</td>
+<td>ciclos en orden topológico</td>
+</tr>
+<tr>
+<td>Calcula</td>
+<td>solo los subproblemas alcanzables</td>
+<td>todos</td>
+</tr>
+<tr>
+<td>Pila</td>
+<td>profundidad de recursión (¡puede desbordar!)</td>
+<td>ninguna</td>
+</tr>
+<tr>
+<td>Memoria</td>
+<td>difícil de reducir</td>
+<td>fácil: si la relación mira solo la “fila” anterior, basta guardar dos filas</td>
+</tr>
+</tbody>
+</table></div>
+<p>Las soluciones del lab son todas abajo-arriba y con memoria reducida.</p>
+<hr/>
+<h2 id="subsecuencia-común-más-larga-lcs">3. Subsecuencia común más larga (LCS)</h2>
+<p>Una <strong>subsecuencia</strong> de una cadena se obtiene borrando caracteres sin reordenar (“ACE” es subsecuencia de “ABCDE”). La LCS de <span class="math inline">\(a\)</span> y <span class="math inline">\(b\)</span> es la subsecuencia común de máxima longitud. Aplicaciones: <code>diff</code> (las líneas que no cambian son una LCS), alineamiento de ADN, detección de plagio.</p>
+<p><strong>SRTBOT</strong> (sobre sufijos):</p>
+<ul>
+<li><strong>S:</strong> <span class="math inline">\(L(i, j)\)</span> = longitud de la LCS de <span class="math inline">\(a[i..]\)</span> y <span class="math inline">\(b[j..]\)</span>, para <span class="math inline">\(0 \le i \le |a|\)</span>, <span class="math inline">\(0 \le j \le |b|\)</span>.</li>
+<li><strong>R:</strong> si <span class="math inline">\(a[i] = b[j]\)</span>: <span class="math inline">\(L(i, j) = 1 + L(i+1, j+1)\)</span>. Si no: <span class="math inline">\(L(i, j) = \max(L(i+1, j),\, L(i, j+1))\)</span>.</li>
+<li><strong>T:</strong> <span class="math inline">\(i\)</span> decreciente; para cada <span class="math inline">\(i\)</span>, <span class="math inline">\(j\)</span> decreciente.</li>
+<li><strong>B:</strong> <span class="math inline">\(L(|a|, j) = L(i, |b|) = 0\)</span> (con una cadena vacía no hay nada común).</li>
+<li><strong>O:</strong> <span class="math inline">\(L(0, 0)\)</span>.</li>
+<li><strong>T:</strong> <span class="math inline">\((|a|+1)(|b|+1)\)</span> subproblemas, <span class="math inline">\(O(1)\)</span> cada uno: <span class="math inline">\(O(|a|\cdot|b|)\)</span>.</li>
+</ul>
+<blockquote>
+<p><strong>Lema 3.</strong> La relación de LCS es correcta.</p>
+</blockquote>
+<p><em>Demostración.</em> <em>Caso <span class="math inline">\(a[i] = b[j] = c\)</span>:</em> sea <span class="math inline">\(S\)</span> una LCS de <span class="math inline">\(a[i..]\)</span> y <span class="math inline">\(b[j..]\)</span>. Si <span class="math inline">\(S\)</span> no empieza con este par, se le puede anteponer <span class="math inline">\(c\)</span> (o reemplazar su primer carácter, si usa uno de los dos <span class="math inline">\(c\)</span>) sin perder longitud; así hay una LCS que empieza emparejando <span class="math inline">\(a[i]\)</span> con <span class="math inline">\(b[j]\)</span>, y el resto es una subsecuencia común de <span class="math inline">\(a[i+1..]\)</span> y <span class="math inline">\(b[j+1..]\)</span>, que debe ser de longitud máxima: <span class="math inline">\(1 + L(i+1, j+1)\)</span>. <em>Caso <span class="math inline">\(a[i] \ne b[j]\)</span>:</em> en una LCS, <span class="math inline">\(a[i]\)</span> y <span class="math inline">\(b[j]\)</span> no pueden estar <strong>ambos</strong> emparejados entre sí; así que o <span class="math inline">\(a[i]\)</span> no se usa (y la LCS es de <span class="math inline">\(a[i+1..]\)</span> y <span class="math inline">\(b[j..]\)</span>) o <span class="math inline">\(b[j]\)</span> no se usa: el máximo de las dos opciones. <span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Memoria.</strong> La fila <span class="math inline">\(i\)</span> solo depende de la fila <span class="math inline">\(i + 1\)</span>: bastan dos filas. Y como el problema es simétrico, se puede intercambiar <span class="math inline">\(a\)</span> y <span class="math inline">\(b\)</span> para que las filas tengan el largo de la cadena <strong>más corta</strong>: <span class="math inline">\(O(\min(|a|, |b|))\)</span>, como exige el lab.</p>
+<p><strong>Reconstrucción.</strong> Para obtener la subsecuencia (no solo su longitud) hace falta la tabla completa: desde <span class="math inline">\((0, 0)\)</span>, si <span class="math inline">\(a[i] = b[j]\)</span> se toma el carácter y se avanza en diagonal; si no, se avanza hacia el vecino con el valor mayor.</p>
+<div class="tabs"><div aria-label="Lenguaje" class="tablist" role="tablist"><button aria-controls="t1-0" aria-selected="false" data-lang="c" id="t1-0-b" role="tab" tabindex="-1" type="button">C</button><button aria-controls="t1-1" aria-selected="false" data-lang="cpp" id="t1-1-b" role="tab" tabindex="-1" type="button">C++</button><button aria-controls="t1-2" aria-selected="false" data-lang="rust" id="t1-2-b" role="tab" tabindex="-1" type="button">Rust</button></div><div aria-labelledby="t1-0-b" class="panel" data-lang="c" id="t1-0" role="tabpanel"><div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a aria-hidden="true" href="#cb5-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb5-2"><a aria-hidden="true" href="#cb5-2" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;string.h&gt;</span></span>
+<span id="cb5-3"><a aria-hidden="true" href="#cb5-3" tabindex="-1"></a></span>
+<span id="cb5-4"><a aria-hidden="true" href="#cb5-4" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-5"><a aria-hidden="true" href="#cb5-5" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>a <span class="op">=</span> <span class="st">"ABCBDAB"</span><span class="op">,</span> <span class="op">*</span>b <span class="op">=</span> <span class="st">"BDCABA"</span><span class="op">;</span></span>
+<span id="cb5-6"><a aria-hidden="true" href="#cb5-6" tabindex="-1"></a>    <span class="dt">int</span> n <span class="op">=</span> <span class="op">(</span><span class="dt">int</span><span class="op">)</span>strlen<span class="op">(</span>a<span class="op">),</span> m <span class="op">=</span> <span class="op">(</span><span class="dt">int</span><span class="op">)</span>strlen<span class="op">(</span>b<span class="op">);</span></span>
+<span id="cb5-7"><a aria-hidden="true" href="#cb5-7" tabindex="-1"></a>    <span class="dt">int</span> L<span class="op">[</span><span class="dv">16</span><span class="op">][</span><span class="dv">16</span><span class="op">]</span> <span class="op">=</span> <span class="op">{{</span><span class="dv">0</span><span class="op">}};</span>                    <span class="co">/* L[i][j] = LCS de a[i..], b[j..] */</span></span>
+<span id="cb5-8"><a aria-hidden="true" href="#cb5-8" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> n <span class="op">-</span> <span class="dv">1</span><span class="op">;</span> i <span class="op">&gt;=</span> <span class="dv">0</span><span class="op">;</span> i<span class="op">--)</span></span>
+<span id="cb5-9"><a aria-hidden="true" href="#cb5-9" tabindex="-1"></a>        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> m <span class="op">-</span> <span class="dv">1</span><span class="op">;</span> j <span class="op">&gt;=</span> <span class="dv">0</span><span class="op">;</span> j<span class="op">--)</span></span>
+<span id="cb5-10"><a aria-hidden="true" href="#cb5-10" tabindex="-1"></a>            L<span class="op">[</span>i<span class="op">][</span>j<span class="op">]</span> <span class="op">=</span> a<span class="op">[</span>i<span class="op">]</span> <span class="op">==</span> b<span class="op">[</span>j<span class="op">]</span> <span class="op">?</span> <span class="dv">1</span> <span class="op">+</span> L<span class="op">[</span>i <span class="op">+</span> <span class="dv">1</span><span class="op">][</span>j <span class="op">+</span> <span class="dv">1</span><span class="op">]</span></span>
+<span id="cb5-11"><a aria-hidden="true" href="#cb5-11" tabindex="-1"></a>                    <span class="op">:</span> <span class="op">(</span>L<span class="op">[</span>i <span class="op">+</span> <span class="dv">1</span><span class="op">][</span>j<span class="op">]</span> <span class="op">&gt;=</span> L<span class="op">[</span>i<span class="op">][</span>j <span class="op">+</span> <span class="dv">1</span><span class="op">]</span> <span class="op">?</span> L<span class="op">[</span>i <span class="op">+</span> <span class="dv">1</span><span class="op">][</span>j<span class="op">]</span> <span class="op">:</span> L<span class="op">[</span>i<span class="op">][</span>j <span class="op">+</span> <span class="dv">1</span><span class="op">]);</span></span>
+<span id="cb5-12"><a aria-hidden="true" href="#cb5-12" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">"longitud de la LCS: </span><span class="sc">%d\n</span><span class="st">una LCS: "</span><span class="op">,</span> L<span class="op">[</span><span class="dv">0</span><span class="op">][</span><span class="dv">0</span><span class="op">]);</span></span>
+<span id="cb5-13"><a aria-hidden="true" href="#cb5-13" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> n <span class="op">&amp;&amp;</span> j <span class="op">&lt;</span> m<span class="op">;)</span> <span class="op">{</span>  <span class="co">/* reconstrucción */</span></span>
+<span id="cb5-14"><a aria-hidden="true" href="#cb5-14" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>a<span class="op">[</span>i<span class="op">]</span> <span class="op">==</span> b<span class="op">[</span>j<span class="op">])</span> <span class="op">{</span> putchar<span class="op">(</span>a<span class="op">[</span>i<span class="op">]);</span> i<span class="op">++;</span> j<span class="op">++;</span> <span class="op">}</span></span>
+<span id="cb5-15"><a aria-hidden="true" href="#cb5-15" tabindex="-1"></a>        <span class="cf">else</span> <span class="cf">if</span> <span class="op">(</span>L<span class="op">[</span>i <span class="op">+</span> <span class="dv">1</span><span class="op">][</span>j<span class="op">]</span> <span class="op">&gt;=</span> L<span class="op">[</span>i<span class="op">][</span>j <span class="op">+</span> <span class="dv">1</span><span class="op">])</span> i<span class="op">++;</span></span>
+<span id="cb5-16"><a aria-hidden="true" href="#cb5-16" tabindex="-1"></a>        <span class="cf">else</span> j<span class="op">++;</span></span>
+<span id="cb5-17"><a aria-hidden="true" href="#cb5-17" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-18"><a aria-hidden="true" href="#cb5-18" tabindex="-1"></a>    putchar<span class="op">(</span><span class="ch">'</span><span class="sc">\n</span><span class="ch">'</span><span class="op">);</span></span>
+<span id="cb5-19"><a aria-hidden="true" href="#cb5-19" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb5-20"><a aria-hidden="true" href="#cb5-20" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div><div aria-labelledby="t1-1-b" class="panel" data-lang="cpp" id="t1-1" role="tabpanel"><div class="sourceCode" id="cb6"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a aria-hidden="true" href="#cb6-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;algorithm&gt;</span></span>
+<span id="cb6-2"><a aria-hidden="true" href="#cb6-2" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb6-3"><a aria-hidden="true" href="#cb6-3" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;string&gt;</span></span>
+<span id="cb6-4"><a aria-hidden="true" href="#cb6-4" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;vector&gt;</span></span>
+<span id="cb6-5"><a aria-hidden="true" href="#cb6-5" tabindex="-1"></a></span>
+<span id="cb6-6"><a aria-hidden="true" href="#cb6-6" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb6-7"><a aria-hidden="true" href="#cb6-7" tabindex="-1"></a>    <span class="at">const</span> <span class="bu">std::</span>string a <span class="op">=</span> <span class="st">"ABCBDAB"</span><span class="op">,</span> b <span class="op">=</span> <span class="st">"BDCABA"</span><span class="op">;</span></span>
+<span id="cb6-8"><a aria-hidden="true" href="#cb6-8" tabindex="-1"></a>    <span class="at">const</span> <span class="bu">std::</span>size_t n <span class="op">=</span> a<span class="op">.</span>size<span class="op">(),</span> m <span class="op">=</span> b<span class="op">.</span>size<span class="op">();</span></span>
+<span id="cb6-9"><a aria-hidden="true" href="#cb6-9" tabindex="-1"></a>    <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&gt;</span> L<span class="op">(</span>n <span class="op">+</span> <span class="dv">1</span><span class="op">,</span> <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;(</span>m <span class="op">+</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">0</span><span class="op">));</span>  <span class="co">// L[i][j] = LCS de a[i..], b[j..]</span></span>
+<span id="cb6-10"><a aria-hidden="true" href="#cb6-10" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="bu">std::</span>size_t i <span class="op">=</span> n<span class="op">;</span> i<span class="op">--</span> <span class="op">&gt;</span> <span class="dv">0</span><span class="op">;)</span></span>
+<span id="cb6-11"><a aria-hidden="true" href="#cb6-11" tabindex="-1"></a>        <span class="cf">for</span> <span class="op">(</span><span class="bu">std::</span>size_t j <span class="op">=</span> m<span class="op">;</span> j<span class="op">--</span> <span class="op">&gt;</span> <span class="dv">0</span><span class="op">;)</span></span>
+<span id="cb6-12"><a aria-hidden="true" href="#cb6-12" tabindex="-1"></a>            L<span class="op">[</span>i<span class="op">][</span>j<span class="op">]</span> <span class="op">=</span> a<span class="op">[</span>i<span class="op">]</span> <span class="op">==</span> b<span class="op">[</span>j<span class="op">]</span> <span class="op">?</span> <span class="dv">1</span> <span class="op">+</span> L<span class="op">[</span>i <span class="op">+</span> <span class="dv">1</span><span class="op">][</span>j <span class="op">+</span> <span class="dv">1</span><span class="op">]</span> <span class="op">:</span> <span class="bu">std::</span>max<span class="op">(</span>L<span class="op">[</span>i <span class="op">+</span> <span class="dv">1</span><span class="op">][</span>j<span class="op">],</span> L<span class="op">[</span>i<span class="op">][</span>j <span class="op">+</span> <span class="dv">1</span><span class="op">]);</span></span>
+<span id="cb6-13"><a aria-hidden="true" href="#cb6-13" tabindex="-1"></a>    <span class="bu">std::</span>printf<span class="op">(</span><span class="st">"longitud de la LCS: </span><span class="sc">%d\n</span><span class="st">una LCS: "</span><span class="op">,</span> L<span class="op">[</span><span class="dv">0</span><span class="op">][</span><span class="dv">0</span><span class="op">]);</span></span>
+<span id="cb6-14"><a aria-hidden="true" href="#cb6-14" tabindex="-1"></a>    <span class="bu">std::</span>string lcs<span class="op">;</span></span>
+<span id="cb6-15"><a aria-hidden="true" href="#cb6-15" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="bu">std::</span>size_t i <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> n <span class="op">&amp;&amp;</span> j <span class="op">&lt;</span> m<span class="op">;)</span> <span class="op">{</span>  <span class="co">// reconstrucción</span></span>
+<span id="cb6-16"><a aria-hidden="true" href="#cb6-16" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>a<span class="op">[</span>i<span class="op">]</span> <span class="op">==</span> b<span class="op">[</span>j<span class="op">])</span> <span class="op">{</span> lcs <span class="op">+=</span> a<span class="op">[</span>i<span class="op">];</span> <span class="op">++</span>i<span class="op">;</span> <span class="op">++</span>j<span class="op">;</span> <span class="op">}</span></span>
+<span id="cb6-17"><a aria-hidden="true" href="#cb6-17" tabindex="-1"></a>        <span class="cf">else</span> <span class="cf">if</span> <span class="op">(</span>L<span class="op">[</span>i <span class="op">+</span> <span class="dv">1</span><span class="op">][</span>j<span class="op">]</span> <span class="op">&gt;=</span> L<span class="op">[</span>i<span class="op">][</span>j <span class="op">+</span> <span class="dv">1</span><span class="op">])</span> <span class="op">++</span>i<span class="op">;</span></span>
+<span id="cb6-18"><a aria-hidden="true" href="#cb6-18" tabindex="-1"></a>        <span class="cf">else</span> <span class="op">++</span>j<span class="op">;</span></span>
+<span id="cb6-19"><a aria-hidden="true" href="#cb6-19" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-20"><a aria-hidden="true" href="#cb6-20" tabindex="-1"></a>    <span class="bu">std::</span>printf<span class="op">(</span><span class="st">"</span><span class="sc">%s\n</span><span class="st">"</span><span class="op">,</span> lcs<span class="op">.</span>c_str<span class="op">());</span></span>
+<span id="cb6-21"><a aria-hidden="true" href="#cb6-21" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div><div aria-labelledby="t1-2-b" class="panel" data-lang="rust" id="t1-2" role="tabpanel"><div class="sourceCode" id="cb7"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb7-1"><a aria-hidden="true" href="#cb7-1" tabindex="-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb7-2"><a aria-hidden="true" href="#cb7-2" tabindex="-1"></a>    <span class="kw">let</span> (a<span class="op">,</span> b) <span class="op">=</span> (<span class="st">"ABCBDAB"</span><span class="op">.</span>as_bytes()<span class="op">,</span> <span class="st">"BDCABA"</span><span class="op">.</span>as_bytes())<span class="op">;</span></span>
+<span id="cb7-3"><a aria-hidden="true" href="#cb7-3" tabindex="-1"></a>    <span class="kw">let</span> (n<span class="op">,</span> m) <span class="op">=</span> (a<span class="op">.</span>len()<span class="op">,</span> b<span class="op">.</span>len())<span class="op">;</span></span>
+<span id="cb7-4"><a aria-hidden="true" href="#cb7-4" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> l <span class="op">=</span> <span class="pp">vec!</span>[<span class="pp">vec!</span>[<span class="dv">0i32</span><span class="op">;</span> m <span class="op">+</span> <span class="dv">1</span>]<span class="op">;</span> n <span class="op">+</span> <span class="dv">1</span>]<span class="op">;</span> <span class="co">// l[i][j] = LCS de a[i..], b[j..]</span></span>
+<span id="cb7-5"><a aria-hidden="true" href="#cb7-5" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> (<span class="dv">0</span><span class="op">..</span>n)<span class="op">.</span>rev() <span class="op">{</span></span>
+<span id="cb7-6"><a aria-hidden="true" href="#cb7-6" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> (<span class="dv">0</span><span class="op">..</span>m)<span class="op">.</span>rev() <span class="op">{</span></span>
+<span id="cb7-7"><a aria-hidden="true" href="#cb7-7" tabindex="-1"></a>            l[i][j] <span class="op">=</span> <span class="cf">if</span> a[i] <span class="op">==</span> b[j] <span class="op">{</span> <span class="dv">1</span> <span class="op">+</span> l[i <span class="op">+</span> <span class="dv">1</span>][j <span class="op">+</span> <span class="dv">1</span>] <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span> l[i <span class="op">+</span> <span class="dv">1</span>][j]<span class="op">.</span>max(l[i][j <span class="op">+</span> <span class="dv">1</span>]) <span class="op">};</span></span>
+<span id="cb7-8"><a aria-hidden="true" href="#cb7-8" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb7-9"><a aria-hidden="true" href="#cb7-9" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb7-10"><a aria-hidden="true" href="#cb7-10" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">"longitud de la LCS: {}"</span><span class="op">,</span> l[<span class="dv">0</span>][<span class="dv">0</span>])<span class="op">;</span></span>
+<span id="cb7-11"><a aria-hidden="true" href="#cb7-11" tabindex="-1"></a>    <span class="kw">let</span> (<span class="kw">mut</span> i<span class="op">,</span> <span class="kw">mut</span> j<span class="op">,</span> <span class="kw">mut</span> lcs) <span class="op">=</span> (<span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">String</span><span class="pp">::</span>new())<span class="op">;</span></span>
+<span id="cb7-12"><a aria-hidden="true" href="#cb7-12" tabindex="-1"></a>    <span class="cf">while</span> i <span class="op">&lt;</span> n <span class="op">&amp;&amp;</span> j <span class="op">&lt;</span> m <span class="op">{</span></span>
+<span id="cb7-13"><a aria-hidden="true" href="#cb7-13" tabindex="-1"></a>        <span class="co">// reconstrucción</span></span>
+<span id="cb7-14"><a aria-hidden="true" href="#cb7-14" tabindex="-1"></a>        <span class="cf">if</span> a[i] <span class="op">==</span> b[j] <span class="op">{</span> lcs<span class="op">.</span>push(a[i] <span class="kw">as</span> <span class="dt">char</span>)<span class="op">;</span> i <span class="op">+=</span> <span class="dv">1</span><span class="op">;</span> j <span class="op">+=</span> <span class="dv">1</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb7-15"><a aria-hidden="true" href="#cb7-15" tabindex="-1"></a>        <span class="cf">else</span> <span class="cf">if</span> l[i <span class="op">+</span> <span class="dv">1</span>][j] <span class="op">&gt;=</span> l[i][j <span class="op">+</span> <span class="dv">1</span>] <span class="op">{</span> i <span class="op">+=</span> <span class="dv">1</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb7-16"><a aria-hidden="true" href="#cb7-16" tabindex="-1"></a>        <span class="cf">else</span> <span class="op">{</span> j <span class="op">+=</span> <span class="dv">1</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb7-17"><a aria-hidden="true" href="#cb7-17" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb7-18"><a aria-hidden="true" href="#cb7-18" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">"una LCS: {lcs}"</span>)<span class="op">;</span></span>
+<span id="cb7-19"><a aria-hidden="true" href="#cb7-19" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div></div>
+<pre class="text salida"><code>longitud de la LCS: 4
+una LCS: BDAB</code></pre>
+<figure>
+<svg aria-label="Tabla de LCS de ABCBDAB y BDCABA con el camino de reconstrucción" fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" role="img" viewbox="0 0 684 372" xmlns="http://www.w3.org/2000/svg">
+<title>Tabla de LCS de ABCBDAB y BDCABA con el camino de reconstrucción</title>
+<defs>
+<marker id="ar" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#111827"></path></marker>
+<marker id="arc" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#1240e0"></path></marker>
+<marker id="ara" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"></path></marker>
+</defs>
+<rect fill="#ffffff" height="372" rx="12" width="684"></rect>
+<text fill="#1240e0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="116.0" y="48">B</text>
+<text fill="#1240e0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="168.0" y="48">D</text>
+<text fill="#1240e0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="220.0" y="48">C</text>
+<text fill="#1240e0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="272.0" y="48">A</text>
+<text fill="#1240e0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="324.0" y="48">B</text>
+<text fill="#1240e0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="376.0" y="48">A</text>
+<text fill="#1240e0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="428.0" y="48">∅</text>
+<text fill="#1240e0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="74" y="82.0">A</text>
+<text fill="#1240e0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="74" y="116.0">B</text>
+<text fill="#1240e0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="74" y="150.0">C</text>
+<text fill="#1240e0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="74" y="184.0">B</text>
+<text fill="#1240e0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="74" y="218.0">D</text>
+<text fill="#1240e0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="74" y="252.0">A</text>
+<text fill="#1240e0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="74" y="286.0">B</text>
+<text fill="#1240e0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="14" font-weight="700" text-anchor="middle" x="74" y="320.0">∅</text>
+<rect fill="#eef2ff" height="30" rx="4" stroke="#1240e0" stroke-width="1.2" width="48" x="92" y="62"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="116.0" y="82.0">4</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="144" y="62"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="168.0" y="82.0">3</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="196" y="62"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="220.0" y="82.0">3</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="248" y="62"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="272.0" y="82.0">3</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="300" y="62"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="324.0" y="82.0">2</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="352" y="62"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="376.0" y="82.0">1</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="404" y="62"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="428.0" y="82.0">0</text>
+<rect fill="#ffedd5" height="30" rx="4" stroke="#c2410c" stroke-width="1.2" width="48" x="92" y="96"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="116.0" y="116.0">4</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="144" y="96"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="168.0" y="116.0">3</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="196" y="96"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="220.0" y="116.0">3</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="248" y="96"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="272.0" y="116.0">2</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="300" y="96"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="324.0" y="116.0">2</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="352" y="96"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="376.0" y="116.0">1</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="404" y="96"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="428.0" y="116.0">0</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="92" y="130"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="116.0" y="150.0">4</text>
+<rect fill="#eef2ff" height="30" rx="4" stroke="#1240e0" stroke-width="1.2" width="48" x="144" y="130"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="168.0" y="150.0">3</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="196" y="130"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="220.0" y="150.0">3</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="248" y="130"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="272.0" y="150.0">2</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="300" y="130"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="324.0" y="150.0">2</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="352" y="130"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="376.0" y="150.0">1</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="404" y="130"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="428.0" y="150.0">0</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="92" y="164"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="116.0" y="184.0">4</text>
+<rect fill="#eef2ff" height="30" rx="4" stroke="#1240e0" stroke-width="1.2" width="48" x="144" y="164"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="168.0" y="184.0">3</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="196" y="164"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="220.0" y="184.0">2</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="248" y="164"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="272.0" y="184.0">2</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="300" y="164"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="324.0" y="184.0">2</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="352" y="164"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="376.0" y="184.0">1</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="404" y="164"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="428.0" y="184.0">0</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="92" y="198"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="116.0" y="218.0">3</text>
+<rect fill="#ffedd5" height="30" rx="4" stroke="#c2410c" stroke-width="1.2" width="48" x="144" y="198"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="168.0" y="218.0">3</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="196" y="198"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="220.0" y="218.0">2</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="248" y="198"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="272.0" y="218.0">2</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="300" y="198"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="324.0" y="218.0">1</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="352" y="198"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="376.0" y="218.0">1</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="404" y="198"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="428.0" y="218.0">0</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="92" y="232"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="116.0" y="252.0">2</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="144" y="232"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="168.0" y="252.0">2</text>
+<rect fill="#eef2ff" height="30" rx="4" stroke="#1240e0" stroke-width="1.2" width="48" x="196" y="232"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="220.0" y="252.0">2</text>
+<rect fill="#ffedd5" height="30" rx="4" stroke="#c2410c" stroke-width="1.2" width="48" x="248" y="232"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="272.0" y="252.0">2</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="300" y="232"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="324.0" y="252.0">1</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="352" y="232"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="376.0" y="252.0">1</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="404" y="232"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="428.0" y="252.0">0</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="92" y="266"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="116.0" y="286.0">1</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="144" y="266"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="168.0" y="286.0">1</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="196" y="266"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="220.0" y="286.0">1</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="248" y="266"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="272.0" y="286.0">1</text>
+<rect fill="#ffedd5" height="30" rx="4" stroke="#c2410c" stroke-width="1.2" width="48" x="300" y="266"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="324.0" y="286.0">1</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="352" y="266"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="376.0" y="286.0">0</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="404" y="266"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="428.0" y="286.0">0</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="92" y="300"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="116.0" y="320.0">0</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="144" y="300"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="168.0" y="320.0">0</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="196" y="300"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="220.0" y="320.0">0</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="248" y="300"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="272.0" y="320.0">0</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="300" y="300"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="324.0" y="320.0">0</text>
+<rect fill="#eef2ff" height="30" rx="4" stroke="#1240e0" stroke-width="1.2" width="48" x="352" y="300"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" x="376.0" y="320.0">0</text>
+<rect fill="#ffffff" height="30" rx="4" stroke="#c7d2fe" stroke-width="1.2" width="48" x="404" y="300"></rect>
+<text fill="#111827" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="400" text-anchor="middle" x="428.0" y="320.0">0</text>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="600" text-anchor="start" x="478" y="80">L[i][j] = LCS de a[i..] y b[j..]</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="400" text-anchor="start" x="478" y="104">a = ABCBDAB (filas)</text>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="400" text-anchor="start" x="478" y="122">b = BDCABA (columnas)</text>
+<text fill="#1240e0" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" text-anchor="start" x="478" y="156">camino de reconstrucción</text>
+<text fill="#c2410c" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="700" text-anchor="start" x="478" y="176">naranja: a[i] = b[j], se toma</text>
+<text fill="#c2410c" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="start" x="478" y="200">resultado: BDAB</text>
+</svg>
+<figcaption aria-hidden="true">La tabla de LCS y el camino de reconstrucción</figcaption>
+</figure>
+<hr/>
+<h2 id="distancia-de-edición">4. Distancia de edición</h2>
+<p>La <strong>distancia de Levenshtein</strong> entre <span class="math inline">\(a\)</span> y <span class="math inline">\(b\)</span> es el mínimo número de operaciones (insertar, borrar o sustituir un carácter, cada una de costo 1) para convertir <span class="math inline">\(a\)</span> en <span class="math inline">\(b\)</span>. “kitten” → “sitting” cuesta 3 (k→s, e→i, +g). Aplicaciones: correctores ortográficos, “¿quisiste decir…?”, comparación de secuencias genéticas.</p>
+<p><strong>SRTBOT</strong> (sobre sufijos):</p>
+<ul>
+<li><strong>S:</strong> <span class="math inline">\(E(i, j)\)</span> = distancia entre <span class="math inline">\(a[i..]\)</span> y <span class="math inline">\(b[j..]\)</span>.</li>
+<li><strong>R:</strong> si <span class="math inline">\(a[i] = b[j]\)</span>: <span class="math inline">\(E(i, j) = E(i+1, j+1)\)</span>. Si no: <span class="math inline">\(E(i, j) = 1 + \min\big(E(i+1, j),\ E(i, j+1),\ E(i+1, j+1)\big)\)</span> — borrar <span class="math inline">\(a[i]\)</span>, insertar <span class="math inline">\(b[j]\)</span>, sustituir <span class="math inline">\(a[i]\)</span> por <span class="math inline">\(b[j]\)</span>.</li>
+<li><strong>T:</strong> como en LCS.</li>
+<li><strong>B:</strong> <span class="math inline">\(E(|a|, j) = |b| - j\)</span> (insertar lo que falta), <span class="math inline">\(E(i, |b|) = |a| - i\)</span> (borrar lo que sobra).</li>
+<li><strong>O:</strong> <span class="math inline">\(E(0, 0)\)</span>. <strong>T:</strong> <span class="math inline">\(O(|a|\cdot|b|)\)</span>, con dos filas de memoria.</li>
+</ul>
+<p><em>Corrección de la relación:</em> en una edición óptima, la primera posición de <span class="math inline">\(a\)</span> y la de <span class="math inline">\(b\)</span> se resuelven de una de cuatro maneras: coinciden y se dejan (solo si <span class="math inline">\(a[i] = b[j]\)</span>, y entonces conviene: dejar un carácter igual nunca empeora, ej. 2 del PS), se borra <span class="math inline">\(a[i]\)</span>, se inserta <span class="math inline">\(b[j]\)</span>, o se sustituye. Cada opción deja exactamente uno de los subproblemas. <span class="math inline">\(\blacksquare\)</span></p>
+<hr/>
+<h2 id="mochila-01-y-cambio-de-monedas">5. Mochila 0/1 y cambio de monedas</h2>
+<h3 id="mochila-01">5.1 Mochila 0/1</h3>
+<p><span class="math inline">\(n\)</span> objetos con pesos <span class="math inline">\(w_i\)</span> y valores <span class="math inline">\(v_i\)</span>, y una mochila de capacidad <span class="math inline">\(W\)</span>. Elegir un subconjunto de peso <span class="math inline">\(\le W\)</span> y valor máximo (cada objeto se toma o no: “0/1”).</p>
+<ul>
+<li><strong>S:</strong> <span class="math inline">\(K(i, c)\)</span> = mejor valor usando solo los objetos <span class="math inline">\(i, \dots, n-1\)</span> con capacidad <span class="math inline">\(c\)</span>.</li>
+<li><strong>R:</strong> <span class="math inline">\(K(i, c) = \max\big(K(i+1, c),\ v_i + K(i+1, c - w_i)\big)\)</span>, la segunda solo si <span class="math inline">\(w_i \le c\)</span>.</li>
+<li><strong>T:</strong> <span class="math inline">\(i\)</span> decreciente. <strong>B:</strong> <span class="math inline">\(K(n, c) = 0\)</span>. <strong>O:</strong> <span class="math inline">\(K(0, W)\)</span>. <strong>T:</strong> <span class="math inline">\(O(nW)\)</span>.</li>
+</ul>
+<p><strong>Una sola fila.</strong> Si se guarda una sola fila <span class="math inline">\(k[c]\)</span> y se procesan los objetos uno por uno, hay que recorrer <span class="math inline">\(c\)</span> <strong>de mayor a menor</strong>: así, al calcular <span class="math inline">\(k[c]\)</span>, el valor <span class="math inline">\(k[c - w_i]\)</span> todavía es el de la fila anterior (sin el objeto <span class="math inline">\(i\)</span>). Recorrerlo de menor a mayor permitiría usar el mismo objeto varias veces (esa es la mochila <strong>no acotada</strong>).</p>
+<h3 id="polinomial-no-pseudo-polinomial">5.2 ¿Polinomial? No: pseudo-polinomial</h3>
+<p><span class="math inline">\(O(nW)\)</span> parece polinomial, pero el <strong>tamaño de la entrada</strong> no es <span class="math inline">\(W\)</span>: el número <span class="math inline">\(W\)</span> se escribe con <span class="math inline">\(\lg W\)</span> bits. Si <span class="math inline">\(W = 2^{60}\)</span>, la entrada ocupa unos pocos bytes y el algoritmo hace <span class="math inline">\(2^{60}\)</span> pasos. Un algoritmo cuyo tiempo es polinomial en el <strong>valor</strong> de los números (pero exponencial en su <strong>longitud</strong>) se llama <strong>pseudo-polinomial</strong>. La mochila 0/1 es NP-difícil: no se conoce (y probablemente no existe) un algoritmo polinomial en <span class="math inline">\(n\)</span> y <span class="math inline">\(\lg W\)</span>.</p>
+<h3 id="cambio-de-monedas">5.3 Cambio de monedas</h3>
+<p>Mínimo número de monedas (de denominaciones <span class="math inline">\(c_1, \dots, c_k\)</span>, con repetición) para formar el monto <span class="math inline">\(A\)</span>.</p>
+<ul>
+<li><strong>S:</strong> <span class="math inline">\(M(v)\)</span> = mínimo de monedas para formar <span class="math inline">\(v\)</span>, para <span class="math inline">\(0 \le v \le A\)</span>.</li>
+<li><strong>R:</strong> <span class="math inline">\(M(v) = 1 + \min_{c_i \le v} M(v - c_i)\)</span> (la primera moneda es alguna <span class="math inline">\(c_i\)</span>; el resto forma <span class="math inline">\(v - c_i\)</span> de forma óptima). <span class="math inline">\(\infty\)</span> si no hay opciones.</li>
+<li><strong>T:</strong> <span class="math inline">\(v\)</span> creciente. <strong>B:</strong> <span class="math inline">\(M(0) = 0\)</span>. <strong>O:</strong> <span class="math inline">\(M(A)\)</span>. <strong>T:</strong> <span class="math inline">\(O(kA)\)</span>, también pseudo-polinomial.</li>
+</ul>
+<p><strong>La estrategia voraz no sirve en general.</strong> Con monedas <span class="math inline">\(\{1, 5, 6, 9\}\)</span> y <span class="math inline">\(A = 11\)</span>, tomar siempre la mayor posible da <span class="math inline">\(9 + 1 + 1\)</span> (3 monedas), pero <span class="math inline">\(5 + 6\)</span> usa 2. (Para las monedas del peso mexicano o del dólar la voraz sí es óptima; esos sistemas se llaman <em>canónicos</em>.) El test <code>coin_change</code> usa exactamente este caso.</p>
+<hr/>
+<h2 id="subsecuencia-creciente-más-larga-lis">6. Subsecuencia creciente más larga (LIS)</h2>
+<p>Dada <span class="math inline">\(a_0, \dots, a_{n-1}\)</span>, la longitud de la subsecuencia <strong>estrictamente</strong> creciente más larga.</p>
+<h3 id="la-pd-cuadrática">6.1 La PD cuadrática</h3>
+<ul>
+<li><strong>S:</strong> <span class="math inline">\(\ell(i)\)</span> = longitud de la LIS que <strong>termina en</strong> <span class="math inline">\(a_i\)</span>.</li>
+<li><strong>R:</strong> <span class="math inline">\(\ell(i) = 1 + \max\{\ell(j) : j &lt; i,\ a_j &lt; a_i\}\)</span> (0 si no hay tales <span class="math inline">\(j\)</span>).</li>
+<li><strong>T:</strong> <span class="math inline">\(i\)</span> creciente. <strong>B:</strong> implícita (el máximo vacío es 0). <strong>O:</strong> <span class="math inline">\(\max_i \ell(i)\)</span>. <strong>T:</strong> <span class="math inline">\(O(n^2)\)</span>.</li>
+</ul>
+<p>Observa el truco de los subproblemas: “la LIS de <span class="math inline">\(a[0..i]\)</span>” no da una relación limpia (no sabemos con qué termina); “la LIS que <strong>termina en</strong> <span class="math inline">\(a_i\)</span>” sí. Agregar una restricción al subproblema es una técnica frecuente.</p>
+<h3 id="la-versión-onlg-n">6.2 La versión <span class="math inline">\(O(n\lg n)\)</span></h3>
+<p>Mantener un arreglo <code>cola</code>, donde <code>cola[k]</code> es el <strong>menor último elemento</strong> de una subsecuencia estrictamente creciente de longitud <span class="math inline">\(k+1\)</span> vista hasta ahora. Para cada <span class="math inline">\(x\)</span>: buscar el primer <code>cola[k]</code> <span class="math inline">\(\ge x\)</span>; si existe, reemplazarlo por <span class="math inline">\(x\)</span>; si no, agregar <span class="math inline">\(x\)</span> al final. La respuesta es el largo de <code>cola</code>.</p>
+<blockquote>
+<p><strong>Teorema 4.</strong> <code>cola</code> es estrictamente creciente en todo momento, y su largo es la longitud de la LIS.</p>
+</blockquote>
+<p><em>Demostración.</em> <em>Creciente:</em> si <code>cola[k]</code> es el último de una subsecuencia de largo <span class="math inline">\(k+1\)</span>, quitándole el último elemento queda una de largo <span class="math inline">\(k\)</span> que termina en algo <span class="math inline">\(&lt;\)</span> <code>cola[k]</code>, así que <code>cola[k-1]</code> <span class="math inline">\(&lt;\)</span> <code>cola[k]</code>. <em>Actualización:</em> al procesar <span class="math inline">\(x\)</span>, sea <span class="math inline">\(k\)</span> el primer índice con <code>cola[k]</code> <span class="math inline">\(\ge x\)</span>. Entonces <code>cola[k-1]</code> <span class="math inline">\(&lt; x\)</span>, y extendiendo esa subsecuencia con <span class="math inline">\(x\)</span> se obtiene una de largo <span class="math inline">\(k + 1\)</span> que termina en <span class="math inline">\(x \le\)</span> <code>cola[k]</code>: el nuevo <code>cola[k] = x</code> es correcto y mínimo (cualquier subsecuencia de largo <span class="math inline">\(k+1\)</span> que termine en <span class="math inline">\(x\)</span> necesita un largo-<span class="math inline">\(k\)</span> previo que termine en <span class="math inline">\(&lt; x\)</span>). Ningún otro <code>cola[k']</code> cambia, porque <span class="math inline">\(x\)</span> no puede terminar una más corta mejor (para <span class="math inline">\(k' &lt; k\)</span>, <code>cola[k']</code> <span class="math inline">\(&lt; x\)</span>) ni extender una de largo <span class="math inline">\(k+1\)</span> o más (para <span class="math inline">\(k' &gt; k\)</span>, <code>cola[k'-1]</code> <span class="math inline">\(\ge\)</span> <code>cola[k]</code> <span class="math inline">\(\ge x\)</span>). <em>Largo:</em> la LIS de largo <span class="math inline">\(L\)</span> hace crecer <code>cola</code> hasta <span class="math inline">\(L\)</span>, y <code>cola</code> nunca supera <span class="math inline">\(L\)</span> porque cada entrada corresponde a una subsecuencia real. <span class="math inline">\(\blacksquare\)</span></p>
+<p>La búsqueda binaria hace <span class="math inline">\(O(\lg n)\)</span> por elemento: <span class="math inline">\(O(n\lg n)\)</span>. Se llama <em>patience sorting</em> porque es el juego de solitario de repartir cartas en pilas. El test <code>lis_grande_nlgn</code> (200 000 elementos) solo pasa con esta versión.</p>
+<hr/>
+<h2 id="resumen-los-subproblemas-típicos">7. Resumen: los subproblemas típicos</h2>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Entrada</th>
+<th>Subproblemas típicos</th>
+<th>Ejemplos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Una secuencia</td>
+<td>prefijos o sufijos, <span class="math inline">\(O(n)\)</span></td>
+<td>Fibonacci, LIS, cambio de monedas</td>
+</tr>
+<tr>
+<td>Dos secuencias</td>
+<td>pares de sufijos, <span class="math inline">\(O(nm)\)</span></td>
+<td>LCS, distancia de edición</td>
+</tr>
+<tr>
+<td>Una secuencia, intervalos</td>
+<td>subcadenas <span class="math inline">\([i, j)\)</span>, <span class="math inline">\(O(n^2)\)</span></td>
+<td>multiplicación de matrices en cadena, palíndromos</td>
+</tr>
+<tr>
+<td>Objetos + capacidad</td>
+<td>prefijo × capacidad restante, <span class="math inline">\(O(nW)\)</span></td>
+<td>mochila</td>
+</tr>
+<tr>
+<td>Grafo</td>
+<td>vértices (+ “número de aristas” o “intermedios”)</td>
+<td>caminos en DAG, Bellman-Ford, Floyd-Warshall (L10)</td>
+</tr>
+</tbody>
+</table></div>
+<hr/>
+<h2 id="texto-y-utf-8">8. Texto y UTF-8</h2>
+<p>La distancia de edición compara “caracteres”. ¿Qué es un carácter?</p>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>Tipo de cadena</th>
+<th>Indexar <code>s[i]</code> da</th>
+<th>Recorrer “letras”</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C</td>
+<td><code>char *</code> terminada en <code>'\0'</code></td>
+<td>un <strong>byte</strong></td>
+<td>hay que decodificar UTF-8 a mano</td>
+</tr>
+<tr>
+<td>C++</td>
+<td><code>std::string</code></td>
+<td>un <strong>byte</strong> (<code>char</code>)</td>
+<td><code>std::string</code> no sabe de UTF-8</td>
+</tr>
+<tr>
+<td>Rust</td>
+<td><code>&amp;str</code> (UTF-8 garantizado)</td>
+<td><strong>no compila</strong>: <code>s[i]</code> no existe para <code>&amp;str</code></td>
+<td><code>s.chars()</code> da <code>char</code> (puntos de código Unicode)</td>
+</tr>
+</tbody>
+</table></div>
+<p>En UTF-8, “ñ” ocupa <strong>2 bytes</strong>. Entre “año” y “ano” hay 1 sustitución si se comparan puntos de código, pero <strong>2</strong> si se comparan bytes (los dos bytes de la ñ contra la “n” de un byte: una sustitución y un borrado):</p>
+<div class="tabs no-compare"><div aria-label="Lenguaje" class="tablist" role="tablist"><button aria-controls="t2-0" aria-selected="false" data-lang="cpp" id="t2-0-b" role="tab" tabindex="-1" type="button">C++</button><button aria-controls="t2-1" aria-selected="false" data-lang="rust" id="t2-1-b" role="tab" tabindex="-1" type="button">Rust</button></div><div aria-labelledby="t2-0-b" class="panel" data-lang="cpp" id="t2-0" role="tabpanel"><div class="sourceCode" id="cb9"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb9-1"><a aria-hidden="true" href="#cb9-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;algorithm&gt;</span></span>
+<span id="cb9-2"><a aria-hidden="true" href="#cb9-2" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;cstdio&gt;</span></span>
+<span id="cb9-3"><a aria-hidden="true" href="#cb9-3" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;string&gt;</span></span>
+<span id="cb9-4"><a aria-hidden="true" href="#cb9-4" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;vector&gt;</span></span>
+<span id="cb9-5"><a aria-hidden="true" href="#cb9-5" tabindex="-1"></a></span>
+<span id="cb9-6"><a aria-hidden="true" href="#cb9-6" tabindex="-1"></a><span class="co">// Distancia de edición genérica sobre cualquier secuencia indexable.</span></span>
+<span id="cb9-7"><a aria-hidden="true" href="#cb9-7" tabindex="-1"></a><span class="kw">template</span> <span class="op">&lt;</span><span class="kw">class</span> S<span class="op">&gt;</span></span>
+<span id="cb9-8"><a aria-hidden="true" href="#cb9-8" tabindex="-1"></a><span class="bu">std::</span>size_t edit<span class="op">(</span><span class="at">const</span> S<span class="op">&amp;</span> a<span class="op">,</span> <span class="at">const</span> S<span class="op">&amp;</span> b<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-9"><a aria-hidden="true" href="#cb9-9" tabindex="-1"></a>    <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="bu">std::</span>size_t<span class="op">&gt;</span> sig<span class="op">(</span>b<span class="op">.</span>size<span class="op">()</span> <span class="op">+</span> <span class="dv">1</span><span class="op">),</span> act<span class="op">(</span>b<span class="op">.</span>size<span class="op">()</span> <span class="op">+</span> <span class="dv">1</span><span class="op">);</span></span>
+<span id="cb9-10"><a aria-hidden="true" href="#cb9-10" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="bu">std::</span>size_t j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;=</span> b<span class="op">.</span>size<span class="op">();</span> <span class="op">++</span>j<span class="op">)</span> sig<span class="op">[</span>j<span class="op">]</span> <span class="op">=</span> b<span class="op">.</span>size<span class="op">()</span> <span class="op">-</span> j<span class="op">;</span></span>
+<span id="cb9-11"><a aria-hidden="true" href="#cb9-11" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="bu">std::</span>size_t i <span class="op">=</span> a<span class="op">.</span>size<span class="op">();</span> i<span class="op">--</span> <span class="op">&gt;</span> <span class="dv">0</span><span class="op">;)</span> <span class="op">{</span></span>
+<span id="cb9-12"><a aria-hidden="true" href="#cb9-12" tabindex="-1"></a>        act<span class="op">[</span>b<span class="op">.</span>size<span class="op">()]</span> <span class="op">=</span> a<span class="op">.</span>size<span class="op">()</span> <span class="op">-</span> i<span class="op">;</span></span>
+<span id="cb9-13"><a aria-hidden="true" href="#cb9-13" tabindex="-1"></a>        <span class="cf">for</span> <span class="op">(</span><span class="bu">std::</span>size_t j <span class="op">=</span> b<span class="op">.</span>size<span class="op">();</span> j<span class="op">--</span> <span class="op">&gt;</span> <span class="dv">0</span><span class="op">;)</span></span>
+<span id="cb9-14"><a aria-hidden="true" href="#cb9-14" tabindex="-1"></a>            act<span class="op">[</span>j<span class="op">]</span> <span class="op">=</span> a<span class="op">[</span>i<span class="op">]</span> <span class="op">==</span> b<span class="op">[</span>j<span class="op">]</span> <span class="op">?</span> sig<span class="op">[</span>j <span class="op">+</span> <span class="dv">1</span><span class="op">]</span> <span class="op">:</span> <span class="dv">1</span> <span class="op">+</span> <span class="bu">std::</span>min<span class="op">({</span>sig<span class="op">[</span>j<span class="op">],</span> act<span class="op">[</span>j <span class="op">+</span> <span class="dv">1</span><span class="op">],</span> sig<span class="op">[</span>j <span class="op">+</span> <span class="dv">1</span><span class="op">]});</span></span>
+<span id="cb9-15"><a aria-hidden="true" href="#cb9-15" tabindex="-1"></a>        <span class="bu">std::</span>swap<span class="op">(</span>act<span class="op">,</span> sig<span class="op">);</span></span>
+<span id="cb9-16"><a aria-hidden="true" href="#cb9-16" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb9-17"><a aria-hidden="true" href="#cb9-17" tabindex="-1"></a>    <span class="cf">return</span> sig<span class="op">[</span><span class="dv">0</span><span class="op">];</span></span>
+<span id="cb9-18"><a aria-hidden="true" href="#cb9-18" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb9-19"><a aria-hidden="true" href="#cb9-19" tabindex="-1"></a></span>
+<span id="cb9-20"><a aria-hidden="true" href="#cb9-20" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb9-21"><a aria-hidden="true" href="#cb9-21" tabindex="-1"></a>    <span class="bu">std::</span>string a <span class="op">=</span> <span class="st">"año"</span><span class="op">,</span> b <span class="op">=</span> <span class="st">"ano"</span><span class="op">;</span></span>
+<span id="cb9-22"><a aria-hidden="true" href="#cb9-22" tabindex="-1"></a>    <span class="bu">std::</span>printf<span class="op">(</span><span class="st">"bytes: |a| = </span><span class="sc">%zu</span><span class="st">, distancia = </span><span class="sc">%zu\n</span><span class="st">"</span><span class="op">,</span> a<span class="op">.</span>size<span class="op">(),</span> edit<span class="op">(</span>a<span class="op">,</span> b<span class="op">));</span></span>
+<span id="cb9-23"><a aria-hidden="true" href="#cb9-23" tabindex="-1"></a>    <span class="bu">std::</span>u32string ua <span class="op">=</span> <span class="st">U"año"</span><span class="op">,</span> ub <span class="op">=</span> <span class="st">U"ano"</span><span class="op">;</span>  <span class="co">// puntos de código (UTF-32)</span></span>
+<span id="cb9-24"><a aria-hidden="true" href="#cb9-24" tabindex="-1"></a>    <span class="bu">std::</span>printf<span class="op">(</span><span class="st">"puntos de código: |a| = </span><span class="sc">%zu</span><span class="st">, distancia = </span><span class="sc">%zu\n</span><span class="st">"</span><span class="op">,</span> ua<span class="op">.</span>size<span class="op">(),</span> edit<span class="op">(</span>ua<span class="op">,</span> ub<span class="op">));</span></span>
+<span id="cb9-25"><a aria-hidden="true" href="#cb9-25" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div><div aria-labelledby="t2-1-b" class="panel" data-lang="rust" id="t2-1" role="tabpanel"><div class="sourceCode" id="cb10"><pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb10-1"><a aria-hidden="true" href="#cb10-1" tabindex="-1"></a><span class="co">// Distancia de edición genérica sobre cualquier secuencia comparable.</span></span>
+<span id="cb10-2"><a aria-hidden="true" href="#cb10-2" tabindex="-1"></a><span class="kw">fn</span> edit<span class="op">&lt;</span>T<span class="op">:</span> <span class="bu">PartialEq</span><span class="op">&gt;</span>(a<span class="op">:</span> <span class="op">&amp;</span>[T]<span class="op">,</span> b<span class="op">:</span> <span class="op">&amp;</span>[T]) <span class="op">-&gt;</span> <span class="dt">usize</span> <span class="op">{</span></span>
+<span id="cb10-3"><a aria-hidden="true" href="#cb10-3" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> sig<span class="op">:</span> <span class="dt">Vec</span><span class="op">&lt;</span><span class="dt">usize</span><span class="op">&gt;</span> <span class="op">=</span> (<span class="dv">0</span><span class="op">..=</span>b<span class="op">.</span>len())<span class="op">.</span>map(<span class="op">|</span>j<span class="op">|</span> b<span class="op">.</span>len() <span class="op">-</span> j)<span class="op">.</span>collect()<span class="op">;</span></span>
+<span id="cb10-4"><a aria-hidden="true" href="#cb10-4" tabindex="-1"></a>    <span class="kw">let</span> <span class="kw">mut</span> act <span class="op">=</span> <span class="pp">vec!</span>[<span class="dv">0</span><span class="op">;</span> b<span class="op">.</span>len() <span class="op">+</span> <span class="dv">1</span>]<span class="op">;</span></span>
+<span id="cb10-5"><a aria-hidden="true" href="#cb10-5" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> (<span class="dv">0</span><span class="op">..</span>a<span class="op">.</span>len())<span class="op">.</span>rev() <span class="op">{</span></span>
+<span id="cb10-6"><a aria-hidden="true" href="#cb10-6" tabindex="-1"></a>        act[b<span class="op">.</span>len()] <span class="op">=</span> a<span class="op">.</span>len() <span class="op">-</span> i<span class="op">;</span></span>
+<span id="cb10-7"><a aria-hidden="true" href="#cb10-7" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> (<span class="dv">0</span><span class="op">..</span>b<span class="op">.</span>len())<span class="op">.</span>rev() <span class="op">{</span></span>
+<span id="cb10-8"><a aria-hidden="true" href="#cb10-8" tabindex="-1"></a>            act[j] <span class="op">=</span> <span class="cf">if</span> a[i] <span class="op">==</span> b[j] <span class="op">{</span> sig[j <span class="op">+</span> <span class="dv">1</span>] <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span> <span class="dv">1</span> <span class="op">+</span> sig[j]<span class="op">.</span>min(act[j <span class="op">+</span> <span class="dv">1</span>])<span class="op">.</span>min(sig[j <span class="op">+</span> <span class="dv">1</span>]) <span class="op">};</span></span>
+<span id="cb10-9"><a aria-hidden="true" href="#cb10-9" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb10-10"><a aria-hidden="true" href="#cb10-10" tabindex="-1"></a>        <span class="pp">std::mem::</span>swap(<span class="op">&amp;</span><span class="kw">mut</span> act<span class="op">,</span> <span class="op">&amp;</span><span class="kw">mut</span> sig)<span class="op">;</span></span>
+<span id="cb10-11"><a aria-hidden="true" href="#cb10-11" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb10-12"><a aria-hidden="true" href="#cb10-12" tabindex="-1"></a>    sig[<span class="dv">0</span>]</span>
+<span id="cb10-13"><a aria-hidden="true" href="#cb10-13" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb10-14"><a aria-hidden="true" href="#cb10-14" tabindex="-1"></a></span>
+<span id="cb10-15"><a aria-hidden="true" href="#cb10-15" tabindex="-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb10-16"><a aria-hidden="true" href="#cb10-16" tabindex="-1"></a>    <span class="kw">let</span> (a<span class="op">,</span> b) <span class="op">=</span> (<span class="st">"año"</span><span class="op">,</span> <span class="st">"ano"</span>)<span class="op">;</span></span>
+<span id="cb10-17"><a aria-hidden="true" href="#cb10-17" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">"bytes: |a| = {}, distancia = {}"</span><span class="op">,</span> a<span class="op">.</span>len()<span class="op">,</span> edit(a<span class="op">.</span>as_bytes()<span class="op">,</span> b<span class="op">.</span>as_bytes()))<span class="op">;</span></span>
+<span id="cb10-18"><a aria-hidden="true" href="#cb10-18" tabindex="-1"></a>    <span class="kw">let</span> (ca<span class="op">,</span> cb)<span class="op">:</span> (<span class="dt">Vec</span><span class="op">&lt;</span><span class="dt">char</span><span class="op">&gt;,</span> <span class="dt">Vec</span><span class="op">&lt;</span><span class="dt">char</span><span class="op">&gt;</span>) <span class="op">=</span> (a<span class="op">.</span>chars()<span class="op">.</span>collect()<span class="op">,</span> b<span class="op">.</span>chars()<span class="op">.</span>collect())<span class="op">;</span></span>
+<span id="cb10-19"><a aria-hidden="true" href="#cb10-19" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">"puntos de código: |a| = {}, distancia = {}"</span><span class="op">,</span> ca<span class="op">.</span>len()<span class="op">,</span> edit(<span class="op">&amp;</span>ca<span class="op">,</span> <span class="op">&amp;</span>cb))<span class="op">;</span></span>
+<span id="cb10-20"><a aria-hidden="true" href="#cb10-20" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></div></div>
+<pre class="text salida"><code>bytes: |a| = 4, distancia = 2
+puntos de código: |a| = 3, distancia = 1</code></pre>
+<p>Y aun los puntos de código no son “letras”: “ñ” también puede escribirse como “n” + tilde combinante (2 puntos de código), y un emoji con tono de piel son varios. La unidad que un usuario percibe como una letra es el <strong>grupo de grafemas</strong>, y compararlos exige normalizar (Unicode NFC) y segmentar con una biblioteca. Los tests del lab usan solo ASCII, donde las tres nociones coinciden; la lección es saber que en un producto real no coinciden.</p>
+<hr/>
+<h2 id="guía-del-lab-12">9. Guía del Lab 12</h2>
+<p><strong>Archivos:</strong> <code>c/src/lab12/dp.c</code>, <code>cpp/include/algolib/lab12/dp.hpp</code>, <code>rust/src/lab12/mod.rs</code>.</p>
+<p><strong>Para cada función, escribe el SRTBOT en un comentario antes del código.</strong> Es parte de la evaluación.</p>
+<p><strong>Orden sugerido:</strong> Fibonacci → cambio de monedas → mochila → LCS → distancia de edición → LIS.</p>
+<p><strong>Errores frecuentes:</strong></p>
+<ul>
+<li>Fibonacci en Rust: calcular <span class="math inline">\(F(n+1)\)</span> en la última vuelta desborda <code>u64</code> para <span class="math inline">\(n = 93\)</span> y hace <code>panic</code> en modo debug. Usa <code>wrapping_add</code> (y explica por qué es seguro) o cambia el ciclo.</li>
+<li>LCS con la tabla completa: correcto, pero el lab pide <span class="math inline">\(O(\min(|a|, |b|))\)</span> de memoria. Dos filas, y la cadena más corta como columnas.</li>
+<li>Mochila con una fila recorriendo <span class="math inline">\(c\)</span> de menor a mayor: resuelve la mochila no acotada (cada objeto infinitas veces). El test contra fuerza bruta lo detecta.</li>
+<li>LIS “no decreciente” en vez de “estrictamente creciente”: usar <code>upper_bound</code> en lugar de <code>lower_bound</code>.</li>
+<li>Cambio de monedas con “infinito” = <code>SIZE_MAX</code> y luego <code>SIZE_MAX + 1</code>: desborda a 0 y da respuestas absurdas.</li>
+</ul>
+<hr/>
+<h2 id="comprueba-tu-comprensión">10. Comprueba tu comprensión</h2>
+<ol type="1">
+<li>¿Por qué mergesort no es programación dinámica?</li>
+<li>¿Cuántos subproblemas tiene la LCS de dos cadenas de largo 1000? ¿Cuánta memoria necesita con dos filas?</li>
+<li>En la mochila con una fila, ¿qué pasa si recorres <span class="math inline">\(c\)</span> en orden creciente? Da un ejemplo con un objeto.</li>
+<li>Calcula a mano <code>cola</code> de LIS para <span class="math inline">\(\langle 3, 1, 4, 1, 5, 9, 2, 6\rangle\)</span>.</li>
+<li>¿Es polinomial un algoritmo <span class="math inline">\(O(n\sqrt W)\)</span> para la mochila?</li>
+</ol>
+<details>
+<summary>
+Respuestas
+</summary>
+<ol type="1">
+<li>Porque sus subproblemas (las dos mitades) <strong>no se repiten</strong>: cada subarreglo se ordena una sola vez. No hay nada que reutilizar.</li>
+<li><span class="math inline">\(1001^2 \approx 10^6\)</span> subproblemas. Con dos filas, <span class="math inline">\(2\times 1001\)</span> enteros: unos 16 KB.</li>
+<li>Un objeto de peso 1 y valor 10 con <span class="math inline">\(W = 3\)</span>: de menor a mayor, <span class="math inline">\(k[1] = 10\)</span>, <span class="math inline">\(k[2] = 10 + k[1] = 20\)</span>, <span class="math inline">\(k[3] = 30\)</span>: usó el objeto tres veces.</li>
+<li>3 → [3]; 1 → [1]; 4 → [1,4]; 1 → [1,4]; 5 → [1,4,5]; 9 → [1,4,5,9]; 2 → [1,2,5,9]; 6 → [1,2,5,6]. Largo 4 (por ejemplo 1, 4, 5, 9).</li>
+<li>No: <span class="math inline">\(\sqrt W = 2^{(\lg W)/2}\)</span> sigue siendo exponencial en el número de bits de <span class="math inline">\(W\)</span>.</li>
+</ol>
+</details>
+<hr/>
+<h2 id="problem-set-12">11. Problem Set 12</h2>
+<p><strong>Teoría</strong></p>
+<ol type="1">
+<li>Demuestra la Proposición 1 y que <span class="math inline">\(F(n) = \Theta(\varphi^n)\)</span>.</li>
+<li>En la distancia de edición, demuestra que si <span class="math inline">\(a[i] = b[j]\)</span>, emparejarlos es siempre óptimo (es decir, <span class="math inline">\(E(i+1, j+1) \le 1 + \min(E(i+1, j), E(i, j+1))\)</span>).</li>
+<li><strong>Multiplicación de matrices en cadena.</strong> Dadas las dimensiones <span class="math inline">\(p_0, p_1, \dots, p_n\)</span> de <span class="math inline">\(n\)</span> matrices, da un SRTBOT que encuentre el orden de multiplicación con el mínimo de multiplicaciones escalares en <span class="math inline">\(O(n^3)\)</span>, y demuestra la relación.</li>
+<li><strong>Hirschberg.</strong> Demuestra que se puede <strong>reconstruir</strong> una LCS (no solo su longitud) con memoria <span class="math inline">\(O(\min(|a|, |b|))\)</span> y tiempo <span class="math inline">\(O(|a|\cdot|b|)\)</span>, dividiendo <span class="math inline">\(a\)</span> por la mitad y encontrando con dos pasadas de dos filas dónde cruza la LCS óptima.</li>
+<li>Demuestra que el problema de decisión “¿hay un subconjunto de valor <span class="math inline">\(\ge V\)</span> y peso <span class="math inline">\(\le W\)</span>?” pertenece a NP, y explica por qué el algoritmo <span class="math inline">\(O(nW)\)</span> no demuestra P = NP.</li>
+</ol>
+<p><strong>Implementación (C, C++ y Rust)</strong></p>
+<ol start="6" type="1">
+<li>Agrega <code>lcs_string</code> que devuelva la subsecuencia (tabla completa está bien) y verifica que es subsecuencia de ambas y tiene la longitud correcta.</li>
+<li>Agrega <code>knapsack_items</code> que devuelva qué objetos se eligen.</li>
+<li>Implementa la multiplicación de matrices en cadena del ej. 3, con reconstrucción de la parentización.</li>
+<li>En Rust, haz <code>edit_distance</code> genérica sobre <code>&amp;[T]</code> con <code>T: PartialEq</code> (como en §8) y úsala sobre bytes, <code>char</code>s y palabras (<code>Vec&lt;&amp;str&gt;</code> de <code>split_whitespace</code>).</li>
+</ol>
+<hr/>
+<h2 id="referencias">Referencias</h2>
+<ul>
+<li>CLRS, <em>Introduction to Algorithms</em>, 4ª ed.: Cap. 14 (programación dinámica: corte de varillas, matrices en cadena, LCS), Problema 14-5 (distancia de edición).</li>
+<li>MIT 6.006 (Spring 2020), Lectures 15–18: <em>Dynamic Programming</em> (el marco SRTBOT).</li>
+<li>Bellman, R. (1957). <em>Dynamic Programming</em>. Princeton University Press.</li>
+<li>Hirschberg, D. S. (1975). <em>A linear space algorithm for computing maximal common subsequences</em>. CACM 18(6).</li>
+<li>The Unicode Standard, Annex #29: <em>Unicode Text Segmentation</em> (grupos de grafemas).</li>
+</ul>
+</main><footer>algolib · Estructuras de Datos y Algoritmos. Fuente: <code>notas/L12-programacion-dinamica.md</code>. Regenerar con <code>make html</code>.</footer><script>{
+
+const KEY='algolib-lang';let pref='cpp';try{pref=localStorage.getItem(KEY)||'cpp'}catch(e){}
+function pick(lang,save){
+  for(const g of document.querySelectorAll('.tabs')){
+    const btns=[...g.querySelectorAll('[role=tab]')];if(!btns.length)continue;
+    const b=btns.find(x=>x.dataset.lang===lang)||btns[0];
+    for(const x of btns){const on=x===b;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;
+      document.getElementById(x.getAttribute('aria-controls')).hidden=!on;}
+  }
+  if(save){try{localStorage.setItem(KEY,lang)}catch(e){}}
+}
+for(const g of document.querySelectorAll('.tablist')){
+  g.addEventListener('click',e=>{const b=e.target.closest('[role=tab]');if(b){const y=b.getBoundingClientRect().top;pick(b.dataset.lang,true);window.scrollBy(0,b.getBoundingClientRect().top-y);}});
+  g.addEventListener('keydown',e=>{const bs=[...g.querySelectorAll('[role=tab]')];const i=bs.indexOf(document.activeElement);
+    if(i<0)return;let j=i;if(e.key==='ArrowRight')j=(i+1)%bs.length;else if(e.key==='ArrowLeft')j=(i-1+bs.length)%bs.length;else return;
+    e.preventDefault();pick(bs[j].dataset.lang,true);bs[j].focus();});
+}
+pick(pref,false);
+for(const p of document.querySelectorAll('main pre:not(.pizarra):not(.salida)')){
+  const b=document.createElement('button');b.className='copy';b.type='button';b.textContent='Copiar';
+  b.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(p.innerText.replace(/Copiar$/,''));b.textContent='Copiado';}catch(e){b.textContent='No se pudo';}setTimeout(()=>b.textContent='Copiar',1600);});
+  p.appendChild(b);}
+}</script></body></html>

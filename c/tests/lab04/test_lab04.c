@@ -161,8 +161,22 @@ static void hash_aleatorio(void) {
     hash_map_free(m);
 }
 
+static void hash_muchos_borrados(void) {
+    /* 200 000 claves distintas pasan por la tabla, pero nunca hay más de 64 vivas.
+     * Con lápidas que nunca se limpian, las búsquedas fallidas no terminarían. */
+    HashMap *m = hash_map_new(sizeof(int), sizeof(int), algolib_hash_int, algolib_eq_int);
+    for (int i = 0; i < 200000; i++) {
+        CHECK(hash_map_insert(m, &i, &i));
+        if (i >= 64) CHECK(hash_map_erase(m, &(int){i - 64}));
+        CHECK(hash_map_find(m, &(int){-1 - i}) == NULL);
+    }
+    CHECK_EQ(hash_map_size(m), 64);
+    for (int i = 200000 - 64; i < 200000; i++) CHECK_EQ(*(int *)hash_map_find(m, &i), i);
+    hash_map_free(m);
+}
+
 int main(void) {
     return algotest_run("lab04", (AlgoTest[]){
         T(ring_fifo), T(ring_envuelve_y_crece), T(ring_aleatorio), T(hash_basico),
-        T(hash_factor_de_carga), T(hash_colisiones_totales), T(hash_aleatorio), {0}});
+        T(hash_factor_de_carga), T(hash_colisiones_totales), T(hash_aleatorio), T(hash_muchos_borrados), {0}});
 }

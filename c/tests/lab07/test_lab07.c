@@ -53,6 +53,21 @@ static void avl_cota_de_altura(void) {
     avl_map_free(m);
 }
 
+static void avl_borrar_rebalancea(void) {
+    /* Borrar casi todo un lado: sin rotaciones al borrar, quedaría la columna
+     * derecha del árbol original (altura ~16 con ~500 claves) y violaría la cota. */
+    AvlMap *m = avl_map_new(sizeof(int), sizeof(int), cmp_int);
+    for (int i = 0; i < 65536; i++) avl_map_insert(m, &i, &i);
+    for (int i = 0; i < 65000; i++) CHECK(avl_map_erase(m, &i));
+    CHECK_EQ(avl_map_size(m), 536);
+    CHECK(cumple_cota_avl(avl_map_height(m), avl_map_size(m)));
+    int *ks = malloc(536 * sizeof *ks);
+    CHECK_EQ(avl_map_keys(m, ks), 536);
+    for (int i = 0; i < 536; i++) CHECK_EQ(ks[i], 65000 + i);
+    free(ks);
+    avl_map_free(m);
+}
+
 static void avl_aleatorio(void) {
     /* Oráculo: direccionamiento directo sobre claves en [0, 3000]. */
     int valor[3001];
@@ -98,5 +113,5 @@ static void avl_aleatorio(void) {
 
 int main(void) {
     return algotest_run("lab07", (AlgoTest[]){
-        T(avl_basico), T(avl_secuencial_es_perfecto), T(avl_cota_de_altura), T(avl_aleatorio), {0}});
+        T(avl_basico), T(avl_secuencial_es_perfecto), T(avl_cota_de_altura), T(avl_aleatorio), T(avl_borrar_rebalancea), {0}});
 }

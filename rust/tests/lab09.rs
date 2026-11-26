@@ -13,6 +13,7 @@ fn main() {
             topo_dag_aleatorio_y_ciclo,
             scc_vs_cierre_transitivo,
             recorridos_iterativos_200k,
+            dfs_estrella_lineal,
         ],
     );
 }
@@ -121,5 +122,18 @@ fn recorridos_iterativos_200k() {
     assert!(es_orden_topologico(&path, &ord));
     path.add_edge(n - 1, 0);
     let comp = strongly_connected_components(&path);
+    assert!(comp.iter().all(|&c| c == comp[0]));
+}
+
+/// 0 → i e i → 0 para todo i: el vértice 0 tiene 200 000 vecinos y se "retoma"
+/// 200 000 veces. Un DFS que vuelve a recorrer adj[0] desde el principio en cada
+/// retorno cuesta Θ(n²) y no termina; con (vértice, próximo índice) es Θ(n).
+fn dfs_estrella_lineal() {
+    let n = 200_000;
+    let mut g = Graph::new(n);
+    for i in 1..n { g.add_edge(0, i); g.add_edge(i, 0); }
+    let ord = dfs_preorder(&g, 0);
+    assert_eq!(ord, (0..n).collect::<Vec<_>>());
+    let comp = strongly_connected_components(&g);
     assert!(comp.iter().all(|&c| c == comp[0]));
 }

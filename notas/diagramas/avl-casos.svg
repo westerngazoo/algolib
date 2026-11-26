@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" width="800" height="520" role="img" aria-label="Los dos casos de rebalanceo AVL cuando el lado izquierdo es más alto" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#111827">
+<title>Los dos casos de rebalanceo AVL cuando el lado izquierdo es más alto</title>
+<defs>
+  <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#111827"/></marker>
+  <marker id="arc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1240e0"/></marker>
+  <marker id="ara" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"/></marker>
+</defs>
+<rect width="800" height="520" rx="12" fill="#ffffff"/>
+<text x="20" y="28" font-size="14" text-anchor="start" fill="#111827" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">Caso izquierda-izquierda: una rotación a la derecha en t</text>
+<line x1="170" y1="60" x2="110" y2="115" stroke="#6b7280" stroke-width="1.4"/>
+<line x1="170" y1="60" x2="230" y2="120" stroke="#6b7280" stroke-width="1.4"/>
+<line x1="110" y1="115" x2="70" y2="160" stroke="#6b7280" stroke-width="1.4"/>
+<line x1="110" y1="115" x2="150" y2="160" stroke="#6b7280" stroke-width="1.4"/>
+<circle cx="170" cy="60" r="18" fill="#ffedd5" stroke="#1240e0" stroke-width="1.5"/>
+<text x="170" y="65" font-size="14" text-anchor="middle" fill="#111827" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">t</text>
+<circle cx="110" cy="115" r="18" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="110" y="120" font-size="14" text-anchor="middle" fill="#111827" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">x</text>
+<path d="M70,135 L46,205 L94,205 Z" fill="#ffedd5" stroke="#6b7280" stroke-width="1.3"/>
+<text x="70" y="195" font-size="13" text-anchor="middle" fill="#111827" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">A</text>
+<path d="M150,135 L126,185 L174,185 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"/>
+<text x="150" y="175" font-size="13" text-anchor="middle" fill="#111827" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">B</text>
+<path d="M230,120 L206,160 L254,160 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"/>
+<text x="230" y="150" font-size="13" text-anchor="middle" fill="#111827" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">C</text>
+<text x="70" y="222" font-size="12" text-anchor="middle" fill="#c2410c" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">k+1</text>
+<text x="150" y="202" font-size="12" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">≤ k+1</text>
+<text x="230" y="178" font-size="12" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">k</text>
+<line x1="300" y1="120" x2="400" y2="120" stroke="#1240e0" stroke-width="2" marker-end="url(#arc)"/>
+<line x1="560" y1="60" x2="500" y2="115" stroke="#6b7280" stroke-width="1.4"/>
+<line x1="560" y1="60" x2="620" y2="115" stroke="#6b7280" stroke-width="1.4"/>
+<line x1="620" y1="115" x2="580" y2="160" stroke="#6b7280" stroke-width="1.4"/>
+<line x1="620" y1="115" x2="660" y2="160" stroke="#6b7280" stroke-width="1.4"/>
+<circle cx="560" cy="60" r="18" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="560" y="65" font-size="14" text-anchor="middle" fill="#111827" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">x</text>
+<circle cx="620" cy="115" r="18" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="620" y="120" font-size="14" text-anchor="middle" fill="#111827" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">t</text>
+<path d="M500,115 L476,185 L524,185 Z" fill="#ffedd5" stroke="#6b7280" stroke-width="1.3"/>
+<text x="500" y="175" font-size="13" text-anchor="middle" fill="#111827" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">A</text>
+<path d="M580,140 L556,190 L604,190 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"/>
+<text x="580" y="180" font-size="13" text-anchor="middle" fill="#111827" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">B</text>
+<path d="M660,140 L636,180 L684,180 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"/>
+<text x="660" y="170" font-size="13" text-anchor="middle" fill="#111827" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">C</text>
+<text x="700" y="80" font-size="13" text-anchor="start" fill="#15803d" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">balanceado</text>
+<text x="20" y="270" font-size="14" text-anchor="start" fill="#111827" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">Caso izquierda-derecha: rotación doble (izquierda en x, derecha en t)</text>
+<line x1="170" y1="302" x2="110" y2="357" stroke="#6b7280" stroke-width="1.4"/>
+<line x1="170" y1="302" x2="230" y2="362" stroke="#6b7280" stroke-width="1.4"/>
+<line x1="110" y1="357" x2="70" y2="402" stroke="#6b7280" stroke-width="1.4"/>
+<line x1="110" y1="357" x2="150" y2="402" stroke="#6b7280" stroke-width="1.4"/>
+<circle cx="170" cy="302" r="18" fill="#ffedd5" stroke="#1240e0" stroke-width="1.5"/>
+<text x="170" y="307" font-size="14" text-anchor="middle" fill="#111827" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">t</text>
+<circle cx="110" cy="357" r="18" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="110" y="362" font-size="14" text-anchor="middle" fill="#111827" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">x</text>
+<circle cx="150" cy="402" r="18" fill="#ffedd5" stroke="#1240e0" stroke-width="1.5"/>
+<text x="150" y="407" font-size="14" text-anchor="middle" fill="#111827" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">y</text>
+<path d="M70,377 L46,422 L94,422 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"/>
+<text x="70" y="412" font-size="13" text-anchor="middle" fill="#111827" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">A</text>
+<path d="M230,362 L206,407 L254,407 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"/>
+<text x="230" y="397" font-size="13" text-anchor="middle" fill="#111827" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">C</text>
+<line x1="150" y1="420" x2="125" y2="450" stroke="#6b7280" stroke-width="1.4"/>
+<line x1="150" y1="420" x2="175" y2="450" stroke="#6b7280" stroke-width="1.4"/>
+<path d="M125,450 L101,490 L149,490 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"/>
+<text x="125" y="480" font-size="13" text-anchor="middle" fill="#111827" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">B₁</text>
+<path d="M175,450 L151,490 L199,490 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"/>
+<text x="175" y="480" font-size="13" text-anchor="middle" fill="#111827" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">B₂</text>
+<line x1="300" y1="380" x2="400" y2="380" stroke="#1240e0" stroke-width="2" marker-end="url(#arc)"/>
+<line x1="580" y1="310" x2="510" y2="370" stroke="#6b7280" stroke-width="1.4"/>
+<line x1="580" y1="310" x2="650" y2="370" stroke="#6b7280" stroke-width="1.4"/>
+<line x1="510" y1="370" x2="480" y2="410" stroke="#6b7280" stroke-width="1.4"/>
+<line x1="510" y1="370" x2="540" y2="410" stroke="#6b7280" stroke-width="1.4"/>
+<line x1="650" y1="370" x2="620" y2="410" stroke="#6b7280" stroke-width="1.4"/>
+<line x1="650" y1="370" x2="680" y2="410" stroke="#6b7280" stroke-width="1.4"/>
+<circle cx="580" cy="310" r="18" fill="#ffedd5" stroke="#1240e0" stroke-width="1.5"/>
+<text x="580" y="315" font-size="14" text-anchor="middle" fill="#111827" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">y</text>
+<circle cx="510" cy="370" r="18" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="510" y="375" font-size="14" text-anchor="middle" fill="#111827" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">x</text>
+<circle cx="650" cy="370" r="18" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="650" y="375" font-size="14" text-anchor="middle" fill="#111827" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">t</text>
+<path d="M480,405 L456,450 L504,450 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"/>
+<text x="480" y="440" font-size="13" text-anchor="middle" fill="#111827" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">A</text>
+<path d="M540,405 L516,445 L564,445 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"/>
+<text x="540" y="435" font-size="13" text-anchor="middle" fill="#111827" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">B₁</text>
+<path d="M620,405 L596,445 L644,445 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"/>
+<text x="620" y="435" font-size="13" text-anchor="middle" fill="#111827" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">B₂</text>
+<path d="M680,405 L656,450 L704,450 Z" fill="#ffffff" stroke="#6b7280" stroke-width="1.3"/>
+<text x="680" y="440" font-size="13" text-anchor="middle" fill="#111827" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">C</text>
+<text x="720" y="330" font-size="13" text-anchor="start" fill="#15803d" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">balanceado</text>
+</svg>

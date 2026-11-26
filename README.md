@@ -4,13 +4,14 @@ Curso de nivel licenciatura con un enfoque riguroso, al estilo de MIT 6.006/6.04
 
 ## Cómo se trabaja
 
-1. Lee las notas de la lección en `notas/`. Empieza por `L00-prerrequisitos.md`.
+1. Lee las notas de la lección: abre `notas/html/index.html` en el navegador (o los `.md` de `notas/`). Empieza por L00.
 2. Abre el lab: la API ya está declarada, y cada función pendiente llama a `ALGOLIB_TODO()` (C y C++) o `todo!()` (Rust).
 3. Implementa hasta que los tests pasen:
 
 ```bash
 make lab01          # C, C++ y Rust, uno tras otro
-make c-lab01        # solo C    (compila con AddressSanitizer + UBSan + LeakSanitizer)
+make c-lab01        # solo C    (compila con AddressSanitizer + UBSan)
+make c-fugas-lab01  # fugas de memoria en C (LeakSanitizer en Linux, `leaks` en macOS)
 make cpp-lab01      # solo C++  (compila con AddressSanitizer + UBSan)
 make rust-lab01     # solo Rust
 make all-labs       # todo el curso
@@ -28,6 +29,8 @@ Salida típica al empezar:
 ```
 
 `[TODO]` significa que aún no lo implementas; `[FAIL]` significa que está implementado pero es incorrecto.
+
+**Dependencias entre labs:** el lab08 parte de tu AVL del lab07; Dijkstra (lab10) y Prim (lab11) usan tu `BinaryHeap` del lab06. En Rust, los labs con `unsafe` (02 y 03) se revisan además con Miri: `cd rust && cargo +nightly miri test --test lab02`.
 
 **Requisitos:** CMake ≥ 3.20, GCC ≥ 11 o Clang ≥ 14 (C17 y C++20) y Rust ≥ 1.75 (`rustup`). Para regenerar el sitio HTML: `pandoc` y `beautifulsoup4`.
 
@@ -85,7 +88,7 @@ algolib/
 └── herramientas/                 actualizar.sh (actualización por zip) + manifiesto de esqueletos
 ```
 
-Los tests de los tres lenguajes usan el **mismo generador pseudoaleatorio** (`Lcg`, con la misma semilla), así que los casos aleatorios son comparables. Siempre que es posible, comparan contra un **oráculo independiente** (la biblioteca estándar, o un algoritmo ingenuo escrito en el propio test) en lugar de valores fijos. C y C++ compilan con AddressSanitizer y UBSan; en C, LeakSanitizer además detecta memoria sin liberar.
+Los tests de los tres lenguajes usan el **mismo generador pseudoaleatorio** (`Lcg`, con la misma semilla), así que los casos aleatorios son comparables. Siempre que es posible, comparan contra un **oráculo independiente** (la biblioteca estándar, o un algoritmo ingenuo escrito en el propio test) en lugar de valores fijos. C y C++ compilan con AddressSanitizer y UBSan; para la memoria sin liberar en C, usa `make c-fugas-labNN`: en Linux corre LeakSanitizer y en macOS (donde LeakSanitizer no existe) la herramienta `leaks` del sistema, que señala la línea del `malloc` que nunca se liberó.
 
 ## Programa
 
@@ -93,18 +96,18 @@ Los tests de los tres lenguajes usan el **mismo generador pseudoaleatorio** (`Lc
 |---|---|---|---|---|
 | — | L00 Prerrequisitos | — | modelo de memoria; manual vs. RAII vs. ownership | — |
 | 01 | Modelo, asintótica, amortizado | `ArrayStack`, `MinStack` | `bool`/`NULL` vs. excepción vs. `Option`; `void*` vs. plantillas vs. genéricos; aliasing | ✅ |
-| 02 | Memoria cruda | `Vector` | `malloc` vs. `allocator`+`construct_at` vs. `MaybeUninit`+`unsafe` | ⏳ |
-| 03 | Listas ligadas, ownership | `ForwardList`/`LinkedStack`, `DList` | punteros crudos vs. `unique_ptr` vs. `Box`/`NonNull` | ⏳ |
-| 04 | Colas y hashing | `RingQueue`, `HashMap` | puntero a función vs. `std::hash` vs. `Hash`+`BuildHasher` | ⏳ |
-| 05 | Ordenamiento | insertion, merge, quick, heap, counting, radix | firma de `qsort` vs. `std::span` vs. `&mut [T]` | ⏳ |
-| 06 | Heaps | `BinaryHeap` | comparador como función vs. plantilla vs. `Reverse<T>` | ⏳ |
-| 07 | BST y AVL | `AvlMap` | rotaciones con punteros vs. `unique_ptr` vs. `Option<Box>` | ⏳ |
-| 08 | Árboles aumentados | `OrderStatSet` (select/rank) | — | ⏳ |
-| 09 | Grafos: recorridos | BFS, DFS, topológico, SCC | recursión profunda en los tres; DFS iterativo | ⏳ |
-| 10 | Caminos mínimos | Dijkstra, Bellman-Ford, DAG, Floyd-Warshall | `INT64_MAX` vs. `std::optional` vs. `Option` como ∞ | ⏳ |
-| 11 | Union-Find y MST | `DisjointSet`, Kruskal, Prim | `find` mutante | ⏳ |
-| 12 | Programación dinámica | Fibonacci, LCS, edición, mochila, LIS, monedas | `char*` vs. `std::string` vs. UTF-8 `&str` | ⏳ |
-| 13 | Tries y árboles de rango | `Trie`, `FenwickTree`, `SegmentTree` | — | ⏳ |
+| 02 | Memoria cruda | `Vector` | `malloc` vs. `allocator`+`construct_at` vs. `MaybeUninit`+`unsafe` | ✅ |
+| 03 | Listas ligadas, ownership | `ForwardList`/`LinkedStack`, `DList` | punteros crudos vs. `unique_ptr` vs. `Box`/`NonNull` | ✅ |
+| 04 | Colas y hashing | `RingQueue`, `HashMap` | puntero a función vs. `std::hash` vs. `Hash`+`BuildHasher` | ✅ |
+| 05 | Ordenamiento | insertion, merge, quick, heap, counting, radix | firma de `qsort` vs. `std::span` vs. `&mut [T]` | ✅ |
+| 06 | Heaps | `BinaryHeap` | comparador como función vs. plantilla vs. `Reverse<T>` | ✅ |
+| 07 | BST y AVL | `AvlMap` | rotaciones con punteros vs. `unique_ptr` vs. `Option<Box>` | ✅ |
+| 08 | Árboles aumentados | `OrderStatSet` (select/rank) | — | ✅ |
+| 09 | Grafos: recorridos | BFS, DFS, topológico, SCC | recursión profunda en los tres; DFS iterativo | ✅ |
+| 10 | Caminos mínimos | Dijkstra, Bellman-Ford, DAG, Floyd-Warshall | `INT64_MAX` vs. `std::optional` vs. `Option` como ∞ | ✅ |
+| 11 | Union-Find y MST | `DisjointSet`, Kruskal, Prim | `find` mutante | ✅ |
+| 12 | Programación dinámica | Fibonacci, LCS, edición, mochila, LIS, monedas | `char*` vs. `std::string` vs. UTF-8 `&str` | ✅ |
+| 13 | Tries y árboles de rango | `Trie`, `FenwickTree`, `SegmentTree` | — | ✅ |
 
 \* ✅ = los tests pasan contra la solución de referencia del instructor en los tres lenguajes. ⏳ = los tests compilan y salen como `[TODO]`; se validan al llegar a cada lección.
 
