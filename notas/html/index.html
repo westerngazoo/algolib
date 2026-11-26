@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inicio · Estructuras de Datos y Algoritmos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: apuntes de curso universitario, sobrios y precisos; el guion habla en voz de profesor.
+   IDEA: cuaderno de clase técnico con pizarrón: hoja limpia, recuadros de pizarra verde para lo que se escribe.
+   PICTURE: diagramas SVG propios de cada lección (cotas, arreglos, costos), sobre placa blanca.
+   COLOUR and TYPE: tira cobalto #1240e0, hoja blanca, zonas #eef2ff, acento naranja quemado; Space Grotesk + Inter + JetBrains Mono.
+   LAYOUT: tira de título a todo el ancho, fila de secciones, columna de lectura de 780px; figuras y tablas hasta 900px. */
+:root{color-scheme:light dark;
+ --bg:light-dark(#ffffff,#0b0e17);--ink:light-dark(#111827,#e6e9f2);--muted:light-dark(#5b6270,#9aa3b5);
+ --cob:#1240e0;--cob-ink:light-dark(#1240e0,#8fa8ff);--pale:light-dark(#eef2ff,#141b33);--line:light-dark(#dfe4f2,#252c44);
+ --acc:light-dark(#c2410c,#fb923c);--acc-pale:light-dark(#fff1e6,#2a1a10);--ok:light-dark(#15803d,#4ade80);
+ --chalk-bg:#1f3a2e;--chalk:#eef3e8;--chalk-dim:#a9c2b2;--wood:#7a5a33}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Inter,system-ui,sans-serif;overflow-x:clip}
+a{color:var(--cob-ink)}
+.strip{background:var(--cob);color:#fff;padding:clamp(22px,3.5vw,44px) max(5vw,16px) clamp(20px,3vw,34px)}
+.strip .curso{font:600 14px/1.3 'Space Grotesk',sans-serif;opacity:.85;margin:0 0 10px}
+.strip h1{font:700 clamp(30px,4.6vw,48px)/1.06 'Space Grotesk',sans-serif;margin:0;text-wrap:balance;max-width:24ch}
+.strip .desc{margin:14px 0 0;max-width:62ch;opacity:.92;font-size:16px}
+.pages{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.pages a{color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.45);border-radius:999px;padding:6px 14px;font-size:14px;line-height:1.3}
+.pages a[aria-current]{background:#fff;color:var(--cob)}
+.pages a:hover{background:rgba(255,255,255,.16)}
+nav.toc{border-bottom:1px solid var(--line);background:var(--bg);z-index:5}
+nav.toc .scroll{display:flex;gap:4px;padding:8px max(5vw,16px);white-space:nowrap}
+nav.toc a{flex:none;text-decoration:none;color:var(--muted);font-size:14px;padding:6px 10px;border-radius:8px}
+nav.toc a:hover{background:var(--pale);color:var(--ink)}
+@media(min-width:900px){nav.toc{position:sticky;top:0}}
+main{max-width:820px;margin:0 auto;padding:28px max(4vw,16px) 80px}
+main h1{font:700 32px/1.1 'Space Grotesk',sans-serif;margin:56px 0 12px;padding-top:18px;border-top:4px solid var(--cob);color:var(--cob-ink)}
+main h2{font:700 26px/1.2 'Space Grotesk',sans-serif;margin:48px 0 10px;text-wrap:balance}
+main h3{font:600 21px/1.25 'Space Grotesk',sans-serif;margin:36px 0 8px}
+main h4{font:600 18px/1.3 'Space Grotesk',sans-serif;margin:28px 0 6px}
+.tiempo{display:inline-block;vertical-align:middle;margin-left:8px;font:500 13px/1 Inter,sans-serif;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:4px 9px}
+p,li{max-width:70ch}
+hr{border:0;border-top:1px solid var(--line);margin:40px 0}
+blockquote{margin:16px 0;padding:12px 18px;border-left:4px solid var(--cob);background:var(--pale);border-radius:0 10px 10px 0}
+blockquote p{margin:6px 0}
+code{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.88em;background:var(--pale);padding:1px 5px;border-radius:5px;overflow-wrap:anywhere}
+pre{position:relative;overflow-x:auto;background:light-dark(#f6f7fb,#11162a);border:1px solid var(--line);border-radius:10px;padding:14px 16px;font:14px/1.55 'JetBrains Mono',ui-monospace,monospace}
+pre code{background:none;padding:0;font-size:inherit;overflow-wrap:normal}
+.copy{position:absolute;top:8px;right:8px;font:600 12px Inter,sans-serif;border:1px solid var(--line);background:var(--bg);color:var(--muted);border-radius:7px;padding:6px 10px;min-height:32px;cursor:pointer}
+.copy:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;margin:16px 0;font-size:15px;width:100%}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-weight:600;background:var(--pale)}
+figure{margin:26px 0;padding:0}
+figure svg{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:12px}
+figcaption{color:var(--muted);font-size:14px;margin-top:8px}
+details{margin:12px 0;border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:var(--bg)}
+summary{cursor:pointer;font-weight:600;color:var(--cob-ink);min-height:28px}
+.callout{margin:16px 0;padding:12px 16px 12px 16px;border-radius:10px;border:1px solid var(--line)}
+.callout>.lbl{display:block;font:700 12px/1.2 Inter,sans-serif;letter-spacing:.02em;margin-bottom:4px}
+.dice{background:light-dark(#f8fafc,#121726);border-left:5px solid var(--ink)}
+.dice>.lbl{color:var(--ink)}
+.pregunta{background:var(--pale);border-left:5px solid var(--cob)}
+.pregunta>.lbl{color:var(--cob-ink)}
+.pregunta+blockquote{margin-top:-10px;border-left-color:var(--ok);background:light-dark(#f0fdf4,#0f1f16)}
+.pregunta+blockquote::before{content:"Respuesta esperada";display:block;font:700 12px Inter,sans-serif;color:var(--ok);margin-bottom:2px}
+.nota{background:light-dark(#fffbea,#211d0c);border-left:5px solid #ca8a04}
+.nota>.lbl{color:light-dark(#a16207,#facc15)}
+.atencion{background:var(--acc-pale);border-left:5px solid var(--acc)}
+.atencion>.lbl{color:var(--acc)}
+.ejercicio{display:inline-block;font:700 12px Inter,sans-serif;color:#fff;background:var(--acc);border-radius:6px;padding:2px 8px;margin-right:6px;vertical-align:2px}
+.moneda{display:inline-block;width:.9em;height:.9em;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fde68a,#d97706);vertical-align:-1px;margin-right:4px}
+.pizarra-label{display:table!important;margin:22px 0 0;font:600 13px/1.3 Inter,sans-serif;color:var(--chalk-dim);background:var(--chalk-bg);display:inline-block;padding:6px 12px;border-radius:8px 8px 0 0;border:6px solid var(--wood);border-bottom:0}
+.pizarra-label b{color:#fff}
+pre.pizarra,div.pizarra{margin-top:0;background:var(--chalk-bg);color:var(--chalk);border:6px solid var(--wood);border-radius:0 10px 10px 10px;box-shadow:inset 0 0 40px rgba(0,0,0,.35);font:15px/1.6 'JetBrains Mono',ui-monospace,monospace;padding:16px 18px;overflow-x:auto;white-space:pre}
+table.pizarra{border:6px solid var(--wood);background:var(--chalk-bg);color:var(--chalk);margin-top:0}
+table.pizarra th{background:#2a4a3c;color:#fff}table.pizarra td,table.pizarra th{border-color:#3d5e4f}
+mjx-container[display=true]{overflow-x:auto;overflow-y:hidden;max-width:100%}
+mjx-container:not([display]){display:inline-block;max-width:100%;overflow-x:auto;overflow-y:hidden;vertical-align:middle}
+.lessons{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px;margin:24px 0}
+.lessons a{display:block;text-decoration:none;color:var(--ink);background:var(--pale);border:1px solid var(--line);border-radius:12px;padding:18px}
+.lessons a:hover{border-color:var(--cob)}
+.lessons b{display:block;font:700 19px/1.2 'Space Grotesk',sans-serif;color:var(--cob-ink);margin-bottom:6px}
+.lessons span{color:var(--muted);font-size:15px}
+footer{color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding:24px max(5vw,16px)}
+@media(max-width:600px){body{font-size:16px}table{font-size:13px}pre.pizarra,div.pizarra{font-size:13px}main h1{font-size:27px}main h2{font-size:23px}}
+
+/* pestañas de código */
+.tabs{margin:20px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:light-dark(#f6f7fb,#11162a)}
+.tablist{display:flex;gap:2px;padding:6px 6px 0;background:var(--pale);border-bottom:1px solid var(--line);overflow-x:auto}
+.tablist button{font:600 14px Inter,sans-serif;color:var(--muted);background:none;border:0;border-radius:8px 8px 0 0;padding:10px 16px;min-height:44px;cursor:pointer;white-space:nowrap}
+.tablist button[aria-selected=true]{background:light-dark(#f6f7fb,#11162a);color:var(--cob-ink);box-shadow:inset 0 3px 0 var(--cob)}
+.tablist button:focus-visible{outline:3px solid var(--acc);outline-offset:-3px}
+.tablist .badge{font:600 11px Inter,sans-serif;color:var(--acc);margin-left:6px}
+.tabs .panel pre{margin:0;border:0;border-radius:0}
+.tabs .panel[hidden]{display:none}
+pre.salida{background:light-dark(#0f172a,#05070d);color:#d1fae5;border-color:#0f172a;margin-top:-8px;padding-top:30px}
+pre.salida::before{content:"Salida";position:absolute;top:8px;left:16px;font:700 11px Inter,sans-serif;color:#6ee7b7;letter-spacing:.03em}
+pre.salida .copy{display:none}
+/* resaltado de sintaxis (clases de pandoc) */
+code span.kw,code span.cf{color:light-dark(#1d4ed8,#93b4ff);font-weight:600}
+code span.dt{color:light-dark(#7c3aed,#c4b5fd)}
+code span.dv,code span.bn,code span.fl,code span.cn{color:light-dark(#b45309,#fbbf24)}
+code span.st,code span.ch,code span.ss,code span.sc{color:light-dark(#047857,#6ee7b7)}
+code span.co,code span.do,code span.cv{color:light-dark(#6b7280,#8b95a7);font-style:italic}
+code span.pp,code span.im,code span.at{color:light-dark(#be185d,#f9a8d4)}
+code span.fu,code span.bu{color:light-dark(#0e7490,#67e8f9)}
+code span.op{color:light-dark(#374151,#cbd5e1)}
+code span.er,code span.al{color:var(--acc)}
+pre.sourceCode a{display:none}
+@media print{nav.toc,.copy,.tablist{display:none}.tabs .panel[hidden]{display:block}.strip{background:none;color:#000}}
+</style>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'},options:{enableMenu:false}};</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+</head><body>
+<header class="strip"><p class="curso">algolib · curso de licenciatura en C++20 y Rust</p><h1>Estructuras de Datos y Algoritmos</h1><p class="desc">Teoría rigurosa con demostraciones completas, y una librería propia que el alumno construye lab por lab en C, C++ y Rust para comparar sus paradigmas.</p><div class="pages"><a href="index.html" aria-current="page">Inicio</a><a href="L00.html">L00 · Prerrequisitos</a><a href="L01.html">L01 · Notas</a></div></header><nav class="toc" aria-label="Secciones"><div class="scroll"><a href="#lecciones">Lecciones</a><a href="#como">Cómo funciona</a><a href="#programa">Programa</a></div></nav><main>
+<h2 id="lecciones">Lecciones publicadas</h2>
+<div class="lessons"><a href="L00.html"><b>L00 · Prerrequisitos</b><span>Repaso de lógica, inducción, logaritmos, sumas, recurrencias, probabilidad, memoria, C, C++ y Rust.</span></a><a href="L01.html"><b>L01 · Notas</b><span>Modelo de cómputo, notación asintótica con taller de demostraciones, TAD Pila y análisis amortizado.</span></a></div>
+<h2 id="como">Cómo funciona cada lección</h2>
+<figure><svg aria-label="Ciclo de cada lección: notas, lab, problem set, entrevistas" fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" role="img" viewbox="0 0 760 250" xmlns="http://www.w3.org/2000/svg">
+<title>Ciclo de cada lección: notas, lab, problem set, entrevistas</title>
+<defs>
+<marker id="ar" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#111827"></path></marker>
+<marker id="arc" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#1240e0"></path></marker>
+<marker id="ara" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"></path></marker>
+</defs>
+<rect fill="#ffffff" height="250" rx="12" width="760"></rect>
+<rect fill="#eef2ff" height="92" rx="10" stroke="#1240e0" stroke-width="1.5" width="150" x="11.0" y="40"></rect>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle" x="86.0" y="72">Notas</text>
+<text fill="#6b7280" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" x="86.0" y="96">teoría y</text>
+<text fill="#6b7280" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" x="86.0" y="114">demostraciones</text>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="167.0" x2="201.0" y1="86.0" y2="86.0"></line>
+<rect fill="#1240e0" height="92" rx="10" stroke="#1240e0" stroke-width="1.5" width="150" x="207.0" y="40"></rect>
+<text fill="#ffffff" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle" x="282.0" y="72">Lab</text>
+<text fill="#dbe4ff" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" x="282.0" y="96">C++ y Rust</text>
+<text fill="#dbe4ff" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" x="282.0" y="114">make labNN</text>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="363.0" x2="397.0" y1="86.0" y2="86.0"></line>
+<rect fill="#eef2ff" height="92" rx="10" stroke="#1240e0" stroke-width="1.5" width="150" x="403.0" y="40"></rect>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle" x="478.0" y="72">Problem set</text>
+<text fill="#6b7280" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" x="478.0" y="96">demostraciones y</text>
+<text fill="#6b7280" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" x="478.0" y="114">extensiones</text>
+<line marker-end="url(#ar)" stroke="#111827" stroke-width="1.6" x1="559.0" x2="593.0" y1="86.0" y2="86.0"></line>
+<rect fill="#eef2ff" height="92" rx="10" stroke="#1240e0" stroke-width="1.5" width="150" x="599.0" y="40"></rect>
+<text fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle" x="674.0" y="72">Entrevistas</text>
+<text fill="#6b7280" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" x="674.0" y="96">al cerrar</text>
+<text fill="#6b7280" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" x="674.0" y="114">cada unidad</text>
+<rect fill="#f3f4f6" height="24" rx="12" stroke="#6b7280" stroke-width="1.2" width="54" x="185.0" y="154"></rect>
+<text fill="#6b7280" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="middle" x="212.0" y="171">TODO</text>
+<line marker-end="url(#ar)" stroke="#6b7280" stroke-width="1.2" x1="241.0" x2="249.0" y1="166" y2="166"></line>
+<rect fill="#ffedd5" height="24" rx="12" stroke="#c2410c" stroke-width="1.2" width="54" x="251.0" y="154"></rect>
+<text fill="#c2410c" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="middle" x="278.0" y="171">FAIL</text>
+<line marker-end="url(#ar)" stroke="#6b7280" stroke-width="1.2" x1="307.0" x2="315.0" y1="166" y2="166"></line>
+<rect fill="#dcfce7" height="24" rx="12" stroke="#15803d" stroke-width="1.2" width="54" x="317.0" y="154"></rect>
+<text fill="#15803d" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace" font-size="12" font-weight="700" text-anchor="middle" x="344.0" y="171">OK</text>
+<text fill="#6b7280" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="400" text-anchor="middle" x="282.0" y="198">los tests pasan de pendiente a correcto</text>
+<path d="M674.0,132 V216 Q674.0,228 662.0,228 H98.0 Q86.0,228 86.0,216 V138" fill="none" marker-end="url(#ar)" stroke="#6b7280" stroke-dasharray="5 4" stroke-width="1.4"></path>
+<text fill="#6b7280" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" font-weight="400" text-anchor="middle" x="576.0" y="222">siguiente lección</text>
+</svg><figcaption>Notas → lab en C, C++ y Rust (<code>make labNN</code>) → problem set → preguntas de entrevista al cerrar la unidad.</figcaption></figure>
+<p>La librería <code>algolib</code> trae la API y los tests de los 13 labs desde el primer día. Al principio todo aparece como <code>[TODO]</code>; el trabajo del alumno es dejarlo en <code>[ OK ]</code>.</p>
+<pre><code>make lab01        # C, C++ y Rust
+make c-lab01      # solo C
+make cpp-lab01    # solo C++ (AddressSanitizer + UBSan)
+make rust-lab01   # solo Rust</code></pre>
+<h2 id="programa">Programa</h2>
+<div class="scroll"><table>
+<thead><tr><th>Lab</th><th>Tema</th><th>Contraste de paradigma</th></tr></thead><tbody>
+<tr><td>01</td><td>Modelo, asintótica, amortizado · <code>ArrayStack</code>, <code>MinStack</code></td><td>excepción vs <code>Option</code>; regla de los 5 vs movimiento implícito</td></tr>
+<tr><td>02</td><td>Memoria cruda · <code>Vector</code></td><td><code>allocator</code> vs <code>MaybeUninit</code> + <code>unsafe</code></td></tr>
+<tr><td>03</td><td>Listas ligadas y ownership</td><td><code>unique_ptr</code> vs <code>Box</code>; ciclos de punteros</td></tr>
+<tr><td>04</td><td>Colas y hashing</td><td><code>std::hash</code> vs <code>Hash</code> + <code>BuildHasher</code></td></tr>
+<tr><td>05</td><td>Ordenamiento</td><td><code>std::span</code> vs <code>&amp;mut [T]</code></td></tr>
+<tr><td>06</td><td>Heaps</td><td>comparador vs <code>Reverse&lt;T&gt;</code></td></tr>
+<tr><td>07–08</td><td>AVL y árboles aumentados</td><td>rotaciones con <code>unique_ptr</code> vs <code>Option&lt;Box&gt;</code></td></tr>
+<tr><td>09–11</td><td>Grafos, caminos mínimos, Union-Find, MST</td><td>recursión profunda; <code>find</code> mutante</td></tr>
+<tr><td>12–13</td><td>Programación dinámica, tries, árboles de rango</td><td>UTF-8 <code>&amp;str</code> vs <code>std::string</code></td></tr>
+</tbody></table></div>
+</main><footer>algolib · Estructuras de Datos y Algoritmos. Regenerar con <code>make html</code>.</footer><script>{
+
+const KEY='algolib-lang';let pref='cpp';try{pref=localStorage.getItem(KEY)||'cpp'}catch(e){}
+function pick(lang,save){
+  for(const g of document.querySelectorAll('.tabs')){
+    const btns=[...g.querySelectorAll('[role=tab]')];if(!btns.length)continue;
+    const b=btns.find(x=>x.dataset.lang===lang)||btns[0];
+    for(const x of btns){const on=x===b;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;
+      document.getElementById(x.getAttribute('aria-controls')).hidden=!on;}
+  }
+  if(save){try{localStorage.setItem(KEY,lang)}catch(e){}}
+}
+for(const g of document.querySelectorAll('.tablist')){
+  g.addEventListener('click',e=>{const b=e.target.closest('[role=tab]');if(b){const y=b.getBoundingClientRect().top;pick(b.dataset.lang,true);window.scrollBy(0,b.getBoundingClientRect().top-y);}});
+  g.addEventListener('keydown',e=>{const bs=[...g.querySelectorAll('[role=tab]')];const i=bs.indexOf(document.activeElement);
+    if(i<0)return;let j=i;if(e.key==='ArrowRight')j=(i+1)%bs.length;else if(e.key==='ArrowLeft')j=(i-1+bs.length)%bs.length;else return;
+    e.preventDefault();pick(bs[j].dataset.lang,true);bs[j].focus();});
+}
+pick(pref,false);
+for(const p of document.querySelectorAll('main pre:not(.pizarra):not(.salida)')){
+  const b=document.createElement('button');b.className='copy';b.type='button';b.textContent='Copiar';
+  b.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(p.innerText.replace(/Copiar$/,''));b.textContent='Copiado';}catch(e){b.textContent='No se pudo';}setTimeout(()=>b.textContent='Copiar',1600);});
+  p.appendChild(b);}
+}</script></body></html>

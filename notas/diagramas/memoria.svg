@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 380" width="720" height="380" role="img" aria-label="Mapa de memoria de un proceso: stack, heap, datos y código" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#111827">
+<title>Mapa de memoria de un proceso: stack, heap, datos y código</title>
+<defs>
+  <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#111827"/></marker>
+  <marker id="arc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1240e0"/></marker>
+  <marker id="ara" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"/></marker>
+</defs>
+<rect width="720" height="380" rx="12" fill="#ffffff"/>
+<rect x="190" y="30" width="200" height="70" fill="#eef2ff" stroke="#1240e0" stroke-width="1.4"/>
+<text x="290.0" y="70.0" font-size="15" text-anchor="middle" fill="#111827" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">stack (pila)</text>
+<text x="412" y="52" font-size="13" text-anchor="start" fill="#111827" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">variables locales y marcos de llamada</text>
+<text x="412" y="70" font-size="13" text-anchor="start" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">tamaño fijo (~8 MiB):</text>
+<text x="412" y="88" font-size="13" text-anchor="start" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">la recursión profunda la desborda</text>
+<rect x="190" y="100" width="200" height="110" fill="#ffffff" stroke="#c7d2fe" stroke-width="1.4"/>
+<rect x="190" y="210" width="200" height="70" fill="#ffedd5" stroke="#c2410c" stroke-width="1.4"/>
+<text x="290.0" y="250.0" font-size="15" text-anchor="middle" fill="#111827" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">heap (montículo)</text>
+<text x="412" y="232" font-size="13" text-anchor="start" fill="#111827" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">memoria dinámica</text>
+<text x="412" y="250" font-size="13" text-anchor="start" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">new / delete · Box · Vec · std::vector</text>
+<rect x="190" y="280" width="200" height="40" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.4"/>
+<text x="290.0" y="305.0" font-size="15" text-anchor="middle" fill="#111827" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">datos estáticos</text>
+<text x="412" y="302" font-size="13" text-anchor="start" fill="#111827" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">variables globales y constantes</text>
+<rect x="190" y="320" width="200" height="40" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.4"/>
+<text x="290.0" y="345.0" font-size="15" text-anchor="middle" fill="#111827" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">código</text>
+<text x="412" y="342" font-size="13" text-anchor="start" fill="#111827" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">instrucciones del programa</text>
+<line x1="290.0" y1="104" x2="290.0" y2="138" stroke="#1240e0" stroke-width="2" marker-end="url(#arc)"/>
+<text x="300.0" y="128" font-size="12" text-anchor="start" fill="#1240e0" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">crece hacia abajo</text>
+<line x1="290.0" y1="206" x2="290.0" y2="172" stroke="#c2410c" stroke-width="2" marker-end="url(#ara)"/>
+<text x="300.0" y="186" font-size="12" text-anchor="start" fill="#c2410c" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">crece hacia arriba</text>
+<text x="290.0" y="160" font-size="13" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-style="italic">espacio libre</text>
+<text x="176" y="40" font-size="13" text-anchor="end" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">dirección alta</text>
+<text x="176" y="356" font-size="13" text-anchor="end" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">dirección baja</text>
+<line x1="130" y1="340" x2="130" y2="52" stroke="#6b7280" stroke-width="1.2" marker-end="url(#ar)"/>
+</svg>

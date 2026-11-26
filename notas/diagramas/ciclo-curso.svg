@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 250" width="760" height="250" role="img" aria-label="Ciclo de cada lección: notas, lab, problem set, entrevistas" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#111827">
+<title>Ciclo de cada lección: notas, lab, problem set, entrevistas</title>
+<defs>
+  <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#111827"/></marker>
+  <marker id="arc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1240e0"/></marker>
+  <marker id="ara" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"/></marker>
+</defs>
+<rect width="760" height="250" rx="12" fill="#ffffff"/>
+<rect x="11.0" y="40" width="150" height="92" rx="10" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="86.0" y="72" font-size="17" text-anchor="middle" fill="#111827" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">Notas</text>
+<text x="86.0" y="96" font-size="13" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">teoría y</text>
+<text x="86.0" y="114" font-size="13" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">demostraciones</text>
+<line x1="167.0" y1="86.0" x2="201.0" y2="86.0" stroke="#111827" stroke-width="1.6" marker-end="url(#ar)"/>
+<rect x="207.0" y="40" width="150" height="92" rx="10" fill="#1240e0" stroke="#1240e0" stroke-width="1.5"/>
+<text x="282.0" y="72" font-size="17" text-anchor="middle" fill="#ffffff" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">Lab</text>
+<text x="282.0" y="96" font-size="13" text-anchor="middle" fill="#dbe4ff" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">C++ y Rust</text>
+<text x="282.0" y="114" font-size="13" text-anchor="middle" fill="#dbe4ff" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">make labNN</text>
+<line x1="363.0" y1="86.0" x2="397.0" y2="86.0" stroke="#111827" stroke-width="1.6" marker-end="url(#ar)"/>
+<rect x="403.0" y="40" width="150" height="92" rx="10" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="478.0" y="72" font-size="17" text-anchor="middle" fill="#111827" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">Problem set</text>
+<text x="478.0" y="96" font-size="13" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">demostraciones y</text>
+<text x="478.0" y="114" font-size="13" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">extensiones</text>
+<line x1="559.0" y1="86.0" x2="593.0" y2="86.0" stroke="#111827" stroke-width="1.6" marker-end="url(#ar)"/>
+<rect x="599.0" y="40" width="150" height="92" rx="10" fill="#eef2ff" stroke="#1240e0" stroke-width="1.5"/>
+<text x="674.0" y="72" font-size="17" text-anchor="middle" fill="#111827" font-weight="700" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">Entrevistas</text>
+<text x="674.0" y="96" font-size="13" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">al cerrar</text>
+<text x="674.0" y="114" font-size="13" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">cada unidad</text>
+<rect x="185.0" y="154" width="54" height="24" rx="12" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.2"/>
+<text x="212.0" y="171" font-size="12" text-anchor="middle" fill="#6b7280" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">TODO</text>
+<line x1="241.0" y1="166" x2="249.0" y2="166" stroke="#6b7280" stroke-width="1.2" marker-end="url(#ar)"/>
+<rect x="251.0" y="154" width="54" height="24" rx="12" fill="#ffedd5" stroke="#c2410c" stroke-width="1.2"/>
+<text x="278.0" y="171" font-size="12" text-anchor="middle" fill="#c2410c" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">FAIL</text>
+<line x1="307.0" y1="166" x2="315.0" y2="166" stroke="#6b7280" stroke-width="1.2" marker-end="url(#ar)"/>
+<rect x="317.0" y="154" width="54" height="24" rx="12" fill="#dcfce7" stroke="#15803d" stroke-width="1.2"/>
+<text x="344.0" y="171" font-size="12" text-anchor="middle" fill="#15803d" font-weight="700" font-family="'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace">OK</text>
+<text x="282.0" y="198" font-size="12" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">los tests pasan de pendiente a correcto</text>
+<path d="M674.0,132 V216 Q674.0,228 662.0,228 H98.0 Q86.0,228 86.0,216 V138" fill="none" stroke="#6b7280" stroke-width="1.4" stroke-dasharray="5 4" marker-end="url(#ar)"/>
+<text x="576.0" y="222" font-size="12" text-anchor="middle" fill="#6b7280" font-weight="400" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">siguiente lección</text>
+</svg>

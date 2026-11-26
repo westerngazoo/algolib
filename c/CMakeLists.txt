@@ -1,0 +1,43 @@
+cmake_minimum_required(VERSION 3.20)
+project(algolib_c C)
+
+set(CMAKE_C_STANDARD 17)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_C_EXTENSIONS OFF)
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
+endif()
+
+option(ALGOLIB_SANITIZE "Compilar con AddressSanitizer + UBSan (+ LeakSanitizer)" ON)
+
+set(WARN -Wall -Wextra -Wpedantic)
+set(SAN -fsanitize=address,undefined -fno-omit-frame-pointer)
+
+# Tu implementación de TODOS los labs forma una sola biblioteca: así un lab puede
+# reutilizar otro (p. ej. Dijkstra con tu BinaryHeap del lab06).
+file(GLOB_RECURSE ALGOLIB_SRC CONFIGURE_DEPENDS src/*.c)
+add_library(algolib_c STATIC ${ALGOLIB_SRC})
+target_include_directories(algolib_c PUBLIC include)
+target_compile_options(algolib_c PRIVATE ${WARN})
+target_link_libraries(algolib_c PUBLIC m)
+if(ALGOLIB_SANITIZE)
+    target_compile_options(algolib_c PRIVATE ${SAN})
+endif()
+
+enable_testing()
+file(GLOB LAB_DIRS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/tests ${CMAKE_CURRENT_SOURCE_DIR}/tests/lab*)
+foreach(lab ${LAB_DIRS})
+    file(GLOB srcs CONFIGURE_DEPENDS tests/${lab}/*.c)
+    if(NOT srcs)
+        continue()
+    endif()
+    add_executable(${lab}_tests ${srcs} tests/common/algotest.c)
+    target_include_directories(${lab}_tests PRIVATE tests/common)
+    target_link_libraries(${lab}_tests PRIVATE algolib_c)
+    target_compile_options(${lab}_tests PRIVATE ${WARN})
+    if(ALGOLIB_SANITIZE)
+        target_compile_options(${lab}_tests PRIVATE ${SAN})
+        target_link_options(${lab}_tests PRIVATE ${SAN})
+    endif()
+    add_test(NAME ${lab} COMMAND ${lab}_tests)
+endforeach()

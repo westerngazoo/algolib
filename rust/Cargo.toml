@@ -1,0 +1,49 @@
+[package]
+name = "algolib"
+version = "0.1.0"
+edition = "2021"
+description = "Estructuras de datos y algoritmos — curso con labs en C++ y Rust"
+
+[dependencies]
+
+# Un test de integración por lab, con runner propio (ver tests/common/mod.rs):
+#   cargo test --test lab03
+[[test]]
+name = "lab01"
+harness = false
+[[test]]
+name = "lab02"
+harness = false
+[[test]]
+name = "lab03"
+harness = false
+[[test]]
+name = "lab04"
+harness = false
+[[test]]
+name = "lab05"
+harness = false
+[[test]]
+name = "lab06"
+harness = false
+[[test]]
+name = "lab07"
+harness = false
+[[test]]
+name = "lab08"
+harness = false
+[[test]]
+name = "lab09"
+harness = false
+[[test]]
+name = "lab10"
+harness = false
+[[test]]
+name = "lab11"
+harness = false
+[[test]]
+name = "lab12"
+harness = false
+[[test]]
+name = "lab13"
+harness = false

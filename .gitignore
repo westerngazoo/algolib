@@ -1,0 +1,10 @@
+# compilación
+cpp/build/
+c/build/
+rust/target/
+# copias que deja `make actualizar`
+*.nuevo
+# editores / sistema
+.DS_Store
+.vscode/
+.idea/
