@@ -114,11 +114,15 @@ Todas son álgebra de bachillerato, pero conviene tenerlas a la vista y **citarl
 **¿Por qué valen R4, R5 y R6?**
 
 - **R4.** Si $n\ge1$, multiplicamos ambos lados de $1\le n$ por $n^{k}$, que es positivo (R2): $n^k\le n^{k+1}$. Encadenando con R3 obtenemos $1\le n\le n^2\le\cdots$
-- **R5.** $\lg n\ge0$ porque $n\ge1=2^0$ y $\lg$ es creciente. Para $\lg n\le n$ basta demostrar $n\le 2^n$ (luego se aplica $\lg$, que es creciente, a ambos lados). Por inducción:
-  - *Base* $n=1$: $1\le 2^1 = 2$. ✓
-  - *Paso:* suponemos $n\le 2^n$. Entonces
-    $$n+1 \;\le\; n+n \;=\; 2n \;\le\; 2\cdot2^n \;=\; 2^{n+1}.$$
-    El primer $\le$ usa $1\le n$; el segundo es la hipótesis inductiva multiplicada por 2 (R2). ✓
+- **R5.** $\lg n\ge0$ porque $n\ge1=2^0$ y $\lg$ es creciente. Para $\lg n\le n$ basta demostrar $n\le 2^n$: luego se aplica $\lg$, que es creciente, a ambos lados, y $\lg(2^n)=n$. Lo demostramos por inducción con la plantilla de L00 §3.1:
+  - *Afirmación* $P(n)$: $n\le2^n$, para todo $n\ge1$.
+  - *Base* ($n=1$): $1\le 2^1 = 2$ ✓.
+  - *HI:* para un $k\ge1$ cualquiera, $k\le2^k$.
+  - *Meta,* $P(k+1)$ (cada $n$ se vuelve $k+1$): $k+1\le2^{k+1}$.
+  - *Paso:* $k+1$ todavía no se parece a nada de la HI; la idea es acotar el $+1$ con algo que contenga $k$, para luego usar la HI.
+    $$k+1 \;\underset{\text{(1)}}{\le}\; k+k \;\underset{\text{(2)}}{=}\; 2k \;\underset{\text{(3) HI}}{\le}\; 2\cdot2^k \;\underset{\text{(4)}}{=}\; 2^{k+1}.$$
+    *Por qué cada signo:* (1) $1\le k$ porque $k\ge1$; sumo $k$ a ambos lados. (2) $k+k$ es dos veces $k$. (3) La HI, $k\le2^k$, multiplicada por $2>0$ (R2). (4) Ley de exponentes, $2\cdot2^k=2^{1+k}$. La cadena va de $k+1$ a $2^{k+1}$ ✓.
+  - *Con números* ($k=3$): $4\le6=6\le16=16$ ✓.
 - **R6.** $\lg 2 = 1$ y $\lg$ es creciente, así que $n\ge2$ implica $\lg n\ge1$.
 
 #### 3.3.3 La receta
@@ -258,7 +262,7 @@ $$
 
 **Paso 4. Construirla.** $n=\max(n_0,\ \lfloor c\rfloor+1)$.
 - (a) $n\ge n_0$ por el $\max$.
-- (b) $n\ge\lfloor c\rfloor+1>c$, porque $\lfloor c\rfloor > c-1$.
+- (b) $n\ge\lfloor c\rfloor+1>c$. *Por qué:* $\lfloor c\rfloor$ es el mayor entero $\le c$, así que a $c$ le falta menos de 1 para alcanzar el siguiente entero: $c-\lfloor c\rfloor<1$. Sumando $\lfloor c\rfloor$ a ambos lados, $c<\lfloor c\rfloor+1$. *Con números:* $c=3.7$ da $\lfloor c\rfloor+1=4>3.7$; $c=5$ da $6>5$.
 - (c) es entero, porque $n_0$ y $\lfloor c\rfloor+1$ lo son.
 
 **Paso 5. Verificar la desigualdad.** De $n>c$ y $n>0$, multiplicando por $n$ (R2): $n\cdot n>c\cdot n$, es decir, $n^2>c\,n$. ✓
@@ -278,7 +282,16 @@ $$
 
 *Superior:* $-5n^2\le0$, se quita (R8): $f(n)\le2n^3+100$. Para $n\ge1$, $1\le n^3$, así que $100\le100n^3$ (R4, R2). Sumando: $f(n)\le102n^3$. Entonces $c=102$ y $n_0=1$.
 
-*Inferior:* $100\ge0$, se quita (R7): $f(n)\ge2n^3-5n^2$. El negativo se paga con la mitad del principal: $2n^3-5n^2\ge n^3\iff n^3\ge5n^2\iff n\ge5$ (dividiendo entre $n^2>0$). Entonces $c=1$ y $n_0=5$. Verificación con $n=5$: $250-125+100=225\ge125$ ✓.
+*Inferior:* $100\ge0$, se quita (R7): $f(n)\ge2n^3-5n^2$. El negativo se paga con la mitad del principal: busco cuándo $2n^3-5n^2\ge n^3$, despejando como en el Ejemplo C:
+
+| Paso | Desigualdad | Qué hicimos |
+|---|---|---|
+| 1 | $2n^3-5n^2\ge n^3$ | lo que queremos ($c=1$, la mitad de $2$) |
+| 2 | $2n^3-n^3\ge5n^2$ | sumamos $5n^2-n^3$ a ambos lados |
+| 3 | $n^3\ge5n^2$ | simplificamos |
+| 4 | $n\ge5$ | dividimos entre $n^2>0$ (R2) |
+
+Los pasos son reversibles, así que vale exactamente para $n\ge5$. Entonces $c=1$ y $n_0=5$, y por transitividad $f(n)\ge2n^3-5n^2\ge n^3$. Verificación con $n=5$: $250-125+100=225\ge125$ ✓.
 </details>
 
 **P2.** Demuestra $n\lg n+50n\in O(n\lg n)$. ¿Por qué **no** funciona $n_0=1$?
@@ -292,13 +305,13 @@ Con $n_0=1$ falla porque en $n=1$ se tiene $g(1)=1\cdot\lg1=0$, pero $f(1)=0+50=
 **P3.** Demuestra $n\notin O(\sqrt n)$.
 <details><summary>Solución</summary>
 
-Negación: $\forall c\ \forall n_0\ \exists n\ge n_0:\ n>c\sqrt n$. Dividiendo entre $\sqrt n>0$, la condición es $\sqrt n>c$, es decir, $n>c^2$. Dados $c$ y $n_0$, tomamos $n=\max(n_0,\lfloor c^2\rfloor+1)$. Entonces $n>c^2$, así que $\sqrt n>c$ (la raíz es creciente), y multiplicando por $\sqrt n>0$ se obtiene $n>c\sqrt n$. $\square$
+Negación: $\forall c\ \forall n_0\ \exists n\ge n_0:\ n>c\sqrt n$. Dividiendo entre $\sqrt n>0$, la condición es $\sqrt n>c$, es decir, $n>c^2$. Dados $c$ y $n_0$, tomamos $n=\max(n_0,\lfloor c^2\rfloor+1)$. Entonces $n\ge\lfloor c^2\rfloor+1>c^2$ (mismo argumento del piso que en el Ejemplo E), así que $\sqrt n>c$ (la raíz es creciente), y multiplicando por $\sqrt n>0$ se obtiene $n>c\sqrt n$. $\square$
 </details>
 
 **P4.** Demuestra $2^{n+1}\in\Theta(2^n)$.
 <details><summary>Solución</summary>
 
-$2^{n+1}=2\cdot2^n$ exactamente. Superior con $c=2$; inferior con $c=2$ (o cualquier $c\le2$); $n_0=0$.
+Por la ley de exponentes, $2^{n+1}=2^1\cdot2^n=2\cdot2^n$ exactamente, para todo $n$. Entonces $2^{n+1}\le2\cdot2^n$ (superior, $c=2$) y $2^{n+1}\ge2\cdot2^n$ (inferior, $c=2$; también sirve cualquier $0<c\le2$), ambas con $n_0=0$. Como es una igualdad, no hay nada que acotar.
 </details>
 
 **P5.** ¿Dónde está el error? *"$n^2-10n\ge n^2$ porque quité el término $-10n$; entonces $c=1$."*
@@ -330,7 +343,7 @@ Recuerda la definición de límite: $\lim f(n)/g(n)=L$ significa que para **cada
 
 **Ejemplo D con el atajo:**
 $$\frac{3n^2+10n\lg n+7}{n^2}=3+\frac{10\lg n}{n}+\frac7{n^2}\ \longrightarrow\ 3+0+0=3,$$
-porque $\frac{\lg n}{n}\to0$. (Por L'Hôpital, con $n$ como variable real: $\frac{(\lg n)'}{(n)'}=\frac{1/(n\ln2)}{1}\to0$.) Como $0<3<\infty$, se concluye $f\in\Theta(n^2)$.
+porque $\frac{\lg n}{n}\to0$ y $\frac7{n^2}\to0$. Para el primero, por L'Hôpital con $n$ como variable real: $\lg n=\frac{\ln n}{\ln 2}$ (cambio de base), así que su derivada es $\frac{1}{n\ln2}$, y $\frac{(\lg n)'}{(n)'}=\frac{1/(n\ln2)}{1}=\frac{1}{n\ln2}\to0$. Como $0<3<\infty$, se concluye $f\in\Theta(n^2)$.
 
 **Cuidado: el recíproco es falso.** $f(n)=n(2+\sin n)$ cumple $n\le f(n)\le3n$ (porque $-1\le\sin n\le1$), así que $f\in\Theta(n)$ con $c=1$ y $c=3$. Sin embargo $f(n)/n=2+\sin n$ oscila y **no tiene límite**. Si el límite no existe, el atajo no dice nada y hay que volver a la definición.
 
@@ -481,7 +494,12 @@ Axiomas, para todo $S$ y todo $x$:
 4. $\mathsf{pop}(\mathsf{push}(S,x)) = S$
 5. $\mathsf{top}(\mathsf{new})$ y $\mathsf{pop}(\mathsf{new})$ están **indefinidos**.
 
-Los axiomas 3 y 4 **son** la disciplina LIFO. Por ejemplo, $\mathsf{top}(\mathsf{pop}(\mathsf{push}(\mathsf{push}(\mathsf{new},a),b))) = \mathsf{top}(\mathsf{push}(\mathsf{new},a)) = a$.
+Los axiomas 3 y 4 **son** la disciplina LIFO. Por ejemplo, calculemos $\mathsf{top}(\mathsf{pop}(\mathsf{push}(\mathsf{push}(\mathsf{new},a),b)))$ de adentro hacia afuera, un axioma por paso:
+
+1. Lo de adentro, $\mathsf{pop}(\mathsf{push}(\underbrace{\mathsf{push}(\mathsf{new},a)}_{S},\ \underbrace{b}_{x}))$, tiene la forma del axioma 4 con $S=\mathsf{push}(\mathsf{new},a)$ y $x=b$, así que vale $S=\mathsf{push}(\mathsf{new},a)$.
+2. Queda $\mathsf{top}(\mathsf{push}(\mathsf{new},a))$: es el axioma 3 con $S=\mathsf{new}$ y $x=a$, así que vale $a$.
+
+En palabras: apilar $a$, apilar $b$, quitar el de arriba ($b$) y mirar el tope da $a$.
 
 **Primera diferencia de paradigma: ¿qué hacemos con el axioma 5?**
 
@@ -722,7 +740,9 @@ $$2^0+2^1+2^2+\dots+2^j=\sum_{i=0}^{j}2^i.$$
 
 **Paso 4. Calcular la suma.** Una suma de potencias de 2 consecutivas, empezando en 1, es *la siguiente potencia menos 1*:
 $$\sum_{i=0}^{j}2^i=2^{j+1}-1.$$
-*¿Por qué?* En binario, $1+2+4+8=1111_2$, y sumarle 1 da $10000_2=16$. Formalmente, por inducción: la base es $j=0$, con $1=2-1$ ✓; para el paso, $(2^{j+1}-1)+2^{j+1}=2\cdot2^{j+1}-1=2^{j+2}-1$ ✓.
+*¿Por qué?* En binario, $1+2+4+8=1111_2$, y sumarle 1 da $10000_2=16$. Formalmente es el Ejercicio 0.2 de L00; resumido con la plantilla: *base* $j=0$, $2^0=1=2^1-1$ ✓; *HI*, $\sum_{i=0}^{k}2^i=2^{k+1}-1$; *meta*, sustituyendo $j$ por $k+1$, $\sum_{i=0}^{k+1}2^i=2^{k+2}-1$; *paso*, separo el último término y uso la HI:
+$$\sum_{i=0}^{k+1}2^i=\Big(\sum_{i=0}^{k}2^i\Big)+2^{k+1}\overset{\text{HI}}{=}(2^{k+1}-1)+2^{k+1}=2\cdot2^{k+1}-1=2^{k+2}-1\ ✓,$$
+donde $2^{k+1}+2^{k+1}=2\cdot2^{k+1}$ (dos veces lo mismo) y $2\cdot2^{k+1}=2^{k+2}$ (ley de exponentes).
 
 **Paso 5. Acotar usando lo único que sabemos de $j$.** Sabemos que $2^j<n$. Multiplicando por 2 (R2): $2^{j+1}<2n$. Por lo tanto:
 $$\text{copias}=2^{j+1}-1\;<\;2^{j+1}\;<\;2n.$$
@@ -736,9 +756,11 @@ $$T(n)=n+\text{copias}\;<\;n+2n\;=\;3n.\qquad\square$$
 
 > **Afirmación.** Si una duplicación copia $m$ elementos (pasa de capacidad $m$ a $2m$), entonces desde la duplicación anterior hubo **al menos $m/2$ push**.
 >
-> *Demostración.* La duplicación anterior llevó la capacidad de $m/2$ a $m$ y dejó $k=m/2+1$ elementos. La actual ocurre cuando $k=m$ y llega otro `push`. Cada `push` suma 1 a $k$ y cada `pop` resta 1, así que para que $k$ subiera de $m/2+1$ a $m$ hicieron falta al menos $m/2-1$ push, más el push que dispara la duplicación: al menos $m/2$. $\square$
+> *Demostración.* Si $m=1$, la duplicación la dispara un push, y $1\ge\frac12$ ✓. Si $m\ge2$, la capacidad llegó a $m$ en la duplicación anterior, que pasó de $m/2$ a $m$: copió $m/2$ elementos y luego escribió el que llegaba, así que dejó $k=m/2+1$. La duplicación actual ocurre cuando $k=m$ y llega otro `push`. Entre las dos, cada `push` sumó 1 a $k$ y cada `pop` restó 1. Para subir de $m/2+1$ a $m$, $k$ tuvo que ganar $m-(m/2+1)=m/2-1$ en neto, así que hubo al menos $m/2-1$ push (los pop solo obligan a que haya **más**). Sumando el push que dispara la duplicación: al menos $m/2$. $\square$
+>
+> *Con números* ($m=8$): la duplicación anterior dejó $k=5$ con capacidad $8$. Para llegar a $k=8$ hacen falta al menos 3 push, y el push que dispara la duplicación es el cuarto: $4=8/2$ ✓.
 
-Entonces le **cobramos** cada copia de $m$ elementos a esos $m/2$ push, a 2 unidades cada uno ($2\cdot m/2=m$). Ningún push paga dos veces, porque los push contados para una duplicación son posteriores a la anterior. Cada push paga a lo más $1+2=3$ y cada pop paga 1, así que el total es $<3n$. $\square$
+Entonces le **cobramos** cada copia de $m$ elementos a $m/2$ de esos push, a 2 unidades cada uno ($2\cdot m/2=m$). Ningún push paga dos veces: los push cobrados para una duplicación ocurren **después** de la duplicación anterior y **hasta** la actual (incluido el que la dispara), así que las ventanas de dos duplicaciones distintas no se traslapan. Cada push paga a lo más $1$ (su escritura) $+\,2$ (su parte de una copia) $=3$, y cada pop paga 1, así que el total es $\le3n$. Y es estrictamente menor (como dice el teorema), porque el primer push no copia nada y paga solo 1. $\square$
 
 ---
 
@@ -766,7 +788,14 @@ En palabras: por cada elemento por **encima de la mitad** de la capacidad hay 2 
 *Paso inductivo:* suponemos el invariante antes de una operación y lo demostramos después. Hay cuatro casos.
 
 **Caso 1: `push` sin duplicar ($k<m$).** Costo real 1, pagó 3, el banco recibe $+2$.
-La cota cambia de $2\max(0,k-\frac m2)$ a $2\max(0,k+1-\frac m2)$. Sumarle 1 al argumento de $\max(0,\cdot)$ lo sube **a lo más** 1, así que la cota sube a lo más 2. El banco subió exactamente 2, así que el invariante se mantiene ✓.
+*HI:* antes de la operación, $B\ge2\max(0,k-\frac m2)$. *Meta:* después, con $k+1$ en lugar de $k$ (la capacidad no cambia), $B+2\ge2\max(0,k+1-\frac m2)$.
+Llamo $a=k-\frac m2$. ¿Cuánto puede subir $\max(0,a)$ al cambiar $a$ por $a+1$? Dos casos:
+- si $a\ge0$: $\max(0,a+1)-\max(0,a)=(a+1)-a=1$;
+- si $a<0$: $\max(0,a)=0$ y $a+1<1$, así que $\max(0,a+1)<1$; sube menos de 1.
+
+En ambos casos sube **a lo más** 1, así que la cota, que es el doble, sube a lo más 2. Entonces
+$$2\max(0,k+1-\tfrac m2)\ \le\ 2\max(0,k-\tfrac m2)+2\ \overset{\text{HI}}{\le}\ B+2,$$
+que es la meta ✓.
 
 **Caso 2: `push` que duplica ($k=m\ge1$).** Costo real: $m$ copias + 1 escritura.
 - **Aquí se usa el invariante:** antes de la operación, con $k=m$, $B\ge2\cdot(m-\frac m2)=m$. **Hay suficiente** para pagar las $m$ copias. Tras pagarlas, $B\ge0$.
@@ -775,7 +804,7 @@ La cota cambia de $2\max(0,k-\frac m2)$ a $2\max(0,k+1-\frac m2)$. Sumarle 1 al 
 
 **Caso 3: el primer `push` ($k=m=0$).** Costo 1 (no hay nada que copiar) y el banco recibe $+2$, así que $B=2$. Estado: $k=1$, $m=1$. La cota es $2\max(0,1-\frac12)=1\le2$ ✓.
 
-**Caso 4: `pop`.** Costo 1 y pagó 1, así que el banco no cambia. $k$ baja en 1, así que la cota baja o se queda igual, y el invariante se mantiene ✓.
+**Caso 4: `pop`.** Costo 1 y pagó 1, así que el banco no cambia. $k$ baja en 1, y con el mismo argumento del caso 1 (cambiar $a$ por $a-1$), $\max(0,a-1)\le\max(0,a)$: la cota baja o se queda igual. Entonces $2\max(0,k-1-\frac m2)\le2\max(0,k-\frac m2)\overset{\text{HI}}{\le}B$ ✓.
 
 **Paso 5. Concluir.** El banco nunca es negativo, por lo que
 $$\text{costo real total}\;\le\;\text{total pagado}\;=\;3\cdot\#\text{push}+1\cdot\#\text{pop}\;\le\;3n.\qquad\square$$
@@ -856,14 +885,24 @@ $$\Phi(D)=\max(0,\ 2k-m).$$
 *Paso 2. ¿Cuántas ampliaciones hay?* La ampliación $j$ ocurre si el push $jc+1$ existe, es decir, $jc+1\le n$, es decir, $j\le\frac{n-1}{c}$. El número de ampliaciones es entonces
 $$q=\Big\lfloor\frac{n-1}{c}\Big\rfloor.$$
 
-*Paso 3. Sumar las copias.* Factorizamos $c$ y usamos la suma aritmética $1+2+\dots+q=\frac{q(q+1)}2$ (L0 §3):
+*Paso 3. Sumar las copias.* Factorizamos $c$ y usamos la suma aritmética $1+2+\dots+q=\frac{q(q+1)}2$ (L00 §3.2 y §7.2):
 $$\text{copias}=c+2c+\dots+qc=c\,(1+2+\dots+q)=c\cdot\frac{q(q+1)}{2}.$$
 
-*Paso 4. Cota superior.* Como $q\le\frac nc$:
-$$\text{copias}\le c\cdot\frac{\frac nc\left(\frac nc+1\right)}{2}=\frac{n^2}{2c}+\frac n2\;\in\;O\!\left(\frac{n^2}c\right).$$
+*Paso 4. Cota superior.* Como $q\le\frac{n-1}{c}<\frac nc$, y $q(q+1)$ crece con $q$ (para $q\ge0$), puedo cambiar $q$ por $\frac nc$ y la expresión solo crece:
+$$\text{copias}=c\cdot\frac{q(q+1)}{2}\ \le\ c\cdot\frac{\frac nc\left(\frac nc+1\right)}{2}\ =\ \frac{n\left(\frac nc+1\right)}{2}\ =\ \frac{n^2}{2c}+\frac n2\;\in\;O\!\left(\frac{n^2}c\right).$$
+(Segundo $=$: $c\cdot\frac nc=n$. Tercero: distributiva, $n\cdot\frac nc=\frac{n^2}c$ y $n\cdot1=n$, y luego divido entre 2.)
 
-*Paso 5. Cota inferior.* Como $\lfloor x\rfloor>x-1$, se tiene $q>\frac{n-1}c-1=\frac{n-1-c}{c}$. Para $n\ge2c+1$ se cumple $n-1-c\ge\frac{n-1}2$, así que $q\ge\frac{n-1}{2c}$. Entonces
-$$\text{copias}\ge c\cdot\frac{q^2}{2}\ge c\cdot\frac{(n-1)^2}{8c^2}=\frac{(n-1)^2}{8c}\;\in\;\Omega\!\left(\frac{n^2}c\right).\qquad\square$$
+*Paso 5. Cota inferior.* Uno por uno:
+
+1. $\lfloor x\rfloor>x-1$ (el piso le quita a $x$ menos de 1). Con $x=\frac{n-1}{c}$: $q>\frac{n-1}c-1=\frac{n-1-c}{c}$.
+2. Quiero cambiar $n-1-c$ por algo sin la resta. ¿Cuándo vale $n-1-c\ge\frac{n-1}2$? Restando $\frac{n-1}2$ a ambos lados: $\frac{n-1}2-c\ge0$, es decir, $n-1\ge2c$, es decir, $n\ge2c+1$. Entonces, para $n\ge2c+1$, $q>\frac{n-1-c}{c}\ge\frac{n-1}{2c}$.
+3. Copias: $c\cdot\frac{q(q+1)}{2}\ge c\cdot\frac{q^2}{2}$, porque $q+1\ge q$ (achico el lado derecho, la dirección correcta para una cota inferior).
+4. De $q\ge\frac{n-1}{2c}\ge0$, elevando al cuadrado (ambos lados son $\ge0$): $q^2\ge\frac{(n-1)^2}{4c^2}$.
+5. Juntando:
+$$\text{copias}\ \ge\ c\cdot\frac{q^2}{2}\ \ge\ c\cdot\frac{(n-1)^2}{8c^2}\ =\ \frac{(n-1)^2}{8c}.$$
+6. Para $n\ge2$, $n-1\ge\frac n2$ (equivale a $n\ge2$), así que $(n-1)^2\ge\frac{n^2}4$ y copias $\ge\frac{n^2}{32c}\in\Omega\!\left(\frac{n^2}c\right)$, con $n_0=\max(2,2c+1)$. $\square$
+
+*Con números* ($c=10$, $n=101$): $q=\lfloor100/10\rfloor=10$, copias $=10\cdot\frac{10\cdot11}{2}=550$. La cota superior da $\frac{101^2}{20}+50.5\approx560.6\ge550$ ✓ y la inferior $\frac{100^2}{80}=125\le550$ ✓.
 
 *Intuición:* sumar una constante en cada paso produce copias que crecen **linealmente** ($c, 2c, 3c, \dots$), y la suma de algo lineal es **cuadrática**. Al duplicar, las copias crecen **geométricamente**, y la suma la domina su último término.
 
@@ -880,21 +919,27 @@ $$\text{copias}\ge c\cdot\frac{q^2}{2}\ge c\cdot\frac{(n-1)^2}{8c^2}=\frac{(n-1)
 
 **Demostración paso a paso (costo).**
 
-*Paso 1. Nombrar las copias.* Sean $s_1<s_2<\dots<s_t$ los tamaños copiados en cada ampliación, en orden. Cada ampliación multiplica la capacidad por al menos $\alpha$, y se copia justo cuando está llena, así que $s_{i+1}\ge\alpha\,s_i$.
+*Paso 1. Nombrar las copias.* Sean $s_1<s_2<\dots<s_t$ los tamaños copiados en cada ampliación, en orden. Se copia justo cuando el arreglo está lleno, así que $s_i$ es también la capacidad en ese momento. La ampliación deja capacidad $\lceil\alpha s_i\rceil$, y la siguiente copia ocurre cuando esa capacidad se llena: $s_{i+1}=\lceil\alpha s_i\rceil\ge\alpha s_i$ (el techo nunca achica).
 
 *Paso 2. La última copia es menor que $n$.* Lo que se copia ya estaba en la pila antes del push que dispara la ampliación, así que $s_t\le n-1<n$.
 
 *Paso 3. Leer hacia atrás.* De $s_{i+1}\ge\alpha s_i$ se obtiene $s_i\le s_{i+1}/\alpha$. Aplicándolo repetidamente desde el final:
 $$s_{t-1}\le\frac{s_t}{\alpha},\qquad s_{t-2}\le\frac{s_t}{\alpha^2},\qquad\dots,\qquad s_{t-r}\le\frac{s_t}{\alpha^r}.$$
 
-*Paso 4. Sumar con una geométrica decreciente.* La razón es $\frac1\alpha<1$, así que la serie infinita converge (L0 §3):
-$$\sum_{i=1}^{t}s_i\;\le\;s_t\left(1+\frac1\alpha+\frac1{\alpha^2}+\cdots\right)=s_t\cdot\frac{1}{1-\frac1\alpha}=s_t\cdot\frac{\alpha}{\alpha-1}\;<\;n\cdot\frac{\alpha}{\alpha-1}.$$
+*Paso 4. Sumar con una geométrica decreciente.* La razón es $\frac1\alpha<1$, así que la serie infinita converge (L00 §7.3):
+$$
+\begin{aligned}
+\sum_{i=1}^{t}s_i\;&\le\;s_t\left(1+\frac1\alpha+\dots+\frac1{\alpha^{t-1}}\right)\;\le\;s_t\left(1+\frac1\alpha+\frac1{\alpha^2}+\cdots\right)\\
+&=\;s_t\cdot\frac{1}{1-\frac1\alpha}\;=\;s_t\cdot\frac{\alpha}{\alpha-1}\;<\;n\cdot\frac{\alpha}{\alpha-1}.
+\end{aligned}
+$$
+Eslabón por eslabón: (1) el paso 3, término por término; (2) agregar los términos que faltan de la serie infinita, todos positivos, solo agranda; (3) geométrica infinita con razón $r=\frac1\alpha<1$, cuya suma es $\frac1{1-r}$ (L00 §7.3 y §7.4); (4) multiplico arriba y abajo por $\alpha$: $\frac{1}{1-\frac1\alpha}=\frac{\alpha}{\alpha-1}$; (5) el paso 2, $s_t<n$, multiplicado por $\frac{\alpha}{\alpha-1}>0$.
 
 *Paso 5. Total.* Con $n$ escrituras más las copias, el costo es menor que $n+n\frac{\alpha}{\alpha-1}=n\left(1+\frac{\alpha}{\alpha-1}\right)$. Al dividir entre $n$ queda el costo amortizado. Con $\alpha=2$: $1+2=3$ ✓, que coincide con el Teorema 6.2. $\square$
 
 **Demostración (memoria).** Justo después de ampliar de $m$ a $\lceil\alpha m\rceil$ hay $m+1$ elementos. Como $\lceil\alpha m\rceil<\alpha m+1$, la fracción ocupada es
-$$\frac{m+1}{\lceil\alpha m\rceil}>\frac{m+1}{\alpha m+1}\ge\frac1\alpha,$$
-donde la última desigualdad equivale a $\alpha(m+1)\ge\alpha m+1$, es decir, a $\alpha\ge1$ ✓. Sin `pop`, $k$ solo crece hasta la siguiente ampliación, así que la fracción ocupada nunca baja de $\frac1\alpha$ y la vacía nunca supera $1-\frac1\alpha$. $\square$
+$$\frac{m+1}{\lceil\alpha m\rceil}>\frac{m+1}{\alpha m+1}\ge\frac1\alpha.$$
+El primer $>$: con el mismo numerador, un denominador **más chico** da una fracción **más grande**, y $\lceil\alpha m\rceil<\alpha m+1$ (el techo le suma a $\alpha m$ menos de 1). El segundo $\ge$: multiplico en cruz, cosa que puedo hacer porque los dos denominadores son positivos: $\alpha(m+1)\ge\alpha m+1$; por la distributiva, $\alpha m+\alpha\ge\alpha m+1$; restando $\alpha m$, $\alpha\ge1$ ✓, que es cierto porque $\alpha>1$. Sin `pop`, $k$ solo crece hasta la siguiente ampliación, así que la fracción ocupada nunca baja de $\frac1\alpha$ y la vacía nunca supera $1-\frac1\alpha$. $\square$
 
 | $\alpha$ | costo amortizado $\le$ | desperdicio $\le$ | quién lo usa |
 |---|---|---|---|
