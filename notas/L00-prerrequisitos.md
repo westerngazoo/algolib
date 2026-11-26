@@ -546,15 +546,18 @@ $$2^{k+1}=2\cdot 2^k.$$
 Es una igualdad: no gano ni pierdo nada, solo reescribo para que aparezca la cantidad de la que la HI sabe algo.
 
 **Paso 2: usar la HI.** La HI dice $2^k\ge k+1$. Multiplico **ambos lados** por $2$. Multiplicar una desigualdad por un número **positivo** no cambia su dirección (si fuera negativo, sí la voltearía):
-$$2^k\ge k+1 \quad\Longrightarrow\quad 2\cdot 2^k\ \ge\ 2(k+1)=2k+2.$$
-Juntando con el paso 1: $2^{k+1}=2\cdot2^k\ge 2k+2$.
+$$2^k\ge k+1 \quad\Longrightarrow\quad 2\cdot 2^k\ \ge\ 2\cdot(k+1).$$
+Ahora quito el paréntesis con la **ley distributiva**, $a\cdot(b+c)=a\cdot b+a\cdot c$: el $2$ multiplica a **cada** sumando de dentro.
+$$2\cdot(k+1)=2\cdot k+2\cdot 1=2k+2.$$
+(Con números: si $k=3$, $2\cdot(3+1)=2\cdot4=8$ y $2\cdot3+2=6+2=8$. Mismo resultado.)
+Juntando con el paso 1: $2^{k+1}=2\cdot2^k\ge 2(k+1)=2k+2$.
 
 **Paso 3: cerrar la distancia.** Ya sé que $2^{k+1}\ge 2k+2$, pero la meta es $2^{k+1}\ge k+2$. Me basta con que $2k+2$ sea **al menos** $k+2$, porque si $2^{k+1}$ supera a $2k+2$ y $2k+2$ supera a $k+2$, entonces $2^{k+1}$ supera a $k+2$ (transitividad: $a\ge b$ y $b\ge c$ implican $a\ge c$). Para comparar dos expresiones, resto:
 $$(2k+2)-(k+2)=k\ \ge\ 0 \qquad\text{porque } k\ge 0 \text{ (así lo fija la HI)}.$$
 Diferencia no negativa significa $2k+2\ge k+2$.
 
 **Todo junto**, leyendo la cadena de izquierda a derecha (cada signo está justificado arriba):
-$$2^{k+1}\ \underset{\text{paso 1}}{=}\ 2\cdot2^k\ \underset{\text{paso 2 (HI)}}{\ge}\ 2k+2\ \underset{\text{paso 3}}{\ge}\ k+2. \qquad\checkmark\ \square$$
+$$2^{k+1}\ \underset{\text{paso 1}}{=}\ 2\cdot2^k\ \underset{\text{paso 2 (HI)}}{\ge}\ 2(k+1)\ \underset{\text{distributiva}}{=}\ 2k+2\ \underset{\text{paso 3}}{\ge}\ k+2. \qquad\checkmark\ \square$$
 
 **Comprobación con números** (no demuestra nada, pero confirma que no me equivoqué en el álgebra), con $k=3$:
 
