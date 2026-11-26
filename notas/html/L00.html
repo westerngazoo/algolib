@@ -277,7 +277,14 @@ pre.sourceCode a{display:none}
 </tbody>
 </table></div>
 <p><strong>En una frase:</strong> <em>“<span class="math inline">\(f\)</span> es <span class="math inline">\(O(g)\)</span> si puedo encontrar una constante <span class="math inline">\(c\)</span> y un punto de arranque <span class="math inline">\(n_0\)</span> tales que, de ahí en adelante, <span class="math inline">\(f\)</span> <strong>nunca</strong> supera a <span class="math inline">\(c\)</span> veces <span class="math inline">\(g\)</span>.”</em> Dicho aún más simple: <strong>ignorando constantes y entradas chicas, <span class="math inline">\(f\)</span> no crece más rápido que <span class="math inline">\(g\)</span></strong>.</p>
-<p><strong>Con números.</strong> ¿Es <span class="math inline">\(3n+5\in O(n)\)</span>? Hay que encontrar un <strong>testigo</strong>: una pareja concreta <span class="math inline">\(c\)</span>, <span class="math inline">\(n_0\)</span> que haga verdadera la frase. Razonamos así:</p>
+<p><strong>Con números: ¿es <span class="math inline">\(3n+5\in O(n)\)</span>?</strong> Hay que encontrar un <strong>testigo</strong>: una pareja concreta <span class="math inline">\(c\)</span>, <span class="math inline">\(n_0\)</span> que haga verdadera la frase. Nada de esto es magia; vamos por partes.</p>
+<p><strong>Qué papel juega <span class="math inline">\(c\)</span>.</strong> Con <span class="math inline">\(g(n)=n\)</span>, la condición <span class="math inline">\(f(n)\le c\cdot n\)</span> dice: <em>“<span class="math inline">\(f\)</span> cabe debajo de <span class="math inline">\(c\)</span> copias de <span class="math inline">\(n\)</span>”</em>. Así que <span class="math inline">\(c\)</span> responde a una pregunta muy concreta: <strong>¿cuántas copias de <span class="math inline">\(n\)</span> necesito para tapar a <span class="math inline">\(3n+5\)</span>?</strong></p>
+<p><strong>Estrategia: convertir cada término de <span class="math inline">\(f\)</span> en copias de <span class="math inline">\(n\)</span>.</strong> Se mira <span class="math inline">\(3n+5\)</span> término por término:</p>
+<ul>
+<li>El término <span class="math inline">\(3n\)</span> <strong>ya son</strong> 3 copias de <span class="math inline">\(n\)</span>. No hay nada que hacer.</li>
+<li>El término <span class="math inline">\(5\)</span> es una constante, no un múltiplo de <span class="math inline">\(n\)</span>. Para “taparlo” necesito escribir algo de la forma <span class="math inline">\(5\le(\text{algunas copias})\cdot n\)</span>, y eso <strong>solo es cierto a partir de cierta <span class="math inline">\(n\)</span></strong>. Ahí aparece <span class="math inline">\(n_0\)</span>.</li>
+</ul>
+<p>Hay dos maneras naturales de tapar el <span class="math inline">\(5\)</span>, y cada una da un testigo distinto:</p>
 <div class="scroll"><table>
 <colgroup>
 <col style="width: 33%"/>
@@ -286,40 +293,112 @@ pre.sourceCode a{display:none}
 </colgroup>
 <thead>
 <tr>
-<th>Paso</th>
-<th>Qué hacemos</th>
-<th>Por qué</th>
+<th></th>
+<th>Opción A: tapar el 5 con <strong>una</strong> copia de <span class="math inline">\(n\)</span></th>
+<th>Opción B: tapar el 5 con <strong>cinco</strong> copias de <span class="math inline">\(n\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Desigualdad que necesito</td>
+<td><span class="math inline">\(5\le n\)</span></td>
+<td><span class="math inline">\(5\le 5n\)</span></td>
+</tr>
+<tr>
+<td>¿Desde cuándo es cierta?</td>
+<td>desde <span class="math inline">\(n=5\)</span> (antes, <span class="math inline">\(n\)</span> es menor que 5)</td>
+<td>desde <span class="math inline">\(n=1\)</span>: multiplica <span class="math inline">\(1\le n\)</span> por 5</td>
+</tr>
+<tr>
+<td>Por eso <span class="math inline">\(n_0\)</span> =</td>
+<td><span class="math inline">\(5\)</span></td>
+<td><span class="math inline">\(1\)</span></td>
+</tr>
+<tr>
+<td>Sustituyo el 5 en <span class="math inline">\(3n+5\)</span></td>
+<td><span class="math inline">\(3n+5\ \le\ 3n+n\)</span></td>
+<td><span class="math inline">\(3n+5\ \le\ 3n+5n\)</span></td>
+</tr>
+<tr>
+<td>Cuento las copias de <span class="math inline">\(n\)</span></td>
+<td><span class="math inline">\(3+1=4\)</span></td>
+<td><span class="math inline">\(3+5=8\)</span></td>
+</tr>
+<tr>
+<td>Por eso <span class="math inline">\(c\)</span> =</td>
+<td><span class="math inline">\(4\)</span></td>
+<td><span class="math inline">\(8\)</span></td>
+</tr>
+</tbody>
+</table></div>
+<p>Fíjate de dónde salen las <span class="math inline">\(n\)</span>: en la opción A, la <span class="math inline">\(n\)</span> extra <strong>es la que puse en lugar del 5</strong>; en la opción B, las <span class="math inline">\(5n\)</span> <strong>son las que puse en lugar del 5</strong>. Y <span class="math inline">\(c\)</span> no se adivina: <strong>es la suma de las copias</strong> que quedaron (<span class="math inline">\(3\)</span> que ya había más las que usé para tapar el <span class="math inline">\(5\)</span>).</p>
+<p><strong>Compruébalo con números</strong> antes de creerlo:</p>
+<div class="scroll"><table style="width:100%;">
+<colgroup>
+<col style="width: 16%"/>
+<col style="width: 16%"/>
+<col style="width: 16%"/>
+<col style="width: 16%"/>
+<col style="width: 16%"/>
+<col style="width: 16%"/>
+</colgroup>
+<thead>
+<tr>
+<th><span class="math inline">\(n\)</span></th>
+<th><span class="math inline">\(3n+5\)</span></th>
+<th><span class="math inline">\(4n\)</span> (opción A)</th>
+<th>¿<span class="math inline">\(3n+5\le4n\)</span>?</th>
+<th><span class="math inline">\(8n\)</span> (opción B)</th>
+<th>¿<span class="math inline">\(3n+5\le8n\)</span>?</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>1</td>
-<td>Queremos <span class="math inline">\(3n+5\le c\cdot n\)</span></td>
-<td>es lo que pide la definición con <span class="math inline">\(g(n)=n\)</span></td>
-</tr>
-<tr>
-<td>2</td>
-<td>El <span class="math inline">\(3n\)</span> ya es “3 veces <span class="math inline">\(n\)</span>”; lo que estorba es el <span class="math inline">\(+5\)</span></td>
-<td>con <span class="math inline">\(c=3\)</span> no alcanza: <span class="math inline">\(3n+5&gt;3n\)</span> siempre</td>
+<td>8</td>
+<td>4</td>
+<td>no (todavía no llegamos a <span class="math inline">\(n_0=5\)</span>)</td>
+<td>8</td>
+<td>sí</td>
 </tr>
 <tr>
 <td>3</td>
-<td>Damos una <span class="math inline">\(n\)</span> de holgura: <span class="math inline">\(c=4\)</span>, para que <span class="math inline">\(4n=3n+n\)</span></td>
-<td>ahora basta con que el <span class="math inline">\(5\)</span> quepa en esa <span class="math inline">\(n\)</span> extra</td>
-</tr>
-<tr>
-<td>4</td>
-<td>Eso pasa cuando <span class="math inline">\(5\le n\)</span>, así que tomamos <span class="math inline">\(n_0=5\)</span></td>
-<td>es justo la condición que hace funcionar el paso 5</td>
+<td>14</td>
+<td>12</td>
+<td>no</td>
+<td>24</td>
+<td>sí</td>
 </tr>
 <tr>
 <td>5</td>
-<td>Para toda <span class="math inline">\(n\ge5\)</span>: <span class="math inline">\(\ 3n+5\ \le\ 3n+n\ =\ 4n\)</span></td>
-<td>como <span class="math inline">\(5\le n\)</span>, cambiar el <span class="math inline">\(5\)</span> por <span class="math inline">\(n\)</span> no puede hacer más chico el lado derecho</td>
+<td>20</td>
+<td>20</td>
+<td>sí, justo</td>
+<td>40</td>
+<td>sí</td>
+</tr>
+<tr>
+<td>10</td>
+<td>35</td>
+<td>40</td>
+<td>sí</td>
+<td>80</td>
+<td>sí</td>
+</tr>
+<tr>
+<td>100</td>
+<td>305</td>
+<td>400</td>
+<td>sí</td>
+<td>800</td>
+<td>sí</td>
 </tr>
 </tbody>
 </table></div>
-<p>Así que la frase es verdadera con <span class="math inline">\(c=4\)</span> y <span class="math inline">\(n_0=5\)</span>: <span class="math inline">\(3n+5\)</span> está en la familia <span class="math inline">\(O(n)\)</span>. El testigo no es único: con <span class="math inline">\(c=8\)</span> y <span class="math inline">\(n_0=1\)</span> también funciona, porque para <span class="math inline">\(n\ge1\)</span> se cumple <span class="math inline">\(5\le5n\)</span> y entonces <span class="math inline">\(3n+5\le3n+5n=8n\)</span>.</p>
+<p>La tabla muestra el <strong>intercambio</strong> entre <span class="math inline">\(c\)</span> y <span class="math inline">\(n_0\)</span>: con pocas copias (<span class="math inline">\(c=4\)</span>) tengo que esperar a que <span class="math inline">\(n\)</span> crezca (<span class="math inline">\(n_0=5\)</span>); con muchas copias (<span class="math inline">\(c=8\)</span>) funciona desde el principio (<span class="math inline">\(n_0=1\)</span>). Los dos testigos son válidos, y basta con <strong>uno</strong> para demostrar que <span class="math inline">\(3n+5\in O(n)\)</span>.</p>
+<blockquote>
+<div class="callout nota"><span class="lbl">Nota para el profesor</span><strong>La receta, en general.</strong> Para demostrar que una suma de términos está en <span class="math inline">\(O(g)\)</span>: acota cada término por un múltiplo de <span class="math inline">\(g\)</span>, anotando a partir de qué <span class="math inline">\(n\)</span> vale cada acotación. Entonces <span class="math inline">\(c\)</span> es la suma de los múltiplos y <span class="math inline">\(n_0\)</span> es el <strong>mayor</strong> de los “a partir de qué <span class="math inline">\(n\)</span>”. En la L01 (§3.3) usaremos exactamente esta receta con funciones más complicadas.</div>
+</blockquote>
 <p>En cambio, <span class="math inline">\(n^2\notin O(n)\)</span>. Supón que alguien propone una constante <span class="math inline">\(c\)</span>. En cuanto <span class="math inline">\(n&gt;c\)</span>, multiplicamos ambos lados de <span class="math inline">\(n&gt;c\)</span> por <span class="math inline">\(n\)</span> (que es positivo, así que la desigualdad se conserva) y obtenemos <span class="math inline">\(n\cdot n&gt;c\cdot n\)</span>, es decir, <span class="math inline">\(n^2&gt;c\cdot n\)</span>: la cota falla. Como esto pasa para <strong>cualquier</strong> <span class="math inline">\(c\)</span>, ninguna constante sirve.</p>
 <blockquote>
 <p>💭 <strong>Para reflexionar.</strong> ¿Por qué la definición deja escoger <span class="math inline">\(c\)</span> y <span class="math inline">\(n_0\)</span>, en lugar de exigir simplemente <span class="math inline">\(f(n)\le g(n)\)</span> para toda <span class="math inline">\(n\)</span>? Piensa en dos algoritmos: uno hace <span class="math inline">\(100n\)</span> pasos y otro <span class="math inline">\(n^2\)</span>. ¿Cuál es mejor para <span class="math inline">\(n=10\)</span>? ¿Y para <span class="math inline">\(n=10^6\)</span>? La notación <span class="math inline">\(O\)</span> está diseñada para responder la segunda pregunta.</p>

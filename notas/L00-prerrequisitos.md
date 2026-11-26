@@ -96,17 +96,41 @@ $$f\in O(g)\iff \exists c>0\ \ \exists n_0\ \ \forall n\ge n_0:\ f(n)\le c\,g(n)
 
 **En una frase:** *"$f$ es $O(g)$ si puedo encontrar una constante $c$ y un punto de arranque $n_0$ tales que, de ahí en adelante, $f$ **nunca** supera a $c$ veces $g$."* Dicho aún más simple: **ignorando constantes y entradas chicas, $f$ no crece más rápido que $g$**.
 
-**Con números.** ¿Es $3n+5\in O(n)$? Hay que encontrar un **testigo**: una pareja concreta $c$, $n_0$ que haga verdadera la frase. Razonamos así:
+**Con números: ¿es $3n+5\in O(n)$?** Hay que encontrar un **testigo**: una pareja concreta $c$, $n_0$ que haga verdadera la frase. Nada de esto es magia; vamos por partes.
 
-| Paso | Qué hacemos | Por qué |
+**Qué papel juega $c$.** Con $g(n)=n$, la condición $f(n)\le c\cdot n$ dice: *"$f$ cabe debajo de $c$ copias de $n$"*. Así que $c$ responde a una pregunta muy concreta: **¿cuántas copias de $n$ necesito para tapar a $3n+5$?**
+
+**Estrategia: convertir cada término de $f$ en copias de $n$.** Se mira $3n+5$ término por término:
+
+- El término $3n$ **ya son** 3 copias de $n$. No hay nada que hacer.
+- El término $5$ es una constante, no un múltiplo de $n$. Para "taparlo" necesito escribir algo de la forma $5\le(\text{algunas copias})\cdot n$, y eso **solo es cierto a partir de cierta $n$**. Ahí aparece $n_0$.
+
+Hay dos maneras naturales de tapar el $5$, y cada una da un testigo distinto:
+
+| | Opción A: tapar el 5 con **una** copia de $n$ | Opción B: tapar el 5 con **cinco** copias de $n$ |
 |---|---|---|
-| 1 | Queremos $3n+5\le c\cdot n$ | es lo que pide la definición con $g(n)=n$ |
-| 2 | El $3n$ ya es "3 veces $n$"; lo que estorba es el $+5$ | con $c=3$ no alcanza: $3n+5>3n$ siempre |
-| 3 | Damos una $n$ de holgura: $c=4$, para que $4n=3n+n$ | ahora basta con que el $5$ quepa en esa $n$ extra |
-| 4 | Eso pasa cuando $5\le n$, así que tomamos $n_0=5$ | es justo la condición que hace funcionar el paso 5 |
-| 5 | Para toda $n\ge5$: $\ 3n+5\ \le\ 3n+n\ =\ 4n$ | como $5\le n$, cambiar el $5$ por $n$ no puede hacer más chico el lado derecho |
+| Desigualdad que necesito | $5\le n$ | $5\le 5n$ |
+| ¿Desde cuándo es cierta? | desde $n=5$ (antes, $n$ es menor que 5) | desde $n=1$: multiplica $1\le n$ por 5 |
+| Por eso $n_0$ = | $5$ | $1$ |
+| Sustituyo el 5 en $3n+5$ | $3n+5\ \le\ 3n+n$ | $3n+5\ \le\ 3n+5n$ |
+| Cuento las copias de $n$ | $3+1=4$ | $3+5=8$ |
+| Por eso $c$ = | $4$ | $8$ |
 
-Así que la frase es verdadera con $c=4$ y $n_0=5$: $3n+5$ está en la familia $O(n)$. El testigo no es único: con $c=8$ y $n_0=1$ también funciona, porque para $n\ge1$ se cumple $5\le5n$ y entonces $3n+5\le3n+5n=8n$.
+Fíjate de dónde salen las $n$: en la opción A, la $n$ extra **es la que puse en lugar del 5**; en la opción B, las $5n$ **son las que puse en lugar del 5**. Y $c$ no se adivina: **es la suma de las copias** que quedaron ($3$ que ya había más las que usé para tapar el $5$).
+
+**Compruébalo con números** antes de creerlo:
+
+| $n$ | $3n+5$ | $4n$ (opción A) | ¿$3n+5\le4n$? | $8n$ (opción B) | ¿$3n+5\le8n$? |
+|---|---|---|---|---|---|
+| 1 | 8 | 4 | no (todavía no llegamos a $n_0=5$) | 8 | sí |
+| 3 | 14 | 12 | no | 24 | sí |
+| 5 | 20 | 20 | sí, justo | 40 | sí |
+| 10 | 35 | 40 | sí | 80 | sí |
+| 100 | 305 | 400 | sí | 800 | sí |
+
+La tabla muestra el **intercambio** entre $c$ y $n_0$: con pocas copias ($c=4$) tengo que esperar a que $n$ crezca ($n_0=5$); con muchas copias ($c=8$) funciona desde el principio ($n_0=1$). Los dos testigos son válidos, y basta con **uno** para demostrar que $3n+5\in O(n)$.
+
+> 💡 **La receta, en general.** Para demostrar que una suma de términos está en $O(g)$: acota cada término por un múltiplo de $g$, anotando a partir de qué $n$ vale cada acotación. Entonces $c$ es la suma de los múltiplos y $n_0$ es el **mayor** de los "a partir de qué $n$". En la L01 (§3.3) usaremos exactamente esta receta con funciones más complicadas.
 
 En cambio, $n^2\notin O(n)$. Supón que alguien propone una constante $c$. En cuanto $n>c$, multiplicamos ambos lados de $n>c$ por $n$ (que es positivo, así que la desigualdad se conserva) y obtenemos $n\cdot n>c\cdot n$, es decir, $n^2>c\cdot n$: la cota falla. Como esto pasa para **cualquier** $c$, ninguna constante sirve.
 
