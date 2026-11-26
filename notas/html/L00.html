@@ -951,7 +951,7 @@ Solución
 <tr>
 <td>5</td>
 <td><span class="math inline">\(=\dfrac{(k+1)(k+2)}{2}\)</span></td>
-<td>factorizo <span class="math inline">\((k+1)\)</span></td>
+<td>factor común <span class="math inline">\((k+1)\)</span>: <span class="math inline">\(k\cdot(k+1)+2\cdot(k+1)=(k+2)\cdot(k+1)\)</span>, igual que <span class="math inline">\(3x+2x=5x\)</span> con <span class="math inline">\(x=k+1\)</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -992,9 +992,36 @@ Solución
  6    21        21</code></pre>
 <h3 id="segundo-ejemplo-una-desigualdad">3.3 Segundo ejemplo: una desigualdad</h3>
 <p><strong>Afirmación <span class="math inline">\(P(n)\)</span>:</strong> <span class="math inline">\(2^n\ge n+1\)</span> para todo <span class="math inline">\(n\ge0\)</span>.</p>
-<p><strong>Base (<span class="math inline">\(n=0\)</span>):</strong> <span class="math inline">\(2^0=1\ge0+1=1\)</span> ✓. <strong>HI:</strong> <span class="math inline">\(2^k\ge k+1\)</span> para un <span class="math inline">\(k\ge0\)</span>. <strong>Paso:</strong> quiero <span class="math inline">\(2^{k+1}\ge k+2\)</span>. <span class="math display">\[2^{k+1}=2\cdot2^k\ \overset{\text{HI}}{\ge}\ 2(k+1)=2k+2\ \ge\ k+2.\]</span> El último <span class="math inline">\(\ge\)</span> vale porque <span class="math inline">\(2k+2-(k+2)=k\ge0\)</span>. ✓ <span class="math inline">\(\square\)</span></p>
+<p><strong>Base (<span class="math inline">\(n=0\)</span>):</strong> <span class="math inline">\(2^0=1\ge0+1=1\)</span> ✓. <strong>HI:</strong> <span class="math inline">\(2^k\ge k+1\)</span> para un <span class="math inline">\(k\ge0\)</span>. <strong>Paso:</strong> quiero demostrar <span class="math inline">\(P(k+1)\)</span>, que es la afirmación con <span class="math inline">\(k+1\)</span> en lugar de <span class="math inline">\(n\)</span>: <span class="math display">\[2^{k+1}\ \ge\ (k+1)+1 \;=\; k+2.\]</span></p>
+<p><strong>Qué tengo y qué me falta.</strong> La HI me dice algo sobre <span class="math inline">\(2^k\)</span>; la meta habla de <span class="math inline">\(2^{k+1}\)</span>. Antes de calcular nada, el plan es <strong>conectar</strong> las dos: escribir <span class="math inline">\(2^{k+1}\)</span> en términos de <span class="math inline">\(2^k\)</span>, usar la HI y ver cuánto falta para llegar a <span class="math inline">\(k+2\)</span>. Lo hago en tres pasos, uno por cada signo de la cadena.</p>
+<p><strong>Paso 1: hacer aparecer <span class="math inline">\(2^k\)</span>.</strong> Por la ley de exponentes <span class="math inline">\(a^{m+1}=a\cdot a^m\)</span>: <span class="math display">\[2^{k+1}=2\cdot 2^k.\]</span> Es una igualdad: no gano ni pierdo nada, solo reescribo para que aparezca la cantidad de la que la HI sabe algo.</p>
+<p><strong>Paso 2: usar la HI.</strong> La HI dice <span class="math inline">\(2^k\ge k+1\)</span>. Multiplico <strong>ambos lados</strong> por <span class="math inline">\(2\)</span>. Multiplicar una desigualdad por un número <strong>positivo</strong> no cambia su dirección (si fuera negativo, sí la voltearía): <span class="math display">\[2^k\ge k+1 \quad\Longrightarrow\quad 2\cdot 2^k\ \ge\ 2(k+1)=2k+2.\]</span> Juntando con el paso 1: <span class="math inline">\(2^{k+1}=2\cdot2^k\ge 2k+2\)</span>.</p>
+<p><strong>Paso 3: cerrar la distancia.</strong> Ya sé que <span class="math inline">\(2^{k+1}\ge 2k+2\)</span>, pero la meta es <span class="math inline">\(2^{k+1}\ge k+2\)</span>. Me basta con que <span class="math inline">\(2k+2\)</span> sea <strong>al menos</strong> <span class="math inline">\(k+2\)</span>, porque si <span class="math inline">\(2^{k+1}\)</span> supera a <span class="math inline">\(2k+2\)</span> y <span class="math inline">\(2k+2\)</span> supera a <span class="math inline">\(k+2\)</span>, entonces <span class="math inline">\(2^{k+1}\)</span> supera a <span class="math inline">\(k+2\)</span> (transitividad: <span class="math inline">\(a\ge b\)</span> y <span class="math inline">\(b\ge c\)</span> implican <span class="math inline">\(a\ge c\)</span>). Para comparar dos expresiones, resto: <span class="math display">\[(2k+2)-(k+2)=k\ \ge\ 0 \qquad\text{porque } k\ge 0 \text{ (así lo fija la HI)}.\]</span> Diferencia no negativa significa <span class="math inline">\(2k+2\ge k+2\)</span>.</p>
+<p><strong>Todo junto</strong>, leyendo la cadena de izquierda a derecha (cada signo está justificado arriba): <span class="math display">\[2^{k+1}\ \underset{\text{paso 1}}{=}\ 2\cdot2^k\ \underset{\text{paso 2 (HI)}}{\ge}\ 2k+2\ \underset{\text{paso 3}}{\ge}\ k+2. \qquad\checkmark\ \square\]</span></p>
+<p><strong>Comprobación con números</strong> (no demuestra nada, pero confirma que no me equivoqué en el álgebra), con <span class="math inline">\(k=3\)</span>:</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th></th>
+<th><span class="math inline">\(2^{k+1}\)</span></th>
+<th><span class="math inline">\(2\cdot 2^k\)</span></th>
+<th><span class="math inline">\(2k+2\)</span></th>
+<th><span class="math inline">\(k+2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math inline">\(k=3\)</span></td>
+<td><span class="math inline">\(16\)</span></td>
+<td><span class="math inline">\(2\cdot 8=16\)</span></td>
+<td><span class="math inline">\(8\)</span></td>
+<td><span class="math inline">\(5\)</span></td>
+</tr>
+</tbody>
+</table></div>
+<p>Se lee <span class="math inline">\(16=16\ge8\ge5\)</span>: cada eslabón de la cadena se cumple. Fíjate que hay “holgura” de sobra (<span class="math inline">\(16\)</span> contra <span class="math inline">\(5\)</span>): la HI me da más de lo que necesito, y el paso 3 solo tira la parte que sobra.</p>
 <blockquote>
-<p><strong>Truco para desigualdades:</strong> escribe el lado izquierdo de <span class="math inline">\(P(k+1)\)</span> de forma que <strong>aparezca</strong> el lado izquierdo de <span class="math inline">\(P(k)\)</span> (aquí <span class="math inline">\(2^{k+1}=2\cdot 2^k\)</span>), aplica la HI y luego cierra la distancia que falta con álgebra.</p>
+<p><strong>Truco para desigualdades:</strong> escribe el lado izquierdo de <span class="math inline">\(P(k+1)\)</span> de forma que <strong>aparezca</strong> el lado izquierdo de <span class="math inline">\(P(k)\)</span> (aquí <span class="math inline">\(2^{k+1}=2\cdot 2^k\)</span>), aplica la HI y luego cierra la distancia que falta con álgebra. “Cerrar la distancia” casi siempre es lo mismo: <strong>restar</strong> lo que obtuviste menos lo que querías y comprobar que la diferencia es <span class="math inline">\(\ge 0\)</span>.</p>
 </blockquote>
 <h3 id="inducción-y-recursión-son-lo-mismo">3.4 Inducción y recursión son lo mismo</h3>
 <p>Una función recursiva es una inducción escrita en código: el <strong>caso base</strong> de la función es la <strong>base</strong> de la inducción, y la <strong>llamada recursiva</strong> confía en que la función ya es correcta para un valor más chico, igual que la <strong>HI</strong>.</p>

@@ -475,7 +475,7 @@ Con eso, cae el 0; como cae el 0, cae el 1; como cae el 1, cae el 2; y así **pa
 | 2 | $=\dfrac{k(k+1)}{2}+(k+1)$ | **aquí uso la HI** para los primeros $k$ términos |
 | 3 | $=\dfrac{k(k+1)}{2}+\dfrac{2(k+1)}{2}$ | escribo $(k+1)$ con denominador 2 |
 | 4 | $=\dfrac{k(k+1)+2(k+1)}{2}$ | sumo fracciones |
-| 5 | $=\dfrac{(k+1)(k+2)}{2}$ | factorizo $(k+1)$ |
+| 5 | $=\dfrac{(k+1)(k+2)}{2}$ | factor común $(k+1)$: $k\cdot(k+1)+2\cdot(k+1)=(k+2)\cdot(k+1)$, igual que $3x+2x=5x$ con $x=k+1$ |
 
 El renglón 5 es el lado derecho de $P(k+1)$ ✓. Por inducción, la fórmula vale para todo $n\ge1$. $\square$
 
@@ -536,11 +536,35 @@ fn main() {
 
 **Base ($n=0$):** $2^0=1\ge0+1=1$ ✓.
 **HI:** $2^k\ge k+1$ para un $k\ge0$.
-**Paso:** quiero $2^{k+1}\ge k+2$.
-$$2^{k+1}=2\cdot2^k\ \overset{\text{HI}}{\ge}\ 2(k+1)=2k+2\ \ge\ k+2.$$
-El último $\ge$ vale porque $2k+2-(k+2)=k\ge0$. ✓ $\square$
+**Paso:** quiero demostrar $P(k+1)$, que es la afirmación con $k+1$ en lugar de $n$:
+$$2^{k+1}\ \ge\ (k+1)+1 \;=\; k+2.$$
 
-> **Truco para desigualdades:** escribe el lado izquierdo de $P(k+1)$ de forma que **aparezca** el lado izquierdo de $P(k)$ (aquí $2^{k+1}=2\cdot 2^k$), aplica la HI y luego cierra la distancia que falta con álgebra.
+**Qué tengo y qué me falta.** La HI me dice algo sobre $2^k$; la meta habla de $2^{k+1}$. Antes de calcular nada, el plan es **conectar** las dos: escribir $2^{k+1}$ en términos de $2^k$, usar la HI y ver cuánto falta para llegar a $k+2$. Lo hago en tres pasos, uno por cada signo de la cadena.
+
+**Paso 1: hacer aparecer $2^k$.** Por la ley de exponentes $a^{m+1}=a\cdot a^m$:
+$$2^{k+1}=2\cdot 2^k.$$
+Es una igualdad: no gano ni pierdo nada, solo reescribo para que aparezca la cantidad de la que la HI sabe algo.
+
+**Paso 2: usar la HI.** La HI dice $2^k\ge k+1$. Multiplico **ambos lados** por $2$. Multiplicar una desigualdad por un número **positivo** no cambia su dirección (si fuera negativo, sí la voltearía):
+$$2^k\ge k+1 \quad\Longrightarrow\quad 2\cdot 2^k\ \ge\ 2(k+1)=2k+2.$$
+Juntando con el paso 1: $2^{k+1}=2\cdot2^k\ge 2k+2$.
+
+**Paso 3: cerrar la distancia.** Ya sé que $2^{k+1}\ge 2k+2$, pero la meta es $2^{k+1}\ge k+2$. Me basta con que $2k+2$ sea **al menos** $k+2$, porque si $2^{k+1}$ supera a $2k+2$ y $2k+2$ supera a $k+2$, entonces $2^{k+1}$ supera a $k+2$ (transitividad: $a\ge b$ y $b\ge c$ implican $a\ge c$). Para comparar dos expresiones, resto:
+$$(2k+2)-(k+2)=k\ \ge\ 0 \qquad\text{porque } k\ge 0 \text{ (así lo fija la HI)}.$$
+Diferencia no negativa significa $2k+2\ge k+2$.
+
+**Todo junto**, leyendo la cadena de izquierda a derecha (cada signo está justificado arriba):
+$$2^{k+1}\ \underset{\text{paso 1}}{=}\ 2\cdot2^k\ \underset{\text{paso 2 (HI)}}{\ge}\ 2k+2\ \underset{\text{paso 3}}{\ge}\ k+2. \qquad\checkmark\ \square$$
+
+**Comprobación con números** (no demuestra nada, pero confirma que no me equivoqué en el álgebra), con $k=3$:
+
+| | $2^{k+1}$ | $2\cdot 2^k$ | $2k+2$ | $k+2$ |
+|---|---|---|---|---|
+| $k=3$ | $16$ | $2\cdot 8=16$ | $8$ | $5$ |
+
+Se lee $16=16\ge8\ge5$: cada eslabón de la cadena se cumple. Fíjate que hay "holgura" de sobra ($16$ contra $5$): la HI me da más de lo que necesito, y el paso 3 solo tira la parte que sobra.
+
+> **Truco para desigualdades:** escribe el lado izquierdo de $P(k+1)$ de forma que **aparezca** el lado izquierdo de $P(k)$ (aquí $2^{k+1}=2\cdot 2^k$), aplica la HI y luego cierra la distancia que falta con álgebra. "Cerrar la distancia" casi siempre es lo mismo: **restar** lo que obtuviste menos lo que querías y comprobar que la diferencia es $\ge 0$.
 
 ### 3.4 Inducción y recursión son lo mismo
 
