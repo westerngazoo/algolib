@@ -506,24 +506,25 @@ Una inducción se cocina siempre igual. Hazla **primero en borrador** y pásala 
 | 2 | **Base:** sustituye $n_0$ en cada lado **por separado** y calcula. | izquierdo: $1$; derecho: $\frac{1\cdot2}{2}=1$ | ¿Los dos lados dan lo mismo? |
 | 3 | **HI:** copia $P(n)$ con $k$ y enciérrala en un recuadro. Es lo **único** que tienes permiso de suponer. | $1+\dots+k=\frac{k(k+1)}{2}$ | ¿Dice $k$, y no $n$ ni $k+1$? |
 | 4 | **Meta:** copia $P(n)$ con $(k+1)$ y márcala "por demostrar". **Todavía no es verdad:** no puedes usarla. | $1+\dots+k+(k+1)\overset{?}{=}\frac{(k+1)(k+2)}{2}$ | ¿Cada $(k+1)$ lleva paréntesis? |
-| 5 | **Compara** la HI y la meta, lado por lado: ¿qué cambió? | izquierdo: apareció el sumando $(k+1)$; derecho: cada $k$ es ahora $k+1$ | ¿Dónde está la HI escondida dentro de la meta? |
-| 6 | **Arranca del lado de la meta que contiene el pedazo de la HI.** Haz que el pedazo aparezca tal cual y **cámbialo** por el otro lado de la HI. | $\underbrace{1+\dots+k}_{\text{pedazo de la HI}}+(k+1)=\frac{k(k+1)}{2}+(k+1)$ | ¿Marcaste "aquí uso la HI"? |
-| 7 | **Álgebra hasta el otro lado.** Aquí ya no hay inducción: solo transformar lo que tienes hasta que sea el otro lado de la meta. | $\frac{k(k+1)}{2}+(k+1)=\dots=\frac{(k+1)(k+2)}{2}$ | ¿Cada signo tiene su porqué? |
+| 5 | **Busca la HI dentro del lado izquierdo de la meta:** ¿qué pedazo es justo lo que la HI sabe calcular? | el lado izquierdo es $(1+\dots+k)+(k+1)$: el paréntesis es la suma de la HI | ¿Encontraste el pedazo? |
+| 6 | **Haz que el pedazo aparezca tal cual y cámbialo** por lo que la HI dice que vale. | $\underbrace{(1+\dots+k)}_{\text{la HI dice: }\frac{k(k+1)}{2}}+(k+1)=\frac{k(k+1)}{2}+(k+1)$ | ¿Marcaste "aquí uso la HI"? |
+| 7 | **Álgebra hasta que se vea igual al lado derecho.** Aquí ya no hay inducción: solo transformar lo que tienes hasta que sea el lado derecho de la meta. | $\frac{k(k+1)}{2}+(k+1)=\dots=\frac{(k+1)(k+2)}{2}$ | ¿Cada signo tiene su porqué? |
 | 8 | **Cierra y comprueba** con un número. | "Por inducción, vale para todo $n\ge1$"; con $k=3$: $10=10$ | ¿Usaste la HI al menos una vez? |
 
 #### Qué pasa con el lado izquierdo y con el lado derecho
 
-El paso 5 es el que decide todo. Pon la HI y la meta una encima de la otra:
+De aquí en adelante, **"lado izquierdo" y "lado derecho" son siempre los de la ecuación que queremos demostrar**, la meta $P(k+1)$:
+$$\underbrace{1+2+\dots+k+(k+1)}_{\text{lado izquierdo}}\ \overset{?}{=}\ \underbrace{\frac{(k+1)(k+2)}{2}}_{\text{lado derecho}}$$
+La HI no es un lado de esta ecuación: es una **herramienta**, un dato que tengo a la mano y que me dice cuánto vale $1+2+\dots+k$.
 
-| | Lado izquierdo | | Lado derecho | Estado |
-|---|---|---|---|---|
-| HI, $P(k)$ | $1+\dots+k$ | $=$ | $\dfrac{k(k+1)}{2}$ | **la supongo** |
-| Meta, $P(k+1)$ | $1+\dots+k+(k+1)$ | $\overset{?}{=}$ | $\dfrac{(k+1)(k+2)}{2}$ | **por demostrar** |
-| Qué cambió | se agregó $+(k+1)$ | | cada $k$ se volvió $k+1$ | |
+| | Qué es | Qué busco hacer con él |
+|---|---|---|
+| **Lado izquierdo** | la suma hasta $k+1$, con puntos suspensivos | **Encontrar adentro la suma $1+\dots+k$** y cambiarla por lo que la HI dice que vale, $\frac{k(k+1)}{2}$. Así desaparecen los puntos suspensivos. |
+| **Lado derecho** | una fórmula, sin puntos suspensivos | **Es el destino:** no lo toco. Lo miro para saber hacia dónde llevar el álgebra: ¿tiene denominador 2? ¿tiene el factor $(k+1)$? |
 
-Léela así: el lado izquierdo de la meta es **el lado izquierdo de la HI, más $(k+1)$**. La HI me deja cambiar ese pedazo por $\frac{k(k+1)}{2}$. Al hacerlo, la suma con puntos suspensivos (de largo desconocido) desaparece, y lo que queda es una pregunta de **puro álgebra entre dos fórmulas**:
-$$\underbrace{\frac{k(k+1)}{2}}_{\text{derecho de la HI}}+\underbrace{(k+1)}_{\text{lo que se agregó}}\ \overset{?}{=}\ \underbrace{\frac{(k+1)(k+2)}{2}}_{\text{derecho de la meta}}.$$
-Eso es todo lo que hace la inducción: **convierte un problema sobre $k+1$ cosas en "lo que ya sabía de $k$ cosas, más el pedazo nuevo"**. Lo demás es álgebra de secundaria. En casi todas las inducciones con sumas la pregunta final tiene esta misma forma: *derecho de la HI + lo que se agregó $\overset{?}{=}$ derecho de la meta*.
+Después de usar la HI, el lado izquierdo ya es una fórmula, y lo que falta es una pregunta de **puro álgebra**:
+$$\underbrace{\frac{k(k+1)}{2}}_{\text{lo que vale }1+\dots+k\text{ (HI)}}+\underbrace{(k+1)}_{\text{el sumando nuevo}}\ \overset{?}{=}\ \underbrace{\frac{(k+1)(k+2)}{2}}_{\text{lado derecho}}.$$
+Eso es todo lo que hace la inducción: **convierte un problema sobre $k+1$ cosas en "lo que ya sé de $k$ cosas, más el pedazo nuevo"**. Lo demás es álgebra de secundaria. En casi todas las inducciones con sumas el plan es el mismo: *en el lado izquierdo separo el último sumando y uso la HI con el resto; luego hago álgebra hasta que se vea igual al lado derecho*.
 
 **Tres formas válidas de hacer que los lados coincidan, y una que no lo es.**
 
@@ -531,15 +532,15 @@ Eso es todo lo que hace la inducción: **convierte un problema sobre $k+1$ cosas
 
 **Forma B: encontrarse en medio.** Si no ves cómo llegar de un lado al otro, trabaja **cada lado por su cuenta** hasta que los dos sean la misma expresión. Se escribe como en un cuaderno con tres columnas: lo que pasa con el lado izquierdo, lo que pasa con el derecho, y **por qué ese renglón es válido**. En cada renglón cambia **un solo lado**; la casilla del otro queda vacía, porque ese lado no se tocó.
 
-| # | Lado izquierdo de $P(k+1)$ | Lado derecho de $P(k+1)$ | Por qué es válido |
+| # | Lado izquierdo, $I$ | Lado derecho, $D$ | Qué hago · por qué se vale |
 |---|---|---|---|
-| 0 | $1+\dots+k+(k+1)$ | $\dfrac{(k+1)(k+2)}{2}$ | Son los dos lados de la meta, copiados tal cual. **No** escribo $=$ entre ellos: que sean iguales es justo lo que falta demostrar. |
-| 1 | $=\dfrac{k(k+1)}{2}+(k+1)$ | | **HI:** los primeros $k$ sumandos, $1+\dots+k$, son el lado izquierdo de $P(k)$, y la HI dice que valen $\frac{k(k+1)}{2}$. Cambio un pedazo por algo que vale lo mismo. |
-| 2 | $=\dfrac{k^2+k}{2}+\dfrac{2k+2}{2}$ | | **Distributiva** en el primer numerador: $k(k+1)=k^2+k$. **Multiplicar por uno** en el segundo término: $(k+1)=\frac{2}{2}(k+1)=\frac{2k+2}{2}$. |
-| 3 | $=\dfrac{k^2+3k+2}{2}$ | | **Sumo fracciones** con el mismo denominador: se suman los numeradores, $k^2+k+2k+2$, y junto términos semejantes, $k+2k=3k$. |
-| 4 | | $=\dfrac{k^2+2k+k+2}{2}$ | **Distributiva** en el numerador: cada término de $(k+1)$ por cada término de $(k+2)$: $k\cdot k+k\cdot2+1\cdot k+1\cdot2$. |
-| 5 | | $=\dfrac{k^2+3k+2}{2}$ | Junto términos semejantes: $2k+k=3k$. |
-| ✓ | $\dfrac{k^2+3k+2}{2}$ | $\dfrac{k^2+3k+2}{2}$ | Las dos columnas terminaron en **la misma expresión**. |
+| 0 | $I=1+\dots+k+(k+1)$ | $D=\dfrac{(k+1)(k+2)}{2}$ | **Copio los dos lados de la meta** y les pongo nombre. **No** escribo $I=D$: que sean iguales es justo lo que falta demostrar. |
+| 1 | $I=\dfrac{k(k+1)}{2}+(k+1)$ | | **Uso la HI ← aquí.** Los primeros $k$ sumandos, $1+\dots+k$, son justo la suma de la que habla la HI; la HI dice que valen $\frac{k(k+1)}{2}$, y cambio una cosa por la otra. |
+| 2 | $I=\dfrac{k^2+k}{2}+\dfrac{2k+2}{2}$ | | **Abro el primer paréntesis y pongo el segundo término sobre 2.** Se vale por la distributiva, $k(k+1)=k^2+k$, y por multiplicar por $\frac22=1$: $(k+1)=\frac{2k+2}{2}$. |
+| 3 | $I=\dfrac{k^2+3k+2}{2}$ | | **Sumo las fracciones** (mismo denominador: se suman los numeradores) y **junto términos semejantes:** $k+2k=3k$. |
+| 4 | | $D=\dfrac{k^2+2k+k+2}{2}$ | **Abro el producto del numerador.** Se vale por la distributiva: cada término de $(k+1)$ por cada término de $(k+2)$, $k\cdot k+k\cdot2+1\cdot k+1\cdot2$. |
+| 5 | | $D=\dfrac{k^2+3k+2}{2}$ | **Junto términos semejantes:** $2k+k=3k$. |
+| ✓ | $I=\dfrac{k^2+3k+2}{2}$ | $D=\dfrac{k^2+3k+2}{2}$ | **Las dos columnas terminaron en la misma expresión.** |
 
 **Por qué el renglón ✓ demuestra la meta.** La columna izquierda es una cadena de igualdades: *izquierdo $=\frac{k^2+3k+2}{2}$*. La columna derecha también: *derecho $=\frac{k^2+3k+2}{2}$*. Dos cosas iguales a una tercera son iguales entre sí (si $A=C$ y $B=C$, entonces $A=B$), así que *izquierdo $=$ derecho*, que es $P(k+1)$.
 
@@ -592,16 +593,18 @@ Todos estos trucos hacen lo mismo: **reescriben una expresión sin cambiar su va
 - *Meta:* $5^{k+1}-1=4\cdot(\text{algún entero})$.
 - *Comparo:* la HI sabe algo de $5^k-1$; la meta tiene $5^{k+1}-1$. Plan: hacer aparecer $5^k-1$ dentro de $5^{k+1}-1$.
 
-| Renglón | Expresión | Justificación |
-|---|---|---|
-| 1 | $5^{k+1}-1$ | la expresión de la meta |
-| 2 | $=5\cdot5^k-1$ | **separar el último:** $a^{k+1}=a\cdot a^k$ |
-| 3 | $=5\cdot5^k-5+5-1$ | **sumar cero:** $-5+5=0$. ¿Por qué 5? Quiero $5\cdot(5^k-1)$, que es $5\cdot5^k-5$, y me falta ese $-5$ |
-| 4 | $=5\,(5^k-1)+4$ | factor común 5 en los dos primeros términos; y $5-1=4$ |
-| 5 | $=5\cdot4m+4$ | **aquí uso la HI:** $5^k-1=4m$ |
-| 6 | $=4\,(5m+1)$ | factor común 4 |
+Le pongo nombre a la expresión de la meta, $A=5^{k+1}-1$, y la comprobación numérica usa $k=1$ (ahí la HI es $5^1-1=4=4\cdot1$, o sea $m=1$, y $A=5^2-1=24$).
 
-Como $m$ es entero, $5m+1$ también lo es, así que $5^{k+1}-1$ es 4 por un entero ✓. Por inducción, vale para todo $n\ge0$. $\square$ *Con números* ($k=1$): la HI es $5-1=4\cdot1$, o sea $m=1$; el renglón 6 da $4\cdot(5\cdot1+1)=24=5^2-1$ ✓.
+| # | Expresión | Con $k=1$, $m=1$ | Qué hago · por qué se vale |
+|---|---|---|---|
+| 1 | $A=5^{k+1}-1$ | $25-1=24$ | **Parto de la expresión de la meta.** |
+| 2 | $A=5\cdot5^k-1$ | $5\cdot5-1=24$ | **Separo el último factor.** Se vale por la ley de exponentes $a^{k+1}=a\cdot a^k$. |
+| 3 | $A=5\cdot5^k-5+5-1$ | $25-5+5-1=24$ | **Sumo cero:** resto 5 y sumo 5. Se vale porque $-5+5=0$. ¿Por qué 5? Quiero que aparezca $5\cdot(5^k-1)$, que es $5\cdot5^k-5$, y me falta ese $-5$. |
+| 4 | $A=5\,(5^k-1)+4$ | $5\cdot4+4=24$ | **Saco el factor común 5** de los dos primeros términos, y hago $5-1=4$. Se vale por la distributiva al revés: $5\cdot5^k-5\cdot1=5\,(5^k-1)$. |
+| 5 | $A=5\cdot4m+4$ | $5\cdot4\cdot1+4=24$ | **Uso la HI ← aquí:** cambio $5^k-1$ por $4m$. |
+| 6 | $A=4\,(5m+1)$ | $4\cdot6=24$ | **Saco el factor común 4.** Se vale por la distributiva al revés: $20m+4=4\cdot5m+4\cdot1$. |
+
+Como $m$ es entero, $5m+1$ también lo es, así que $A=5^{k+1}-1$ es 4 por un entero ✓. Por inducción, vale para todo $n\ge0$. $\square$
 
 ### 3.2 Ejemplo resuelto: la suma $1+2+\dots+n$
 
@@ -611,21 +614,33 @@ Como $m$ es entero, $5m+1$ también lo es, así que $5^{k+1}-1$ es 4 por un ente
 
 **HI:** para un $k\ge1$ cualquiera, $1+2+\dots+k=\frac{k(k+1)}2$.
 
-**Paso.** *Movimiento 1, la meta:* sustituyo $n$ por $k+1$ en la afirmación. El lado izquierdo es la suma hasta $k+1$, que escribo mostrando su último término; el derecho, $\frac{(k+1)\big((k+1)+1\big)}{2}$, se simplifica a $\frac{(k+1)(k+2)}{2}$:
-$$P(k+1):\qquad 1+2+\dots+k+(k+1)=\frac{(k+1)(k+2)}{2}.$$
-*El plan:* en el lado izquierdo, los primeros $k$ términos, $1+\dots+k$, son **exactamente** el lado izquierdo de la HI. Los sustituyo por lo que la HI dice que valen (movimiento 2) y simplifico hasta llegar al lado derecho (movimiento 3):
+**Paso.** Antes de calcular nada, tres renglones en el cuaderno:
 
-| Renglón | Expresión | Justificación |
-|---|---|---|
-| 1 | $1+2+\dots+k+(k+1)$ | lado izquierdo de $P(k+1)$ |
-| 2 | $=\dfrac{k(k+1)}{2}+(k+1)$ | **aquí uso la HI** para los primeros $k$ términos |
-| 3 | $=\dfrac{k(k+1)}{2}+\dfrac{2(k+1)}{2}$ | escribo $(k+1)$ con denominador 2: $(k+1)=\frac{2(k+1)}{2}$, porque multiplicar y dividir entre 2 no cambia el valor |
-| 4 | $=\dfrac{k(k+1)+2(k+1)}{2}$ | sumo fracciones |
-| 5 | $=\dfrac{(k+1)(k+2)}{2}$ | factor común $(k+1)$: $k\cdot(k+1)+2\cdot(k+1)=(k+2)\cdot(k+1)$, igual que $3x+2x=5x$ con $x=k+1$ |
+- **Tengo (la HI):** $1+2+\dots+k=\dfrac{k(k+1)}{2}$.
+- **Quiero (la meta, $P(k+1)$):** sustituyo cada $n$ por $(k+1)$, con paréntesis. El lado izquierdo es la suma hasta $k+1$, que escribo con su último sumando a la vista:
+$$1+2+\dots+k+(k+1)\ \overset{?}{=}\ \frac{(k+1)\big((k+1)+1\big)}{2}.$$
+El $\overset{?}{=}$ recuerda que **todavía no sé** si es cierto: es el destino, no algo que pueda usar.
+- **Plan:** los primeros $k$ sumandos del lado izquierdo, $1+\dots+k$, son **exactamente** lo que la HI sabe sumar. Los agrupo, los cambio por lo que la HI dice que valen, y hago álgebra hasta llegar al lado derecho.
 
-El renglón 5 es el lado derecho de $P(k+1)$ ✓. Por inducción, la fórmula vale para todo $n\ge1$. $\square$
+Le pongo nombre al lado izquierdo de la meta: $S_{k+1}=1+2+\dots+k+(k+1)$. **Cómo leer la tabla:**
 
-*Con números* ($k=3$, es decir, pasar de $P(3)$ a $P(4)$): renglón 1, $1+2+3+4=10$; renglón 2, $\frac{3\cdot4}{2}+4=6+4=10$; renglón 5, $\frac{4\cdot5}{2}=10$ ✓.
+- **Expresión:** cada renglón dice cuánto vale $S_{k+1}$. Es una igualdad completa que se lee sola, sin un "$=$" colgando.
+- **Con $k=3$:** el mismo renglón con números. Si todos los renglones dan lo mismo (10), ningún paso cambió el valor. Es una comprobación, no la demostración.
+- **Qué hago · por qué se vale:** primero la acción, en negritas; después la regla que la permite.
+
+| # | Expresión | Con $k=3$ | Qué hago · por qué se vale |
+|---|---|---|---|
+| 1 | $S_{k+1}=1+2+\dots+k+(k+1)$ | $1+2+3+4=10$ | **Parto del lado izquierdo de la meta.** Es la definición de $S_{k+1}$. |
+| 2 | $S_{k+1}=(1+2+\dots+k)+(k+1)$ | $(1+2+3)+4=10$ | **Agrupo los primeros $k$ sumandos.** Se vale porque en una suma los paréntesis no cambian el resultado. Los pongo para ver el pedazo del que habla la HI. |
+| 3 | $S_{k+1}=\dfrac{k(k+1)}{2}+(k+1)$ | $\dfrac{3\cdot4}{2}+4=10$ | **Uso la HI ← aquí.** Cambio el paréntesis por $\frac{k(k+1)}{2}$. Se vale porque la HI dice que valen lo mismo. |
+| 4 | $S_{k+1}=\dfrac{k(k+1)}{2}+\dfrac{2(k+1)}{2}$ | $6+\dfrac{8}{2}=10$ | **Pongo el segundo término sobre 2**, para poder sumar fracciones. Se vale porque multiplico por $\frac22=1$, y multiplicar por 1 no cambia nada. |
+| 5 | $S_{k+1}=\dfrac{k(k+1)+2(k+1)}{2}$ | $\dfrac{12+8}{2}=10$ | **Sumo las fracciones.** Se vale porque con el mismo denominador se suman los numeradores: $\frac a2+\frac b2=\frac{a+b}{2}$. |
+| 6 | $S_{k+1}=\dfrac{(k+1)(k+2)}{2}$ | $\dfrac{4\cdot5}{2}=10$ | **Saco el factor común $(k+1)$.** Se vale por la distributiva al revés: $k\cdot(k+1)+2\cdot(k+1)$ es lo mismo que $(k+2)\cdot(k+1)$, igual que $3x+2x=5x$ con $x=k+1$. |
+| 7 | $S_{k+1}=\dfrac{(k+1)\big((k+1)+1\big)}{2}$ | $\dfrac{4\cdot(4+1)}{2}=10$ | **Escribo $k+2$ como $(k+1)+1$**, para que se vea letra por letra que es $\frac{n(n+1)}{2}$ con $n=k+1$. Es el lado derecho de la meta ✓ |
+
+**¿Por qué esto no es circular?** Lee la última columna de arriba abajo: solo aparecen la HI y reglas de álgebra. La meta nunca justifica un renglón; solo aparece al final, como el lugar al que llegamos.
+
+**Conclusión.** La base demostró $P(1)$. El paso demostró que, para **cualquier** $k\ge1$, si $P(k)$ es verdadera, $P(k+1)$ también. Es la fila de dominós: cae el 1, y cada uno tumba al siguiente. Por el principio de inducción, la fórmula vale para todo $n\ge1$. $\square$
 
 Un programa puede **comprobar** la fórmula para muchos valores (y es buena práctica hacerlo antes de intentar demostrarla), pero recuerda §2.4: comprobar no es demostrar.
 
@@ -715,7 +730,7 @@ $$2^{k+1}\ \underset{\text{paso 1}}{=}\ 2\cdot2^k\ \underset{\text{paso 2 (HI)}}
 
 Se lee $16=16\ge8\ge5$: cada eslabón de la cadena se cumple. Fíjate que hay "holgura" de sobra ($16$ contra $5$): la HI me da más de lo que necesito, y el paso 3 solo tira la parte que sobra.
 
-> **Truco para desigualdades:** escribe el lado izquierdo de $P(k+1)$ de forma que **aparezca** el lado izquierdo de $P(k)$ (aquí $2^{k+1}=2\cdot 2^k$), aplica la HI y luego cierra la distancia que falta con álgebra. "Cerrar la distancia" casi siempre es lo mismo: **restar** lo que obtuviste menos lo que querías y comprobar que la diferencia es $\ge 0$.
+> **Truco para desigualdades:** reescribe el lado izquierdo de la meta hasta que **aparezca** la cantidad de la que habla la HI (aquí $2^k$, con $2^{k+1}=2\cdot 2^k$), aplica la HI y luego cierra la distancia que falta con álgebra. "Cerrar la distancia" casi siempre es lo mismo: **restar** lo que obtuviste menos lo que querías y comprobar que la diferencia es $\ge 0$.
 
 ### 3.4 Inducción y recursión son lo mismo
 
@@ -892,15 +907,17 @@ Aquí la variable de la afirmación ya se llama $k$; para no confundir, la renom
 - *HI:* para un $k\ge0$ cualquiera, $\sum_{i=0}^{k}2^i=2^{k+1}-1$.
 - *Paso.* Meta, $P(k+1)$ (cada $n$ se vuelve $k+1$): $\sum_{i=0}^{k+1}2^i=2^{(k+1)+1}-1=2^{k+2}-1$. *Plan:* separar el último término para que aparezca la suma de la HI.
 
-| Renglón | Expresión | Justificación |
-|---|---|---|
-| 1 | $\sum_{i=0}^{k+1}2^i$ | lado izquierdo de $P(k+1)$ |
-| 2 | $=\Big(\sum_{i=0}^{k}2^i\Big)+2^{k+1}$ | separo el último término ($i=k+1$) |
-| 3 | $=(2^{k+1}-1)+2^{k+1}$ | **aquí uso la HI** |
-| 4 | $=2\cdot2^{k+1}-1$ | dos veces lo mismo es el doble: $2^{k+1}+2^{k+1}=2\cdot2^{k+1}$ |
-| 5 | $=2^{k+2}-1$ | ley de exponentes: $2\cdot2^{k+1}=2^{1+(k+1)}$ |
+Le pongo nombre al lado izquierdo de la meta, $S=\sum_{i=0}^{k+1}2^i$, y compruebo con $k=2$, donde $S=1+2+4+8=15$.
 
-El renglón 5 es el lado derecho de $P(k+1)$ ✓. $\square$ *Con números* ($k=2$): $1+2+4+8=15$, $(2^3-1)+2^3=7+8=15$, $2^4-1=15$ ✓.
+| # | Expresión | Con $k=2$ | Qué hago · por qué se vale |
+|---|---|---|---|
+| 1 | $S=\sum_{i=0}^{k+1}2^i$ | $1+2+4+8=15$ | **Parto del lado izquierdo de la meta.** |
+| 2 | $S=\Big(\sum_{i=0}^{k}2^i\Big)+2^{k+1}$ | $(1+2+4)+8=15$ | **Separo el último término** ($i=k+1$). Se vale porque la suma hasta $k+1$ es la suma hasta $k$ más el término $k+1$. |
+| 3 | $S=(2^{k+1}-1)+2^{k+1}$ | $(8-1)+8=15$ | **Uso la HI ← aquí:** el paréntesis vale $2^{k+1}-1$. |
+| 4 | $S=2\cdot2^{k+1}-1$ | $2\cdot8-1=15$ | **Junto los dos $2^{k+1}$.** Se vale porque algo más sí mismo es el doble: $x+x=2x$. |
+| 5 | $S=2^{k+2}-1$ | $16-1=15$ | **Ley de exponentes:** $2\cdot2^{k+1}=2^{1+(k+1)}=2^{k+2}$. Es el lado derecho de la meta ✓ |
+
+Por inducción, la fórmula vale para todo $n\ge0$. $\square$
 </details>
 
 ---
@@ -2710,7 +2727,7 @@ Si puedes responder esto sin mirar las notas, estás listo para la L01.
 - A mano, en papel. Nada de código: aquí el objetivo es la demostración.
 - Usa la plantilla de §3.1 en **cada** inducción, con sus cinco partes rotuladas: afirmación $P(n)$, base, HI (escrita con $k$), paso y conclusión.
 - En el paso, escribe **primero** $P(k+1)$ completa, sustituyendo cada $n$ por $(k+1)$, y **marca** el renglón donde usas la HI.
-- Cada $=$, $\le$ o $\ge$ lleva su justificación (qué regla, qué sustituiste, por qué no se voltea el signo), como en las tablas de renglones de §3.2.
+- Escribe el paso como **tabla de cuaderno**, igual que §3.2: columna de expresión (cada renglón empieza con el mismo nombre, como $S_{k+1}=\dots$), columna "con números" y columna "qué hago · por qué se vale". Cada $=$, $\le$ o $\ge$ lleva su razón: qué regla, qué sustituiste, por qué no se voltea el signo. Marca el renglón de la HI.
 - Cierra cada ejercicio con una **comprobación con números** para un valor pequeño de $k$. No demuestra nada, pero atrapa errores de álgebra.
 
 **Ejercicios.**

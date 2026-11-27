@@ -1010,19 +1010,19 @@ Solución
 </tr>
 <tr>
 <td>5</td>
-<td><strong>Compara</strong> la HI y la meta, lado por lado: ¿qué cambió?</td>
-<td>izquierdo: apareció el sumando <span class="math inline">\((k+1)\)</span>; derecho: cada <span class="math inline">\(k\)</span> es ahora <span class="math inline">\(k+1\)</span></td>
-<td>¿Dónde está la HI escondida dentro de la meta?</td>
+<td><strong>Busca la HI dentro del lado izquierdo de la meta:</strong> ¿qué pedazo es justo lo que la HI sabe calcular?</td>
+<td>el lado izquierdo es <span class="math inline">\((1+\dots+k)+(k+1)\)</span>: el paréntesis es la suma de la HI</td>
+<td>¿Encontraste el pedazo?</td>
 </tr>
 <tr>
 <td>6</td>
-<td><strong>Arranca del lado de la meta que contiene el pedazo de la HI.</strong> Haz que el pedazo aparezca tal cual y <strong>cámbialo</strong> por el otro lado de la HI.</td>
-<td><span class="math inline">\(\underbrace{1+\dots+k}_{\text{pedazo de la HI}}+(k+1)=\frac{k(k+1)}{2}+(k+1)\)</span></td>
+<td><strong>Haz que el pedazo aparezca tal cual y cámbialo</strong> por lo que la HI dice que vale.</td>
+<td><span class="math inline">\(\underbrace{(1+\dots+k)}_{\text{la HI dice: }\frac{k(k+1)}{2}}+(k+1)=\frac{k(k+1)}{2}+(k+1)\)</span></td>
 <td>¿Marcaste “aquí uso la HI”?</td>
 </tr>
 <tr>
 <td>7</td>
-<td><strong>Álgebra hasta el otro lado.</strong> Aquí ya no hay inducción: solo transformar lo que tienes hasta que sea el otro lado de la meta.</td>
+<td><strong>Álgebra hasta que se vea igual al lado derecho.</strong> Aquí ya no hay inducción: solo transformar lo que tienes hasta que sea el lado derecho de la meta.</td>
 <td><span class="math inline">\(\frac{k(k+1)}{2}+(k+1)=\dots=\frac{(k+1)(k+2)}{2}\)</span></td>
 <td>¿Cada signo tiene su porqué?</td>
 </tr>
@@ -1035,49 +1035,34 @@ Solución
 </tbody>
 </table></div>
 <h4 id="qué-pasa-con-el-lado-izquierdo-y-con-el-lado-derecho">Qué pasa con el lado izquierdo y con el lado derecho</h4>
-<p>El paso 5 es el que decide todo. Pon la HI y la meta una encima de la otra:</p>
+<p>De aquí en adelante, <strong>“lado izquierdo” y “lado derecho” son siempre los de la ecuación que queremos demostrar</strong>, la meta <span class="math inline">\(P(k+1)\)</span>: <span class="math display">\[\underbrace{1+2+\dots+k+(k+1)}_{\text{lado izquierdo}}\ \overset{?}{=}\ \underbrace{\frac{(k+1)(k+2)}{2}}_{\text{lado derecho}}\]</span> La HI no es un lado de esta ecuación: es una <strong>herramienta</strong>, un dato que tengo a la mano y que me dice cuánto vale <span class="math inline">\(1+2+\dots+k\)</span>.</p>
 <div class="scroll"><table>
 <colgroup>
-<col style="width: 20%"/>
-<col style="width: 20%"/>
-<col style="width: 20%"/>
-<col style="width: 20%"/>
-<col style="width: 20%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
 </colgroup>
 <thead>
 <tr>
 <th></th>
-<th>Lado izquierdo</th>
-<th></th>
-<th>Lado derecho</th>
-<th>Estado</th>
+<th>Qué es</th>
+<th>Qué busco hacer con él</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>HI, <span class="math inline">\(P(k)\)</span></td>
-<td><span class="math inline">\(1+\dots+k\)</span></td>
-<td><span class="math inline">\(=\)</span></td>
-<td><span class="math inline">\(\dfrac{k(k+1)}{2}\)</span></td>
-<td><strong>la supongo</strong></td>
+<td><strong>Lado izquierdo</strong></td>
+<td>la suma hasta <span class="math inline">\(k+1\)</span>, con puntos suspensivos</td>
+<td><strong>Encontrar adentro la suma <span class="math inline">\(1+\dots+k\)</span></strong> y cambiarla por lo que la HI dice que vale, <span class="math inline">\(\frac{k(k+1)}{2}\)</span>. Así desaparecen los puntos suspensivos.</td>
 </tr>
 <tr>
-<td>Meta, <span class="math inline">\(P(k+1)\)</span></td>
-<td><span class="math inline">\(1+\dots+k+(k+1)\)</span></td>
-<td><span class="math inline">\(\overset{?}{=}\)</span></td>
-<td><span class="math inline">\(\dfrac{(k+1)(k+2)}{2}\)</span></td>
-<td><strong>por demostrar</strong></td>
-</tr>
-<tr>
-<td>Qué cambió</td>
-<td>se agregó <span class="math inline">\(+(k+1)\)</span></td>
-<td></td>
-<td>cada <span class="math inline">\(k\)</span> se volvió <span class="math inline">\(k+1\)</span></td>
-<td></td>
+<td><strong>Lado derecho</strong></td>
+<td>una fórmula, sin puntos suspensivos</td>
+<td><strong>Es el destino:</strong> no lo toco. Lo miro para saber hacia dónde llevar el álgebra: ¿tiene denominador 2? ¿tiene el factor <span class="math inline">\((k+1)\)</span>?</td>
 </tr>
 </tbody>
 </table></div>
-<p>Léela así: el lado izquierdo de la meta es <strong>el lado izquierdo de la HI, más <span class="math inline">\((k+1)\)</span></strong>. La HI me deja cambiar ese pedazo por <span class="math inline">\(\frac{k(k+1)}{2}\)</span>. Al hacerlo, la suma con puntos suspensivos (de largo desconocido) desaparece, y lo que queda es una pregunta de <strong>puro álgebra entre dos fórmulas</strong>: <span class="math display">\[\underbrace{\frac{k(k+1)}{2}}_{\text{derecho de la HI}}+\underbrace{(k+1)}_{\text{lo que se agregó}}\ \overset{?}{=}\ \underbrace{\frac{(k+1)(k+2)}{2}}_{\text{derecho de la meta}}.\]</span> Eso es todo lo que hace la inducción: <strong>convierte un problema sobre <span class="math inline">\(k+1\)</span> cosas en “lo que ya sabía de <span class="math inline">\(k\)</span> cosas, más el pedazo nuevo”</strong>. Lo demás es álgebra de secundaria. En casi todas las inducciones con sumas la pregunta final tiene esta misma forma: <em>derecho de la HI + lo que se agregó <span class="math inline">\(\overset{?}{=}\)</span> derecho de la meta</em>.</p>
+<p>Después de usar la HI, el lado izquierdo ya es una fórmula, y lo que falta es una pregunta de <strong>puro álgebra</strong>: <span class="math display">\[\underbrace{\frac{k(k+1)}{2}}_{\text{lo que vale }1+\dots+k\text{ (HI)}}+\underbrace{(k+1)}_{\text{el sumando nuevo}}\ \overset{?}{=}\ \underbrace{\frac{(k+1)(k+2)}{2}}_{\text{lado derecho}}.\]</span> Eso es todo lo que hace la inducción: <strong>convierte un problema sobre <span class="math inline">\(k+1\)</span> cosas en “lo que ya sé de <span class="math inline">\(k\)</span> cosas, más el pedazo nuevo”</strong>. Lo demás es álgebra de secundaria. En casi todas las inducciones con sumas el plan es el mismo: <em>en el lado izquierdo separo el último sumando y uso la HI con el resto; luego hago álgebra hasta que se vea igual al lado derecho</em>.</p>
 <p><strong>Tres formas válidas de hacer que los lados coincidan, y una que no lo es.</strong></p>
 <p><strong>Forma A: la cadena (la que se entrega).</strong> Empiezas en un lado de la meta y, renglón por renglón, llegas al otro. Cada renglón es igual al anterior por una razón que escribes. Así está redactado §3.2.</p>
 <p><strong>Forma B: encontrarse en medio.</strong> Si no ves cómo llegar de un lado al otro, trabaja <strong>cada lado por su cuenta</strong> hasta que los dos sean la misma expresión. Se escribe como en un cuaderno con tres columnas: lo que pasa con el lado izquierdo, lo que pasa con el derecho, y <strong>por qué ese renglón es válido</strong>. En cada renglón cambia <strong>un solo lado</strong>; la casilla del otro queda vacía, porque ese lado no se tocó.</p>
@@ -1091,53 +1076,53 @@ Solución
 <thead>
 <tr>
 <th>#</th>
-<th>Lado izquierdo de <span class="math inline">\(P(k+1)\)</span></th>
-<th>Lado derecho de <span class="math inline">\(P(k+1)\)</span></th>
-<th>Por qué es válido</th>
+<th>Lado izquierdo, <span class="math inline">\(I\)</span></th>
+<th>Lado derecho, <span class="math inline">\(D\)</span></th>
+<th>Qué hago · por qué se vale</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>0</td>
-<td><span class="math inline">\(1+\dots+k+(k+1)\)</span></td>
-<td><span class="math inline">\(\dfrac{(k+1)(k+2)}{2}\)</span></td>
-<td>Son los dos lados de la meta, copiados tal cual. <strong>No</strong> escribo <span class="math inline">\(=\)</span> entre ellos: que sean iguales es justo lo que falta demostrar.</td>
+<td><span class="math inline">\(I=1+\dots+k+(k+1)\)</span></td>
+<td><span class="math inline">\(D=\dfrac{(k+1)(k+2)}{2}\)</span></td>
+<td><strong>Copio los dos lados de la meta</strong> y les pongo nombre. <strong>No</strong> escribo <span class="math inline">\(I=D\)</span>: que sean iguales es justo lo que falta demostrar.</td>
 </tr>
 <tr>
 <td>1</td>
-<td><span class="math inline">\(=\dfrac{k(k+1)}{2}+(k+1)\)</span></td>
+<td><span class="math inline">\(I=\dfrac{k(k+1)}{2}+(k+1)\)</span></td>
 <td></td>
-<td><strong>HI:</strong> los primeros <span class="math inline">\(k\)</span> sumandos, <span class="math inline">\(1+\dots+k\)</span>, son el lado izquierdo de <span class="math inline">\(P(k)\)</span>, y la HI dice que valen <span class="math inline">\(\frac{k(k+1)}{2}\)</span>. Cambio un pedazo por algo que vale lo mismo.</td>
+<td><strong>Uso la HI ← aquí.</strong> Los primeros <span class="math inline">\(k\)</span> sumandos, <span class="math inline">\(1+\dots+k\)</span>, son justo la suma de la que habla la HI; la HI dice que valen <span class="math inline">\(\frac{k(k+1)}{2}\)</span>, y cambio una cosa por la otra.</td>
 </tr>
 <tr>
 <td>2</td>
-<td><span class="math inline">\(=\dfrac{k^2+k}{2}+\dfrac{2k+2}{2}\)</span></td>
+<td><span class="math inline">\(I=\dfrac{k^2+k}{2}+\dfrac{2k+2}{2}\)</span></td>
 <td></td>
-<td><strong>Distributiva</strong> en el primer numerador: <span class="math inline">\(k(k+1)=k^2+k\)</span>. <strong>Multiplicar por uno</strong> en el segundo término: <span class="math inline">\((k+1)=\frac{2}{2}(k+1)=\frac{2k+2}{2}\)</span>.</td>
+<td><strong>Abro el primer paréntesis y pongo el segundo término sobre 2.</strong> Se vale por la distributiva, <span class="math inline">\(k(k+1)=k^2+k\)</span>, y por multiplicar por <span class="math inline">\(\frac22=1\)</span>: <span class="math inline">\((k+1)=\frac{2k+2}{2}\)</span>.</td>
 </tr>
 <tr>
 <td>3</td>
-<td><span class="math inline">\(=\dfrac{k^2+3k+2}{2}\)</span></td>
+<td><span class="math inline">\(I=\dfrac{k^2+3k+2}{2}\)</span></td>
 <td></td>
-<td><strong>Sumo fracciones</strong> con el mismo denominador: se suman los numeradores, <span class="math inline">\(k^2+k+2k+2\)</span>, y junto términos semejantes, <span class="math inline">\(k+2k=3k\)</span>.</td>
+<td><strong>Sumo las fracciones</strong> (mismo denominador: se suman los numeradores) y <strong>junto términos semejantes:</strong> <span class="math inline">\(k+2k=3k\)</span>.</td>
 </tr>
 <tr>
 <td>4</td>
 <td></td>
-<td><span class="math inline">\(=\dfrac{k^2+2k+k+2}{2}\)</span></td>
-<td><strong>Distributiva</strong> en el numerador: cada término de <span class="math inline">\((k+1)\)</span> por cada término de <span class="math inline">\((k+2)\)</span>: <span class="math inline">\(k\cdot k+k\cdot2+1\cdot k+1\cdot2\)</span>.</td>
+<td><span class="math inline">\(D=\dfrac{k^2+2k+k+2}{2}\)</span></td>
+<td><strong>Abro el producto del numerador.</strong> Se vale por la distributiva: cada término de <span class="math inline">\((k+1)\)</span> por cada término de <span class="math inline">\((k+2)\)</span>, <span class="math inline">\(k\cdot k+k\cdot2+1\cdot k+1\cdot2\)</span>.</td>
 </tr>
 <tr>
 <td>5</td>
 <td></td>
-<td><span class="math inline">\(=\dfrac{k^2+3k+2}{2}\)</span></td>
-<td>Junto términos semejantes: <span class="math inline">\(2k+k=3k\)</span>.</td>
+<td><span class="math inline">\(D=\dfrac{k^2+3k+2}{2}\)</span></td>
+<td><strong>Junto términos semejantes:</strong> <span class="math inline">\(2k+k=3k\)</span>.</td>
 </tr>
 <tr>
 <td>✓</td>
-<td><span class="math inline">\(\dfrac{k^2+3k+2}{2}\)</span></td>
-<td><span class="math inline">\(\dfrac{k^2+3k+2}{2}\)</span></td>
-<td>Las dos columnas terminaron en <strong>la misma expresión</strong>.</td>
+<td><span class="math inline">\(I=\dfrac{k^2+3k+2}{2}\)</span></td>
+<td><span class="math inline">\(D=\dfrac{k^2+3k+2}{2}\)</span></td>
+<td><strong>Las dos columnas terminaron en la misma expresión.</strong></td>
 </tr>
 </tbody>
 </table></div>
@@ -1248,101 +1233,140 @@ Solución
 <li><em>Meta:</em> <span class="math inline">\(5^{k+1}-1=4\cdot(\text{algún entero})\)</span>.</li>
 <li><em>Comparo:</em> la HI sabe algo de <span class="math inline">\(5^k-1\)</span>; la meta tiene <span class="math inline">\(5^{k+1}-1\)</span>. Plan: hacer aparecer <span class="math inline">\(5^k-1\)</span> dentro de <span class="math inline">\(5^{k+1}-1\)</span>.</li>
 </ul>
+<p>Le pongo nombre a la expresión de la meta, <span class="math inline">\(A=5^{k+1}-1\)</span>, y la comprobación numérica usa <span class="math inline">\(k=1\)</span> (ahí la HI es <span class="math inline">\(5^1-1=4=4\cdot1\)</span>, o sea <span class="math inline">\(m=1\)</span>, y <span class="math inline">\(A=5^2-1=24\)</span>).</p>
 <div class="scroll"><table>
 <colgroup>
-<col style="width: 33%"/>
-<col style="width: 33%"/>
-<col style="width: 33%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
 </colgroup>
 <thead>
 <tr>
-<th>Renglón</th>
+<th>#</th>
 <th>Expresión</th>
-<th>Justificación</th>
+<th>Con <span class="math inline">\(k=1\)</span>, <span class="math inline">\(m=1\)</span></th>
+<th>Qué hago · por qué se vale</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>1</td>
-<td><span class="math inline">\(5^{k+1}-1\)</span></td>
-<td>la expresión de la meta</td>
+<td><span class="math inline">\(A=5^{k+1}-1\)</span></td>
+<td><span class="math inline">\(25-1=24\)</span></td>
+<td><strong>Parto de la expresión de la meta.</strong></td>
 </tr>
 <tr>
 <td>2</td>
-<td><span class="math inline">\(=5\cdot5^k-1\)</span></td>
-<td><strong>separar el último:</strong> <span class="math inline">\(a^{k+1}=a\cdot a^k\)</span></td>
+<td><span class="math inline">\(A=5\cdot5^k-1\)</span></td>
+<td><span class="math inline">\(5\cdot5-1=24\)</span></td>
+<td><strong>Separo el último factor.</strong> Se vale por la ley de exponentes <span class="math inline">\(a^{k+1}=a\cdot a^k\)</span>.</td>
 </tr>
 <tr>
 <td>3</td>
-<td><span class="math inline">\(=5\cdot5^k-5+5-1\)</span></td>
-<td><strong>sumar cero:</strong> <span class="math inline">\(-5+5=0\)</span>. ¿Por qué 5? Quiero <span class="math inline">\(5\cdot(5^k-1)\)</span>, que es <span class="math inline">\(5\cdot5^k-5\)</span>, y me falta ese <span class="math inline">\(-5\)</span></td>
+<td><span class="math inline">\(A=5\cdot5^k-5+5-1\)</span></td>
+<td><span class="math inline">\(25-5+5-1=24\)</span></td>
+<td><strong>Sumo cero:</strong> resto 5 y sumo 5. Se vale porque <span class="math inline">\(-5+5=0\)</span>. ¿Por qué 5? Quiero que aparezca <span class="math inline">\(5\cdot(5^k-1)\)</span>, que es <span class="math inline">\(5\cdot5^k-5\)</span>, y me falta ese <span class="math inline">\(-5\)</span>.</td>
 </tr>
 <tr>
 <td>4</td>
-<td><span class="math inline">\(=5\,(5^k-1)+4\)</span></td>
-<td>factor común 5 en los dos primeros términos; y <span class="math inline">\(5-1=4\)</span></td>
+<td><span class="math inline">\(A=5\,(5^k-1)+4\)</span></td>
+<td><span class="math inline">\(5\cdot4+4=24\)</span></td>
+<td><strong>Saco el factor común 5</strong> de los dos primeros términos, y hago <span class="math inline">\(5-1=4\)</span>. Se vale por la distributiva al revés: <span class="math inline">\(5\cdot5^k-5\cdot1=5\,(5^k-1)\)</span>.</td>
 </tr>
 <tr>
 <td>5</td>
-<td><span class="math inline">\(=5\cdot4m+4\)</span></td>
-<td><strong>aquí uso la HI:</strong> <span class="math inline">\(5^k-1=4m\)</span></td>
+<td><span class="math inline">\(A=5\cdot4m+4\)</span></td>
+<td><span class="math inline">\(5\cdot4\cdot1+4=24\)</span></td>
+<td><strong>Uso la HI ← aquí:</strong> cambio <span class="math inline">\(5^k-1\)</span> por <span class="math inline">\(4m\)</span>.</td>
 </tr>
 <tr>
 <td>6</td>
-<td><span class="math inline">\(=4\,(5m+1)\)</span></td>
-<td>factor común 4</td>
+<td><span class="math inline">\(A=4\,(5m+1)\)</span></td>
+<td><span class="math inline">\(4\cdot6=24\)</span></td>
+<td><strong>Saco el factor común 4.</strong> Se vale por la distributiva al revés: <span class="math inline">\(20m+4=4\cdot5m+4\cdot1\)</span>.</td>
 </tr>
 </tbody>
 </table></div>
-<p>Como <span class="math inline">\(m\)</span> es entero, <span class="math inline">\(5m+1\)</span> también lo es, así que <span class="math inline">\(5^{k+1}-1\)</span> es 4 por un entero ✓. Por inducción, vale para todo <span class="math inline">\(n\ge0\)</span>. <span class="math inline">\(\square\)</span> <em>Con números</em> (<span class="math inline">\(k=1\)</span>): la HI es <span class="math inline">\(5-1=4\cdot1\)</span>, o sea <span class="math inline">\(m=1\)</span>; el renglón 6 da <span class="math inline">\(4\cdot(5\cdot1+1)=24=5^2-1\)</span> ✓.</p>
+<p>Como <span class="math inline">\(m\)</span> es entero, <span class="math inline">\(5m+1\)</span> también lo es, así que <span class="math inline">\(A=5^{k+1}-1\)</span> es 4 por un entero ✓. Por inducción, vale para todo <span class="math inline">\(n\ge0\)</span>. <span class="math inline">\(\square\)</span></p>
 <h3 id="ejemplo-resuelto-la-suma-12dotsn">3.2 Ejemplo resuelto: la suma <span class="math inline">\(1+2+\dots+n\)</span></h3>
 <p><strong>Afirmación <span class="math inline">\(P(n)\)</span>:</strong> <span class="math inline">\(\displaystyle 1+2+\dots+n=\frac{n(n+1)}{2}\)</span>, para todo <span class="math inline">\(n\ge1\)</span>.</p>
 <p><strong>Base (<span class="math inline">\(n=1\)</span>):</strong> el lado izquierdo es <span class="math inline">\(1\)</span>. El derecho es <span class="math inline">\(\frac{1\cdot2}{2}=1\)</span>. Son iguales ✓.</p>
 <p><strong>HI:</strong> para un <span class="math inline">\(k\ge1\)</span> cualquiera, <span class="math inline">\(1+2+\dots+k=\frac{k(k+1)}2\)</span>.</p>
-<p><strong>Paso.</strong> <em>Movimiento 1, la meta:</em> sustituyo <span class="math inline">\(n\)</span> por <span class="math inline">\(k+1\)</span> en la afirmación. El lado izquierdo es la suma hasta <span class="math inline">\(k+1\)</span>, que escribo mostrando su último término; el derecho, <span class="math inline">\(\frac{(k+1)\big((k+1)+1\big)}{2}\)</span>, se simplifica a <span class="math inline">\(\frac{(k+1)(k+2)}{2}\)</span>: <span class="math display">\[P(k+1):\qquad 1+2+\dots+k+(k+1)=\frac{(k+1)(k+2)}{2}.\]</span> <em>El plan:</em> en el lado izquierdo, los primeros <span class="math inline">\(k\)</span> términos, <span class="math inline">\(1+\dots+k\)</span>, son <strong>exactamente</strong> el lado izquierdo de la HI. Los sustituyo por lo que la HI dice que valen (movimiento 2) y simplifico hasta llegar al lado derecho (movimiento 3):</p>
+<p><strong>Paso.</strong> Antes de calcular nada, tres renglones en el cuaderno:</p>
+<ul>
+<li><strong>Tengo (la HI):</strong> <span class="math inline">\(1+2+\dots+k=\dfrac{k(k+1)}{2}\)</span>.</li>
+<li><strong>Quiero (la meta, <span class="math inline">\(P(k+1)\)</span>):</strong> sustituyo cada <span class="math inline">\(n\)</span> por <span class="math inline">\((k+1)\)</span>, con paréntesis. El lado izquierdo es la suma hasta <span class="math inline">\(k+1\)</span>, que escribo con su último sumando a la vista: <span class="math display">\[1+2+\dots+k+(k+1)\ \overset{?}{=}\ \frac{(k+1)\big((k+1)+1\big)}{2}.\]</span> El <span class="math inline">\(\overset{?}{=}\)</span> recuerda que <strong>todavía no sé</strong> si es cierto: es el destino, no algo que pueda usar.</li>
+<li><strong>Plan:</strong> los primeros <span class="math inline">\(k\)</span> sumandos del lado izquierdo, <span class="math inline">\(1+\dots+k\)</span>, son <strong>exactamente</strong> lo que la HI sabe sumar. Los agrupo, los cambio por lo que la HI dice que valen, y hago álgebra hasta llegar al lado derecho.</li>
+</ul>
+<p>Le pongo nombre al lado izquierdo de la meta: <span class="math inline">\(S_{k+1}=1+2+\dots+k+(k+1)\)</span>. <strong>Cómo leer la tabla:</strong></p>
+<ul>
+<li><strong>Expresión:</strong> cada renglón dice cuánto vale <span class="math inline">\(S_{k+1}\)</span>. Es una igualdad completa que se lee sola, sin un “<span class="math inline">\(=\)</span>” colgando.</li>
+<li><strong>Con <span class="math inline">\(k=3\)</span>:</strong> el mismo renglón con números. Si todos los renglones dan lo mismo (10), ningún paso cambió el valor. Es una comprobación, no la demostración.</li>
+<li><strong>Qué hago · por qué se vale:</strong> primero la acción, en negritas; después la regla que la permite.</li>
+</ul>
 <div class="scroll"><table>
 <colgroup>
-<col style="width: 33%"/>
-<col style="width: 33%"/>
-<col style="width: 33%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
 </colgroup>
 <thead>
 <tr>
-<th>Renglón</th>
+<th>#</th>
 <th>Expresión</th>
-<th>Justificación</th>
+<th>Con <span class="math inline">\(k=3\)</span></th>
+<th>Qué hago · por qué se vale</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>1</td>
-<td><span class="math inline">\(1+2+\dots+k+(k+1)\)</span></td>
-<td>lado izquierdo de <span class="math inline">\(P(k+1)\)</span></td>
+<td><span class="math inline">\(S_{k+1}=1+2+\dots+k+(k+1)\)</span></td>
+<td><span class="math inline">\(1+2+3+4=10\)</span></td>
+<td><strong>Parto del lado izquierdo de la meta.</strong> Es la definición de <span class="math inline">\(S_{k+1}\)</span>.</td>
 </tr>
 <tr>
 <td>2</td>
-<td><span class="math inline">\(=\dfrac{k(k+1)}{2}+(k+1)\)</span></td>
-<td><strong>aquí uso la HI</strong> para los primeros <span class="math inline">\(k\)</span> términos</td>
+<td><span class="math inline">\(S_{k+1}=(1+2+\dots+k)+(k+1)\)</span></td>
+<td><span class="math inline">\((1+2+3)+4=10\)</span></td>
+<td><strong>Agrupo los primeros <span class="math inline">\(k\)</span> sumandos.</strong> Se vale porque en una suma los paréntesis no cambian el resultado. Los pongo para ver el pedazo del que habla la HI.</td>
 </tr>
 <tr>
 <td>3</td>
-<td><span class="math inline">\(=\dfrac{k(k+1)}{2}+\dfrac{2(k+1)}{2}\)</span></td>
-<td>escribo <span class="math inline">\((k+1)\)</span> con denominador 2: <span class="math inline">\((k+1)=\frac{2(k+1)}{2}\)</span>, porque multiplicar y dividir entre 2 no cambia el valor</td>
+<td><span class="math inline">\(S_{k+1}=\dfrac{k(k+1)}{2}+(k+1)\)</span></td>
+<td><span class="math inline">\(\dfrac{3\cdot4}{2}+4=10\)</span></td>
+<td><strong>Uso la HI ← aquí.</strong> Cambio el paréntesis por <span class="math inline">\(\frac{k(k+1)}{2}\)</span>. Se vale porque la HI dice que valen lo mismo.</td>
 </tr>
 <tr>
 <td>4</td>
-<td><span class="math inline">\(=\dfrac{k(k+1)+2(k+1)}{2}\)</span></td>
-<td>sumo fracciones</td>
+<td><span class="math inline">\(S_{k+1}=\dfrac{k(k+1)}{2}+\dfrac{2(k+1)}{2}\)</span></td>
+<td><span class="math inline">\(6+\dfrac{8}{2}=10\)</span></td>
+<td><strong>Pongo el segundo término sobre 2</strong>, para poder sumar fracciones. Se vale porque multiplico por <span class="math inline">\(\frac22=1\)</span>, y multiplicar por 1 no cambia nada.</td>
 </tr>
 <tr>
 <td>5</td>
-<td><span class="math inline">\(=\dfrac{(k+1)(k+2)}{2}\)</span></td>
-<td>factor común <span class="math inline">\((k+1)\)</span>: <span class="math inline">\(k\cdot(k+1)+2\cdot(k+1)=(k+2)\cdot(k+1)\)</span>, igual que <span class="math inline">\(3x+2x=5x\)</span> con <span class="math inline">\(x=k+1\)</span></td>
+<td><span class="math inline">\(S_{k+1}=\dfrac{k(k+1)+2(k+1)}{2}\)</span></td>
+<td><span class="math inline">\(\dfrac{12+8}{2}=10\)</span></td>
+<td><strong>Sumo las fracciones.</strong> Se vale porque con el mismo denominador se suman los numeradores: <span class="math inline">\(\frac a2+\frac b2=\frac{a+b}{2}\)</span>.</td>
+</tr>
+<tr>
+<td>6</td>
+<td><span class="math inline">\(S_{k+1}=\dfrac{(k+1)(k+2)}{2}\)</span></td>
+<td><span class="math inline">\(\dfrac{4\cdot5}{2}=10\)</span></td>
+<td><strong>Saco el factor común <span class="math inline">\((k+1)\)</span>.</strong> Se vale por la distributiva al revés: <span class="math inline">\(k\cdot(k+1)+2\cdot(k+1)\)</span> es lo mismo que <span class="math inline">\((k+2)\cdot(k+1)\)</span>, igual que <span class="math inline">\(3x+2x=5x\)</span> con <span class="math inline">\(x=k+1\)</span>.</td>
+</tr>
+<tr>
+<td>7</td>
+<td><span class="math inline">\(S_{k+1}=\dfrac{(k+1)\big((k+1)+1\big)}{2}\)</span></td>
+<td><span class="math inline">\(\dfrac{4\cdot(4+1)}{2}=10\)</span></td>
+<td><strong>Escribo <span class="math inline">\(k+2\)</span> como <span class="math inline">\((k+1)+1\)</span></strong>, para que se vea letra por letra que es <span class="math inline">\(\frac{n(n+1)}{2}\)</span> con <span class="math inline">\(n=k+1\)</span>. Es el lado derecho de la meta ✓</td>
 </tr>
 </tbody>
 </table></div>
-<p>El renglón 5 es el lado derecho de <span class="math inline">\(P(k+1)\)</span> ✓. Por inducción, la fórmula vale para todo <span class="math inline">\(n\ge1\)</span>. <span class="math inline">\(\square\)</span></p>
-<p><em>Con números</em> (<span class="math inline">\(k=3\)</span>, es decir, pasar de <span class="math inline">\(P(3)\)</span> a <span class="math inline">\(P(4)\)</span>): renglón 1, <span class="math inline">\(1+2+3+4=10\)</span>; renglón 2, <span class="math inline">\(\frac{3\cdot4}{2}+4=6+4=10\)</span>; renglón 5, <span class="math inline">\(\frac{4\cdot5}{2}=10\)</span> ✓.</p>
+<p><strong>¿Por qué esto no es circular?</strong> Lee la última columna de arriba abajo: solo aparecen la HI y reglas de álgebra. La meta nunca justifica un renglón; solo aparece al final, como el lugar al que llegamos.</p>
+<p><strong>Conclusión.</strong> La base demostró <span class="math inline">\(P(1)\)</span>. El paso demostró que, para <strong>cualquier</strong> <span class="math inline">\(k\ge1\)</span>, si <span class="math inline">\(P(k)\)</span> es verdadera, <span class="math inline">\(P(k+1)\)</span> también. Es la fila de dominós: cae el 1, y cada uno tumba al siguiente. Por el principio de inducción, la fórmula vale para todo <span class="math inline">\(n\ge1\)</span>. <span class="math inline">\(\square\)</span></p>
 <p>Un programa puede <strong>comprobar</strong> la fórmula para muchos valores (y es buena práctica hacerlo antes de intentar demostrarla), pero recuerda §2.4: comprobar no es demostrar.</p>
 <div class="tabs"><div aria-label="Lenguaje" class="tablist" role="tablist"><button aria-controls="t3-0" aria-selected="false" data-lang="c" id="t3-0-b" role="tab" tabindex="-1" type="button">C</button><button aria-controls="t3-1" aria-selected="false" data-lang="cpp" id="t3-1-b" role="tab" tabindex="-1" type="button">C++</button><button aria-controls="t3-2" aria-selected="false" data-lang="rust" id="t3-2-b" role="tab" tabindex="-1" type="button">Rust</button></div><div aria-labelledby="t3-0-b" class="panel" data-lang="c" id="t3-0" role="tabpanel"><div class="sourceCode" id="cb14"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb14-1"><a aria-hidden="true" href="#cb14-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
 <span id="cb14-2"><a aria-hidden="true" href="#cb14-2" tabindex="-1"></a></span>
@@ -1408,7 +1432,7 @@ Solución
 </table></div>
 <p>Se lee <span class="math inline">\(16=16\ge8\ge5\)</span>: cada eslabón de la cadena se cumple. Fíjate que hay “holgura” de sobra (<span class="math inline">\(16\)</span> contra <span class="math inline">\(5\)</span>): la HI me da más de lo que necesito, y el paso 3 solo tira la parte que sobra.</p>
 <blockquote>
-<p><strong>Truco para desigualdades:</strong> escribe el lado izquierdo de <span class="math inline">\(P(k+1)\)</span> de forma que <strong>aparezca</strong> el lado izquierdo de <span class="math inline">\(P(k)\)</span> (aquí <span class="math inline">\(2^{k+1}=2\cdot 2^k\)</span>), aplica la HI y luego cierra la distancia que falta con álgebra. “Cerrar la distancia” casi siempre es lo mismo: <strong>restar</strong> lo que obtuviste menos lo que querías y comprobar que la diferencia es <span class="math inline">\(\ge 0\)</span>.</p>
+<p><strong>Truco para desigualdades:</strong> reescribe el lado izquierdo de la meta hasta que <strong>aparezca</strong> la cantidad de la que habla la HI (aquí <span class="math inline">\(2^k\)</span>, con <span class="math inline">\(2^{k+1}=2\cdot 2^k\)</span>), aplica la HI y luego cierra la distancia que falta con álgebra. “Cerrar la distancia” casi siempre es lo mismo: <strong>restar</strong> lo que obtuviste menos lo que querías y comprobar que la diferencia es <span class="math inline">\(\ge 0\)</span>.</p>
 </blockquote>
 <h3 id="inducción-y-recursión-son-lo-mismo">3.4 Inducción y recursión son lo mismo</h3>
 <p>Una función recursiva es una inducción escrita en código: el <strong>caso base</strong> de la función es la <strong>base</strong> de la inducción, y la <strong>llamada recursiva</strong> confía en que la función ya es correcta para un valor más chico, igual que la <strong>HI</strong>.</p>
@@ -1556,48 +1580,56 @@ Solución
 <li><em>HI:</em> para un <span class="math inline">\(k\ge0\)</span> cualquiera, <span class="math inline">\(\sum_{i=0}^{k}2^i=2^{k+1}-1\)</span>.</li>
 <li><em>Paso.</em> Meta, <span class="math inline">\(P(k+1)\)</span> (cada <span class="math inline">\(n\)</span> se vuelve <span class="math inline">\(k+1\)</span>): <span class="math inline">\(\sum_{i=0}^{k+1}2^i=2^{(k+1)+1}-1=2^{k+2}-1\)</span>. <em>Plan:</em> separar el último término para que aparezca la suma de la HI.</li>
 </ul>
+<p>Le pongo nombre al lado izquierdo de la meta, <span class="math inline">\(S=\sum_{i=0}^{k+1}2^i\)</span>, y compruebo con <span class="math inline">\(k=2\)</span>, donde <span class="math inline">\(S=1+2+4+8=15\)</span>.</p>
 <div class="scroll"><table>
 <colgroup>
-<col style="width: 33%"/>
-<col style="width: 33%"/>
-<col style="width: 33%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
 </colgroup>
 <thead>
 <tr>
-<th>Renglón</th>
+<th>#</th>
 <th>Expresión</th>
-<th>Justificación</th>
+<th>Con <span class="math inline">\(k=2\)</span></th>
+<th>Qué hago · por qué se vale</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>1</td>
-<td><span class="math inline">\(\sum_{i=0}^{k+1}2^i\)</span></td>
-<td>lado izquierdo de <span class="math inline">\(P(k+1)\)</span></td>
+<td><span class="math inline">\(S=\sum_{i=0}^{k+1}2^i\)</span></td>
+<td><span class="math inline">\(1+2+4+8=15\)</span></td>
+<td><strong>Parto del lado izquierdo de la meta.</strong></td>
 </tr>
 <tr>
 <td>2</td>
-<td><span class="math inline">\(=\Big(\sum_{i=0}^{k}2^i\Big)+2^{k+1}\)</span></td>
-<td>separo el último término (<span class="math inline">\(i=k+1\)</span>)</td>
+<td><span class="math inline">\(S=\Big(\sum_{i=0}^{k}2^i\Big)+2^{k+1}\)</span></td>
+<td><span class="math inline">\((1+2+4)+8=15\)</span></td>
+<td><strong>Separo el último término</strong> (<span class="math inline">\(i=k+1\)</span>). Se vale porque la suma hasta <span class="math inline">\(k+1\)</span> es la suma hasta <span class="math inline">\(k\)</span> más el término <span class="math inline">\(k+1\)</span>.</td>
 </tr>
 <tr>
 <td>3</td>
-<td><span class="math inline">\(=(2^{k+1}-1)+2^{k+1}\)</span></td>
-<td><strong>aquí uso la HI</strong></td>
+<td><span class="math inline">\(S=(2^{k+1}-1)+2^{k+1}\)</span></td>
+<td><span class="math inline">\((8-1)+8=15\)</span></td>
+<td><strong>Uso la HI ← aquí:</strong> el paréntesis vale <span class="math inline">\(2^{k+1}-1\)</span>.</td>
 </tr>
 <tr>
 <td>4</td>
-<td><span class="math inline">\(=2\cdot2^{k+1}-1\)</span></td>
-<td>dos veces lo mismo es el doble: <span class="math inline">\(2^{k+1}+2^{k+1}=2\cdot2^{k+1}\)</span></td>
+<td><span class="math inline">\(S=2\cdot2^{k+1}-1\)</span></td>
+<td><span class="math inline">\(2\cdot8-1=15\)</span></td>
+<td><strong>Junto los dos <span class="math inline">\(2^{k+1}\)</span>.</strong> Se vale porque algo más sí mismo es el doble: <span class="math inline">\(x+x=2x\)</span>.</td>
 </tr>
 <tr>
 <td>5</td>
-<td><span class="math inline">\(=2^{k+2}-1\)</span></td>
-<td>ley de exponentes: <span class="math inline">\(2\cdot2^{k+1}=2^{1+(k+1)}\)</span></td>
+<td><span class="math inline">\(S=2^{k+2}-1\)</span></td>
+<td><span class="math inline">\(16-1=15\)</span></td>
+<td><strong>Ley de exponentes:</strong> <span class="math inline">\(2\cdot2^{k+1}=2^{1+(k+1)}=2^{k+2}\)</span>. Es el lado derecho de la meta ✓</td>
 </tr>
 </tbody>
 </table></div>
-<p>El renglón 5 es el lado derecho de <span class="math inline">\(P(k+1)\)</span> ✓. <span class="math inline">\(\square\)</span> <em>Con números</em> (<span class="math inline">\(k=2\)</span>): <span class="math inline">\(1+2+4+8=15\)</span>, <span class="math inline">\((2^3-1)+2^3=7+8=15\)</span>, <span class="math inline">\(2^4-1=15\)</span> ✓.</p>
+<p>Por inducción, la fórmula vale para todo <span class="math inline">\(n\ge0\)</span>. <span class="math inline">\(\square\)</span></p>
 </details>
 <hr/>
 <h2 id="invariantes-de-ciclo-inducción-para-ciclos-for-y-while">4. Invariantes de ciclo: inducción para ciclos <code>for</code> y <code>while</code></h2>
@@ -3596,7 +3628,7 @@ Respuestas
 <li>A mano, en papel. Nada de código: aquí el objetivo es la demostración.</li>
 <li>Usa la plantilla de §3.1 en <strong>cada</strong> inducción, con sus cinco partes rotuladas: afirmación <span class="math inline">\(P(n)\)</span>, base, HI (escrita con <span class="math inline">\(k\)</span>), paso y conclusión.</li>
 <li>En el paso, escribe <strong>primero</strong> <span class="math inline">\(P(k+1)\)</span> completa, sustituyendo cada <span class="math inline">\(n\)</span> por <span class="math inline">\((k+1)\)</span>, y <strong>marca</strong> el renglón donde usas la HI.</li>
-<li>Cada <span class="math inline">\(=\)</span>, <span class="math inline">\(\le\)</span> o <span class="math inline">\(\ge\)</span> lleva su justificación (qué regla, qué sustituiste, por qué no se voltea el signo), como en las tablas de renglones de §3.2.</li>
+<li>Escribe el paso como <strong>tabla de cuaderno</strong>, igual que §3.2: columna de expresión (cada renglón empieza con el mismo nombre, como <span class="math inline">\(S_{k+1}=\dots\)</span>), columna “con números” y columna “qué hago · por qué se vale”. Cada <span class="math inline">\(=\)</span>, <span class="math inline">\(\le\)</span> o <span class="math inline">\(\ge\)</span> lleva su razón: qué regla, qué sustituiste, por qué no se voltea el signo. Marca el renglón de la HI.</li>
 <li>Cierra cada ejercicio con una <strong>comprobación con números</strong> para un valor pequeño de <span class="math inline">\(k\)</span>. No demuestra nada, pero atrapa errores de álgebra.</li>
 </ul>
 <p><strong>Ejercicios.</strong></p>
