@@ -226,9 +226,8 @@ pre.sourceCode a{display:none}
 </table></div>
 <h3 id="especificación">2.2 Especificación</h3>
 <p>Igual que con la pila (L01 §4.2), fijamos el significado sin hablar de implementación. Con <span class="math inline">\(S = \langle x_0,\dots,x_{n-1}\rangle\)</span>:</p>
-<p><span class="math display">\[\mathsf{get}(\mathsf{insert}(S, i, x), j) = \begin{cases} \mathsf{get}(S, j) &amp; j &lt; i \\ x &amp; j = i \\ \mathsf{get}(S, j-1) &amp; j &gt; i \end{cases}
-\qquad
-\mathsf{len}(\mathsf{insert}(S,i,x)) = \mathsf{len}(S)+1\]</span></p>
+<p><span class="math display">\[\mathsf{get}(\mathsf{insert}(S, i, x), j) = \begin{cases} \mathsf{get}(S, j) &amp; j &lt; i \\ x &amp; j = i \\ \mathsf{get}(S, j-1) &amp; j &gt; i \end{cases}\]</span></p>
+<p><span class="math display">\[\mathsf{len}(\mathsf{insert}(S,i,x)) = \mathsf{len}(S)+1\]</span></p>
 <p>y análogamente para <code>erase</code>. Estas ecuaciones son exactamente lo que comprueba el test aleatorio del lab (<code>vector_aleatorio_vs_std</code>): ejecuta la misma secuencia de operaciones en tu <code>Vector</code> y en un <strong>oráculo</strong> (<code>std::vector</code>, <code>Vec</code> o un arreglo de C manipulado a mano) y exige que coincidan.</p>
 <h3 id="tres-implementaciones-tres-perfiles-de-costo">2.3 Tres implementaciones, tres perfiles de costo</h3>
 <div class="scroll"><table>
@@ -277,7 +276,12 @@ pre.sourceCode a{display:none}
 <blockquote>
 <p><strong>Teorema (cota inferior informal).</strong> Ninguna estructura que guarde los elementos en un arreglo contiguo, en el orden de la secuencia, puede hacer <code>insert(0, x)</code> en <span class="math inline">\(o(n)\)</span> en el peor caso: tras insertar, los <span class="math inline">\(n\)</span> elementos viejos deben ocupar posiciones distintas a las que ocupaban, y cada uno requiere al menos una escritura.</p>
 </blockquote>
-<p><em>Por qué.</em> Antes de insertar, el elemento <span class="math inline">\(x_j\)</span> está en la celda <span class="math inline">\(j\)</span>, para <span class="math inline">\(j=0,\dots,n-1\)</span>. Después de <code>insert(0, x)</code>, la especificación de §2.2 (caso <span class="math inline">\(j&gt;i\)</span> con <span class="math inline">\(i=0\)</span>) dice que <span class="math inline">\(x_j\)</span> es el elemento número <span class="math inline">\(j+1\)</span> de la secuencia; como el arreglo guarda la secuencia en orden, <span class="math inline">\(x_j\)</span> tiene que estar en la celda <span class="math inline">\(j+1\)</span>. La celda <span class="math inline">\(j+1\)</span> no es la celda <span class="math inline">\(j\)</span>, así que cada uno de los <span class="math inline">\(n\)</span> elementos viejos se tiene que escribir en una celda donde antes no estaba: al menos <span class="math inline">\(n\)</span> escrituras. Una operación que hace al menos <span class="math inline">\(n\)</span> escrituras no puede costar <span class="math inline">\(o(n)\)</span>. (Es “informal” porque supone que el único modo de cambiar el contenido de una celda es escribir en ella, que es lo que hace el modelo RAM de L01 §2.)</p>
+<p><em>Por qué.</em></p>
+<p><strong>Paso 1. Miro dónde está cada elemento antes.</strong> El arreglo guarda la secuencia en orden: <span class="math display">\[x_j\ \text{está en la celda } j,\qquad j=0,\dots,n-1.\]</span></p>
+<p><strong>Paso 2. Miro dónde tiene que estar después.</strong> La especificación de §2.2 (caso <span class="math inline">\(j&gt;i\)</span>, con <span class="math inline">\(i=0\)</span>) dice que <span class="math inline">\(x_j\)</span> queda en la posición <span class="math inline">\(j+1\)</span>. Como el arreglo guarda la secuencia en orden: <span class="math display">\[x_j\ \text{tiene que estar en la celda } j+1.\]</span></p>
+<p><strong>Paso 3. Cuento escrituras.</strong> La celda <span class="math inline">\(j+1\)</span> no es la celda <span class="math inline">\(j\)</span>: cada uno de los <span class="math inline">\(n\)</span> elementos viejos se escribe en una celda donde antes no estaba. <span class="math display">\[\text{escrituras}\ \ge\ n\]</span></p>
+<p><strong>Paso 4. Concluyo.</strong> Una operación que hace al menos <span class="math inline">\(n\)</span> escrituras no puede costar <span class="math inline">\(o(n)\)</span>.</p>
+<p>Es “informal” porque supone que el único modo de cambiar el contenido de una celda es escribir en ella, que es lo que hace el modelo RAM de L01 §2.</p>
 <p>Romper esa cota exige abandonar la contigüidad (listas, L03) o el orden físico (buffer circular, L04; árboles de secuencia, problem set).</p>
 <hr/>
 <h2 id="memoria-tamaño-alineación-y-layout">3. Memoria: tamaño, alineación y <em>layout</em></h2>
@@ -286,60 +290,26 @@ pre.sourceCode a{display:none}
 <ul>
 <li><strong>Tamaño</strong> <span class="math inline">\(s(T)\)</span>: bytes entre el inicio de un <code>T</code> y el inicio del siguiente en un arreglo (<code>sizeof</code>, <code>size_of</code>).</li>
 <li><strong>Alineación</strong> <span class="math inline">\(a(T)\)</span>: una potencia de 2; un <code>T</code> solo puede vivir en direcciones múltiplo de <span class="math inline">\(a(T)\)</span> (<code>alignof</code>, <code>align_of</code>). En la mayoría de las plataformas de 64 bits, <span class="math inline">\(a(\texttt{int}) = 4\)</span>, <span class="math inline">\(a(\texttt{double}) = 8\)</span>.</li>
-<li><strong>Invariante:</strong> <span class="math inline">\(a(T) \mid s(T)\)</span> (“<span class="math inline">\(a(T)\)</span> divide a <span class="math inline">\(s(T)\)</span>”: el tamaño es múltiplo de la alineación). <em>Por qué tiene que ser así:</em> en un arreglo <code>T[2]</code> que empieza en <span class="math inline">\(p\)</span>, el elemento 0 empieza en <span class="math inline">\(p\)</span> (múltiplo de <span class="math inline">\(a(T)\)</span>) y el elemento 1 en <span class="math inline">\(p+s(T)\)</span>. Para que <span class="math inline">\(p+s(T)\)</span> también sea múltiplo de <span class="math inline">\(a(T)\)</span>, sabiendo que <span class="math inline">\(p\)</span> ya lo es, hace falta que <span class="math inline">\(s(T)\)</span> lo sea: <span class="math inline">\(s(T)\)</span> es la resta <span class="math inline">\((p+s(T))-p\)</span> de dos múltiplos de <span class="math inline">\(a(T)\)</span>, y la resta de dos múltiplos de <span class="math inline">\(a\)</span> es múltiplo de <span class="math inline">\(a\)</span> (distributiva al revés: <span class="math inline">\(q_1a-q_2a\)</span> es lo mismo que <span class="math inline">\((q_1-q_2)\,a\)</span>). <em>Con números:</em> si un <code>struct</code> con un <code>int</code> (<span class="math inline">\(a=4\)</span>) midiera 5 bytes, con <span class="math inline">\(p=0\)</span> el segundo elemento empezaría en 5, que no es múltiplo de 4. Por eso el compilador agrega <strong>relleno</strong> al final de un <code>struct</code>.</li>
+<li><strong>Invariante:</strong> <span class="math inline">\(a(T) \mid s(T)\)</span> (“<span class="math inline">\(a(T)\)</span> divide a <span class="math inline">\(s(T)\)</span>”: el tamaño es múltiplo de la alineación).</li>
 </ul>
+<p><em>Por qué el tamaño tiene que ser múltiplo de la alineación.</em> Abrevio <span class="math inline">\(a=a(T)\)</span> y <span class="math inline">\(s=s(T)\)</span>, y miro un arreglo <code>T[2]</code> que empieza en la dirección <span class="math inline">\(p\)</span>.</p>
+<p><strong>Paso 1. Escribo lo que exige la alineación.</strong> El elemento 0 empieza en <span class="math inline">\(p\)</span> y el elemento 1 en <span class="math inline">\(p+s\)</span>. Los dos tienen que empezar en un múltiplo de <span class="math inline">\(a\)</span>, así que hay enteros <span class="math inline">\(q_1\)</span> y <span class="math inline">\(q_2\)</span> con: <span class="math display">\[\boxed{\,p=q_1a\,}\qquad\boxed{\,p+s=q_2a\,}\]</span></p>
+<p><strong>Paso 2. Escribo <span class="math inline">\(s\)</span> como una resta.</strong> El tamaño es la distancia entre el inicio del elemento 1 y el del elemento 0: <span class="math display">\[s=\boxed{(p+s)}-\boxed{p}\]</span></p>
+<p><strong>Paso 3. Uso las dos cajas.</strong> Cambio cada caja por lo que vale: <span class="math display">\[s=q_2a-q_1a\]</span></p>
+<p><strong>Paso 4. Saco <span class="math inline">\(a\)</span> de factor común.</strong> Es la distributiva al revés, como <span class="math inline">\(5x-3x=(5-3)x\)</span>: <span class="math display">\[s=(q_2-q_1)\,a\]</span> Como <span class="math inline">\(q_2-q_1\)</span> es entero, <span class="math inline">\(s\)</span> es múltiplo de <span class="math inline">\(a\)</span> ✓.</p>
+<p><strong>Paso 5. Compruebo con un número.</strong> Si un <code>struct</code> con un <code>int</code> (<span class="math inline">\(a=4\)</span>) midiera <span class="math inline">\(s=5\)</span> bytes, con <span class="math inline">\(p=0\)</span> el segundo elemento empezaría en <span class="math inline">\(5\)</span>, que no es múltiplo de 4. Por eso el compilador agrega <strong>relleno</strong> al final de un <code>struct</code>.</p>
 <p><strong>Layout de un <code>struct</code> con orden fijo (C, C++, <code>#[repr(C)]</code> en Rust).</strong> Los campos se colocan en el orden declarado; cada uno en el primer desplazamiento múltiplo de su alineación; el tamaño total se redondea hacia arriba a un múltiplo de la mayor alineación.</p>
 <p><span class="math display">\[\begin{aligned}\text{offset}_k &amp;= \Big\lceil \frac{\text{offset}_{k-1} + s_{k-1}}{a_k} \Big\rceil a_k,\qquad\text{con }\text{offset}_0=0,\\ s(\texttt{struct}) &amp;= \Big\lceil \frac{\text{offset}_{\text{último}} + s_{\text{último}}}{a_{\max}} \Big\rceil a_{\max}.\end{aligned}\]</span></p>
-<p><strong>Cómo leer la fórmula.</strong> <span class="math inline">\(\text{offset}_{k-1}+s_{k-1}\)</span> es el primer byte libre después del campo anterior (donde empieza, más lo que ocupa). Y <span class="math inline">\(\lceil x/a\rceil\,a\)</span> es el <strong>menor múltiplo de <span class="math inline">\(a\)</span> que es <span class="math inline">\(\ge x\)</span></strong>. Se calcula en tres pasos; la tabla los hace con <span class="math inline">\(x=5\)</span>, <span class="math inline">\(a=4\)</span> (un caso que necesita relleno) y con <span class="math inline">\(x=8\)</span>, <span class="math inline">\(a=4\)</span> (uno que no):</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 20%"/>
-<col style="width: 20%"/>
-<col style="width: 20%"/>
-<col style="width: 20%"/>
-<col style="width: 20%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Paso</th>
-<th>Con <span class="math inline">\(x=5\)</span>, <span class="math inline">\(a=4\)</span></th>
-<th>Con <span class="math inline">\(x=8\)</span>, <span class="math inline">\(a=4\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(x/a\)</span></td>
-<td><span class="math inline">\(5/4=1.25\)</span></td>
-<td><span class="math inline">\(8/4=2\)</span></td>
-<td><strong>Divido:</strong> cuántos bloques de <span class="math inline">\(a\)</span> bytes caben en <span class="math inline">\(x\)</span> bytes, contando el pedazo de bloque que sobra.</td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(\lceil x/a\rceil\)</span></td>
-<td><span class="math inline">\(\lceil1.25\rceil=2\)</span></td>
-<td><span class="math inline">\(\lceil2\rceil=2\)</span></td>
-<td><strong>Redondeo hacia arriba</strong> (L00 §6.1): el menor número <strong>entero</strong> de bloques que cubre los <span class="math inline">\(x\)</span> bytes. Un número que ya es entero no cambia.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(\lceil x/a\rceil\,a\)</span></td>
-<td><span class="math inline">\(2\cdot4=8\)</span></td>
-<td><span class="math inline">\(2\cdot4=8\)</span></td>
-<td><strong>Multiplico por <span class="math inline">\(a\)</span>:</strong> paso de bloques a bytes.</td>
-</tr>
-</tbody>
-</table></div>
-<p><em>Por qué el resultado es el menor múltiplo de <span class="math inline">\(a\)</span> que no es menor que <span class="math inline">\(x\)</span>.</em> Un múltiplo de <span class="math inline">\(a\)</span> es <span class="math inline">\(q\,a\)</span> con <span class="math inline">\(q\)</span> entero. Pedir <span class="math inline">\(q\,a\ge x\)</span> es lo mismo que pedir <span class="math inline">\(q\ge x/a\)</span>: divido entre <span class="math inline">\(a&gt;0\)</span>, y dividir entre un número positivo no voltea la desigualdad. El menor entero <span class="math inline">\(q\)</span> con <span class="math inline">\(q\ge x/a\)</span> es, por definición de techo, <span class="math inline">\(\lceil x/a\rceil\)</span>. Y como <span class="math inline">\(a&gt;0\)</span>, un <span class="math inline">\(q\)</span> más chico da un múltiplo <span class="math inline">\(q\,a\)</span> más chico, así que el menor <span class="math inline">\(q\)</span> da el menor múltiplo. <em>Con números:</em> los múltiplos de 4 son 0, 4, 8, 12…; el primero que no es menor que 5 es 8 ✓.</p>
-<p><strong>Ejemplo.</strong> <code>struct A { char a; int b; char c; }</code>, aplicando la fórmula campo por campo. <strong>Cómo leer la tabla:</strong></p>
-<ul>
-<li><strong>Primer byte libre:</strong> el offset del campo anterior más su tamaño <span class="math inline">\(s\)</span> (los dos están en el renglón de arriba).</li>
-<li><strong>Offset:</strong> la fórmula, con el primer byte libre en el lugar de <span class="math inline">\(x\)</span> y la alineación del campo en el lugar de <span class="math inline">\(a\)</span>.</li>
-<li><strong>Relleno antes:</strong> offset menos primer byte libre; son los bytes que se saltan para que el campo quede alineado.</li>
-<li><strong>Total:</strong> el mismo cálculo, pero con <span class="math inline">\(a_{\max}\)</span>, la mayor alineación de los campos; aquí <span class="math inline">\(a_{\max}=\max(1,4,1)=4\)</span>.</li>
-</ul>
+<p><strong>Cómo leer la fórmula.</strong> <span class="math inline">\(\text{offset}_{k-1}+s_{k-1}\)</span> es el primer byte libre después del campo anterior (donde empieza, más lo que ocupa). Y <span class="math inline">\(\lceil x/a\rceil\,a\)</span> es el <strong>menor múltiplo de <span class="math inline">\(a\)</span> que es <span class="math inline">\(\ge x\)</span></strong>. Se calcula en tres pasos; los hago con <span class="math inline">\(x=5\)</span>, <span class="math inline">\(a=4\)</span> (un caso que necesita relleno) y con <span class="math inline">\(x=8\)</span>, <span class="math inline">\(a=4\)</span> (uno que no).</p>
+<p><strong>Paso 1. Divido.</strong> <span class="math inline">\(x/a\)</span> dice cuántos bloques de <span class="math inline">\(a\)</span> bytes caben en <span class="math inline">\(x\)</span> bytes, contando el pedazo de bloque que sobra: <span class="math display">\[\frac54=1.25\qquad\qquad\frac84=2\]</span></p>
+<p><strong>Paso 2. Redondeo hacia arriba</strong> (L00 §6.1). Así obtengo el menor número <strong>entero</strong> de bloques que cubre los <span class="math inline">\(x\)</span> bytes. Un número que ya es entero no cambia: <span class="math display">\[\lceil1.25\rceil=2\qquad\qquad\lceil2\rceil=2\]</span></p>
+<p><strong>Paso 3. Multiplico por <span class="math inline">\(a\)</span>.</strong> Paso de bloques a bytes: <span class="math display">\[2\cdot4=8\qquad\qquad2\cdot4=8\]</span></p>
+<p><em>Por qué el resultado es el menor múltiplo de <span class="math inline">\(a\)</span> que no es menor que <span class="math inline">\(x\)</span>.</em></p>
+<p><strong>Paso 1. Traduzco “múltiplo de <span class="math inline">\(a\)</span>”.</strong> Es un número <span class="math inline">\(q\,a\)</span> con <span class="math inline">\(q\)</span> entero, y quiero que no sea menor que <span class="math inline">\(x\)</span>: <span class="math display">\[q\,a\ge x\]</span></p>
+<p><strong>Paso 2. Divido entre <span class="math inline">\(a\)</span>.</strong> Como <span class="math inline">\(a&gt;0\)</span>, la desigualdad no se voltea: <span class="math display">\[q\ge\frac{x}{a}\]</span></p>
+<p><strong>Paso 3. Elijo el menor <span class="math inline">\(q\)</span>.</strong> El menor entero con <span class="math inline">\(q\ge x/a\)</span> es, por definición de techo, <span class="math inline">\(\lceil x/a\rceil\)</span>. Como <span class="math inline">\(a&gt;0\)</span>, un <span class="math inline">\(q\)</span> más chico da un múltiplo <span class="math inline">\(q\,a\)</span> más chico; así que el menor <span class="math inline">\(q\)</span> da el menor múltiplo: <span class="math display">\[\Big\lceil\frac{x}{a}\Big\rceil\,a\]</span></p>
+<p><strong>Paso 4. Compruebo con números.</strong> Los múltiplos de 4 son 0, 4, 8, 12…; el primero que no es menor que 5 es 8, lo mismo que dio el cálculo ✓.</p>
+<p><strong>Ejemplo.</strong> <code>struct A { char a; int b; char c; }</code>, aplicando la fórmula campo por campo. En cada renglón, el <strong>primer byte libre</strong> es el offset más el <span class="math inline">\(s\)</span> del renglón de arriba; el <strong>offset</strong> es la fórmula con ese byte libre como <span class="math inline">\(x\)</span>; el <strong>relleno</strong> es la diferencia entre los dos. El renglón <em>total</em> usa <span class="math inline">\(a_{\max}\)</span>, la mayor alineación de los campos; aquí <span class="math inline">\(a_{\max}=\max(1,4,1)=4\)</span>.</p>
 <div class="scroll"><table style="width:100%;">
 <colgroup>
 <col style="width: 16%"/>
@@ -592,13 +562,7 @@ Layout::array::&lt;u64&gt;(10) = Ok(80) bytes
 <blockquote>
 <p><strong>Lema 1.</strong> Si hay espacio libre, <code>insert(i, x)</code> hace exactamente <span class="math inline">\(n - i\)</span> movimientos y una escritura; <code>erase(i)</code> hace exactamente <span class="math inline">\(n - i - 1\)</span> movimientos.</p>
 </blockquote>
-<p><em>Demostración.</em></p>
-<ul>
-<li><strong>Tengo:</strong> antes de la operación, la celda <span class="math inline">\(j\)</span> guarda <span class="math inline">\(x_j\)</span> (<span class="math inline">\(0\le j&lt;n\)</span>). Después, la celda <span class="math inline">\(j\)</span> debe guardar <span class="math inline">\(\mathsf{get}(S',j)\)</span>, donde <span class="math inline">\(S'\)</span> es la secuencia nueva que fija la especificación de §2.2.</li>
-<li><strong>Quiero:</strong> contar cuántas celdas cambian de contenido, y de qué manera (movimiento o escritura).</li>
-<li><strong>Plan:</strong> comparar celda por celda el antes y el después. Una celda cuyo contenido no cambia no cuesta nada; las demás se cuentan.</li>
-</ul>
-<p>Comparamos celda por celda para <code>insert(i, x)</code>:</p>
+<p><em>Demostración.</em> Antes de la operación, la celda <span class="math inline">\(j\)</span> guarda <span class="math inline">\(x_j\)</span>. Después, debe guardar <span class="math inline">\(\mathsf{get}(S',j)\)</span>, donde <span class="math inline">\(S'\)</span> es la secuencia nueva que fija §2.2. Comparo celda por celda: una celda que no cambia no cuesta nada; las demás se cuentan. Para <code>insert(i, x)</code>:</p>
 <div class="scroll"><table>
 <colgroup>
 <col style="width: 25%"/>
@@ -635,377 +599,40 @@ Layout::array::&lt;u64&gt;(10) = Ok(80) bytes
 </tr>
 </tbody>
 </table></div>
-<p>Las celdas de la última fila son <span class="math inline">\(i+1,\,i+2,\,\dots,\,n\)</span>. Cada una recibe exactamente un movimiento: su contenido nuevo, <span class="math inline">\(x_{j-1}\)</span>, estaba en otra celda (la <span class="math inline">\(j-1\)</span>) y hay que traerlo. Ninguna otra celda se toca. Falta contarlas.</p>
-<p><em>La regla para contar.</em> De <span class="math inline">\(a\)</span> a <span class="math inline">\(b\)</span> (enteros) hay <span class="math inline">\(b-a+1\)</span> enteros. Por qué: si a cada uno le resto <span class="math inline">\(a\)</span>, la lista <span class="math inline">\(a,a+1,\dots,b\)</span> se vuelve <span class="math inline">\(0,1,\dots,b-a\)</span>, que tiene la misma cantidad de números; y de <span class="math inline">\(0\)</span> a <span class="math inline">\(b-a\)</span> hay <span class="math inline">\(b-a+1\)</span> (los que van de 1 a <span class="math inline">\(b-a\)</span>, más el 0). <em>Con números:</em> de 3 a 5 están 3, 4, 5; restando 3 quedan 0, 1, 2: tres números, y <span class="math inline">\(5-3+1=3\)</span> ✓. Si <span class="math inline">\(b=a-1\)</span> la lista está vacía y la regla da <span class="math inline">\(0\)</span>, que también es correcto.</p>
-<p>Llamo <span class="math inline">\(C\)</span> al número de celdas de <span class="math inline">\(i+1\)</span> a <span class="math inline">\(n\)</span>. La columna de números usa <span class="math inline">\(n=5\)</span>, <span class="math inline">\(i=2\)</span> (las celdas 3, 4 y 5):</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(n=5\)</span>, <span class="math inline">\(i=2\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(C=n-(i+1)+1\)</span></td>
-<td><span class="math inline">\(5-3+1=3\)</span></td>
-<td><strong>Aplico la regla para contar</strong> con <span class="math inline">\(a=i+1\)</span> y <span class="math inline">\(b=n\)</span>.</td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(C=n-i-1+1\)</span></td>
-<td><span class="math inline">\(5-2-1+1=3\)</span></td>
-<td><strong>Quito el paréntesis.</strong> Se vale porque restar <span class="math inline">\((i+1)\)</span> es restar <span class="math inline">\(i\)</span> y luego restar 1.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(C=n-i\)</span></td>
-<td><span class="math inline">\(5-2=3\)</span></td>
-<td><strong>Cancelo</strong> <span class="math inline">\(-1+1=0\)</span>.</td>
-</tr>
-</tbody>
-</table></div>
-<p>Total: exactamente <span class="math inline">\(n-i\)</span> movimientos y una escritura.</p>
-<p>Para <code>erase(i)</code>, la secuencia nueva tiene <span class="math inline">\(n-1\)</span> elementos: <span class="math inline">\(\mathsf{get}(S',j)=x_j\)</span> si <span class="math inline">\(j&lt;i\)</span>, y <span class="math inline">\(\mathsf{get}(S',j)=x_{j+1}\)</span> si <span class="math inline">\(i\le j\le n-2\)</span>. Las celdas <span class="math inline">\(j&lt;i\)</span> no cambian; las celdas <span class="math inline">\(i,\dots,n-2\)</span> reciben un movimiento cada una (la celda <span class="math inline">\(j\)</span> recibe <span class="math inline">\(x_{j+1}\)</span>, que estaba en la celda <span class="math inline">\(j+1\)</span>). <span class="math inline">\(x_i\)</span> se devuelve, no se escribe en el arreglo, y la celda <span class="math inline">\(n-1\)</span> queda fuera de la secuencia. Llamo <span class="math inline">\(C'\)</span> al número de celdas de <span class="math inline">\(i\)</span> a <span class="math inline">\(n-2\)</span>, con los mismos números (las celdas 2 y 3):</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(n=5\)</span>, <span class="math inline">\(i=2\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(C'=(n-2)-i+1\)</span></td>
-<td><span class="math inline">\(3-2+1=2\)</span></td>
-<td><strong>Aplico la regla para contar</strong> con <span class="math inline">\(a=i\)</span> y <span class="math inline">\(b=n-2\)</span>.</td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(C'=n-2-i+1\)</span></td>
-<td><span class="math inline">\(5-2-2+1=2\)</span></td>
-<td><strong>Quito el paréntesis.</strong> Se vale porque va sumando: <span class="math inline">\(+(n-2)\)</span> es lo mismo que <span class="math inline">\(n-2\)</span>.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(C'=n-i-1\)</span></td>
-<td><span class="math inline">\(5-2-1=2\)</span></td>
-<td><strong>Reordeno y junto las constantes:</strong> <span class="math inline">\(-2+1=-1\)</span>. Reordenar sumandos no cambia la suma.</td>
-</tr>
-</tbody>
-</table></div>
-<p><em>Con números</em> (<span class="math inline">\(n=5\)</span>, <span class="math inline">\(i=2\)</span>): <code>insert</code> escribe <span class="math inline">\(x\)</span> en la celda 2 y mueve a las celdas 3, 4, 5 los elementos <span class="math inline">\(x_2,x_3,x_4\)</span>: <span class="math inline">\(3=5-2\)</span> movimientos ✓. <code>erase</code> llena las celdas 2 y 3 con <span class="math inline">\(x_3,x_4\)</span>: <span class="math inline">\(2=5-2-1\)</span> ✓. <span class="math inline">\(\blacksquare\)</span></p>
+<p>Las celdas de la última fila son <span class="math inline">\(i+1,\,i+2,\,\dots,\,n\)</span>. Cada una recibe exactamente un movimiento: su contenido nuevo, <span class="math inline">\(x_{j-1}\)</span>, estaba en la celda <span class="math inline">\(j-1\)</span> y hay que traerlo. Ninguna otra celda se toca.</p>
+<p><strong>Paso 1. Cuento los movimientos de <code>insert</code>.</strong> Si a cada celda le resto <span class="math inline">\(i\)</span>, la lista cambia pero tiene la misma cantidad de números, y se cuenta a simple vista: <span class="math display">\[i+1,\ \dots,\ n\quad\longrightarrow\quad1,\ \dots,\ n-i\]</span> Son <span class="math inline">\(n-i\)</span> movimientos, más la escritura de <span class="math inline">\(x\)</span>.</p>
+<p><strong>Paso 2. Compruebo con <span class="math inline">\(n=5\)</span>, <span class="math inline">\(i=2\)</span>.</strong> <code>insert</code> escribe <span class="math inline">\(x\)</span> en la celda 2 y mueve a las celdas 3, 4, 5 los elementos <span class="math inline">\(x_2,x_3,x_4\)</span>: son <span class="math inline">\(3=5-2\)</span> movimientos ✓.</p>
+<p><em>Los movimientos de <code>erase</code>.</em> La secuencia nueva tiene <span class="math inline">\(n-1\)</span> elementos: <span class="math inline">\(\mathsf{get}(S',j)=x_j\)</span> si <span class="math inline">\(j&lt;i\)</span>, y <span class="math inline">\(\mathsf{get}(S',j)=x_{j+1}\)</span> si <span class="math inline">\(i\le j\le n-2\)</span>.</p>
+<ul>
+<li>Las celdas <span class="math inline">\(j&lt;i\)</span> no cambian.</li>
+<li>Las celdas <span class="math inline">\(i,\dots,n-2\)</span> reciben un movimiento cada una: la celda <span class="math inline">\(j\)</span> recibe <span class="math inline">\(x_{j+1}\)</span>, que estaba en la celda <span class="math inline">\(j+1\)</span>.</li>
+<li><span class="math inline">\(x_i\)</span> se devuelve, no se escribe en el arreglo, y la celda <span class="math inline">\(n-1\)</span> queda fuera de la secuencia.</li>
+</ul>
+<p><strong>Paso 3. Cuento los movimientos de <code>erase</code>.</strong> Si a cada celda le resto <span class="math inline">\(i-1\)</span>, el último número queda <span class="math inline">\((n-2)-(i-1)=n-i-1\)</span>: <span class="math display">\[i,\ \dots,\ n-2\quad\longrightarrow\quad1,\ \dots,\ n-i-1\]</span> Son <span class="math inline">\(n-i-1\)</span> movimientos.</p>
+<p><strong>Paso 4. Compruebo con <span class="math inline">\(n=5\)</span>, <span class="math inline">\(i=2\)</span>.</strong> <code>erase</code> llena las celdas 2 y 3 con <span class="math inline">\(x_3,x_4\)</span>: son <span class="math inline">\(2=5-2-1\)</span> movimientos ✓. <span class="math inline">\(\blacksquare\)</span></p>
 <h3 id="peor-caso-mejor-caso-y-un-patrón-cuadrático">4.2 Peor caso, mejor caso y un patrón cuadrático</h3>
 <blockquote>
 <p><strong>Teorema 2.</strong> <span class="math inline">\(n\)</span> llamadas <code>insert(0, ·)</code> sobre una secuencia vacía hacen <span class="math inline">\(\binom{n}{2} = \Theta(n^2)\)</span> movimientos; <span class="math inline">\(n\)</span> llamadas <code>push_back</code> hacen 0 movimientos de corrimiento (y <span class="math inline">\(&lt;2n\)</span> copias por realojamiento, L01 §6.4).</p>
 </blockquote>
-<p><em>Demostración.</em> <em>Parte 1: <code>insert(0, ·)</code>.</em> Numeramos las inserciones <span class="math inline">\(k=0,1,\dots,n-1\)</span>. Antes de la inserción <span class="math inline">\(k\)</span> ya se hicieron <span class="math inline">\(k\)</span> inserciones, así que hay <span class="math inline">\(k\)</span> elementos: en el Lema 1 el tamaño es <span class="math inline">\(k\)</span> (hace el papel de <span class="math inline">\(n\)</span>) y la posición es <span class="math inline">\(i=0\)</span>, de modo que se mueven <span class="math inline">\(k-0=k\)</span> elementos. Llamo <span class="math inline">\(M\)</span> al total de movimientos de las <span class="math inline">\(n\)</span> inserciones.</p>
-<ul>
-<li><strong>Tengo:</strong> la suma de Gauss (L00 §7.2): <span class="math inline">\(1+2+\dots+N=\dfrac{N(N+1)}{2}\)</span> para todo entero <span class="math inline">\(N\ge1\)</span>.</li>
-<li><strong>Quiero:</strong> <span class="math inline">\(M\overset{?}{=}\dbinom n2\)</span>, el número de parejas que se pueden formar con <span class="math inline">\(n\)</span> cosas, que vale <span class="math inline">\(\dfrac{n(n-1)}{2}\)</span> (L00 §9.1).</li>
-<li><strong>Plan:</strong> escribir <span class="math inline">\(M\)</span> como suma, quitar el término <span class="math inline">\(k=0\)</span> (no aporta nada), y lo que queda es Gauss con <span class="math inline">\(N=n-1\)</span>.</li>
-</ul>
-<p>La columna de números usa <span class="math inline">\(n=4\)</span>: las cuatro inserciones al frente mueven <span class="math inline">\(0,1,2,3\)</span> elementos.</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(n=4\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(M=\sum_{k=0}^{n-1}k\)</span></td>
-<td><span class="math inline">\(0+1+2+3=6\)</span></td>
-<td><strong>Parto del total:</strong> la inserción <span class="math inline">\(k\)</span> mueve <span class="math inline">\(k\)</span> elementos (arriba).</td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(M=0+\big(1+2+\dots+(n-1)\big)\)</span></td>
-<td><span class="math inline">\(0+(1+2+3)=6\)</span></td>
-<td><strong>Separo el término <span class="math inline">\(k=0\)</span></strong> y agrupo el resto. Se vale porque en una suma los paréntesis no cambian el resultado.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(M=1+2+\dots+(n-1)\)</span></td>
-<td><span class="math inline">\(1+2+3=6\)</span></td>
-<td><strong>Quito el 0:</strong> sumar 0 no cambia nada.</td>
-</tr>
-<tr>
-<td>4</td>
-<td><span class="math inline">\(M=\dfrac{(n-1)\big((n-1)+1\big)}{2}\)</span></td>
-<td><span class="math inline">\(\dfrac{3\cdot4}{2}=6\)</span></td>
-<td><strong>Uso Gauss ← aquí</strong> con <span class="math inline">\(N=n-1\)</span>, que es <span class="math inline">\(\ge1\)</span> cuando <span class="math inline">\(n\ge2\)</span>.</td>
-</tr>
-<tr>
-<td>5</td>
-<td><span class="math inline">\(M=\dfrac{(n-1)\,n}{2}\)</span></td>
-<td><span class="math inline">\(\dfrac{3\cdot4}{2}=6\)</span></td>
-<td><strong>Simplifico</strong> <span class="math inline">\((n-1)+1=n\)</span>.</td>
-</tr>
-<tr>
-<td>6</td>
-<td><span class="math inline">\(M=\dfrac{n(n-1)}{2}\)</span></td>
-<td><span class="math inline">\(\dfrac{4\cdot3}{2}=6\)</span></td>
-<td><strong>Conmuto los factores:</strong> <span class="math inline">\((n-1)\,n\)</span> es lo mismo que <span class="math inline">\(n\,(n-1)\)</span>. Es <span class="math inline">\(\binom n2\)</span> ✓</td>
-</tr>
-</tbody>
-</table></div>
-<p>Con <span class="math inline">\(n=1\)</span> no hace falta Gauss: la única inserción mueve 0, y <span class="math inline">\(\frac{1\cdot0}{2}=0\)</span> ✓. <em>Con <span class="math inline">\(n=1000\)</span>:</em> <span class="math inline">\(\frac{1000\cdot999}{2}=499\,500\)</span>, exactamente lo que imprime el programa de abajo.</p>
-<p><em>Por qué es <span class="math inline">\(\Theta(n^2)\)</span></em> (definición en L01 §3.2). Por la distributiva, <span class="math inline">\(M=\frac{n(n-1)}{2}=\frac{n^2}{2}-\frac n2\)</span>. Busco dos constantes:</p>
-<ul>
-<li><em>Por arriba:</em> <span class="math inline">\(M\le\frac{n^2}{2}\)</span>, porque a <span class="math inline">\(\frac{n^2}{2}\)</span> le resto <span class="math inline">\(\frac n2\ge0\)</span>.</li>
-<li><em>Por abajo, si <span class="math inline">\(n\ge2\)</span>:</em> multiplico <span class="math inline">\(2\le n\)</span> por <span class="math inline">\(\frac n4&gt;0\)</span> (multiplicar por un positivo no voltea la desigualdad) y sale <span class="math inline">\(\frac n2\le\frac{n^2}{4}\)</span>. Restar un número más chico deja un resultado más grande, así que <span class="math inline">\(M=\frac{n^2}2-\frac n2\ge\frac{n^2}2-\frac{n^2}4=\frac{n^2}{4}\)</span>.</li>
-</ul>
+<p><em>Demostración.</em> <em>Parte 1: <code>insert(0, ·)</code>.</em> Numero las inserciones <span class="math inline">\(k=0,1,\dots,n-1\)</span>; la inserción <span class="math inline">\(k\)</span> encuentra <span class="math inline">\(k\)</span> elementos y, por el Lema 1 con <span class="math inline">\(i=0\)</span>, mueve <span class="math inline">\(k\)</span>. Llamo <span class="math inline">\(M\)</span> al total. Quiero ver que <span class="math inline">\(M=\binom n2=\frac{n(n-1)}{2}\)</span>, el número de parejas que se pueden formar con <span class="math inline">\(n\)</span> cosas (L00 §9.1). Uso la suma de Gauss (L00 §7.2), que vale para todo entero <span class="math inline">\(N\ge1\)</span>: <span class="math display">\[\boxed{\,1+2+\dots+N=\frac{N(N+1)}{2}\,}\qquad\text{(Gauss)}\]</span></p>
+<p><strong>Paso 1. Escribo el total como suma.</strong> La inserción <span class="math inline">\(k\)</span> mueve <span class="math inline">\(k\)</span> elementos: <span class="math display">\[M=\sum_{k=0}^{n-1}k\]</span></p>
+<p><strong>Paso 2. Quito el término <span class="math inline">\(k=0\)</span>.</strong> Vale 0 y no aporta. Lo que queda es exactamente el lado izquierdo de Gauss con <span class="math inline">\(N=n-1\)</span>: <span class="math display">\[M=\boxed{\,1+2+\dots+(n-1)\,}\]</span></p>
+<p><strong>Paso 3. Uso Gauss</strong> con <span class="math inline">\(N=n-1\)</span>, que es <span class="math inline">\(\ge1\)</span> cuando <span class="math inline">\(n\ge2\)</span>: <span class="math display">\[M=\frac{(n-1)\big((n-1)+1\big)}{2}\]</span></p>
+<p><strong>Paso 4. Simplifico</strong> <span class="math inline">\((n-1)+1=n\)</span> y conmuto los factores, <span class="math inline">\((n-1)\,n=n\,(n-1)\)</span>: <span class="math display">\[M=\frac{n(n-1)}{2}=\binom n2\ ✓\]</span></p>
+<p><strong>Paso 5. Compruebo con números.</strong> Con <span class="math inline">\(n=4\)</span>, las inserciones mueven <span class="math inline">\(0+1+2+3=6\)</span>, y <span class="math inline">\(\frac{4\cdot3}{2}=6\)</span> ✓. Con <span class="math inline">\(n=1\)</span> no hace falta Gauss: la única inserción mueve 0, y <span class="math inline">\(\frac{1\cdot0}{2}=0\)</span> ✓. Con <span class="math inline">\(n=1000\)</span>: <span class="math inline">\(\frac{1000\cdot999}{2}=499\,500\)</span>, exactamente lo que imprime el programa de abajo.</p>
+<p><em>Por qué es <span class="math inline">\(\Theta(n^2)\)</span></em> (definición en L01 §3.2). Escribo <span class="math inline">\(M=\frac n2\,(n-1)\)</span> (dividir el producto entre 2 es dividir uno de sus factores) y comparo <span class="math inline">\(n-1\)</span> con <span class="math inline">\(n\)</span> y con <span class="math inline">\(\frac n2\)</span>.</p>
+<p><strong>Paso 1. Cota por arriba.</strong> <span class="math inline">\(n-1\le n\)</span>. Multiplico los dos lados por <span class="math inline">\(\frac n2\ge0\)</span>, que no voltea la desigualdad: <span class="math display">\[M\le\frac{n^2}{2}\]</span></p>
+<p><strong>Paso 2. Cota por abajo, con <span class="math inline">\(n\ge2\)</span>.</strong> <span class="math inline">\(n-1\ge\frac n2\)</span>, porque la resta <span class="math inline">\((n-1)-\frac n2=\frac n2-1\)</span> es <span class="math inline">\(\ge0\)</span> cuando <span class="math inline">\(n\ge2\)</span>. Multiplico por <span class="math inline">\(\frac n2&gt;0\)</span>, que no voltea la desigualdad: <span class="math display">\[M\ge\frac{n^2}{4}\]</span></p>
 <p>Entonces <span class="math inline">\(\frac14n^2\le M\le\frac12n^2\)</span> para todo <span class="math inline">\(n\ge2\)</span>, que es <span class="math inline">\(M=\Theta(n^2)\)</span>. <em>Con <span class="math inline">\(n=4\)</span>:</em> <span class="math inline">\(4\le6\le8\)</span> ✓.</p>
 <p><em>Parte 2: <code>push_back</code>.</em> <code>push_back</code> con <span class="math inline">\(k\)</span> elementos es <code>insert(k, ·)</code>: la posición es <span class="math inline">\(i=k\)</span>, y el Lema 1 da <span class="math inline">\(k-k=0\)</span> movimientos. Las copias por realojamiento son otra cuenta, ya hecha en L01 §6.4. <span class="math inline">\(\blacksquare\)</span></p>
-<p>Insertar siempre <strong>a la mitad</strong>: la inserción <span class="math inline">\(k\)</span> (con <span class="math inline">\(k\)</span> elementos) va en la posición <span class="math inline">\(i=\lfloor k/2\rfloor\)</span> y, por el Lema 1, mueve <span class="math inline">\(R_k=k-\lfloor k/2\rfloor\)</span> elementos. Llamo <span class="math inline">\(H_n\)</span> al total de movimientos de <span class="math inline">\(n\)</span> inserciones a la mitad.</p>
-<p><em>Paso 1: cuánto vale <span class="math inline">\(R_k\)</span>.</em> Uso la definición de L00 §6.1: <span class="math inline">\(\lfloor x\rfloor\)</span> es el mayor entero <span class="math inline">\(\le x\)</span>; si <span class="math inline">\(x\)</span> ya es entero, <span class="math inline">\(\lfloor x\rfloor=x\)</span>. Todo entero <span class="math inline">\(k\ge0\)</span> es par, <span class="math inline">\(k=2j\)</span>, o impar, <span class="math inline">\(k=2j+1\)</span>, con <span class="math inline">\(j\)</span> entero, así que hago los dos casos por separado.</p>
-<p>Caso par, <span class="math inline">\(k=2j\)</span>. Los números usan <span class="math inline">\(k=2\)</span> (así <span class="math inline">\(j=1\)</span>):</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(k=2\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(R_k=2j-\lfloor 2j/2\rfloor\)</span></td>
-<td><span class="math inline">\(2-\lfloor1\rfloor=1\)</span></td>
-<td><strong>Sustituyo <span class="math inline">\(k=2j\)</span></strong> en la definición de <span class="math inline">\(R_k\)</span>.</td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(R_k=2j-j\)</span></td>
-<td><span class="math inline">\(2-1=1\)</span></td>
-<td><strong>Simplifico</strong> <span class="math inline">\(2j/2=j\)</span>; y <span class="math inline">\(\lfloor j\rfloor=j\)</span> porque <span class="math inline">\(j\)</span> ya es entero.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(R_k=j\)</span></td>
-<td><span class="math inline">\(1\)</span></td>
-<td><strong>Resto:</strong> <span class="math inline">\(2j-j=j\)</span> ✓</td>
-</tr>
-</tbody>
-</table></div>
-<p>Caso impar, <span class="math inline">\(k=2j+1\)</span>. Los números usan <span class="math inline">\(k=3\)</span> (así <span class="math inline">\(j=1\)</span>):</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(k=3\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(R_k=(2j+1)-\Big\lfloor\dfrac{2j+1}{2}\Big\rfloor\)</span></td>
-<td><span class="math inline">\(3-\lfloor1.5\rfloor=2\)</span></td>
-<td><strong>Sustituyo <span class="math inline">\(k=2j+1\)</span>.</strong></td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(R_k=(2j+1)-\lfloor j+\tfrac12\rfloor\)</span></td>
-<td><span class="math inline">\(3-\lfloor1.5\rfloor=2\)</span></td>
-<td><strong>Reparto la división:</strong> <span class="math inline">\(\frac{2j+1}{2}\)</span> es <span class="math inline">\(\frac{2j}{2}+\frac12\)</span>, o sea <span class="math inline">\(j+\frac12\)</span>.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(R_k=(2j+1)-j\)</span></td>
-<td><span class="math inline">\(3-1=2\)</span></td>
-<td><strong>Calculo el piso:</strong> <span class="math inline">\(j\le j+\frac12&lt;j+1\)</span>, así que <span class="math inline">\(j\)</span> es el mayor entero <span class="math inline">\(\le j+\frac12\)</span> (el siguiente, <span class="math inline">\(j+1\)</span>, ya se pasa).</td>
-</tr>
-<tr>
-<td>4</td>
-<td><span class="math inline">\(R_k=j+1\)</span></td>
-<td><span class="math inline">\(2\)</span></td>
-<td><strong>Resto:</strong> <span class="math inline">\(2j+1-j=j+1\)</span> ✓</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>Resultado del Paso 1:</strong> <span class="math inline">\(R_{2j}=j\)</span> y <span class="math inline">\(R_{2j+1}=j+1\)</span>. (<em>Nota:</em> las dos respuestas son <span class="math inline">\(\lceil k/2\rceil\)</span>, el menor entero <span class="math inline">\(\ge k/2\)</span>, de L00 §6.1: <span class="math inline">\(\lceil 2j/2\rceil=j\)</span>, y <span class="math inline">\(\lceil j+\frac12\rceil=j+1\)</span> porque <span class="math inline">\(j&lt;j+\frac12\le j+1\)</span>. Es la propiedad <span class="math inline">\(\lfloor k/2\rfloor+\lceil k/2\rceil=k\)</span> de L00 §6.1.)</p>
-<p><em>Paso 2: la suma, con <span class="math inline">\(n\)</span> par.</em> Abrevio <span class="math inline">\(h=n/2\)</span> (un entero, porque <span class="math inline">\(n\)</span> es par).</p>
-<ul>
-<li><strong>Tengo:</strong> el Paso 1, <span class="math inline">\(R_{2j}=j\)</span> y <span class="math inline">\(R_{2j+1}=j+1\)</span>; y la Parte 1 del Teorema 2, <span class="math inline">\(\sum_{k=0}^{N-1}k=\frac{N(N-1)}{2}\)</span> para todo <span class="math inline">\(N\ge1\)</span>.</li>
-<li><strong>Quiero:</strong> <span class="math inline">\(H_n\overset{?}{=}h^2\)</span>, es decir, <span class="math inline">\(\big(\frac n2\big)^2\)</span>.</li>
-<li><strong>Plan:</strong> juntar cada <span class="math inline">\(k\)</span> par, <span class="math inline">\(k=2j\)</span>, con el impar que le sigue, <span class="math inline">\(k=2j+1\)</span>. Cada pareja se calcula con el Paso 1, y lo que queda es una suma que ya sé hacer.</li>
-</ul>
-<p>La columna de números usa <span class="math inline">\(n=4\)</span>, así que <span class="math inline">\(h=2\)</span> y las parejas son <span class="math inline">\(k=0,1\)</span> (con <span class="math inline">\(j=0\)</span>) y <span class="math inline">\(k=2,3\)</span> (con <span class="math inline">\(j=1\)</span>).</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(n=4\)</span>, <span class="math inline">\(h=2\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(H_n=\sum_{k=0}^{n-1}R_k\)</span></td>
-<td><span class="math inline">\(0+1+1+2=4\)</span></td>
-<td><strong>Parto del total:</strong> la inserción <span class="math inline">\(k\)</span> mueve <span class="math inline">\(R_k\)</span>.</td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(H_n=\sum_{j=0}^{h-1}(R_{2j}+R_{2j+1})\)</span></td>
-<td><span class="math inline">\((0+1)+(1+2)=4\)</span></td>
-<td><strong>Agrupo por parejas</strong> <span class="math inline">\(k=2j\)</span> y <span class="math inline">\(k=2j+1\)</span>. Se vale porque <span class="math inline">\(n\)</span> es par: los <span class="math inline">\(k\)</span> de <span class="math inline">\(0\)</span> a <span class="math inline">\(n-1\)</span> se parten exactamente en <span class="math inline">\(h\)</span> parejas (la última es <span class="math inline">\(k=n-2,\,n-1\)</span>, con <span class="math inline">\(j=h-1\)</span>), y agrupar los sumandos de una suma no cambia el resultado.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(H_n=\sum_{j=0}^{h-1}\big(j+(j+1)\big)\)</span></td>
-<td><span class="math inline">\((0+1)+(1+2)=4\)</span></td>
-<td><strong>Uso el Paso 1 ← aquí,</strong> sus dos casos: el par aporta <span class="math inline">\(j\)</span> y el impar <span class="math inline">\(j+1\)</span>.</td>
-</tr>
-<tr>
-<td>4</td>
-<td><span class="math inline">\(H_n=\sum_{j=0}^{h-1}(2j+1)\)</span></td>
-<td><span class="math inline">\(1+3=4\)</span></td>
-<td><strong>Junto</strong> <span class="math inline">\(j+j=2j\)</span>.</td>
-</tr>
-<tr>
-<td>5</td>
-<td><span class="math inline">\(H_n=\sum_{j=0}^{h-1}2j+\sum_{j=0}^{h-1}1\)</span></td>
-<td><span class="math inline">\((0+2)+(1+1)=4\)</span></td>
-<td><strong>Separo la suma en dos.</strong> Se vale porque sumar los <span class="math inline">\(a_j+b_j\)</span> es lo mismo que sumar los <span class="math inline">\(a_j\)</span> y luego los <span class="math inline">\(b_j\)</span>: son los mismos sumandos en otro orden.</td>
-</tr>
-<tr>
-<td>6</td>
-<td><span class="math inline">\(H_n=2\sum_{j=0}^{h-1}j+h\)</span></td>
-<td><span class="math inline">\(2\cdot1+2=4\)</span></td>
-<td><strong>Saco el factor 2</strong> de la primera suma (distributiva al revés: <span class="math inline">\(2a+2b=2(a+b)\)</span>) y <strong>cuento</strong> la segunda: son <span class="math inline">\(h\)</span> unos.</td>
-</tr>
-<tr>
-<td>7</td>
-<td><span class="math inline">\(H_n=2\cdot\dfrac{h(h-1)}{2}+h\)</span></td>
-<td><span class="math inline">\(2\cdot\dfrac{2\cdot1}{2}+2=4\)</span></td>
-<td><strong>Uso la Parte 1 del Teorema 2</strong> con <span class="math inline">\(N=h\)</span>.</td>
-</tr>
-<tr>
-<td>8</td>
-<td><span class="math inline">\(H_n=h(h-1)+h\)</span></td>
-<td><span class="math inline">\(2\cdot1+2=4\)</span></td>
-<td><strong>Cancelo</strong> el 2 con el <span class="math inline">\(\frac12\)</span>.</td>
-</tr>
-<tr>
-<td>9</td>
-<td><span class="math inline">\(H_n=h^2-h+h\)</span></td>
-<td><span class="math inline">\(4-2+2=4\)</span></td>
-<td><strong>Distributiva:</strong> <span class="math inline">\(h(h-1)=h^2-h\)</span>.</td>
-</tr>
-<tr>
-<td>10</td>
-<td><span class="math inline">\(H_n=h^2\)</span></td>
-<td><span class="math inline">\(2^2=4\)</span></td>
-<td><strong>Cancelo</strong> <span class="math inline">\(-h+h=0\)</span>. Como <span class="math inline">\(h=\frac n2\)</span>, es <span class="math inline">\(\big(\frac n2\big)^2\)</span> ✓</td>
-</tr>
-</tbody>
-</table></div>
-<p><em>Con <span class="math inline">\(n=1000\)</span>:</em> <span class="math inline">\(h=500\)</span> y <span class="math inline">\(H_{1000}=500^2=250\,000\)</span>, lo que imprime el programa.</p>
-<p><em>Paso 3: con <span class="math inline">\(n\)</span> impar.</em> Plan: separar la última inserción, para que lo demás sea el caso par con <span class="math inline">\(n-1\)</span>. Si <span class="math inline">\(n=1\)</span>, la única inserción mueve 0, y <span class="math inline">\(H_1=0\)</span>. Si <span class="math inline">\(n\ge3\)</span> es impar, <span class="math inline">\(n-1\ge2\)</span> es par. La columna de números usa <span class="math inline">\(n=3\)</span>, donde <span class="math inline">\(H_3=0+1+1=2\)</span>:</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(n=3\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(H_n=H_{n-1}+R_{n-1}\)</span></td>
-<td><span class="math inline">\(1+1=2\)</span></td>
-<td><strong>Separo la última inserción,</strong> la <span class="math inline">\(k=n-1\)</span>. Las primeras <span class="math inline">\(n-1\)</span> suman <span class="math inline">\(H_{n-1}\)</span>.</td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(H_n=\big(\tfrac{n-1}{2}\big)^2+R_{n-1}\)</span></td>
-<td><span class="math inline">\(1^2+1=2\)</span></td>
-<td><strong>Uso el Paso 2</strong> con <span class="math inline">\(n-1\)</span>, que es par.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(H_n=\big(\tfrac{n-1}{2}\big)^2+\tfrac{n-1}{2}\)</span></td>
-<td><span class="math inline">\(1+1=2\)</span></td>
-<td><strong>Uso el Paso 1, caso par,</strong> con <span class="math inline">\(j=\frac{n-1}{2}\)</span>: <span class="math inline">\(R_{2j}=j\)</span>.</td>
-</tr>
-<tr>
-<td>4</td>
-<td><span class="math inline">\(H_n=\dfrac{n^2-2n+1}{4}+\dfrac{2n-2}{4}\)</span></td>
-<td><span class="math inline">\(\dfrac44+\dfrac44=2\)</span></td>
-<td><strong>Desarrollo el cuadrado</strong> (el de arriba es <span class="math inline">\((n-1)^2=n^2-2n+1\)</span>) y <strong>pongo el segundo término sobre 4</strong> (multiplico por <span class="math inline">\(\frac22=1\)</span>).</td>
-</tr>
-<tr>
-<td>5</td>
-<td><span class="math inline">\(H_n=\dfrac{n^2-1}{4}\)</span></td>
-<td><span class="math inline">\(\dfrac84=2\)</span></td>
-<td><strong>Sumo las fracciones:</strong> <span class="math inline">\(-2n+2n=0\)</span> y <span class="math inline">\(1-2=-1\)</span> ✓</td>
-</tr>
-</tbody>
-</table></div>
-<p>También vale para <span class="math inline">\(n=1\)</span>: <span class="math inline">\(\frac{1-1}{4}=0=H_1\)</span>. En los dos casos <span class="math inline">\(H_n=\lfloor n^2/4\rfloor\)</span>: si <span class="math inline">\(n\)</span> es par, <span class="math inline">\(\frac{n^2}{4}\)</span> ya es entero; si es impar, <span class="math inline">\(\frac{n^2}{4}=\frac{n^2-1}{4}+\frac14\)</span> con <span class="math inline">\(\frac{n^2-1}{4}\)</span> entero, y el piso quita justo el <span class="math inline">\(\frac14\)</span>.</p>
-<p><em>Por qué es <span class="math inline">\(\Theta(n^2)\)</span>.</em> Por arriba, <span class="math inline">\(H_n\le\frac{n^2}{4}\)</span> en los dos casos. Por abajo, <span class="math inline">\(H_n\ge\frac{n^2-1}{4}\)</span> en los dos casos, y <span class="math inline">\(\frac{n^2-1}{4}\ge\frac{n^2}{8}\)</span> cuando <span class="math inline">\(n\ge2\)</span>: multiplicar por <span class="math inline">\(8&gt;0\)</span> no voltea la desigualdad y la deja como <span class="math inline">\(2n^2-2\ge n^2\)</span>; restando <span class="math inline">\(n^2\)</span> y sumando 2 a los dos lados queda <span class="math inline">\(n^2\ge2\)</span>, que se cumple si <span class="math inline">\(n\ge2\)</span>. Entonces <span class="math inline">\(\frac18n^2\le H_n\le\frac14n^2\)</span> para <span class="math inline">\(n\ge2\)</span> (<em>con <span class="math inline">\(n=3\)</span>:</em> <span class="math inline">\(1.125\le2\le2.25\)</span> ✓). <strong>La mitad de cuadrático sigue siendo cuadrático.</strong> El programa lo cuenta:</p>
+<p>Insertar siempre <strong>a la mitad</strong>: la inserción <span class="math inline">\(k\)</span> (con <span class="math inline">\(k\)</span> elementos) va en la posición <span class="math inline">\(i=\lfloor k/2\rfloor\)</span> y, por el Lema 1, mueve <span class="math inline">\(R_k=k-\lfloor k/2\rfloor\)</span> elementos. Llamo <span class="math inline">\(H_n\)</span> al total de movimientos de <span class="math inline">\(n\)</span> inserciones a la mitad. Uso la definición de L00 §6.1: <span class="math inline">\(\lfloor x\rfloor\)</span> es el mayor entero <span class="math inline">\(\le x\)</span>. Todo entero <span class="math inline">\(k\ge0\)</span> es par, <span class="math inline">\(k=2j\)</span>, o impar, <span class="math inline">\(k=2j+1\)</span>, con <span class="math inline">\(j\)</span> entero.</p>
+<p><strong>Paso 1. Caso par, <span class="math inline">\(k=2j\)</span>.</strong> <span class="math inline">\(\lfloor 2j/2\rfloor=\lfloor j\rfloor=j\)</span>, porque <span class="math inline">\(j\)</span> ya es entero: <span class="math display">\[R_{2j}=2j-j=j\]</span></p>
+<p><strong>Paso 2. Caso impar, <span class="math inline">\(k=2j+1\)</span>.</strong> <span class="math inline">\(\frac{2j+1}{2}=j+\frac12\)</span>, y <span class="math inline">\(\lfloor j+\frac12\rfloor=j\)</span> porque <span class="math inline">\(j\le j+\frac12&lt;j+1\)</span>: <span class="math display">\[R_{2j+1}=(2j+1)-j=j+1\]</span></p>
+<p><strong>Paso 3. Acoto <span class="math inline">\(R_k\)</span> entre <span class="math inline">\(\frac k2\)</span> y <span class="math inline">\(k\)</span>.</strong> Por arriba, <span class="math inline">\(R_k\le k\)</span> porque a <span class="math inline">\(k\)</span> le resto <span class="math inline">\(\lfloor k/2\rfloor\ge0\)</span>. Por abajo, en el caso par <span class="math inline">\(R_k=j=\frac{2j}{2}=\frac k2\)</span>, y en el impar <span class="math inline">\(R_k=j+1=\frac{2j+2}{2}&gt;\frac{2j+1}{2}=\frac k2\)</span>: <span class="math display">\[\frac k2\le R_k\le k\]</span></p>
+<p><strong>Paso 4. Sumo sobre las <span class="math inline">\(n\)</span> inserciones.</strong> Sumar desigualdades término a término conserva la dirección, y <span class="math inline">\(\sum_{k=0}^{n-1}k=M=\frac{n(n-1)}{2}\)</span> (Parte 1): <span class="math display">\[\frac12M\le H_n\le M\]</span></p>
+<p><strong>Paso 5. Uso las cotas de <span class="math inline">\(M\)</span></strong> de arriba, <span class="math inline">\(\frac{n^2}{4}\le M\le\frac{n^2}{2}\)</span> para <span class="math inline">\(n\ge2\)</span>. Multiplicar la de abajo por <span class="math inline">\(\frac12&gt;0\)</span> no la voltea: <span class="math display">\[\frac{n^2}{8}\le H_n\le\frac{n^2}{2}\]</span></p>
+<p><strong>Paso 6. Compruebo con <span class="math inline">\(n=4\)</span>.</strong> Las inserciones mueven <span class="math inline">\(R_0,\dots,R_3=0,1,1,2\)</span>, así que <span class="math inline">\(H_4=4\)</span>. Con <span class="math inline">\(M=6\)</span>, el paso 4 da <span class="math inline">\(3\le4\le6\)</span> y el paso 5 da <span class="math inline">\(2\le4\le8\)</span> ✓.</p>
+<p>Con <span class="math inline">\(n\)</span> par sale incluso el valor exacto, <span class="math inline">\(H_n=(n/2)^2\)</span>: cada pareja <span class="math inline">\(k=2j,\,2j+1\)</span> aporta <span class="math inline">\(j+(j+1)=2j+1\)</span>, y la suma de los primeros <span class="math inline">\(n/2\)</span> impares es <span class="math inline">\((n/2)^2\)</span>. Con <span class="math inline">\(n=1000\)</span> da <span class="math inline">\(500^2=250\,000\)</span>. <strong>La mitad de cuadrático sigue siendo cuadrático.</strong> El programa lo cuenta:</p>
 <div class="tabs"><div aria-label="Lenguaje" class="tablist" role="tablist"><button aria-controls="t2-0" aria-selected="false" data-lang="c" id="t2-0-b" role="tab" tabindex="-1" type="button">C</button><button aria-controls="t2-1" aria-selected="false" data-lang="cpp" id="t2-1-b" role="tab" tabindex="-1" type="button">C++</button><button aria-controls="t2-2" aria-selected="false" data-lang="rust" id="t2-2-b" role="tab" tabindex="-1" type="button">Rust</button></div><div aria-labelledby="t2-0-b" class="panel" data-lang="c" id="t2-0" role="tabpanel"><div class="sourceCode" id="cb7"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb7-1"><a aria-hidden="true" href="#cb7-1" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
 <span id="cb7-2"><a aria-hidden="true" href="#cb7-2" tabindex="-1"></a></span>
 <span id="cb7-3"><a aria-hidden="true" href="#cb7-3" tabindex="-1"></a><span class="pp">#define N </span><span class="dv">1000</span></span>
@@ -1086,353 +713,73 @@ al final:   0 movimientos</code></pre>
 <p><strong>Teorema 3.</strong> Si cada inserción elige su posición de manera uniforme e independiente entre las <span class="math inline">\(k+1\)</span> posibles, el número esperado de movimientos de <span class="math inline">\(n\)</span> inserciones desde la secuencia vacía es <span class="math inline">\(n(n-1)/4\)</span>.</p>
 </blockquote>
 <p><em>Demostración.</em> Sea <span class="math inline">\(M_k\)</span> el número de movimientos de la inserción <span class="math inline">\(k\)</span> (con <span class="math inline">\(k\)</span> elementos presentes) e <span class="math inline">\(I_k\)</span> su posición, uniforme en <span class="math inline">\(\{0,\dots,k\}\)</span>: cada una de las <span class="math inline">\(k+1\)</span> posiciones sale con probabilidad <span class="math inline">\(\frac1{k+1}\)</span>. Por el Lema 1, con tamaño <span class="math inline">\(k\)</span> y posición <span class="math inline">\(I_k\)</span>, <span class="math inline">\(M_k = k - I_k\)</span>.</p>
-<p><em>Paso 1: una inserción.</em></p>
-<ul>
-<li><strong>Tengo:</strong> la definición de esperanza (L00 §9.2): la suma de cada valor por su probabilidad; aquí cada valor <span class="math inline">\(i\in\{0,\dots,k\}\)</span> tiene probabilidad <span class="math inline">\(\frac1{k+1}\)</span>. Y Gauss (L00 §7.2): <span class="math inline">\(0+1+\dots+k=\frac{k(k+1)}{2}\)</span> (el 0 no aporta; con <span class="math inline">\(k=0\)</span> los dos lados valen 0).</li>
-<li><strong>Quiero:</strong> <span class="math inline">\(\mathbb{E}[M_k]\overset{?}{=}\frac k2\)</span>.</li>
-<li><strong>Plan:</strong> calcular primero <span class="math inline">\(\mathbb{E}[I_k]\)</span>, que sale de Gauss, y luego pasar a <span class="math inline">\(M_k=k-I_k\)</span> por linealidad.</li>
-</ul>
-<p>La columna de números usa <span class="math inline">\(k=2\)</span>: <span class="math inline">\(I_2\)</span> vale 0, 1 o 2, cada uno con probabilidad <span class="math inline">\(\frac13\)</span>.</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(k=2\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(\mathbb{E}[I_k]=\sum_{i=0}^{k}i\cdot\dfrac{1}{k+1}\)</span></td>
-<td><span class="math inline">\(\dfrac03+\dfrac13+\dfrac23=1\)</span></td>
-<td><strong>Parto de la definición de esperanza.</strong></td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(\mathbb{E}[I_k]=\dfrac{1}{k+1}\sum_{i=0}^{k}i\)</span></td>
-<td><span class="math inline">\(\dfrac13(0+1+2)=1\)</span></td>
-<td><strong>Saco el factor común <span class="math inline">\(\frac1{k+1}\)</span>.</strong> Se vale por la distributiva: <span class="math inline">\(\frac1{k+1}\)</span> no depende de <span class="math inline">\(i\)</span>, es el mismo en todos los sumandos.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(\mathbb{E}[I_k]=\dfrac{1}{k+1}\cdot\dfrac{k(k+1)}{2}\)</span></td>
-<td><span class="math inline">\(\dfrac13\cdot\dfrac{2\cdot3}{2}=1\)</span></td>
-<td><strong>Uso Gauss ← aquí</strong> para <span class="math inline">\(0+1+\dots+k\)</span>.</td>
-</tr>
-<tr>
-<td>4</td>
-<td><span class="math inline">\(\mathbb{E}[I_k]=\dfrac{k}{2}\)</span></td>
-<td><span class="math inline">\(\dfrac22=1\)</span></td>
-<td><strong>Cancelo <span class="math inline">\(k+1\)</span></strong> arriba y abajo. Se vale porque <span class="math inline">\(k+1\ge1\)</span> no es cero.</td>
-</tr>
-</tbody>
-</table></div>
-<p>Ahora paso de la posición a los movimientos:</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(k=2\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(\mathbb{E}[M_k]=\mathbb{E}[k-I_k]\)</span></td>
-<td><span class="math inline">\(\dfrac{2+1+0}{3}=1\)</span></td>
-<td><strong>Uso el Lema 1:</strong> <span class="math inline">\(M_k=k-I_k\)</span>. Con <span class="math inline">\(I_2=0,1,2\)</span> se mueven <span class="math inline">\(2,1,0\)</span>.</td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(\mathbb{E}[M_k]=\sum_{i=0}^{k}(k-i)\cdot\dfrac{1}{k+1}\)</span></td>
-<td><span class="math inline">\(\dfrac23+\dfrac13+\dfrac03=1\)</span></td>
-<td><strong>Uso la definición de esperanza:</strong> <span class="math inline">\(M_k\)</span> vale <span class="math inline">\(k-i\)</span> con probabilidad <span class="math inline">\(\frac1{k+1}\)</span>.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(\mathbb{E}[M_k]=\sum_{i=0}^{k}\dfrac{k}{k+1}-\sum_{i=0}^{k}\dfrac{i}{k+1}\)</span></td>
-<td><span class="math inline">\(\dfrac{2+2+2}{3}-\dfrac{0+1+2}{3}=1\)</span></td>
-<td><strong>Separo la suma en dos.</strong> Distributiva: <span class="math inline">\((k-i)\cdot\frac1{k+1}\)</span> es <span class="math inline">\(\frac{k}{k+1}-\frac{i}{k+1}\)</span>; y sumar diferencias es lo mismo que restar las sumas.</td>
-</tr>
-<tr>
-<td>4</td>
-<td><span class="math inline">\(\mathbb{E}[M_k]=k\sum_{i=0}^{k}\dfrac{1}{k+1}-\mathbb{E}[I_k]\)</span></td>
-<td><span class="math inline">\(2\cdot\dfrac33-1=1\)</span></td>
-<td><strong>Saco el factor común <span class="math inline">\(k\)</span></strong> de la primera suma (no depende de <span class="math inline">\(i\)</span>), y <strong>reconozco</strong> la segunda: es el renglón 1 de la tabla anterior.</td>
-</tr>
-<tr>
-<td>5</td>
-<td><span class="math inline">\(\mathbb{E}[M_k]=k-\mathbb{E}[I_k]\)</span></td>
-<td><span class="math inline">\(2-1=1\)</span></td>
-<td><strong>Las probabilidades suman 1:</strong> son <span class="math inline">\(k+1\)</span> sumandos iguales a <span class="math inline">\(\frac1{k+1}\)</span>.</td>
-</tr>
-<tr>
-<td>6</td>
-<td><span class="math inline">\(\mathbb{E}[M_k]=k-\dfrac k2\)</span></td>
-<td><span class="math inline">\(2-1=1\)</span></td>
-<td><strong>Uso la tabla anterior:</strong> <span class="math inline">\(\mathbb{E}[I_k]=\frac k2\)</span>.</td>
-</tr>
-<tr>
-<td>7</td>
-<td><span class="math inline">\(\mathbb{E}[M_k]=\dfrac k2\)</span></td>
-<td><span class="math inline">\(\dfrac22=1\)</span></td>
-<td><strong>Resto:</strong> <span class="math inline">\(k\)</span> es <span class="math inline">\(\frac{2k}{2}\)</span>, y <span class="math inline">\(\frac{2k}{2}-\frac k2=\frac k2\)</span> ✓</td>
-</tr>
-</tbody>
-</table></div>
-<p><em>Paso 2: las <span class="math inline">\(n\)</span> inserciones.</em> Llamo <span class="math inline">\(X=\sum_{k=0}^{n-1}M_k\)</span> al total de movimientos.</p>
-<ul>
-<li><strong>Tengo:</strong> <span class="math inline">\(\mathbb{E}[M_k]=\frac k2\)</span> (Paso 1) y <span class="math inline">\(\sum_{k=0}^{n-1}k=\frac{n(n-1)}{2}\)</span> (Teorema 2, Parte 1).</li>
-<li><strong>Quiero:</strong> <span class="math inline">\(\mathbb{E}[X]\overset{?}{=}\frac{n(n-1)}{4}\)</span>.</li>
-<li><strong>Plan:</strong> la esperanza de una suma es la suma de las esperanzas, y cada una la da el Paso 1.</li>
-</ul>
-<p>La columna de números usa <span class="math inline">\(n=3\)</span>. <span class="math inline">\(M_0=0\)</span> siempre, <span class="math inline">\(M_1\)</span> vale 1 o 0, y <span class="math inline">\(M_2\)</span> vale 2, 1 o 0. Como las posiciones son uniformes e independientes, las <span class="math inline">\(2\cdot3=6\)</span> combinaciones de <span class="math inline">\((M_1,M_2)\)</span> son igual de probables, y en ellas <span class="math inline">\(X\)</span> vale <span class="math inline">\(3,2,1,2,1,0\)</span>. El renglón 1 promedia esas seis; los demás renglones ya no necesitan la independencia.</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(n=3\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(\mathbb{E}[X]=\mathbb{E}\Big[\sum_{k=0}^{n-1}M_k\Big]\)</span></td>
-<td><span class="math inline">\(\dfrac{3+2+1+2+1+0}{6}=\dfrac32\)</span></td>
-<td><strong>Parto de la definición de <span class="math inline">\(X\)</span>.</strong></td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(\mathbb{E}[X]=\sum_{k=0}^{n-1}\mathbb{E}[M_k]\)</span></td>
-<td><span class="math inline">\(0+\dfrac12+1=\dfrac32\)</span></td>
-<td><strong>Linealidad de la esperanza</strong> (L00 §9.2): la esperanza de una suma es la suma de las esperanzas, aunque las variables dependan entre sí.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(\mathbb{E}[X]=\sum_{k=0}^{n-1}\dfrac{k}{2}\)</span></td>
-<td><span class="math inline">\(\dfrac02+\dfrac12+\dfrac22=\dfrac32\)</span></td>
-<td><strong>Uso el Paso 1 ← aquí</strong> en cada sumando.</td>
-</tr>
-<tr>
-<td>4</td>
-<td><span class="math inline">\(\mathbb{E}[X]=\dfrac12\sum_{k=0}^{n-1}k\)</span></td>
-<td><span class="math inline">\(\dfrac12(0+1+2)=\dfrac32\)</span></td>
-<td><strong>Saco el factor común <span class="math inline">\(\frac12\)</span></strong> (distributiva al revés).</td>
-</tr>
-<tr>
-<td>5</td>
-<td><span class="math inline">\(\mathbb{E}[X]=\dfrac12\cdot\dfrac{n(n-1)}{2}\)</span></td>
-<td><span class="math inline">\(\dfrac12\cdot\dfrac{3\cdot2}{2}=\dfrac32\)</span></td>
-<td><strong>Uso el Teorema 2</strong> (Parte 1) para la suma.</td>
-</tr>
-<tr>
-<td>6</td>
-<td><span class="math inline">\(\mathbb{E}[X]=\dfrac{n(n-1)}{4}\)</span></td>
-<td><span class="math inline">\(\dfrac{3\cdot2}{4}=\dfrac32\)</span></td>
-<td><strong>Multiplico las fracciones:</strong> numerador por numerador y denominador por denominador (<span class="math inline">\(2\cdot2=4\)</span>) ✓</td>
-</tr>
-</tbody>
-</table></div>
-<p><span class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Etapa 1. Una inserción.</strong> Quiero ver que <span class="math inline">\(\mathbb{E}[M_k]=\frac k2\)</span>. Uso la definición de esperanza (L00 §9.2), la suma de cada valor por su probabilidad, y Gauss (L00 §7.2) empezando en 0 (el 0 no aporta; con <span class="math inline">\(k=0\)</span> los dos lados valen 0): <span class="math display">\[\boxed{\,0+1+\dots+k=\frac{k(k+1)}{2}\,}\qquad\text{(Gauss)}\]</span></p>
+<p><strong>Paso 1. Veo qué valores toma <span class="math inline">\(M_k\)</span>.</strong> Por el Lema 1, <span class="math inline">\(M_k=k-I_k\)</span>. Cuando <span class="math inline">\(I_k\)</span> recorre <span class="math inline">\(0,\dots,k\)</span>, <span class="math inline">\(M_k\)</span> recorre los mismos números al revés, así que cada valor <span class="math inline">\(v\in\{0,\dots,k\}\)</span> sale con probabilidad <span class="math inline">\(\frac1{k+1}\)</span>: <span class="math display">\[I_k=0,\ 1,\ \dots,\ k\quad\longrightarrow\quad M_k=k,\ k-1,\ \dots,\ 0\]</span></p>
+<p><strong>Paso 2. Uso la definición de esperanza:</strong> <span class="math display">\[\mathbb{E}[M_k]=\sum_{v=0}^{k}v\cdot\frac{1}{k+1}\]</span></p>
+<p><strong>Paso 3. Saco el factor común <span class="math inline">\(\frac1{k+1}\)</span>.</strong> Es la distributiva: <span class="math inline">\(\frac1{k+1}\)</span> no depende de <span class="math inline">\(v\)</span>, es el mismo en todos los sumandos. Lo que queda dentro es la caja de Gauss: <span class="math display">\[\mathbb{E}[M_k]=\frac{1}{k+1}\,\boxed{\sum_{v=0}^{k}v}\]</span></p>
+<p><strong>Paso 4. Uso Gauss:</strong> <span class="math display">\[\mathbb{E}[M_k]=\frac{1}{k+1}\cdot\frac{k(k+1)}{2}\]</span></p>
+<p><strong>Paso 5. Cancelo <span class="math inline">\(k+1\)</span></strong> arriba y abajo. Se vale porque <span class="math inline">\(k+1\ge1\)</span> no es cero: <span class="math display">\[\boxed{\,\mathbb{E}[M_k]=\frac k2\,}\]</span></p>
+<p><strong>Paso 6. Compruebo con <span class="math inline">\(k=2\)</span>.</strong> Con <span class="math inline">\(I_2=0,1,2\)</span> se mueven <span class="math inline">\(2,1,0\)</span>, cada uno con probabilidad <span class="math inline">\(\frac13\)</span>: <span class="math inline">\(\frac23+\frac13+\frac03=1=\frac22\)</span> ✓.</p>
+<p><strong>Etapa 2. Las <span class="math inline">\(n\)</span> inserciones.</strong> Llamo <span class="math inline">\(X=\sum_{k=0}^{n-1}M_k\)</span> al total de movimientos. Quiero ver que <span class="math inline">\(\mathbb{E}[X]=\frac{n(n-1)}{4}\)</span>. Además de la caja de la Etapa 1, uso la Parte 1 del Teorema 2: <span class="math display">\[\boxed{\,\sum_{k=0}^{n-1}k=\frac{n(n-1)}{2}\,}\qquad\text{(Parte 1)}\]</span></p>
+<p><strong>Paso 1. Uso la linealidad de la esperanza</strong> (L00 §9.2) en <span class="math inline">\(X=\sum_k M_k\)</span>: la esperanza de una suma es la suma de las esperanzas, aunque las variables dependan entre sí: <span class="math display">\[\mathbb{E}[X]=\sum_{k=0}^{n-1}\boxed{\mathbb{E}[M_k]}\]</span></p>
+<p><strong>Paso 2. Uso la Etapa 1</strong> en cada sumando: <span class="math display">\[\mathbb{E}[X]=\sum_{k=0}^{n-1}\frac{k}{2}\]</span></p>
+<p><strong>Paso 3. Saco el factor común <span class="math inline">\(\frac12\)</span></strong> (distributiva al revés): <span class="math display">\[\mathbb{E}[X]=\frac12\,\boxed{\sum_{k=0}^{n-1}k}\]</span></p>
+<p><strong>Paso 4. Uso la Parte 1:</strong> <span class="math display">\[\mathbb{E}[X]=\frac12\cdot\frac{n(n-1)}{2}\]</span></p>
+<p><strong>Paso 5. Multiplico las fracciones.</strong> Numerador por numerador y denominador por denominador (<span class="math inline">\(2\cdot2=4\)</span>): <span class="math display">\[\mathbb{E}[X]=\frac{n(n-1)}{4}\ ✓\]</span></p>
+<p><strong>Paso 6. Compruebo con <span class="math inline">\(n=3\)</span>.</strong> <span class="math inline">\(M_0=0\)</span> siempre, <span class="math inline">\(M_1\)</span> vale 1 o 0, y <span class="math inline">\(M_2\)</span> vale 2, 1 o 0. Como las posiciones son uniformes e independientes, las <span class="math inline">\(2\cdot3=6\)</span> combinaciones de <span class="math inline">\((M_1,M_2)\)</span> son igual de probables, y en ellas <span class="math inline">\(X\)</span> vale <span class="math inline">\(3,2,1,2,1,0\)</span>. Su promedio es <span class="math inline">\(\frac{9}{6}=\frac32\)</span>, y la fórmula da <span class="math inline">\(\frac{3\cdot2}{4}=\frac32\)</span> ✓. (Este promedio directo sí usa la independencia; la demostración no la necesitó.) <span class="math inline">\(\blacksquare\)</span></p>
 <p>Observa que <strong>esperado</strong> (<span class="math inline">\(n(n-1)/4\approx n^2/4\)</span>, promedio sobre posiciones elegidas al azar; aquí el azar está en la entrada, no en el algoritmo como en L01 §6.8) y <strong>amortizado</strong> (garantía sobre toda secuencia, L01 §6.8) son conceptos distintos, y aquí ambos dan <span class="math inline">\(\Theta(n^2)\)</span> para <span class="math inline">\(n\)</span> inserciones en medio: no hay contabilidad que salve un corrimiento.</p>
 <h3 id="análisis-amortizado-con-insert-y-erase-mezclados">4.4 Análisis amortizado con <code>insert</code> y <code>erase</code> mezclados</h3>
 <p>De la L01 sabemos que <span class="math inline">\(\Phi(D) = \max(0, 2k - m)\)</span> (con <span class="math inline">\(k\)</span> = tamaño, <span class="math inline">\(m\)</span> = capacidad) demuestra <code>push_back</code> en <span class="math inline">\(O(1)\)</span> amortizado. ¿Sigue valiendo con <code>insert</code> y <code>erase</code> arbitrarios?</p>
 <blockquote>
 <p><strong>Teorema 4.</strong> Con duplicación y sin contracción, y la misma <span class="math inline">\(\Phi\)</span>, el costo amortizado de <code>insert(i, x)</code> es a lo más <span class="math inline">\((k - i) + 3\)</span> y el de <code>erase(i)</code> a lo más <span class="math inline">\(k - i\)</span>, donde <span class="math inline">\(k\)</span> es el tamaño antes de la operación.</p>
 </blockquote>
-<p><em>Demostración.</em> Contamos como costo cada escritura de un elemento (movimiento, copia o escritura del nuevo). Recuerda (L01 §6.4) que el costo amortizado es <span class="math inline">\(\hat c=c+\Delta\Phi\)</span>, con <span class="math inline">\(\Delta\Phi=\Phi'-\Phi\)</span>: <span class="math inline">\(\Phi\)</span> es el potencial antes de la operación y <span class="math inline">\(\Phi'\)</span> el de después. Para abreviar, llamo <span class="math inline">\(y=2k-m\)</span>, así que <span class="math inline">\(\Phi=\max(0,y)\)</span>. En cada caso parto de <span class="math inline">\(\hat c=c+\Phi'-\Phi\)</span>, sustituyo <span class="math inline">\(c\)</span> y <span class="math inline">\(\Phi'\)</span>, y simplifico hasta la cota.</p>
-<p><em>Dos hechos sobre <span class="math inline">\(\max\)</span> que usaremos.</em> Para cualquier número <span class="math inline">\(y\)</span> y cualquier <span class="math inline">\(d\ge0\)</span>:</p>
+<p><em>Demostración.</em> Contamos como costo cada escritura de un elemento (movimiento, copia o escritura del nuevo). Recuerda (L01 §6.4) que el costo amortizado es <span class="math inline">\(\hat c=c+\Delta\Phi\)</span>, con <span class="math inline">\(\Delta\Phi=\Phi'-\Phi\)</span>: <span class="math inline">\(\Phi\)</span> es el potencial antes de la operación y <span class="math inline">\(\Phi'\)</span> el de después. Para abreviar, llamo <span class="math inline">\(y=2k-m\)</span>, así que <span class="math inline">\(\Phi=\max(0,y)\)</span>. En cada caso parto de <span class="math inline">\(\hat c=c+\Phi'-\Phi\)</span>.</p>
+<p><em>Dos hechos sobre <span class="math inline">\(\max\)</span> que usaremos.</em> Para cualquier número <span class="math inline">\(y\)</span> y cualquier <span class="math inline">\(d\ge0\)</span>: <span class="math display">\[
+\begin{aligned}
+&amp;\boxed{\,\max(0,y+d)\le\max(0,y)+d\,}&amp;&amp;\text{(Hecho 1)}\\
+&amp;\boxed{\,\max(0,y-d)\le\max(0,y)\,}&amp;&amp;\text{(Hecho 2)}
+\end{aligned}
+\]</span></p>
+<p><em>Por qué vale el Hecho 1.</em> Miro cuál de los dos candidatos gana el máximo de la izquierda.</p>
 <ul>
-<li><strong>Hecho 1:</strong> <span class="math inline">\(\max(0,y+d)\le\max(0,y)+d\)</span>. Si <span class="math inline">\(y+d\le0\)</span>, el lado izquierdo es <span class="math inline">\(0\)</span>, y <span class="math inline">\(0\le\max(0,y)+d\)</span> porque ambos sumandos son <span class="math inline">\(\ge0\)</span>. Si no, el lado izquierdo es <span class="math inline">\(y+d\)</span>, y <span class="math inline">\(y+d\le\max(0,y)+d\)</span> porque <span class="math inline">\(y\le\max(0,y)\)</span>.</li>
-<li><strong>Hecho 2:</strong> <span class="math inline">\(\max(0,y-d)\le\max(0,y)\)</span>. Los dos candidatos del máximo izquierdo no pasan de <span class="math inline">\(\max(0,y)\)</span>: <span class="math inline">\(0\le\max(0,y)\)</span>, y <span class="math inline">\(y-d\le y\le\max(0,y)\)</span>.</li>
+<li>Si <span class="math inline">\(y+d\le0\)</span>, la izquierda es <span class="math inline">\(0\)</span>, y <span class="math inline">\(0\le\max(0,y)+d\)</span> porque los dos sumandos son <span class="math inline">\(\ge0\)</span>.</li>
+<li>Si <span class="math inline">\(y+d&gt;0\)</span>, la izquierda es <span class="math inline">\(y+d\)</span>, y <span class="math inline">\(y+d\le\max(0,y)+d\)</span> porque <span class="math inline">\(y\le\max(0,y)\)</span> (sumo <span class="math inline">\(d\)</span> a los dos lados).</li>
+<li><em>Con números:</em> <span class="math inline">\(y=-1\)</span>, <span class="math inline">\(d=2\)</span>: <span class="math inline">\(\max(0,1)=1\le0+2=2\)</span> ✓.</li>
 </ul>
-<p><strong>Cómo leer las tablas de los tres casos:</strong></p>
+<p><em>Por qué vale el Hecho 2.</em> Los dos candidatos del máximo de la izquierda no pasan de <span class="math inline">\(\max(0,y)\)</span>:</p>
 <ul>
-<li><strong>Expresión:</strong> todos los renglones empiezan con <span class="math inline">\(\hat c\)</span>. Los primeros son igualdades; desde el renglón donde se usa una cota, son desigualdades <span class="math inline">\(\le\)</span>, y la última columna dice por qué cada una conserva la dirección.</li>
-<li><strong>Columna de números:</strong> el lado derecho del renglón con valores chicos. De un renglón al siguiente el número se queda igual (si el paso es una igualdad) o sube o se queda igual (si es una cota); nunca baja del valor real de <span class="math inline">\(\hat c\)</span>, que es el del renglón 1.</li>
-<li><strong>Qué hago · por qué se vale:</strong> primero la acción, en negritas; después la regla.</li>
+<li><span class="math inline">\(0\le\max(0,y)\)</span>;</li>
+<li><span class="math inline">\(y-d\le y\le\max(0,y)\)</span>, porque <span class="math inline">\(d\ge0\)</span>.</li>
+<li><em>Con números:</em> <span class="math inline">\(y=2\)</span>, <span class="math inline">\(d=2\)</span>: <span class="math inline">\(\max(0,0)=0\le2\)</span> ✓.</li>
 </ul>
-<p><em>Caso 1: <code>insert</code> sin realojar</em> (<span class="math inline">\(k&lt;m\)</span>). Costo real: <span class="math inline">\(c=(k-i)+1\)</span> (<span class="math inline">\(k-i\)</span> movimientos y una escritura, Lema 1). Después de insertar, el tamaño es <span class="math inline">\(k+1\)</span> y la capacidad sigue siendo <span class="math inline">\(m\)</span>. Así que <span class="math inline">\(\Phi'=\max\big(0,2(k+1)-m\big)\)</span>, y lo de adentro es <span class="math inline">\(y+2\)</span>: por la distributiva, <span class="math inline">\(2(k+1)-m\)</span> es <span class="math inline">\(2k+2-m\)</span>, y reordenando, <span class="math inline">\((2k-m)+2\)</span>. Es decir, <span class="math inline">\(\Phi'=\max(0,y+2)\)</span>. Los números usan <span class="math inline">\(k=5\)</span>, <span class="math inline">\(m=8\)</span>, <span class="math inline">\(i=2\)</span>: <span class="math inline">\(c=3+1=4\)</span>, <span class="math inline">\(\Phi=\max(0,10-8)=2\)</span> y <span class="math inline">\(\Phi'=\max(0,12-8)=4\)</span>.</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(k=5\)</span>, <span class="math inline">\(m=8\)</span>, <span class="math inline">\(i=2\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(\hat c=c+\Phi'-\Phi\)</span></td>
-<td><span class="math inline">\(4+4-2=6\)</span></td>
-<td><strong>Parto de la definición</strong> de costo amortizado.</td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(\hat c=c+\max(0,y+2)-\Phi\)</span></td>
-<td><span class="math inline">\(4+\max(0,4)-2=6\)</span></td>
-<td><strong>Escribo <span class="math inline">\(\Phi'\)</span> como <span class="math inline">\(\max(0,y+2)\)</span></strong> (arriba).</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(\hat c\le c+\max(0,y)+2-\Phi\)</span></td>
-<td><span class="math inline">\(4+2+2-2=6\)</span></td>
-<td><strong>Uso el Hecho 1 ← aquí,</strong> con <span class="math inline">\(d=2\ge0\)</span>. La dirección se conserva: cambio un sumando por otro mayor o igual, y lo demás no cambia.</td>
-</tr>
-<tr>
-<td>4</td>
-<td><span class="math inline">\(\hat c\le c+2\)</span></td>
-<td><span class="math inline">\(4+2=6\)</span></td>
-<td><strong>Cancelo</strong> <span class="math inline">\(\max(0,y)-\Phi=0\)</span>: son la misma cosa.</td>
-</tr>
-<tr>
-<td>5</td>
-<td><span class="math inline">\(\hat c\le(k-i)+3\)</span></td>
-<td><span class="math inline">\(3+3=6\)</span></td>
-<td><strong>Sustituyo el costo real</strong> <span class="math inline">\(c=(k-i)+1\)</span> (Lema 1) y sumo <span class="math inline">\(1+2=3\)</span> ✓</td>
-</tr>
-</tbody>
-</table></div>
-<p><em>Caso 2: <code>insert</code> con realojamiento</em> (<span class="math inline">\(k=m\)</span>). Costo real: se reserva un bloque de <span class="math inline">\(2m\)</span>, se reubican los <span class="math inline">\(k\)</span> viejos y se escribe <span class="math inline">\(x\)</span>. Si la reubicación deja cada elemento <strong>ya en su posición final</strong> (los de antes de <span class="math inline">\(i\)</span> en su lugar, los demás corridos uno, como hacen las soluciones de C y C++), el costo real es <span class="math inline">\(c=k+1\)</span>; si primero se reubica y luego se corre (como la de Rust), es <span class="math inline">\(c=k+(k-i)+1\)</span>. En ambos casos <span class="math inline">\(c\le k+(k-i)+1\)</span>, porque <span class="math inline">\(k-i\ge0\)</span> (la posición cumple <span class="math inline">\(i\le k\)</span>). Los números usan <span class="math inline">\(k=m=8\)</span>, <span class="math inline">\(i=3\)</span>, reubicando y luego corriendo: <span class="math inline">\(c=8+5+1=14\)</span>, <span class="math inline">\(\Phi=\max(0,16-8)=8\)</span> y, con capacidad 16, <span class="math inline">\(\Phi'=\max(0,18-16)=2\)</span>.</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(k=m=8\)</span>, <span class="math inline">\(i=3\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(\hat c=c+\Phi'-\Phi\)</span></td>
-<td><span class="math inline">\(14+2-8=8\)</span></td>
-<td><strong>Parto de la definición</strong> de costo amortizado.</td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(\hat c=c+2-\Phi\)</span></td>
-<td><span class="math inline">\(14+2-8=8\)</span></td>
-<td><strong>Calculo <span class="math inline">\(\Phi'\)</span>.</strong> Después, el tamaño es <span class="math inline">\(k+1\)</span> y la capacidad <span class="math inline">\(2m\)</span>, que es <span class="math inline">\(2k\)</span> porque <span class="math inline">\(m=k\)</span>. Por la distributiva, <span class="math inline">\(2(k+1)-2k\)</span> es <span class="math inline">\(2k+2-2k\)</span>, o sea 2, y <span class="math inline">\(\max(0,2)=2\)</span>.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(\hat c=c+2-k\)</span></td>
-<td><span class="math inline">\(14+2-8=8\)</span></td>
-<td><strong>Calculo <span class="math inline">\(\Phi\)</span>.</strong> Antes, el tamaño es <span class="math inline">\(k\)</span> y la capacidad <span class="math inline">\(m=k\)</span>, así que <span class="math inline">\(2k-m\)</span> es <span class="math inline">\(k\)</span>, y <span class="math inline">\(\max(0,k)=k\)</span> porque <span class="math inline">\(k\ge0\)</span>.</td>
-</tr>
-<tr>
-<td>4</td>
-<td><span class="math inline">\(\hat c\le\big(k+(k-i)+1\big)+2-k\)</span></td>
-<td><span class="math inline">\(14+2-8=8\)</span></td>
-<td><strong>Acoto el costo real</strong> con <span class="math inline">\(c\le k+(k-i)+1\)</span>. La dirección se conserva: cambio un sumando por otro mayor o igual.</td>
-</tr>
-<tr>
-<td>5</td>
-<td><span class="math inline">\(\hat c\le(k-i)+3\)</span></td>
-<td><span class="math inline">\(5+3=8\)</span></td>
-<td><strong>Cancelo</strong> <span class="math inline">\(k-k=0\)</span> y sumo <span class="math inline">\(1+2=3\)</span> ✓</td>
-</tr>
-</tbody>
-</table></div>
-<p>En el renglón 5, el <span class="math inline">\(k\)</span> de la reubicación se cancela con el <span class="math inline">\(-k\)</span> del potencial: <strong>la caída del potencial paga la reubicación</strong>. Con la reubicación de C y C++, <span class="math inline">\(c=k+1=9\)</span> y <span class="math inline">\(\hat c=9+2-8=3\)</span>, todavía menos.</p>
-<p><em>Caso borde <span class="math inline">\(m=0\)</span>.</em> La primera reserva no es de <span class="math inline">\(2\cdot0\)</span> sino de 1 elemento. Ahí <span class="math inline">\(k=i=0\)</span> y <span class="math inline">\(c=1\)</span>; <span class="math inline">\(\Phi\)</span> pasa de 0 a <span class="math inline">\(\max(0,2\cdot1-1)=1\)</span>, así que <span class="math inline">\(\hat c=1+1-0=2\)</span>, que es <span class="math inline">\(\le(0-0)+3=3\)</span>.</p>
-<p><em>Caso 3: <code>erase</code>.</em> Costo real: <span class="math inline">\(c=k-i-1\)</span> (Lema 1). Después de borrar, el tamaño baja a <span class="math inline">\(k-1\)</span> y <span class="math inline">\(m\)</span> no cambia. Así que <span class="math inline">\(\Phi'=\max\big(0,2(k-1)-m\big)\)</span>, y lo de adentro es <span class="math inline">\(y-2\)</span>: por la distributiva, <span class="math inline">\(2(k-1)-m\)</span> es <span class="math inline">\(2k-2-m\)</span>, y reordenando, <span class="math inline">\((2k-m)-2\)</span>. Es decir, <span class="math inline">\(\Phi'=\max(0,y-2)\)</span>. Los números usan <span class="math inline">\(k=5\)</span>, <span class="math inline">\(m=8\)</span>, <span class="math inline">\(i=2\)</span>: <span class="math inline">\(c=2\)</span>, <span class="math inline">\(\Phi=\max(0,10-8)=2\)</span> y <span class="math inline">\(\Phi'=\max(0,8-8)=0\)</span>.</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(k=5\)</span>, <span class="math inline">\(m=8\)</span>, <span class="math inline">\(i=2\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(\hat c=c+\Phi'-\Phi\)</span></td>
-<td><span class="math inline">\(2+0-2=0\)</span></td>
-<td><strong>Parto de la definición</strong> de costo amortizado.</td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(\hat c=c+\max(0,y-2)-\Phi\)</span></td>
-<td><span class="math inline">\(2+\max(0,0)-2=0\)</span></td>
-<td><strong>Escribo <span class="math inline">\(\Phi'\)</span> como <span class="math inline">\(\max(0,y-2)\)</span></strong> (arriba).</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(\hat c\le c+\max(0,y)-\Phi\)</span></td>
-<td><span class="math inline">\(2+2-2=2\)</span></td>
-<td><strong>Uso el Hecho 2 ← aquí,</strong> con <span class="math inline">\(d=2\)</span>. La dirección se conserva: cambio un sumando por otro mayor o igual.</td>
-</tr>
-<tr>
-<td>4</td>
-<td><span class="math inline">\(\hat c\le c\)</span></td>
-<td><span class="math inline">\(2\)</span></td>
-<td><strong>Cancelo</strong> <span class="math inline">\(\max(0,y)-\Phi=0\)</span>.</td>
-</tr>
-<tr>
-<td>5</td>
-<td><span class="math inline">\(\hat c\le k-i-1\)</span></td>
-<td><span class="math inline">\(2\)</span></td>
-<td><strong>Sustituyo el costo real</strong> <span class="math inline">\(c=k-i-1\)</span> (Lema 1).</td>
-</tr>
-<tr>
-<td>6</td>
-<td><span class="math inline">\(\hat c\le k-i\)</span></td>
-<td><span class="math inline">\(3\)</span></td>
-<td><strong>Agrando la cota:</strong> <span class="math inline">\(k-i-1\le k-i\)</span>, porque quitar el <span class="math inline">\(-1\)</span> suma 1. Si <span class="math inline">\(\hat c\)</span> es a lo más lo primero, es a lo más lo segundo (transitividad) ✓</td>
-</tr>
-</tbody>
-</table></div>
-<p>Aquí sí se ve subir el número: el valor real es <span class="math inline">\(\hat c=0\)</span>, y las cotas de los renglones 3 a 6 (2, 2, 2 y 3) no bajan de él.</p>
-<p><em>Por qué esto acota el costo real.</em> Como en L01 §6.4(c) Paso 2: sumando <span class="math inline">\(\hat c_t=c_t+\Phi_t-\Phi_{t-1}\)</span> sobre las operaciones <span class="math inline">\(t=1,\dots,T\)</span>, los potenciales intermedios se cancelan en cadena (suma telescópica, L00 §7.6) y queda <span class="math inline">\(\sum_t\hat c_t=\sum_t c_t+\Phi_T-\Phi_0\ge\sum_t c_t\)</span>, porque <span class="math inline">\(\Phi_0=0\)</span> (vector vacío) y <span class="math inline">\(\Phi_T\ge0\)</span> (es un máximo con 0). <em>Con tres <code>push_back</code> desde el vector vacío</em> (<span class="math inline">\(c_t=1,2,3\)</span> y <span class="math inline">\(\Phi_t=0,1,2,2\)</span>, así que <span class="math inline">\(\hat c_t=2,3,3\)</span>): <span class="math inline">\(8=6+2-0\ge6\)</span> ✓. <span class="math inline">\(\blacksquare\)</span></p>
+<p><em>Caso 1: <code>insert</code> sin realojar</em> (<span class="math inline">\(k&lt;m\)</span>). Costo real: <span class="math inline">\(c=(k-i)+1\)</span> (<span class="math inline">\(k-i\)</span> movimientos y una escritura, Lema 1). Después de insertar, el tamaño es <span class="math inline">\(k+1\)</span> y la capacidad sigue siendo <span class="math inline">\(m\)</span>.</p>
+<p><strong>Paso 1. Escribo <span class="math inline">\(\Phi'\)</span></strong> con el tamaño nuevo, <span class="math inline">\(k+1\)</span>, y la misma capacidad <span class="math inline">\(m\)</span>: <span class="math display">\[\hat c=c+\max\big(0,\,2(k+1)-m\big)-\Phi\]</span></p>
+<p><strong>Paso 2. Escribo lo de adentro con <span class="math inline">\(y\)</span>.</strong> Por la distributiva, <span class="math inline">\(2(k+1)-m\)</span> es <span class="math inline">\(2k+2-m\)</span>, y reordenando, <span class="math inline">\((2k-m)+2=y+2\)</span>. Queda la forma del Hecho 1: <span class="math display">\[\hat c=c+\boxed{\max(0,\,y+2)}-\Phi\]</span></p>
+<p><strong>Paso 3. Uso el Hecho 1</strong> con <span class="math inline">\(d=2\ge0\)</span>. Cambio un sumando por otro mayor o igual y lo demás no cambia, así que la dirección es <span class="math inline">\(\le\)</span>: <span class="math display">\[\hat c\le c+\max(0,y)+2-\Phi\]</span></p>
+<p><strong>Paso 4. Cancelo</strong> <span class="math inline">\(\max(0,y)-\Phi=0\)</span>: son la misma cosa. <span class="math display">\[\hat c\le c+2\]</span></p>
+<p><strong>Paso 5. Sustituyo el costo real</strong> <span class="math inline">\(c=(k-i)+1\)</span> y sumo <span class="math inline">\(1+2=3\)</span>: <span class="math display">\[\hat c\le(k-i)+3\ ✓\]</span></p>
+<p><strong>Paso 6. Compruebo con <span class="math inline">\(k=5\)</span>, <span class="math inline">\(m=8\)</span>, <span class="math inline">\(i=2\)</span>.</strong> <span class="math inline">\(c=3+1=4\)</span>, <span class="math inline">\(\Phi=\max(0,10-8)=2\)</span> y <span class="math inline">\(\Phi'=\max(0,12-8)=4\)</span>. El valor real es <span class="math inline">\(\hat c=4+4-2=6\)</span>, y la cota es <span class="math inline">\((5-2)+3=6\)</span> ✓.</p>
+<p><em>Caso 2: <code>insert</code> con realojamiento</em> (<span class="math inline">\(k=m\)</span>). Costo real: se reserva un bloque de <span class="math inline">\(2m\)</span>, se reubican los <span class="math inline">\(k\)</span> viejos y se escribe <span class="math inline">\(x\)</span>.</p>
+<ul>
+<li>Si la reubicación deja cada elemento <strong>ya en su posición final</strong> (los de antes de <span class="math inline">\(i\)</span> en su lugar, los demás corridos uno, como hacen las soluciones de C y C++), el costo real es <span class="math inline">\(c=k+1\)</span>.</li>
+<li>Si primero se reubica y luego se corre (como la de Rust), es <span class="math inline">\(c=k+(k-i)+1\)</span>.</li>
+<li>En ambos casos <span class="math inline">\(\boxed{\,c\le k+(k-i)+1\,}\)</span>, porque <span class="math inline">\(k-i\ge0\)</span> (la posición cumple <span class="math inline">\(i\le k\)</span>).</li>
+</ul>
+<p><strong>Paso 1. Calculo <span class="math inline">\(\Phi'\)</span>.</strong> Después, el tamaño es <span class="math inline">\(k+1\)</span> y la capacidad <span class="math inline">\(2m\)</span>, que es <span class="math inline">\(2k\)</span> porque <span class="math inline">\(m=k\)</span>. Por la distributiva, <span class="math inline">\(2(k+1)-2k\)</span> es <span class="math inline">\(2k+2-2k\)</span>, o sea 2, y <span class="math inline">\(\max(0,2)=2\)</span>: <span class="math display">\[\hat c=c+2-\Phi\]</span></p>
+<p><strong>Paso 2. Calculo <span class="math inline">\(\Phi\)</span>.</strong> Antes, el tamaño es <span class="math inline">\(k\)</span> y la capacidad <span class="math inline">\(m=k\)</span>, así que <span class="math inline">\(2k-m\)</span> es <span class="math inline">\(k\)</span>, y <span class="math inline">\(\max(0,k)=k\)</span> porque <span class="math inline">\(k\ge0\)</span>: <span class="math display">\[\hat c=\boxed{c}+2-k\]</span></p>
+<p><strong>Paso 3. Acoto el costo real</strong> con <span class="math inline">\(c\le k+(k-i)+1\)</span>. Cambio un sumando por otro mayor o igual, así que la dirección es <span class="math inline">\(\le\)</span>: <span class="math display">\[\hat c\le\big(k+(k-i)+1\big)+2-k\]</span></p>
+<p><strong>Paso 4. Cancelo</strong> <span class="math inline">\(k-k=0\)</span> y sumo <span class="math inline">\(1+2=3\)</span>: <span class="math display">\[\hat c\le(k-i)+3\ ✓\]</span></p>
+<p><strong>Paso 5. Compruebo con <span class="math inline">\(k=m=8\)</span>, <span class="math inline">\(i=3\)</span></strong>, reubicando y luego corriendo. <span class="math inline">\(c=8+5+1=14\)</span>, <span class="math inline">\(\Phi=\max(0,16-8)=8\)</span> y, con capacidad 16, <span class="math inline">\(\Phi'=\max(0,18-16)=2\)</span>. El valor real es <span class="math inline">\(\hat c=14+2-8=8\)</span>, y la cota es <span class="math inline">\(5+3=8\)</span> ✓. Con la reubicación de C y C++, <span class="math inline">\(c=k+1=9\)</span> y <span class="math inline">\(\hat c=9+2-8=3\)</span>, todavía menos.</p>
+<p>En el paso 4, el <span class="math inline">\(k\)</span> de la reubicación se cancela con el <span class="math inline">\(-k\)</span> del potencial: <strong>la caída del potencial paga la reubicación</strong>.</p>
+<p><em>Caso borde <span class="math inline">\(m=0\)</span>.</em> La primera reserva no es de <span class="math inline">\(2\cdot0\)</span> sino de 1 elemento. Ahí <span class="math inline">\(k=i=0\)</span> y <span class="math inline">\(c=1\)</span>; <span class="math inline">\(\Phi\)</span> pasa de 0 a <span class="math inline">\(\max(0,2\cdot1-1)=1\)</span>. Entonces: <span class="math display">\[\hat c=1+1-0=2\ \le\ (0-0)+3=3\]</span></p>
+<p><em>Caso 3: <code>erase</code>.</em> Costo real: <span class="math inline">\(c=k-i-1\le k-i\)</span> (Lema 1). Después de borrar, el tamaño baja a <span class="math inline">\(k-1\)</span> y <span class="math inline">\(m\)</span> no cambia.</p>
+<p><strong>Paso 1. Escribo <span class="math inline">\(\Phi'\)</span></strong> con el tamaño nuevo, <span class="math inline">\(k-1\)</span>, y la misma capacidad <span class="math inline">\(m\)</span>: <span class="math display">\[\hat c=c+\max\big(0,\,2(k-1)-m\big)-\Phi\]</span></p>
+<p><strong>Paso 2. Escribo lo de adentro con <span class="math inline">\(y\)</span>.</strong> Por la distributiva, <span class="math inline">\(2(k-1)-m\)</span> es <span class="math inline">\(2k-2-m\)</span>, y reordenando, <span class="math inline">\((2k-m)-2=y-2\)</span>. Queda la forma del Hecho 2: <span class="math display">\[\hat c=c+\boxed{\max(0,\,y-2)}-\Phi\]</span></p>
+<p><strong>Paso 3. Uso el Hecho 2</strong> con <span class="math inline">\(d=2\)</span>. Cambio un sumando por otro mayor o igual, así que la dirección es <span class="math inline">\(\le\)</span>: <span class="math display">\[\hat c\le c+\max(0,y)-\Phi\]</span></p>
+<p><strong>Paso 4. Cancelo</strong> <span class="math inline">\(\max(0,y)-\Phi=0\)</span>: <span class="math display">\[\hat c\le c\]</span></p>
+<p><strong>Paso 5. Uso <span class="math inline">\(c\le k-i\)</span>:</strong> <span class="math display">\[\hat c\le k-i\ ✓\]</span></p>
+<p><strong>Paso 6. Compruebo con <span class="math inline">\(k=5\)</span>, <span class="math inline">\(m=8\)</span>, <span class="math inline">\(i=2\)</span>.</strong> <span class="math inline">\(c=2\)</span>, <span class="math inline">\(\Phi=\max(0,10-8)=2\)</span> y <span class="math inline">\(\Phi'=\max(0,8-8)=0\)</span>. El valor real es <span class="math inline">\(\hat c=2+0-2=0\)</span>. Las cotas de los pasos 3 a 5 valen <span class="math inline">\(2,2,3\)</span>: ninguna baja de 0 ✓.</p>
+<p><em>Por qué esto acota el costo real.</em> Como <span class="math inline">\(\Phi_0=0\)</span> y <span class="math inline">\(\Phi\ge0\)</span>, la suma de los <span class="math inline">\(\hat c\)</span> acota la suma de los <span class="math inline">\(c\)</span>; es el mismo argumento de L01 §6.4(c), que no depende de qué operación sea. <span class="math inline">\(\blacksquare\)</span></p>
 <p>En palabras: <strong>el realojamiento sigue siendo gratis amortizado; lo único que cuesta es el corrimiento</strong>, y ese no se amortiza.</p>
 <hr/>
 <h2 id="reserve-shrink_to_fit-y-la-interacción-con-el-análisis">5. <code>reserve</code>, <code>shrink_to_fit</code> y la interacción con el análisis</h2>
@@ -1441,214 +788,52 @@ al final:   0 movimientos</code></pre>
 <blockquote>
 <p><strong>Proposición 5.</strong> Sea <span class="math inline">\(k_0\le N\)</span> el tamaño al llamar <code>reserve(N)</code>. Las siguientes <span class="math inline">\(N - k_0\)</span> llamadas a <code>push_back</code> cuestan exactamente 1 cada una <strong>en el peor caso</strong> (no solo amortizado), y no invalidan ningún puntero.</p>
 </blockquote>
-<p><em>Demostración.</em> <code>reserve</code> no cambia el tamaño, así que justo después sigue siendo <span class="math inline">\(k_0\)</span>; la capacidad es <span class="math inline">\(m\ge N\)</span>. Numeramos los <code>push_back</code> <span class="math inline">\(t=1,\dots,N-k_0\)</span>. Antes del <code>push_back</code> número <span class="math inline">\(t\)</span> ya se hicieron <span class="math inline">\(t-1\)</span>, así que el tamaño es <span class="math inline">\(k=k_0+t-1\)</span>.</p>
+<p><em>Demostración.</em> <code>reserve</code> no cambia el tamaño, así que justo después sigue siendo <span class="math inline">\(k_0\)</span>; la capacidad es <span class="math inline">\(m\ge N\)</span>. Numeramos los <code>push_back</code> <span class="math inline">\(t=1,\dots,N-k_0\)</span>. Antes del <code>push_back</code> número <span class="math inline">\(t\)</span> el tamaño es <span class="math inline">\(k=k_0+t-1\)</span>. Quiero ver que <span class="math inline">\(k&lt;m\)</span>. Uso dos datos (cuántos <code>push_back</code> cuento, y lo que garantiza <code>reserve</code>): <span class="math display">\[\boxed{\,t\le N-k_0\,}\qquad\qquad\boxed{\,N\le m\,}\]</span></p>
+<p><strong>Paso 1. Uso <span class="math inline">\(t\le N-k_0\)</span> en el tamaño.</strong> En <span class="math inline">\(k=k_0+t-1\)</span> cambio <span class="math inline">\(t\)</span> por algo mayor o igual. La dirección se conserva porque a los dos lados de <span class="math inline">\(t\le N-k_0\)</span> solo les sumo <span class="math inline">\(k_0\)</span> y les resto 1: <span class="math display">\[k\le k_0+(N-k_0)-1\]</span></p>
+<p><strong>Paso 2. Cancelo</strong> <span class="math inline">\(k_0-k_0=0\)</span>: <span class="math display">\[k\le N-1\]</span></p>
+<p><strong>Paso 3. Encadeno con <span class="math inline">\(N\le m\)</span>.</strong> <span class="math inline">\(k\le N-1&lt;N\le m\)</span>; por transitividad: <span class="math display">\[k&lt;m\ ✓\]</span></p>
+<p><strong>Paso 4. Compruebo con el caso más justo:</strong> vector vacío (<span class="math inline">\(k_0=0\)</span>), <code>reserve(100)</code> con <span class="math inline">\(m=100\)</span>, y el último <code>push_back</code> contado, <span class="math inline">\(t=100\)</span>. Entonces <span class="math inline">\(k=0+100-1=99\)</span>, y <span class="math inline">\(99&lt;100\)</span> ✓. El 101 ya encontraría <span class="math inline">\(k=100=m\)</span> y realojaría.</p>
+<p>Es decir, cada uno encuentra <span class="math inline">\(k&lt;m\)</span>: hay espacio y no realoja. Falta ver dos cosas:</p>
 <ul>
-<li><strong>Tengo:</strong> <span class="math inline">\(t\le N-k_0\)</span> (solo contamos esos <code>push_back</code>) y <span class="math inline">\(N\le m\)</span> (lo garantiza <code>reserve</code>).</li>
-<li><strong>Quiero:</strong> <span class="math inline">\(k\overset{?}{&lt;}m\)</span>, es decir, que haya una celda libre.</li>
-<li><strong>Plan:</strong> cambiar <span class="math inline">\(t\)</span> por su cota y encadenar desigualdades hasta llegar a <span class="math inline">\(m\)</span>.</li>
+<li><strong><span class="math inline">\(m\)</span> no cambia por el camino.</strong> Lo único que cambia <span class="math inline">\(m\)</span> es un realojamiento. Yendo en orden <span class="math inline">\(t=1,2,\dots\)</span> (inducción sobre <span class="math inline">\(t\)</span>): si los anteriores no realojaron, <span class="math inline">\(m\)</span> sigue igual, y por los pasos 1 a 3 el <span class="math inline">\(t\)</span>-ésimo tampoco realoja.</li>
+<li><strong>Ningún puntero se invalida.</strong> Sin realojamiento, cada <code>push_back</code> es una escritura (cuesta 1) y el bloque no se mueve. <span class="math inline">\(\blacksquare\)</span></li>
 </ul>
-<p>La columna de números usa el caso más justo: vector vacío (<span class="math inline">\(k_0=0\)</span>), <code>reserve(100)</code> con <span class="math inline">\(m=100\)</span>, y el último <code>push_back</code> contado, <span class="math inline">\(t=100\)</span>.</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(k_0=0\)</span>, <span class="math inline">\(N=m=100\)</span>, <span class="math inline">\(t=100\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(k=k_0+t-1\)</span></td>
-<td><span class="math inline">\(0+100-1=99\)</span></td>
-<td><strong>Parto del tamaño</strong> antes del <code>push_back</code> <span class="math inline">\(t\)</span>.</td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(k\le k_0+(N-k_0)-1\)</span></td>
-<td><span class="math inline">\(0+100-1=99\)</span></td>
-<td><strong>Uso <span class="math inline">\(t\le N-k_0\)</span>:</strong> cambio <span class="math inline">\(t\)</span> por algo mayor o igual. La dirección se conserva porque a los dos lados de <span class="math inline">\(t\le N-k_0\)</span> solo les sumo <span class="math inline">\(k_0\)</span> y les resto 1.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(k\le N-1\)</span></td>
-<td><span class="math inline">\(100-1=99\)</span></td>
-<td><strong>Cancelo</strong> <span class="math inline">\(k_0-k_0=0\)</span>.</td>
-</tr>
-<tr>
-<td>4</td>
-<td><span class="math inline">\(k&lt;N\)</span></td>
-<td><span class="math inline">\(99&lt;100\)</span></td>
-<td><strong>Uso <span class="math inline">\(N-1&lt;N\)</span>:</strong> si <span class="math inline">\(k\)</span> es a lo más <span class="math inline">\(N-1\)</span>, y <span class="math inline">\(N-1\)</span> es menor que <span class="math inline">\(N\)</span>, entonces <span class="math inline">\(k\)</span> es menor que <span class="math inline">\(N\)</span> (transitividad).</td>
-</tr>
-<tr>
-<td>5</td>
-<td><span class="math inline">\(k&lt;m\)</span></td>
-<td><span class="math inline">\(99&lt;100\)</span></td>
-<td><strong>Uso <span class="math inline">\(N\le m\)</span>:</strong> si <span class="math inline">\(k&lt;N\)</span> y <span class="math inline">\(N\le m\)</span>, entonces <span class="math inline">\(k&lt;m\)</span> (transitividad) ✓</td>
-</tr>
-</tbody>
-</table></div>
-<p>Es decir, cada uno encuentra <span class="math inline">\(k&lt;m\)</span>: hay espacio y no realoja. Falta ver que <span class="math inline">\(m\)</span> no cambia por el camino: lo único que cambia <span class="math inline">\(m\)</span> es un realojamiento, así que, yendo en orden <span class="math inline">\(t=1,2,\dots\)</span> (inducción sobre <span class="math inline">\(t\)</span>), si los anteriores no realojaron <span class="math inline">\(m\)</span> sigue igual y el <span class="math inline">\(t\)</span>-ésimo tampoco realoja. Sin realojamiento, cada <code>push_back</code> es una escritura y el bloque no se mueve, así que ningún puntero se invalida. <em>Con números:</em> vector vacío y <code>reserve(100)</code> con <span class="math inline">\(m=100\)</span>: los <code>push_back</code> 1 a 100 encuentran tamaños <span class="math inline">\(0,\dots,99\)</span>, todos <span class="math inline">\(&lt;100\)</span>; el 101 encuentra tamaño <span class="math inline">\(100=m\)</span> y realoja. <span class="math inline">\(\blacksquare\)</span></p>
-<p>Úsalo cuando conoces el tamaño final. Sin <code>reserve</code>, <span class="math inline">\(N\)</span> <code>push_back</code> desde el vector vacío copian <span class="math inline">\(1+2+4+\dots+2^j=2^{j+1}-1\)</span> elementos, donde <span class="math inline">\(2^j&lt;N\le2^{j+1}\)</span>: entre <span class="math inline">\(N-1\)</span> y <span class="math inline">\(2N-1\)</span> copias, en <span class="math inline">\(j+2\approx\lg N\)</span> reservas (con <span class="math inline">\(N=100\)</span>: <span class="math inline">\(1+2+\dots+64=127\)</span> copias y 8 reservas, de capacidades <span class="math inline">\(1,2,4,\dots,128\)</span>). Con <code>reserve(N)</code> son 0 copias y una reserva. Además vuelve predecible la latencia (importante en sistemas de tiempo real, donde un <code>push_back</code> ocasional de <span class="math inline">\(\Theta(n)\)</span> es inaceptable aunque el promedio sea bueno).</p>
+<p>Úsalo cuando conoces el tamaño final. Compara:</p>
+<ul>
+<li><strong>Sin <code>reserve</code>:</strong> <span class="math inline">\(N\)</span> <code>push_back</code> desde el vector vacío realojan cuando el tamaño es <span class="math inline">\(1,2,4,\dots,2^j\)</span>, donde <span class="math inline">\(2^j&lt;N\le2^{j+1}\)</span>, y cada vez copian ese tamaño. En total (suma geométrica, L00 §7.3): <span class="math display">\[1+2+4+\dots+2^j=2^{j+1}-1\ \text{copias}\]</span> Eso queda entre <span class="math inline">\(N-1\)</span> y <span class="math inline">\(2N-1\)</span> copias, en <span class="math inline">\(j+2=\lceil\lg N\rceil+1\)</span> reservas.</li>
+<li><em>Con <span class="math inline">\(N=100\)</span>:</em> <span class="math inline">\(j=6\)</span>, así que son <span class="math inline">\(1+2+\dots+64=127\)</span> copias y 8 reservas, de capacidades <span class="math inline">\(1,2,4,\dots,128\)</span>.</li>
+<li><strong>Con <code>reserve(N)</code>:</strong> 0 copias y una reserva.</li>
+</ul>
+<p>Además vuelve predecible la latencia (importante en sistemas de tiempo real, donde un <code>push_back</code> ocasional de <span class="math inline">\(\Theta(n)\)</span> es inaceptable aunque el promedio sea bueno).</p>
 <h3 id="shrink_to_fit-el-adversario">5.2 <code>shrink_to_fit</code>: el adversario</h3>
 <p><code>shrink_to_fit()</code> deja <span class="math inline">\(m = k\)</span>. Parece inofensivo; no lo es.</p>
 <blockquote>
 <p><strong>Proposición 6.</strong> La secuencia <code>(push_back; shrink_to_fit)</code> repetida <span class="math inline">\(n\)</span> veces cuesta <span class="math inline">\(\Theta(n^2)\)</span>.</p>
 </blockquote>
-<p><em>Demostración.</em> Numeramos las vueltas <span class="math inline">\(t=0,1,\dots,n-1\)</span>. Antes de la vuelta <span class="math inline">\(t\)</span> hay <span class="math inline">\(t\)</span> elementos y, por el <code>shrink_to_fit</code> de la vuelta anterior, capacidad <span class="math inline">\(m=t\)</span> (en la vuelta 0, el vector vacío tiene <span class="math inline">\(m=0\)</span>). El <code>push_back</code> encuentra <span class="math inline">\(k=m=t\)</span>: realoja, copia los <span class="math inline">\(t\)</span> elementos y escribe el nuevo, <span class="math inline">\(t+1\)</span> escrituras. Después, <code>shrink_to_fit</code> deja <span class="math inline">\(m=t+1\)</span>, copiando a lo más los <span class="math inline">\(t+1\)</span> elementos.</p>
-<p>Llamo <span class="math inline">\(V_t\)</span> al costo de la vuelta <span class="math inline">\(t\)</span> y <span class="math inline">\(C=\sum_{t=0}^{n-1}V_t\)</span> al total. La columna de números usa <span class="math inline">\(n=4\)</span> con duplicación: el <code>push_back</code> de la vuelta <span class="math inline">\(t\)</span> cuesta <span class="math inline">\(1,2,3,4\)</span>, y el <code>shrink_to_fit</code> copia <span class="math inline">\(0,0,3,4\)</span> elementos (en las vueltas 0 y 1 la capacidad nueva, 1 y 2, ya era igual al tamaño). Así <span class="math inline">\(V_0,\dots,V_3=1,2,6,8\)</span> y <span class="math inline">\(C=17\)</span>.</p>
-<p><em>Cota inferior.</em> Plan: quedarme solo con una parte del costo que ya sé sumar.</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(n=4\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(C=\sum_{t=0}^{n-1}V_t\)</span></td>
-<td><span class="math inline">\(1+2+6+8=17\)</span></td>
-<td><strong>Parto del total.</strong></td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(C\ge\sum_{t=0}^{n-1}t\)</span></td>
-<td><span class="math inline">\(0+1+2+3=6\)</span></td>
-<td><strong>Me quedo solo con las copias de los <code>push_back</code></strong> (<span class="math inline">\(t\)</span> en la vuelta <span class="math inline">\(t\)</span>). Lo que dejo fuera (la escritura del nuevo y las copias de <code>shrink_to_fit</code>) es <span class="math inline">\(\ge0\)</span>, y quitar sumandos no negativos no agranda: por eso el signo es <span class="math inline">\(\ge\)</span>.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(C\ge\dfrac{n(n-1)}{2}\)</span></td>
-<td><span class="math inline">\(\dfrac{4\cdot3}{2}=6\)</span></td>
-<td><strong>Uso el Teorema 2</strong> (Parte 1) para la suma.</td>
-</tr>
-</tbody>
-</table></div>
-<p>Tras el Teorema 2 vimos que <span class="math inline">\(\frac{n(n-1)}{2}\ge\frac{n^2}{4}\)</span> para <span class="math inline">\(n\ge2\)</span>, así que <span class="math inline">\(C=\Omega(n^2)\)</span>.</p>
-<p><em>Cota superior.</em> Plan: acotar cada vuelta por lo mismo, <span class="math inline">\(2n\)</span>, y sumar <span class="math inline">\(n\)</span> veces.</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(n=4\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(C=\sum_{t=0}^{n-1}V_t\)</span></td>
-<td><span class="math inline">\(1+2+6+8=17\)</span></td>
-<td><strong>Parto del total.</strong></td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(C\le\sum_{t=0}^{n-1}\big((t+1)+(t+1)\big)\)</span></td>
-<td><span class="math inline">\(2+4+6+8=20\)</span></td>
-<td><strong>Acoto cada vuelta:</strong> el <code>push_back</code> cuesta <span class="math inline">\(t+1\)</span> y <code>shrink_to_fit</code> a lo más <span class="math inline">\(t+1\)</span>. Si cada sumando crece o se queda igual, la suma también: el <span class="math inline">\(\le\)</span> se conserva.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(C\le\sum_{t=0}^{n-1}2(t+1)\)</span></td>
-<td><span class="math inline">\(2+4+6+8=20\)</span></td>
-<td><strong>Junto:</strong> sumar algo consigo mismo da el doble, <span class="math inline">\(x+x=2x\)</span>.</td>
-</tr>
-<tr>
-<td>4</td>
-<td><span class="math inline">\(C\le\sum_{t=0}^{n-1}2n\)</span></td>
-<td><span class="math inline">\(8+8+8+8=32\)</span></td>
-<td><strong>Uso <span class="math inline">\(t\le n-1\)</span>,</strong> o sea <span class="math inline">\(t+1\le n\)</span>. Multiplico por <span class="math inline">\(2&gt;0\)</span>, que no voltea la desigualdad: <span class="math inline">\(2(t+1)\le2n\)</span>.</td>
-</tr>
-<tr>
-<td>5</td>
-<td><span class="math inline">\(C\le2n\cdot n=2n^2\)</span></td>
-<td><span class="math inline">\(8\cdot4=32\)</span></td>
-<td><strong>Sumo <span class="math inline">\(n\)</span> veces lo mismo:</strong> son <span class="math inline">\(n\)</span> sumandos iguales a <span class="math inline">\(2n\)</span> ✓</td>
-</tr>
-</tbody>
-</table></div>
-<p>Entonces <span class="math inline">\(C=O(n^2)\)</span>, y las dos cotas juntas dan <span class="math inline">\(\Theta(n^2)\)</span>. <em>Con <span class="math inline">\(n=4\)</span>:</em> <span class="math inline">\(6\le17\le32\)</span> ✓. <span class="math inline">\(\blacksquare\)</span></p>
-<p>Esto viola la intuición de L01, y el potencial <span class="math inline">\(\Phi=\max(0,2k-m)\)</span> dice exactamente por qué. Toma un vector con <span class="math inline">\(m=2k\)</span>; por ejemplo, el <code>push_back</code> número 5 duplicó la capacidad a <span class="math inline">\(m=8\)</span> y luego un <code>pop_back</code> dejó <span class="math inline">\(k=4\)</span>. Si ahora <code>shrink_to_fit</code> baja <span class="math inline">\(m\)</span> a <span class="math inline">\(k\)</span>, copia los <span class="math inline">\(k\)</span> elementos (<span class="math inline">\(c=k\)</span>) y el potencial cambia sin que el usuario haya pagado nada. La columna de números usa <span class="math inline">\(k=4\)</span> y <span class="math inline">\(m=8\)</span>:</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(k=4\)</span>, <span class="math inline">\(m=8\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(\hat c=c+\Phi'-\Phi\)</span></td>
-<td><span class="math inline">\(4+4-0=8\)</span></td>
-<td><strong>Parto de la definición</strong> de costo amortizado.</td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(\hat c=k+\Phi'-\Phi\)</span></td>
-<td><span class="math inline">\(4+4-0=8\)</span></td>
-<td><strong>Sustituyo el costo real:</strong> se copian los <span class="math inline">\(k\)</span> elementos.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(\hat c=k+\max(0,2k-k)-\Phi\)</span></td>
-<td><span class="math inline">\(4+\max(0,4)-0=8\)</span></td>
-<td><strong>Escribo <span class="math inline">\(\Phi'\)</span>:</strong> el tamaño sigue siendo <span class="math inline">\(k\)</span> y la capacidad baja a <span class="math inline">\(k\)</span>.</td>
-</tr>
-<tr>
-<td>4</td>
-<td><span class="math inline">\(\hat c=k+k-\Phi\)</span></td>
-<td><span class="math inline">\(4+4-0=8\)</span></td>
-<td><strong>Calculo <span class="math inline">\(\Phi'\)</span>:</strong> <span class="math inline">\(2k-k=k\)</span>, y <span class="math inline">\(\max(0,k)=k\)</span> porque <span class="math inline">\(k\ge0\)</span>.</td>
-</tr>
-<tr>
-<td>5</td>
-<td><span class="math inline">\(\hat c=k+k-\max(0,2k-2k)\)</span></td>
-<td><span class="math inline">\(4+4-\max(0,0)=8\)</span></td>
-<td><strong>Escribo <span class="math inline">\(\Phi\)</span>:</strong> antes, la capacidad era <span class="math inline">\(m=2k\)</span>.</td>
-</tr>
-<tr>
-<td>6</td>
-<td><span class="math inline">\(\hat c=2k\)</span></td>
-<td><span class="math inline">\(8\)</span></td>
-<td><strong>Calculo <span class="math inline">\(\Phi\)</span></strong> (<span class="math inline">\(\max(0,0)=0\)</span>) y <strong>junto</strong> <span class="math inline">\(k+k=2k\)</span>.</td>
-</tr>
-</tbody>
-</table></div>
-<p>El potencial pasa de 0 a <span class="math inline">\(k\)</span>: <strong>sube</strong> <span class="math inline">\(k\)</span> unidades (renglones 4 y 5) sin que el usuario haya pagado por ellas, y el costo amortizado de ese <code>shrink_to_fit</code> es <span class="math inline">\(2k=\Theta(k)\)</span>, no <span class="math inline">\(O(1)\)</span>. Por eso <code>std::vector::shrink_to_fit</code> está especificada como una <strong>petición no vinculante</strong> y por eso <code>Vec::shrink_to_fit</code> documenta que puede realojar: son operaciones de <span class="math inline">\(\Theta(k)\)</span> que el usuario debe invocar con conocimiento de causa (típicamente una sola vez, cuando el contenedor deja de crecer).</p>
+<p><em>Demostración.</em> Numeramos las vueltas <span class="math inline">\(t=0,1,\dots,n-1\)</span>.</p>
+<ul>
+<li>Antes de la vuelta <span class="math inline">\(t\)</span> hay <span class="math inline">\(t\)</span> elementos y, por el <code>shrink_to_fit</code> de la vuelta anterior, capacidad <span class="math inline">\(m=t\)</span> (en la vuelta 0, el vector vacío tiene <span class="math inline">\(m=0\)</span>).</li>
+<li>El <code>push_back</code> encuentra <span class="math inline">\(k=m=t\)</span>: realoja, copia los <span class="math inline">\(t\)</span> elementos y escribe el nuevo. Son <span class="math inline">\(t+1\)</span> escrituras.</li>
+<li>Después, <code>shrink_to_fit</code> deja <span class="math inline">\(m=t+1\)</span>, copiando a lo más los <span class="math inline">\(t+1\)</span> elementos.</li>
+</ul>
+<p>Llamo <span class="math inline">\(V_t\)</span> al costo de la vuelta <span class="math inline">\(t\)</span> y <span class="math inline">\(C=\sum_{t=0}^{n-1}V_t\)</span> al total. <em>Con <span class="math inline">\(n=4\)</span> y duplicación:</em> el <code>push_back</code> de la vuelta <span class="math inline">\(t\)</span> cuesta <span class="math inline">\(1,2,3,4\)</span>, y el <code>shrink_to_fit</code> copia <span class="math inline">\(0,0,3,4\)</span> elementos (en las vueltas 0 y 1 la capacidad nueva, 1 y 2, ya era igual al tamaño). Así <span class="math inline">\(V_0,\dots,V_3=1,2,6,8\)</span> y <span class="math inline">\(C=17\)</span>.</p>
+<p><em>Cota inferior.</em> Me quedo solo con una parte del costo que ya sé sumar, y uso la Parte 1 del Teorema 2: <span class="math display">\[\boxed{\,\sum_{t=0}^{n-1}t=\frac{n(n-1)}{2}\,}\qquad\text{(Parte 1)}\]</span></p>
+<p><strong>Paso 1. Me quedo solo con las copias de los <code>push_back</code></strong> (<span class="math inline">\(t\)</span> en la vuelta <span class="math inline">\(t\)</span>). Lo que dejo fuera de <span class="math inline">\(C\)</span> (la escritura del nuevo y las copias de <code>shrink_to_fit</code>) es <span class="math inline">\(\ge0\)</span>, y quitar sumandos no negativos no agranda: por eso el signo es <span class="math inline">\(\ge\)</span>. <span class="math display">\[C\ge\boxed{\sum_{t=0}^{n-1}t}\]</span></p>
+<p><strong>Paso 2. Uso la Parte 1:</strong> <span class="math display">\[C\ge\frac{n(n-1)}{2}\]</span></p>
+<p><strong>Paso 3. Uso la cota de después del Teorema 2.</strong> Ahí vimos que <span class="math inline">\(\frac{n(n-1)}{2}\ge\frac{n^2}{4}\)</span> para <span class="math inline">\(n\ge2\)</span>; por transitividad: <span class="math display">\[C\ge\frac{n^2}{4}\]</span> Entonces <span class="math inline">\(C=\Omega(n^2)\)</span>.</p>
+<p><strong>Paso 4. Compruebo con <span class="math inline">\(n=4\)</span>:</strong> <span class="math inline">\(C=17\)</span>, el paso 2 da <span class="math inline">\(\frac{4\cdot3}{2}=6\)</span> y el paso 3 da <span class="math inline">\(4\)</span>; <span class="math inline">\(17\ge6\ge4\)</span> ✓.</p>
+<p><em>Cota superior.</em> Acoto cada vuelta por lo mismo, <span class="math inline">\(2n\)</span>, y sumo <span class="math inline">\(n\)</span> veces.</p>
+<p><strong>Paso 1. Acoto cada vuelta.</strong> El <code>push_back</code> cuesta <span class="math inline">\(t+1\)</span> y <code>shrink_to_fit</code> a lo más <span class="math inline">\(t+1\)</span>, así que la vuelta cuesta a lo más <span class="math inline">\((t+1)+(t+1)=2(t+1)\)</span>. Si cada sumando crece o se queda igual, la suma también, así que el signo es <span class="math inline">\(\le\)</span>: <span class="math display">\[C\le\sum_{t=0}^{n-1}2(t+1)\]</span></p>
+<p><strong>Paso 2. Uso <span class="math inline">\(t\le n-1\)</span>,</strong> o sea <span class="math inline">\(t+1\le n\)</span>. Multiplico por <span class="math inline">\(2&gt;0\)</span>, que no voltea la desigualdad: <span class="math inline">\(2(t+1)\le2n\)</span>. <span class="math display">\[C\le\sum_{t=0}^{n-1}2n\]</span></p>
+<p><strong>Paso 3. Sumo <span class="math inline">\(n\)</span> veces lo mismo.</strong> Son <span class="math inline">\(n\)</span> sumandos iguales a <span class="math inline">\(2n\)</span>, y <span class="math inline">\(2n\cdot n=2n^2\)</span>: <span class="math display">\[C\le2n^2\]</span> Entonces <span class="math inline">\(C=O(n^2)\)</span>.</p>
+<p><strong>Paso 4. Compruebo con <span class="math inline">\(n=4\)</span>:</strong> el paso 1 da <span class="math inline">\(2+4+6+8=20\)</span>, el paso 3 da <span class="math inline">\(2\cdot16=32\)</span>; <span class="math inline">\(17\le20\le32\)</span> ✓.</p>
+<p>Las dos cotas juntas dan <span class="math inline">\(\Theta(n^2)\)</span>. <em>Con <span class="math inline">\(n=4\)</span>:</em> <span class="math inline">\(6\le17\le32\)</span> ✓. <span class="math inline">\(\blacksquare\)</span></p>
+<p>Esto viola la intuición de L01, y el potencial <span class="math inline">\(\Phi=\max(0,2k-m)\)</span> dice exactamente por qué. Toma un vector con <span class="math inline">\(m=2k\)</span>; por ejemplo, el <code>push_back</code> número 5 duplicó la capacidad a <span class="math inline">\(m=8\)</span> y luego un <code>pop_back</code> dejó <span class="math inline">\(k=4\)</span>. Si ahora <code>shrink_to_fit</code> baja <span class="math inline">\(m\)</span> a <span class="math inline">\(k\)</span>, copia los <span class="math inline">\(k\)</span> elementos (<span class="math inline">\(c=k\)</span>) y el potencial cambia sin que el usuario haya pagado nada.</p>
+<p><strong>Paso 1. Calculo <span class="math inline">\(\Phi\)</span>.</strong> Antes, la capacidad es <span class="math inline">\(m=2k\)</span>, así que <span class="math inline">\(2k-m=0\)</span>: <span class="math display">\[\Phi=\max(0,0)=0\]</span></p>
+<p><strong>Paso 2. Calculo <span class="math inline">\(\Phi'\)</span>.</strong> Después, la capacidad es <span class="math inline">\(m=k\)</span>, así que <span class="math inline">\(2k-m=k\)</span>, y <span class="math inline">\(\max(0,k)=k\)</span> porque <span class="math inline">\(k\ge0\)</span>: <span class="math display">\[\Phi'=\max(0,k)=k\]</span></p>
+<p><strong>Paso 3. Sustituyo en <span class="math inline">\(\hat c=c+\Phi'-\Phi\)</span></strong>, con el costo real <span class="math inline">\(c=k\)</span>: <span class="math display">\[\hat c=k+k-0=2k\]</span></p>
+<p><strong>Paso 4. Compruebo con <span class="math inline">\(k=4\)</span>, <span class="math inline">\(m=8\)</span>.</strong> <span class="math inline">\(c=4\)</span>, <span class="math inline">\(\Phi=\max(0,8-8)=0\)</span> y <span class="math inline">\(\Phi'=\max(0,8-4)=4\)</span>: <span class="math inline">\(\hat c=4+4-0=8=2\cdot4\)</span> ✓.</p>
+<p>El potencial pasa de 0 a <span class="math inline">\(k\)</span>: <strong>sube</strong> <span class="math inline">\(k\)</span> unidades (pasos 1 y 2) sin que el usuario haya pagado por ellas, y el costo amortizado de ese <code>shrink_to_fit</code> es <span class="math inline">\(2k=\Theta(k)\)</span>, no <span class="math inline">\(O(1)\)</span>. Por eso <code>std::vector::shrink_to_fit</code> está especificada como una <strong>petición no vinculante</strong> y por eso <code>Vec::shrink_to_fit</code> documenta que puede realojar: son operaciones de <span class="math inline">\(\Theta(k)\)</span> que el usuario debe invocar con conocimiento de causa (típicamente una sola vez, cuando el contenedor deja de crecer).</p>
 <h3 id="contracción-automática">5.3 Contracción automática</h3>
 <p>La solución robusta a la memoria desperdiciada es la contracción a <span class="math inline">\(m/2\)</span> cuando <span class="math inline">\(k = m/4\)</span> que analizaste en el Problem Set 1 (ej. 2). El lab02, como <code>std::vector</code> y <code>Vec</code>, <strong>no</strong> contrae automáticamente: prefiere que el usuario decida.</p>
 <h3 id="por-qué-el-arreglo-gana-en-la-práctica">5.4 Por qué el arreglo gana en la práctica</h3>
@@ -2031,7 +1216,14 @@ copia:    p apunta al buf del original = 1</code></pre>
 Respuestas
 </summary>
 <ol type="1">
-<li>16 bytes. <code>d</code> va en 0 y ocupa los bytes 0–7; el primer byte libre es 8, y <code>c</code> (alineación 1) va ahí; el fin es <span class="math inline">\(8+1=9\)</span>, y se redondea al múltiplo de <span class="math inline">\(a_{\max}=8\)</span>: <span class="math inline">\(\lceil9/8\rceil\cdot8=16\)</span>. El arreglo de 10 ocupa <span class="math inline">\(10\cdot16=160\)</span>, porque <span class="math inline">\(s(T)\)</span> ya incluye el relleno del final (§3.1).</li>
+<li>16 bytes. Con la fórmula de §3.1, paso a paso:
+<ul>
+<li><strong>Paso 1.</strong> <code>d</code> va en el offset 0 y ocupa los bytes 0–7.</li>
+<li><strong>Paso 2.</strong> El primer byte libre es <span class="math inline">\(0+8=8\)</span>. <code>c</code> tiene alineación 1, así que va ahí: offset <span class="math inline">\(\lceil8/1\rceil\cdot1=8\)</span>.</li>
+<li><strong>Paso 3.</strong> El campo <code>c</code> termina en <span class="math inline">\(8+1=9\)</span>: es el primer byte libre después del último campo.</li>
+<li><strong>Paso 4.</strong> Redondeo al múltiplo de <span class="math inline">\(a_{\max}=\max(8,1)=8\)</span>: <span class="math inline">\(\lceil9/8\rceil\cdot8=2\cdot8=16\)</span>.</li>
+<li><strong>Paso 5.</strong> El arreglo de 10 ocupa <span class="math inline">\(10\cdot16=160\)</span>, porque <span class="math inline">\(s(T)\)</span> ya incluye el relleno del final (§3.1).</li>
+</ul></li>
 <li>Ninguna (Proposición 5: antes de cada uno el tamaño es <span class="math inline">\(0,\dots,99\)</span>, siempre menor que <span class="math inline">\(100\le m\)</span>). El 101 encuentra tamaño <span class="math inline">\(100\)</span>; si la capacidad era exactamente 100, realoja una vez, a capacidad 200.</li>
 <li>Porque <code>erase</code> no recibe un elemento: el valor que devuelve se copia <strong>antes</strong> del corrimiento, y nada externo apunta a una celda que se vaya a sobrescribir.</li>
 <li>Devolvería 0 y el primer <code>push</code> intentaría <code>alloc</code> con un <code>Layout</code> de 0 bytes: UB.</li>

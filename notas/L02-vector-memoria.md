@@ -51,9 +51,9 @@ Una **secuencia** representa una lista finita $\langle x_0, x_1, \dots, x_{n-1}\
 
 Igual que con la pila (L01 §4.2), fijamos el significado sin hablar de implementación. Con $S = \langle x_0,\dots,x_{n-1}\rangle$:
 
-$$\mathsf{get}(\mathsf{insert}(S, i, x), j) = \begin{cases} \mathsf{get}(S, j) & j < i \\ x & j = i \\ \mathsf{get}(S, j-1) & j > i \end{cases}
-\qquad
-\mathsf{len}(\mathsf{insert}(S,i,x)) = \mathsf{len}(S)+1$$
+$$\mathsf{get}(\mathsf{insert}(S, i, x), j) = \begin{cases} \mathsf{get}(S, j) & j < i \\ x & j = i \\ \mathsf{get}(S, j-1) & j > i \end{cases}$$
+
+$$\mathsf{len}(\mathsf{insert}(S,i,x)) = \mathsf{len}(S)+1$$
 
 y análogamente para `erase`. Estas ecuaciones son exactamente lo que comprueba el test aleatorio del lab (`vector_aleatorio_vs_std`): ejecuta la misma secuencia de operaciones en tu `Vector` y en un **oráculo** (`std::vector`, `Vec` o un arreglo de C manipulado a mano) y exige que coincidan.
 
@@ -70,7 +70,20 @@ Ninguna gana en todo. El arreglo dinámico gana donde más importa en la prácti
 
 > **Teorema (cota inferior informal).** Ninguna estructura que guarde los elementos en un arreglo contiguo, en el orden de la secuencia, puede hacer `insert(0, x)` en $o(n)$ en el peor caso: tras insertar, los $n$ elementos viejos deben ocupar posiciones distintas a las que ocupaban, y cada uno requiere al menos una escritura.
 
-*Por qué.* Antes de insertar, el elemento $x_j$ está en la celda $j$, para $j=0,\dots,n-1$. Después de `insert(0, x)`, la especificación de §2.2 (caso $j>i$ con $i=0$) dice que $x_j$ es el elemento número $j+1$ de la secuencia; como el arreglo guarda la secuencia en orden, $x_j$ tiene que estar en la celda $j+1$. La celda $j+1$ no es la celda $j$, así que cada uno de los $n$ elementos viejos se tiene que escribir en una celda donde antes no estaba: al menos $n$ escrituras. Una operación que hace al menos $n$ escrituras no puede costar $o(n)$. (Es "informal" porque supone que el único modo de cambiar el contenido de una celda es escribir en ella, que es lo que hace el modelo RAM de L01 §2.)
+*Por qué.*
+
+**Paso 1. Miro dónde está cada elemento antes.** El arreglo guarda la secuencia en orden:
+$$x_j\ \text{está en la celda } j,\qquad j=0,\dots,n-1.$$
+
+**Paso 2. Miro dónde tiene que estar después.** La especificación de §2.2 (caso $j>i$, con $i=0$) dice que $x_j$ queda en la posición $j+1$. Como el arreglo guarda la secuencia en orden:
+$$x_j\ \text{tiene que estar en la celda } j+1.$$
+
+**Paso 3. Cuento escrituras.** La celda $j+1$ no es la celda $j$: cada uno de los $n$ elementos viejos se escribe en una celda donde antes no estaba.
+$$\text{escrituras}\ \ge\ n$$
+
+**Paso 4. Concluyo.** Una operación que hace al menos $n$ escrituras no puede costar $o(n)$.
+
+Es "informal" porque supone que el único modo de cambiar el contenido de una celda es escribir en ella, que es lo que hace el modelo RAM de L01 §2.
 
 Romper esa cota exige abandonar la contigüidad (listas, L03) o el orden físico (buffer circular, L04; árboles de secuencia, problem set).
 
@@ -84,28 +97,54 @@ Para manejar memoria cruda hay que saber exactamente **cuántos bytes** ocupa un
 
 - **Tamaño** $s(T)$: bytes entre el inicio de un `T` y el inicio del siguiente en un arreglo (`sizeof`, `size_of`).
 - **Alineación** $a(T)$: una potencia de 2; un `T` solo puede vivir en direcciones múltiplo de $a(T)$ (`alignof`, `align_of`). En la mayoría de las plataformas de 64 bits, $a(\texttt{int}) = 4$, $a(\texttt{double}) = 8$.
-- **Invariante:** $a(T) \mid s(T)$ ("$a(T)$ divide a $s(T)$": el tamaño es múltiplo de la alineación). *Por qué tiene que ser así:* en un arreglo `T[2]` que empieza en $p$, el elemento 0 empieza en $p$ (múltiplo de $a(T)$) y el elemento 1 en $p+s(T)$. Para que $p+s(T)$ también sea múltiplo de $a(T)$, sabiendo que $p$ ya lo es, hace falta que $s(T)$ lo sea: $s(T)$ es la resta $(p+s(T))-p$ de dos múltiplos de $a(T)$, y la resta de dos múltiplos de $a$ es múltiplo de $a$ (distributiva al revés: $q_1a-q_2a$ es lo mismo que $(q_1-q_2)\,a$). *Con números:* si un `struct` con un `int` ($a=4$) midiera 5 bytes, con $p=0$ el segundo elemento empezaría en 5, que no es múltiplo de 4. Por eso el compilador agrega **relleno** al final de un `struct`.
+- **Invariante:** $a(T) \mid s(T)$ ("$a(T)$ divide a $s(T)$": el tamaño es múltiplo de la alineación).
+
+*Por qué el tamaño tiene que ser múltiplo de la alineación.* Abrevio $a=a(T)$ y $s=s(T)$, y miro un arreglo `T[2]` que empieza en la dirección $p$.
+
+**Paso 1. Escribo lo que exige la alineación.** El elemento 0 empieza en $p$ y el elemento 1 en $p+s$. Los dos tienen que empezar en un múltiplo de $a$, así que hay enteros $q_1$ y $q_2$ con:
+$$\boxed{\,p=q_1a\,}\qquad\boxed{\,p+s=q_2a\,}$$
+
+**Paso 2. Escribo $s$ como una resta.** El tamaño es la distancia entre el inicio del elemento 1 y el del elemento 0:
+$$s=\boxed{(p+s)}-\boxed{p}$$
+
+**Paso 3. Uso las dos cajas.** Cambio cada caja por lo que vale:
+$$s=q_2a-q_1a$$
+
+**Paso 4. Saco $a$ de factor común.** Es la distributiva al revés, como $5x-3x=(5-3)x$:
+$$s=(q_2-q_1)\,a$$
+Como $q_2-q_1$ es entero, $s$ es múltiplo de $a$ ✓.
+
+**Paso 5. Compruebo con un número.** Si un `struct` con un `int` ($a=4$) midiera $s=5$ bytes, con $p=0$ el segundo elemento empezaría en $5$, que no es múltiplo de 4. Por eso el compilador agrega **relleno** al final de un `struct`.
 
 **Layout de un `struct` con orden fijo (C, C++, `#[repr(C)]` en Rust).** Los campos se colocan en el orden declarado; cada uno en el primer desplazamiento múltiplo de su alineación; el tamaño total se redondea hacia arriba a un múltiplo de la mayor alineación.
 
 $$\begin{aligned}\text{offset}_k &= \Big\lceil \frac{\text{offset}_{k-1} + s_{k-1}}{a_k} \Big\rceil a_k,\qquad\text{con }\text{offset}_0=0,\\ s(\texttt{struct}) &= \Big\lceil \frac{\text{offset}_{\text{último}} + s_{\text{último}}}{a_{\max}} \Big\rceil a_{\max}.\end{aligned}$$
 
-**Cómo leer la fórmula.** $\text{offset}_{k-1}+s_{k-1}$ es el primer byte libre después del campo anterior (donde empieza, más lo que ocupa). Y $\lceil x/a\rceil\,a$ es el **menor múltiplo de $a$ que es $\ge x$**. Se calcula en tres pasos; la tabla los hace con $x=5$, $a=4$ (un caso que necesita relleno) y con $x=8$, $a=4$ (uno que no):
+**Cómo leer la fórmula.** $\text{offset}_{k-1}+s_{k-1}$ es el primer byte libre después del campo anterior (donde empieza, más lo que ocupa). Y $\lceil x/a\rceil\,a$ es el **menor múltiplo de $a$ que es $\ge x$**. Se calcula en tres pasos; los hago con $x=5$, $a=4$ (un caso que necesita relleno) y con $x=8$, $a=4$ (uno que no).
 
-| # | Paso | Con $x=5$, $a=4$ | Con $x=8$, $a=4$ | Qué hago · por qué se vale |
-|---|---|---|---|---|
-| 1 | $x/a$ | $5/4=1.25$ | $8/4=2$ | **Divido:** cuántos bloques de $a$ bytes caben en $x$ bytes, contando el pedazo de bloque que sobra. |
-| 2 | $\lceil x/a\rceil$ | $\lceil1.25\rceil=2$ | $\lceil2\rceil=2$ | **Redondeo hacia arriba** (L00 §6.1): el menor número **entero** de bloques que cubre los $x$ bytes. Un número que ya es entero no cambia. |
-| 3 | $\lceil x/a\rceil\,a$ | $2\cdot4=8$ | $2\cdot4=8$ | **Multiplico por $a$:** paso de bloques a bytes. |
+**Paso 1. Divido.** $x/a$ dice cuántos bloques de $a$ bytes caben en $x$ bytes, contando el pedazo de bloque que sobra:
+$$\frac54=1.25\qquad\qquad\frac84=2$$
 
-*Por qué el resultado es el menor múltiplo de $a$ que no es menor que $x$.* Un múltiplo de $a$ es $q\,a$ con $q$ entero. Pedir $q\,a\ge x$ es lo mismo que pedir $q\ge x/a$: divido entre $a>0$, y dividir entre un número positivo no voltea la desigualdad. El menor entero $q$ con $q\ge x/a$ es, por definición de techo, $\lceil x/a\rceil$. Y como $a>0$, un $q$ más chico da un múltiplo $q\,a$ más chico, así que el menor $q$ da el menor múltiplo. *Con números:* los múltiplos de 4 son 0, 4, 8, 12…; el primero que no es menor que 5 es 8 ✓.
+**Paso 2. Redondeo hacia arriba** (L00 §6.1). Así obtengo el menor número **entero** de bloques que cubre los $x$ bytes. Un número que ya es entero no cambia:
+$$\lceil1.25\rceil=2\qquad\qquad\lceil2\rceil=2$$
 
-**Ejemplo.** `struct A { char a; int b; char c; }`, aplicando la fórmula campo por campo. **Cómo leer la tabla:**
+**Paso 3. Multiplico por $a$.** Paso de bloques a bytes:
+$$2\cdot4=8\qquad\qquad2\cdot4=8$$
 
-- **Primer byte libre:** el offset del campo anterior más su tamaño $s$ (los dos están en el renglón de arriba).
-- **Offset:** la fórmula, con el primer byte libre en el lugar de $x$ y la alineación del campo en el lugar de $a$.
-- **Relleno antes:** offset menos primer byte libre; son los bytes que se saltan para que el campo quede alineado.
-- **Total:** el mismo cálculo, pero con $a_{\max}$, la mayor alineación de los campos; aquí $a_{\max}=\max(1,4,1)=4$.
+*Por qué el resultado es el menor múltiplo de $a$ que no es menor que $x$.*
+
+**Paso 1. Traduzco "múltiplo de $a$".** Es un número $q\,a$ con $q$ entero, y quiero que no sea menor que $x$:
+$$q\,a\ge x$$
+
+**Paso 2. Divido entre $a$.** Como $a>0$, la desigualdad no se voltea:
+$$q\ge\frac{x}{a}$$
+
+**Paso 3. Elijo el menor $q$.** El menor entero con $q\ge x/a$ es, por definición de techo, $\lceil x/a\rceil$. Como $a>0$, un $q$ más chico da un múltiplo $q\,a$ más chico; así que el menor $q$ da el menor múltiplo:
+$$\Big\lceil\frac{x}{a}\Big\rceil\,a$$
+
+**Paso 4. Compruebo con números.** Los múltiplos de 4 son 0, 4, 8, 12…; el primero que no es menor que 5 es 8, lo mismo que dio el cálculo ✓.
+
+**Ejemplo.** `struct A { char a; int b; char c; }`, aplicando la fórmula campo por campo. En cada renglón, el **primer byte libre** es el offset más el $s$ del renglón de arriba; el **offset** es la fórmula con ese byte libre como $x$; el **relleno** es la diferencia entre los dos. El renglón *total* usa $a_{\max}$, la mayor alineación de los campos; aquí $a_{\max}=\max(1,4,1)=4$.
 
 | Campo | $s$ | $a$ | primer byte libre | offset $=\lceil\text{libre}/a\rceil\,a$ | relleno antes |
 |---|---|---|---|---|---|
@@ -230,13 +269,7 @@ Para `insert(i, x)` en un bloque con espacio libre, los elementos $x_i, \dots, x
 
 > **Lema 1.** Si hay espacio libre, `insert(i, x)` hace exactamente $n - i$ movimientos y una escritura; `erase(i)` hace exactamente $n - i - 1$ movimientos.
 
-*Demostración.*
-
-- **Tengo:** antes de la operación, la celda $j$ guarda $x_j$ ($0\le j<n$). Después, la celda $j$ debe guardar $\mathsf{get}(S',j)$, donde $S'$ es la secuencia nueva que fija la especificación de §2.2.
-- **Quiero:** contar cuántas celdas cambian de contenido, y de qué manera (movimiento o escritura).
-- **Plan:** comparar celda por celda el antes y el después. Una celda cuyo contenido no cambia no cuesta nada; las demás se cuentan.
-
-Comparamos celda por celda para `insert(i, x)`:
+*Demostración.* Antes de la operación, la celda $j$ guarda $x_j$. Después, debe guardar $\mathsf{get}(S',j)$, donde $S'$ es la secuencia nueva que fija §2.2. Comparo celda por celda: una celda que no cambia no cuesta nada; las demás se cuentan. Para `insert(i, x)`:
 
 | Celdas | Antes | Después (§2.2) | Trabajo |
 |---|---|---|---|
@@ -244,121 +277,79 @@ Comparamos celda por celda para `insert(i, x)`:
 | $j=i$ | $x_i$ (o libre, si $i=n$) | $\mathsf{get}(S',i)=x$ | 1 escritura |
 | $i<j\le n$ | $x_j$ (o libre, si $j=n$) | $\mathsf{get}(S',j)=\mathsf{get}(S,j-1)=x_{j-1}$ | 1 movimiento cada una |
 
-Las celdas de la última fila son $i+1,\,i+2,\,\dots,\,n$. Cada una recibe exactamente un movimiento: su contenido nuevo, $x_{j-1}$, estaba en otra celda (la $j-1$) y hay que traerlo. Ninguna otra celda se toca. Falta contarlas.
+Las celdas de la última fila son $i+1,\,i+2,\,\dots,\,n$. Cada una recibe exactamente un movimiento: su contenido nuevo, $x_{j-1}$, estaba en la celda $j-1$ y hay que traerlo. Ninguna otra celda se toca.
 
-*La regla para contar.* De $a$ a $b$ (enteros) hay $b-a+1$ enteros. Por qué: si a cada uno le resto $a$, la lista $a,a+1,\dots,b$ se vuelve $0,1,\dots,b-a$, que tiene la misma cantidad de números; y de $0$ a $b-a$ hay $b-a+1$ (los que van de 1 a $b-a$, más el 0). *Con números:* de 3 a 5 están 3, 4, 5; restando 3 quedan 0, 1, 2: tres números, y $5-3+1=3$ ✓. Si $b=a-1$ la lista está vacía y la regla da $0$, que también es correcto.
+**Paso 1. Cuento los movimientos de `insert`.** Si a cada celda le resto $i$, la lista cambia pero tiene la misma cantidad de números, y se cuenta a simple vista:
+$$i+1,\ \dots,\ n\quad\longrightarrow\quad1,\ \dots,\ n-i$$
+Son $n-i$ movimientos, más la escritura de $x$.
 
-Llamo $C$ al número de celdas de $i+1$ a $n$. La columna de números usa $n=5$, $i=2$ (las celdas 3, 4 y 5):
+**Paso 2. Compruebo con $n=5$, $i=2$.** `insert` escribe $x$ en la celda 2 y mueve a las celdas 3, 4, 5 los elementos $x_2,x_3,x_4$: son $3=5-2$ movimientos ✓.
 
-| # | Expresión | Con $n=5$, $i=2$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $C=n-(i+1)+1$ | $5-3+1=3$ | **Aplico la regla para contar** con $a=i+1$ y $b=n$. |
-| 2 | $C=n-i-1+1$ | $5-2-1+1=3$ | **Quito el paréntesis.** Se vale porque restar $(i+1)$ es restar $i$ y luego restar 1. |
-| 3 | $C=n-i$ | $5-2=3$ | **Cancelo** $-1+1=0$. |
+*Los movimientos de `erase`.* La secuencia nueva tiene $n-1$ elementos: $\mathsf{get}(S',j)=x_j$ si $j<i$, y $\mathsf{get}(S',j)=x_{j+1}$ si $i\le j\le n-2$.
 
-Total: exactamente $n-i$ movimientos y una escritura.
+- Las celdas $j<i$ no cambian.
+- Las celdas $i,\dots,n-2$ reciben un movimiento cada una: la celda $j$ recibe $x_{j+1}$, que estaba en la celda $j+1$.
+- $x_i$ se devuelve, no se escribe en el arreglo, y la celda $n-1$ queda fuera de la secuencia.
 
-Para `erase(i)`, la secuencia nueva tiene $n-1$ elementos: $\mathsf{get}(S',j)=x_j$ si $j<i$, y $\mathsf{get}(S',j)=x_{j+1}$ si $i\le j\le n-2$. Las celdas $j<i$ no cambian; las celdas $i,\dots,n-2$ reciben un movimiento cada una (la celda $j$ recibe $x_{j+1}$, que estaba en la celda $j+1$). $x_i$ se devuelve, no se escribe en el arreglo, y la celda $n-1$ queda fuera de la secuencia. Llamo $C'$ al número de celdas de $i$ a $n-2$, con los mismos números (las celdas 2 y 3):
+**Paso 3. Cuento los movimientos de `erase`.** Si a cada celda le resto $i-1$, el último número queda $(n-2)-(i-1)=n-i-1$:
+$$i,\ \dots,\ n-2\quad\longrightarrow\quad1,\ \dots,\ n-i-1$$
+Son $n-i-1$ movimientos.
 
-| # | Expresión | Con $n=5$, $i=2$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $C'=(n-2)-i+1$ | $3-2+1=2$ | **Aplico la regla para contar** con $a=i$ y $b=n-2$. |
-| 2 | $C'=n-2-i+1$ | $5-2-2+1=2$ | **Quito el paréntesis.** Se vale porque va sumando: $+(n-2)$ es lo mismo que $n-2$. |
-| 3 | $C'=n-i-1$ | $5-2-1=2$ | **Reordeno y junto las constantes:** $-2+1=-1$. Reordenar sumandos no cambia la suma. |
-
-*Con números* ($n=5$, $i=2$): `insert` escribe $x$ en la celda 2 y mueve a las celdas 3, 4, 5 los elementos $x_2,x_3,x_4$: $3=5-2$ movimientos ✓. `erase` llena las celdas 2 y 3 con $x_3,x_4$: $2=5-2-1$ ✓. $\blacksquare$
+**Paso 4. Compruebo con $n=5$, $i=2$.** `erase` llena las celdas 2 y 3 con $x_3,x_4$: son $2=5-2-1$ movimientos ✓. $\blacksquare$
 
 ### 4.2 Peor caso, mejor caso y un patrón cuadrático
 
 > **Teorema 2.** $n$ llamadas `insert(0, ·)` sobre una secuencia vacía hacen $\binom{n}{2} = \Theta(n^2)$ movimientos; $n$ llamadas `push_back` hacen 0 movimientos de corrimiento (y $<2n$ copias por realojamiento, L01 §6.4).
 
-*Demostración.* *Parte 1: `insert(0, ·)`.* Numeramos las inserciones $k=0,1,\dots,n-1$. Antes de la inserción $k$ ya se hicieron $k$ inserciones, así que hay $k$ elementos: en el Lema 1 el tamaño es $k$ (hace el papel de $n$) y la posición es $i=0$, de modo que se mueven $k-0=k$ elementos. Llamo $M$ al total de movimientos de las $n$ inserciones.
+*Demostración.* *Parte 1: `insert(0, ·)`.* Numero las inserciones $k=0,1,\dots,n-1$; la inserción $k$ encuentra $k$ elementos y, por el Lema 1 con $i=0$, mueve $k$. Llamo $M$ al total. Quiero ver que $M=\binom n2=\frac{n(n-1)}{2}$, el número de parejas que se pueden formar con $n$ cosas (L00 §9.1). Uso la suma de Gauss (L00 §7.2), que vale para todo entero $N\ge1$:
+$$\boxed{\,1+2+\dots+N=\frac{N(N+1)}{2}\,}\qquad\text{(Gauss)}$$
 
-- **Tengo:** la suma de Gauss (L00 §7.2): $1+2+\dots+N=\dfrac{N(N+1)}{2}$ para todo entero $N\ge1$.
-- **Quiero:** $M\overset{?}{=}\dbinom n2$, el número de parejas que se pueden formar con $n$ cosas, que vale $\dfrac{n(n-1)}{2}$ (L00 §9.1).
-- **Plan:** escribir $M$ como suma, quitar el término $k=0$ (no aporta nada), y lo que queda es Gauss con $N=n-1$.
+**Paso 1. Escribo el total como suma.** La inserción $k$ mueve $k$ elementos:
+$$M=\sum_{k=0}^{n-1}k$$
 
-La columna de números usa $n=4$: las cuatro inserciones al frente mueven $0,1,2,3$ elementos.
+**Paso 2. Quito el término $k=0$.** Vale 0 y no aporta. Lo que queda es exactamente el lado izquierdo de Gauss con $N=n-1$:
+$$M=\boxed{\,1+2+\dots+(n-1)\,}$$
 
-| # | Expresión | Con $n=4$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $M=\sum_{k=0}^{n-1}k$ | $0+1+2+3=6$ | **Parto del total:** la inserción $k$ mueve $k$ elementos (arriba). |
-| 2 | $M=0+\big(1+2+\dots+(n-1)\big)$ | $0+(1+2+3)=6$ | **Separo el término $k=0$** y agrupo el resto. Se vale porque en una suma los paréntesis no cambian el resultado. |
-| 3 | $M=1+2+\dots+(n-1)$ | $1+2+3=6$ | **Quito el 0:** sumar 0 no cambia nada. |
-| 4 | $M=\dfrac{(n-1)\big((n-1)+1\big)}{2}$ | $\dfrac{3\cdot4}{2}=6$ | **Uso Gauss ← aquí** con $N=n-1$, que es $\ge1$ cuando $n\ge2$. |
-| 5 | $M=\dfrac{(n-1)\,n}{2}$ | $\dfrac{3\cdot4}{2}=6$ | **Simplifico** $(n-1)+1=n$. |
-| 6 | $M=\dfrac{n(n-1)}{2}$ | $\dfrac{4\cdot3}{2}=6$ | **Conmuto los factores:** $(n-1)\,n$ es lo mismo que $n\,(n-1)$. Es $\binom n2$ ✓ |
+**Paso 3. Uso Gauss** con $N=n-1$, que es $\ge1$ cuando $n\ge2$:
+$$M=\frac{(n-1)\big((n-1)+1\big)}{2}$$
 
-Con $n=1$ no hace falta Gauss: la única inserción mueve 0, y $\frac{1\cdot0}{2}=0$ ✓. *Con $n=1000$:* $\frac{1000\cdot999}{2}=499\,500$, exactamente lo que imprime el programa de abajo.
+**Paso 4. Simplifico** $(n-1)+1=n$ y conmuto los factores, $(n-1)\,n=n\,(n-1)$:
+$$M=\frac{n(n-1)}{2}=\binom n2\ ✓$$
 
-*Por qué es $\Theta(n^2)$* (definición en L01 §3.2). Por la distributiva, $M=\frac{n(n-1)}{2}=\frac{n^2}{2}-\frac n2$. Busco dos constantes:
+**Paso 5. Compruebo con números.** Con $n=4$, las inserciones mueven $0+1+2+3=6$, y $\frac{4\cdot3}{2}=6$ ✓. Con $n=1$ no hace falta Gauss: la única inserción mueve 0, y $\frac{1\cdot0}{2}=0$ ✓. Con $n=1000$: $\frac{1000\cdot999}{2}=499\,500$, exactamente lo que imprime el programa de abajo.
 
-- *Por arriba:* $M\le\frac{n^2}{2}$, porque a $\frac{n^2}{2}$ le resto $\frac n2\ge0$.
-- *Por abajo, si $n\ge2$:* multiplico $2\le n$ por $\frac n4>0$ (multiplicar por un positivo no voltea la desigualdad) y sale $\frac n2\le\frac{n^2}{4}$. Restar un número más chico deja un resultado más grande, así que $M=\frac{n^2}2-\frac n2\ge\frac{n^2}2-\frac{n^2}4=\frac{n^2}{4}$.
+*Por qué es $\Theta(n^2)$* (definición en L01 §3.2). Escribo $M=\frac n2\,(n-1)$ (dividir el producto entre 2 es dividir uno de sus factores) y comparo $n-1$ con $n$ y con $\frac n2$.
+
+**Paso 1. Cota por arriba.** $n-1\le n$. Multiplico los dos lados por $\frac n2\ge0$, que no voltea la desigualdad:
+$$M\le\frac{n^2}{2}$$
+
+**Paso 2. Cota por abajo, con $n\ge2$.** $n-1\ge\frac n2$, porque la resta $(n-1)-\frac n2=\frac n2-1$ es $\ge0$ cuando $n\ge2$. Multiplico por $\frac n2>0$, que no voltea la desigualdad:
+$$M\ge\frac{n^2}{4}$$
 
 Entonces $\frac14n^2\le M\le\frac12n^2$ para todo $n\ge2$, que es $M=\Theta(n^2)$. *Con $n=4$:* $4\le6\le8$ ✓.
 
 *Parte 2: `push_back`.* `push_back` con $k$ elementos es `insert(k, ·)`: la posición es $i=k$, y el Lema 1 da $k-k=0$ movimientos. Las copias por realojamiento son otra cuenta, ya hecha en L01 §6.4. $\blacksquare$
 
-Insertar siempre **a la mitad**: la inserción $k$ (con $k$ elementos) va en la posición $i=\lfloor k/2\rfloor$ y, por el Lema 1, mueve $R_k=k-\lfloor k/2\rfloor$ elementos. Llamo $H_n$ al total de movimientos de $n$ inserciones a la mitad.
+Insertar siempre **a la mitad**: la inserción $k$ (con $k$ elementos) va en la posición $i=\lfloor k/2\rfloor$ y, por el Lema 1, mueve $R_k=k-\lfloor k/2\rfloor$ elementos. Llamo $H_n$ al total de movimientos de $n$ inserciones a la mitad. Uso la definición de L00 §6.1: $\lfloor x\rfloor$ es el mayor entero $\le x$. Todo entero $k\ge0$ es par, $k=2j$, o impar, $k=2j+1$, con $j$ entero.
 
-*Paso 1: cuánto vale $R_k$.* Uso la definición de L00 §6.1: $\lfloor x\rfloor$ es el mayor entero $\le x$; si $x$ ya es entero, $\lfloor x\rfloor=x$. Todo entero $k\ge0$ es par, $k=2j$, o impar, $k=2j+1$, con $j$ entero, así que hago los dos casos por separado.
+**Paso 1. Caso par, $k=2j$.** $\lfloor 2j/2\rfloor=\lfloor j\rfloor=j$, porque $j$ ya es entero:
+$$R_{2j}=2j-j=j$$
 
-Caso par, $k=2j$. Los números usan $k=2$ (así $j=1$):
+**Paso 2. Caso impar, $k=2j+1$.** $\frac{2j+1}{2}=j+\frac12$, y $\lfloor j+\frac12\rfloor=j$ porque $j\le j+\frac12<j+1$:
+$$R_{2j+1}=(2j+1)-j=j+1$$
 
-| # | Expresión | Con $k=2$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $R_k=2j-\lfloor 2j/2\rfloor$ | $2-\lfloor1\rfloor=1$ | **Sustituyo $k=2j$** en la definición de $R_k$. |
-| 2 | $R_k=2j-j$ | $2-1=1$ | **Simplifico** $2j/2=j$; y $\lfloor j\rfloor=j$ porque $j$ ya es entero. |
-| 3 | $R_k=j$ | $1$ | **Resto:** $2j-j=j$ ✓ |
+**Paso 3. Acoto $R_k$ entre $\frac k2$ y $k$.** Por arriba, $R_k\le k$ porque a $k$ le resto $\lfloor k/2\rfloor\ge0$. Por abajo, en el caso par $R_k=j=\frac{2j}{2}=\frac k2$, y en el impar $R_k=j+1=\frac{2j+2}{2}>\frac{2j+1}{2}=\frac k2$:
+$$\frac k2\le R_k\le k$$
 
-Caso impar, $k=2j+1$. Los números usan $k=3$ (así $j=1$):
+**Paso 4. Sumo sobre las $n$ inserciones.** Sumar desigualdades término a término conserva la dirección, y $\sum_{k=0}^{n-1}k=M=\frac{n(n-1)}{2}$ (Parte 1):
+$$\frac12M\le H_n\le M$$
 
-| # | Expresión | Con $k=3$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $R_k=(2j+1)-\Big\lfloor\dfrac{2j+1}{2}\Big\rfloor$ | $3-\lfloor1.5\rfloor=2$ | **Sustituyo $k=2j+1$.** |
-| 2 | $R_k=(2j+1)-\lfloor j+\tfrac12\rfloor$ | $3-\lfloor1.5\rfloor=2$ | **Reparto la división:** $\frac{2j+1}{2}$ es $\frac{2j}{2}+\frac12$, o sea $j+\frac12$. |
-| 3 | $R_k=(2j+1)-j$ | $3-1=2$ | **Calculo el piso:** $j\le j+\frac12<j+1$, así que $j$ es el mayor entero $\le j+\frac12$ (el siguiente, $j+1$, ya se pasa). |
-| 4 | $R_k=j+1$ | $2$ | **Resto:** $2j+1-j=j+1$ ✓ |
+**Paso 5. Uso las cotas de $M$** de arriba, $\frac{n^2}{4}\le M\le\frac{n^2}{2}$ para $n\ge2$. Multiplicar la de abajo por $\frac12>0$ no la voltea:
+$$\frac{n^2}{8}\le H_n\le\frac{n^2}{2}$$
 
-**Resultado del Paso 1:** $R_{2j}=j$ y $R_{2j+1}=j+1$. (*Nota:* las dos respuestas son $\lceil k/2\rceil$, el menor entero $\ge k/2$, de L00 §6.1: $\lceil 2j/2\rceil=j$, y $\lceil j+\frac12\rceil=j+1$ porque $j<j+\frac12\le j+1$. Es la propiedad $\lfloor k/2\rfloor+\lceil k/2\rceil=k$ de L00 §6.1.)
+**Paso 6. Compruebo con $n=4$.** Las inserciones mueven $R_0,\dots,R_3=0,1,1,2$, así que $H_4=4$. Con $M=6$, el paso 4 da $3\le4\le6$ y el paso 5 da $2\le4\le8$ ✓.
 
-*Paso 2: la suma, con $n$ par.* Abrevio $h=n/2$ (un entero, porque $n$ es par).
-
-- **Tengo:** el Paso 1, $R_{2j}=j$ y $R_{2j+1}=j+1$; y la Parte 1 del Teorema 2, $\sum_{k=0}^{N-1}k=\frac{N(N-1)}{2}$ para todo $N\ge1$.
-- **Quiero:** $H_n\overset{?}{=}h^2$, es decir, $\big(\frac n2\big)^2$.
-- **Plan:** juntar cada $k$ par, $k=2j$, con el impar que le sigue, $k=2j+1$. Cada pareja se calcula con el Paso 1, y lo que queda es una suma que ya sé hacer.
-
-La columna de números usa $n=4$, así que $h=2$ y las parejas son $k=0,1$ (con $j=0$) y $k=2,3$ (con $j=1$).
-
-| # | Expresión | Con $n=4$, $h=2$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $H_n=\sum_{k=0}^{n-1}R_k$ | $0+1+1+2=4$ | **Parto del total:** la inserción $k$ mueve $R_k$. |
-| 2 | $H_n=\sum_{j=0}^{h-1}(R_{2j}+R_{2j+1})$ | $(0+1)+(1+2)=4$ | **Agrupo por parejas** $k=2j$ y $k=2j+1$. Se vale porque $n$ es par: los $k$ de $0$ a $n-1$ se parten exactamente en $h$ parejas (la última es $k=n-2,\,n-1$, con $j=h-1$), y agrupar los sumandos de una suma no cambia el resultado. |
-| 3 | $H_n=\sum_{j=0}^{h-1}\big(j+(j+1)\big)$ | $(0+1)+(1+2)=4$ | **Uso el Paso 1 ← aquí,** sus dos casos: el par aporta $j$ y el impar $j+1$. |
-| 4 | $H_n=\sum_{j=0}^{h-1}(2j+1)$ | $1+3=4$ | **Junto** $j+j=2j$. |
-| 5 | $H_n=\sum_{j=0}^{h-1}2j+\sum_{j=0}^{h-1}1$ | $(0+2)+(1+1)=4$ | **Separo la suma en dos.** Se vale porque sumar los $a_j+b_j$ es lo mismo que sumar los $a_j$ y luego los $b_j$: son los mismos sumandos en otro orden. |
-| 6 | $H_n=2\sum_{j=0}^{h-1}j+h$ | $2\cdot1+2=4$ | **Saco el factor 2** de la primera suma (distributiva al revés: $2a+2b=2(a+b)$) y **cuento** la segunda: son $h$ unos. |
-| 7 | $H_n=2\cdot\dfrac{h(h-1)}{2}+h$ | $2\cdot\dfrac{2\cdot1}{2}+2=4$ | **Uso la Parte 1 del Teorema 2** con $N=h$. |
-| 8 | $H_n=h(h-1)+h$ | $2\cdot1+2=4$ | **Cancelo** el 2 con el $\frac12$. |
-| 9 | $H_n=h^2-h+h$ | $4-2+2=4$ | **Distributiva:** $h(h-1)=h^2-h$. |
-| 10 | $H_n=h^2$ | $2^2=4$ | **Cancelo** $-h+h=0$. Como $h=\frac n2$, es $\big(\frac n2\big)^2$ ✓ |
-
-*Con $n=1000$:* $h=500$ y $H_{1000}=500^2=250\,000$, lo que imprime el programa.
-
-*Paso 3: con $n$ impar.* Plan: separar la última inserción, para que lo demás sea el caso par con $n-1$. Si $n=1$, la única inserción mueve 0, y $H_1=0$. Si $n\ge3$ es impar, $n-1\ge2$ es par. La columna de números usa $n=3$, donde $H_3=0+1+1=2$:
-
-| # | Expresión | Con $n=3$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $H_n=H_{n-1}+R_{n-1}$ | $1+1=2$ | **Separo la última inserción,** la $k=n-1$. Las primeras $n-1$ suman $H_{n-1}$. |
-| 2 | $H_n=\big(\tfrac{n-1}{2}\big)^2+R_{n-1}$ | $1^2+1=2$ | **Uso el Paso 2** con $n-1$, que es par. |
-| 3 | $H_n=\big(\tfrac{n-1}{2}\big)^2+\tfrac{n-1}{2}$ | $1+1=2$ | **Uso el Paso 1, caso par,** con $j=\frac{n-1}{2}$: $R_{2j}=j$. |
-| 4 | $H_n=\dfrac{n^2-2n+1}{4}+\dfrac{2n-2}{4}$ | $\dfrac44+\dfrac44=2$ | **Desarrollo el cuadrado** (el de arriba es $(n-1)^2=n^2-2n+1$) y **pongo el segundo término sobre 4** (multiplico por $\frac22=1$). |
-| 5 | $H_n=\dfrac{n^2-1}{4}$ | $\dfrac84=2$ | **Sumo las fracciones:** $-2n+2n=0$ y $1-2=-1$ ✓ |
-
-También vale para $n=1$: $\frac{1-1}{4}=0=H_1$. En los dos casos $H_n=\lfloor n^2/4\rfloor$: si $n$ es par, $\frac{n^2}{4}$ ya es entero; si es impar, $\frac{n^2}{4}=\frac{n^2-1}{4}+\frac14$ con $\frac{n^2-1}{4}$ entero, y el piso quita justo el $\frac14$.
-
-*Por qué es $\Theta(n^2)$.* Por arriba, $H_n\le\frac{n^2}{4}$ en los dos casos. Por abajo, $H_n\ge\frac{n^2-1}{4}$ en los dos casos, y $\frac{n^2-1}{4}\ge\frac{n^2}{8}$ cuando $n\ge2$: multiplicar por $8>0$ no voltea la desigualdad y la deja como $2n^2-2\ge n^2$; restando $n^2$ y sumando 2 a los dos lados queda $n^2\ge2$, que se cumple si $n\ge2$. Entonces $\frac18n^2\le H_n\le\frac14n^2$ para $n\ge2$ (*con $n=3$:* $1.125\le2\le2.25$ ✓). **La mitad de cuadrático sigue siendo cuadrático.** El programa lo cuenta:
+Con $n$ par sale incluso el valor exacto, $H_n=(n/2)^2$: cada pareja $k=2j,\,2j+1$ aporta $j+(j+1)=2j+1$, y la suma de los primeros $n/2$ impares es $(n/2)^2$. Con $n=1000$ da $500^2=250\,000$. **La mitad de cuadrático sigue siendo cuadrático.** El programa lo cuenta:
 
 ::: {.tabs}
 ```c
@@ -457,51 +448,45 @@ al final:   0 movimientos
 
 *Demostración.* Sea $M_k$ el número de movimientos de la inserción $k$ (con $k$ elementos presentes) e $I_k$ su posición, uniforme en $\{0,\dots,k\}$: cada una de las $k+1$ posiciones sale con probabilidad $\frac1{k+1}$. Por el Lema 1, con tamaño $k$ y posición $I_k$, $M_k = k - I_k$.
 
-*Paso 1: una inserción.*
+**Etapa 1. Una inserción.** Quiero ver que $\mathbb{E}[M_k]=\frac k2$. Uso la definición de esperanza (L00 §9.2), la suma de cada valor por su probabilidad, y Gauss (L00 §7.2) empezando en 0 (el 0 no aporta; con $k=0$ los dos lados valen 0):
+$$\boxed{\,0+1+\dots+k=\frac{k(k+1)}{2}\,}\qquad\text{(Gauss)}$$
 
-- **Tengo:** la definición de esperanza (L00 §9.2): la suma de cada valor por su probabilidad; aquí cada valor $i\in\{0,\dots,k\}$ tiene probabilidad $\frac1{k+1}$. Y Gauss (L00 §7.2): $0+1+\dots+k=\frac{k(k+1)}{2}$ (el 0 no aporta; con $k=0$ los dos lados valen 0).
-- **Quiero:** $\mathbb{E}[M_k]\overset{?}{=}\frac k2$.
-- **Plan:** calcular primero $\mathbb{E}[I_k]$, que sale de Gauss, y luego pasar a $M_k=k-I_k$ por linealidad.
+**Paso 1. Veo qué valores toma $M_k$.** Por el Lema 1, $M_k=k-I_k$. Cuando $I_k$ recorre $0,\dots,k$, $M_k$ recorre los mismos números al revés, así que cada valor $v\in\{0,\dots,k\}$ sale con probabilidad $\frac1{k+1}$:
+$$I_k=0,\ 1,\ \dots,\ k\quad\longrightarrow\quad M_k=k,\ k-1,\ \dots,\ 0$$
 
-La columna de números usa $k=2$: $I_2$ vale 0, 1 o 2, cada uno con probabilidad $\frac13$.
+**Paso 2. Uso la definición de esperanza:**
+$$\mathbb{E}[M_k]=\sum_{v=0}^{k}v\cdot\frac{1}{k+1}$$
 
-| # | Expresión | Con $k=2$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $\mathbb{E}[I_k]=\sum_{i=0}^{k}i\cdot\dfrac{1}{k+1}$ | $\dfrac03+\dfrac13+\dfrac23=1$ | **Parto de la definición de esperanza.** |
-| 2 | $\mathbb{E}[I_k]=\dfrac{1}{k+1}\sum_{i=0}^{k}i$ | $\dfrac13(0+1+2)=1$ | **Saco el factor común $\frac1{k+1}$.** Se vale por la distributiva: $\frac1{k+1}$ no depende de $i$, es el mismo en todos los sumandos. |
-| 3 | $\mathbb{E}[I_k]=\dfrac{1}{k+1}\cdot\dfrac{k(k+1)}{2}$ | $\dfrac13\cdot\dfrac{2\cdot3}{2}=1$ | **Uso Gauss ← aquí** para $0+1+\dots+k$. |
-| 4 | $\mathbb{E}[I_k]=\dfrac{k}{2}$ | $\dfrac22=1$ | **Cancelo $k+1$** arriba y abajo. Se vale porque $k+1\ge1$ no es cero. |
+**Paso 3. Saco el factor común $\frac1{k+1}$.** Es la distributiva: $\frac1{k+1}$ no depende de $v$, es el mismo en todos los sumandos. Lo que queda dentro es la caja de Gauss:
+$$\mathbb{E}[M_k]=\frac{1}{k+1}\,\boxed{\sum_{v=0}^{k}v}$$
 
-Ahora paso de la posición a los movimientos:
+**Paso 4. Uso Gauss:**
+$$\mathbb{E}[M_k]=\frac{1}{k+1}\cdot\frac{k(k+1)}{2}$$
 
-| # | Expresión | Con $k=2$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $\mathbb{E}[M_k]=\mathbb{E}[k-I_k]$ | $\dfrac{2+1+0}{3}=1$ | **Uso el Lema 1:** $M_k=k-I_k$. Con $I_2=0,1,2$ se mueven $2,1,0$. |
-| 2 | $\mathbb{E}[M_k]=\sum_{i=0}^{k}(k-i)\cdot\dfrac{1}{k+1}$ | $\dfrac23+\dfrac13+\dfrac03=1$ | **Uso la definición de esperanza:** $M_k$ vale $k-i$ con probabilidad $\frac1{k+1}$. |
-| 3 | $\mathbb{E}[M_k]=\sum_{i=0}^{k}\dfrac{k}{k+1}-\sum_{i=0}^{k}\dfrac{i}{k+1}$ | $\dfrac{2+2+2}{3}-\dfrac{0+1+2}{3}=1$ | **Separo la suma en dos.** Distributiva: $(k-i)\cdot\frac1{k+1}$ es $\frac{k}{k+1}-\frac{i}{k+1}$; y sumar diferencias es lo mismo que restar las sumas. |
-| 4 | $\mathbb{E}[M_k]=k\sum_{i=0}^{k}\dfrac{1}{k+1}-\mathbb{E}[I_k]$ | $2\cdot\dfrac33-1=1$ | **Saco el factor común $k$** de la primera suma (no depende de $i$), y **reconozco** la segunda: es el renglón 1 de la tabla anterior. |
-| 5 | $\mathbb{E}[M_k]=k-\mathbb{E}[I_k]$ | $2-1=1$ | **Las probabilidades suman 1:** son $k+1$ sumandos iguales a $\frac1{k+1}$. |
-| 6 | $\mathbb{E}[M_k]=k-\dfrac k2$ | $2-1=1$ | **Uso la tabla anterior:** $\mathbb{E}[I_k]=\frac k2$. |
-| 7 | $\mathbb{E}[M_k]=\dfrac k2$ | $\dfrac22=1$ | **Resto:** $k$ es $\frac{2k}{2}$, y $\frac{2k}{2}-\frac k2=\frac k2$ ✓ |
+**Paso 5. Cancelo $k+1$** arriba y abajo. Se vale porque $k+1\ge1$ no es cero:
+$$\boxed{\,\mathbb{E}[M_k]=\frac k2\,}$$
 
-*Paso 2: las $n$ inserciones.* Llamo $X=\sum_{k=0}^{n-1}M_k$ al total de movimientos.
+**Paso 6. Compruebo con $k=2$.** Con $I_2=0,1,2$ se mueven $2,1,0$, cada uno con probabilidad $\frac13$: $\frac23+\frac13+\frac03=1=\frac22$ ✓.
 
-- **Tengo:** $\mathbb{E}[M_k]=\frac k2$ (Paso 1) y $\sum_{k=0}^{n-1}k=\frac{n(n-1)}{2}$ (Teorema 2, Parte 1).
-- **Quiero:** $\mathbb{E}[X]\overset{?}{=}\frac{n(n-1)}{4}$.
-- **Plan:** la esperanza de una suma es la suma de las esperanzas, y cada una la da el Paso 1.
+**Etapa 2. Las $n$ inserciones.** Llamo $X=\sum_{k=0}^{n-1}M_k$ al total de movimientos. Quiero ver que $\mathbb{E}[X]=\frac{n(n-1)}{4}$. Además de la caja de la Etapa 1, uso la Parte 1 del Teorema 2:
+$$\boxed{\,\sum_{k=0}^{n-1}k=\frac{n(n-1)}{2}\,}\qquad\text{(Parte 1)}$$
 
-La columna de números usa $n=3$. $M_0=0$ siempre, $M_1$ vale 1 o 0, y $M_2$ vale 2, 1 o 0. Como las posiciones son uniformes e independientes, las $2\cdot3=6$ combinaciones de $(M_1,M_2)$ son igual de probables, y en ellas $X$ vale $3,2,1,2,1,0$. El renglón 1 promedia esas seis; los demás renglones ya no necesitan la independencia.
+**Paso 1. Uso la linealidad de la esperanza** (L00 §9.2) en $X=\sum_k M_k$: la esperanza de una suma es la suma de las esperanzas, aunque las variables dependan entre sí:
+$$\mathbb{E}[X]=\sum_{k=0}^{n-1}\boxed{\mathbb{E}[M_k]}$$
 
-| # | Expresión | Con $n=3$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $\mathbb{E}[X]=\mathbb{E}\Big[\sum_{k=0}^{n-1}M_k\Big]$ | $\dfrac{3+2+1+2+1+0}{6}=\dfrac32$ | **Parto de la definición de $X$.** |
-| 2 | $\mathbb{E}[X]=\sum_{k=0}^{n-1}\mathbb{E}[M_k]$ | $0+\dfrac12+1=\dfrac32$ | **Linealidad de la esperanza** (L00 §9.2): la esperanza de una suma es la suma de las esperanzas, aunque las variables dependan entre sí. |
-| 3 | $\mathbb{E}[X]=\sum_{k=0}^{n-1}\dfrac{k}{2}$ | $\dfrac02+\dfrac12+\dfrac22=\dfrac32$ | **Uso el Paso 1 ← aquí** en cada sumando. |
-| 4 | $\mathbb{E}[X]=\dfrac12\sum_{k=0}^{n-1}k$ | $\dfrac12(0+1+2)=\dfrac32$ | **Saco el factor común $\frac12$** (distributiva al revés). |
-| 5 | $\mathbb{E}[X]=\dfrac12\cdot\dfrac{n(n-1)}{2}$ | $\dfrac12\cdot\dfrac{3\cdot2}{2}=\dfrac32$ | **Uso el Teorema 2** (Parte 1) para la suma. |
-| 6 | $\mathbb{E}[X]=\dfrac{n(n-1)}{4}$ | $\dfrac{3\cdot2}{4}=\dfrac32$ | **Multiplico las fracciones:** numerador por numerador y denominador por denominador ($2\cdot2=4$) ✓ |
+**Paso 2. Uso la Etapa 1** en cada sumando:
+$$\mathbb{E}[X]=\sum_{k=0}^{n-1}\frac{k}{2}$$
 
-$\blacksquare$
+**Paso 3. Saco el factor común $\frac12$** (distributiva al revés):
+$$\mathbb{E}[X]=\frac12\,\boxed{\sum_{k=0}^{n-1}k}$$
+
+**Paso 4. Uso la Parte 1:**
+$$\mathbb{E}[X]=\frac12\cdot\frac{n(n-1)}{2}$$
+
+**Paso 5. Multiplico las fracciones.** Numerador por numerador y denominador por denominador ($2\cdot2=4$):
+$$\mathbb{E}[X]=\frac{n(n-1)}{4}\ ✓$$
+
+**Paso 6. Compruebo con $n=3$.** $M_0=0$ siempre, $M_1$ vale 1 o 0, y $M_2$ vale 2, 1 o 0. Como las posiciones son uniformes e independientes, las $2\cdot3=6$ combinaciones de $(M_1,M_2)$ son igual de probables, y en ellas $X$ vale $3,2,1,2,1,0$. Su promedio es $\frac{9}{6}=\frac32$, y la fórmula da $\frac{3\cdot2}{4}=\frac32$ ✓. (Este promedio directo sí usa la independencia; la demostración no la necesitó.) $\blacksquare$
 
 Observa que **esperado** ($n(n-1)/4\approx n^2/4$, promedio sobre posiciones elegidas al azar; aquí el azar está en la entrada, no en el algoritmo como en L01 §6.8) y **amortizado** (garantía sobre toda secuencia, L01 §6.8) son conceptos distintos, y aquí ambos dan $\Theta(n^2)$ para $n$ inserciones en medio: no hay contabilidad que salve un corrimiento.
 
@@ -511,57 +496,92 @@ De la L01 sabemos que $\Phi(D) = \max(0, 2k - m)$ (con $k$ = tamaño, $m$ = capa
 
 > **Teorema 4.** Con duplicación y sin contracción, y la misma $\Phi$, el costo amortizado de `insert(i, x)` es a lo más $(k - i) + 3$ y el de `erase(i)` a lo más $k - i$, donde $k$ es el tamaño antes de la operación.
 
-*Demostración.* Contamos como costo cada escritura de un elemento (movimiento, copia o escritura del nuevo). Recuerda (L01 §6.4) que el costo amortizado es $\hat c=c+\Delta\Phi$, con $\Delta\Phi=\Phi'-\Phi$: $\Phi$ es el potencial antes de la operación y $\Phi'$ el de después. Para abreviar, llamo $y=2k-m$, así que $\Phi=\max(0,y)$. En cada caso parto de $\hat c=c+\Phi'-\Phi$, sustituyo $c$ y $\Phi'$, y simplifico hasta la cota.
+*Demostración.* Contamos como costo cada escritura de un elemento (movimiento, copia o escritura del nuevo). Recuerda (L01 §6.4) que el costo amortizado es $\hat c=c+\Delta\Phi$, con $\Delta\Phi=\Phi'-\Phi$: $\Phi$ es el potencial antes de la operación y $\Phi'$ el de después. Para abreviar, llamo $y=2k-m$, así que $\Phi=\max(0,y)$. En cada caso parto de $\hat c=c+\Phi'-\Phi$.
 
 *Dos hechos sobre $\max$ que usaremos.* Para cualquier número $y$ y cualquier $d\ge0$:
+$$
+\begin{aligned}
+&\boxed{\,\max(0,y+d)\le\max(0,y)+d\,}&&\text{(Hecho 1)}\\
+&\boxed{\,\max(0,y-d)\le\max(0,y)\,}&&\text{(Hecho 2)}
+\end{aligned}
+$$
 
-- **Hecho 1:** $\max(0,y+d)\le\max(0,y)+d$. Si $y+d\le0$, el lado izquierdo es $0$, y $0\le\max(0,y)+d$ porque ambos sumandos son $\ge0$. Si no, el lado izquierdo es $y+d$, y $y+d\le\max(0,y)+d$ porque $y\le\max(0,y)$.
-- **Hecho 2:** $\max(0,y-d)\le\max(0,y)$. Los dos candidatos del máximo izquierdo no pasan de $\max(0,y)$: $0\le\max(0,y)$, y $y-d\le y\le\max(0,y)$.
+*Por qué vale el Hecho 1.* Miro cuál de los dos candidatos gana el máximo de la izquierda.
 
-**Cómo leer las tablas de los tres casos:**
+- Si $y+d\le0$, la izquierda es $0$, y $0\le\max(0,y)+d$ porque los dos sumandos son $\ge0$.
+- Si $y+d>0$, la izquierda es $y+d$, y $y+d\le\max(0,y)+d$ porque $y\le\max(0,y)$ (sumo $d$ a los dos lados).
+- *Con números:* $y=-1$, $d=2$: $\max(0,1)=1\le0+2=2$ ✓.
 
-- **Expresión:** todos los renglones empiezan con $\hat c$. Los primeros son igualdades; desde el renglón donde se usa una cota, son desigualdades $\le$, y la última columna dice por qué cada una conserva la dirección.
-- **Columna de números:** el lado derecho del renglón con valores chicos. De un renglón al siguiente el número se queda igual (si el paso es una igualdad) o sube o se queda igual (si es una cota); nunca baja del valor real de $\hat c$, que es el del renglón 1.
-- **Qué hago · por qué se vale:** primero la acción, en negritas; después la regla.
+*Por qué vale el Hecho 2.* Los dos candidatos del máximo de la izquierda no pasan de $\max(0,y)$:
 
-*Caso 1: `insert` sin realojar* ($k<m$). Costo real: $c=(k-i)+1$ ($k-i$ movimientos y una escritura, Lema 1). Después de insertar, el tamaño es $k+1$ y la capacidad sigue siendo $m$. Así que $\Phi'=\max\big(0,2(k+1)-m\big)$, y lo de adentro es $y+2$: por la distributiva, $2(k+1)-m$ es $2k+2-m$, y reordenando, $(2k-m)+2$. Es decir, $\Phi'=\max(0,y+2)$. Los números usan $k=5$, $m=8$, $i=2$: $c=3+1=4$, $\Phi=\max(0,10-8)=2$ y $\Phi'=\max(0,12-8)=4$.
+- $0\le\max(0,y)$;
+- $y-d\le y\le\max(0,y)$, porque $d\ge0$.
+- *Con números:* $y=2$, $d=2$: $\max(0,0)=0\le2$ ✓.
 
-| # | Expresión | Con $k=5$, $m=8$, $i=2$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $\hat c=c+\Phi'-\Phi$ | $4+4-2=6$ | **Parto de la definición** de costo amortizado. |
-| 2 | $\hat c=c+\max(0,y+2)-\Phi$ | $4+\max(0,4)-2=6$ | **Escribo $\Phi'$ como $\max(0,y+2)$** (arriba). |
-| 3 | $\hat c\le c+\max(0,y)+2-\Phi$ | $4+2+2-2=6$ | **Uso el Hecho 1 ← aquí,** con $d=2\ge0$. La dirección se conserva: cambio un sumando por otro mayor o igual, y lo demás no cambia. |
-| 4 | $\hat c\le c+2$ | $4+2=6$ | **Cancelo** $\max(0,y)-\Phi=0$: son la misma cosa. |
-| 5 | $\hat c\le(k-i)+3$ | $3+3=6$ | **Sustituyo el costo real** $c=(k-i)+1$ (Lema 1) y sumo $1+2=3$ ✓ |
+*Caso 1: `insert` sin realojar* ($k<m$). Costo real: $c=(k-i)+1$ ($k-i$ movimientos y una escritura, Lema 1). Después de insertar, el tamaño es $k+1$ y la capacidad sigue siendo $m$.
 
-*Caso 2: `insert` con realojamiento* ($k=m$). Costo real: se reserva un bloque de $2m$, se reubican los $k$ viejos y se escribe $x$. Si la reubicación deja cada elemento **ya en su posición final** (los de antes de $i$ en su lugar, los demás corridos uno, como hacen las soluciones de C y C++), el costo real es $c=k+1$; si primero se reubica y luego se corre (como la de Rust), es $c=k+(k-i)+1$. En ambos casos $c\le k+(k-i)+1$, porque $k-i\ge0$ (la posición cumple $i\le k$). Los números usan $k=m=8$, $i=3$, reubicando y luego corriendo: $c=8+5+1=14$, $\Phi=\max(0,16-8)=8$ y, con capacidad 16, $\Phi'=\max(0,18-16)=2$.
+**Paso 1. Escribo $\Phi'$** con el tamaño nuevo, $k+1$, y la misma capacidad $m$:
+$$\hat c=c+\max\big(0,\,2(k+1)-m\big)-\Phi$$
 
-| # | Expresión | Con $k=m=8$, $i=3$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $\hat c=c+\Phi'-\Phi$ | $14+2-8=8$ | **Parto de la definición** de costo amortizado. |
-| 2 | $\hat c=c+2-\Phi$ | $14+2-8=8$ | **Calculo $\Phi'$.** Después, el tamaño es $k+1$ y la capacidad $2m$, que es $2k$ porque $m=k$. Por la distributiva, $2(k+1)-2k$ es $2k+2-2k$, o sea 2, y $\max(0,2)=2$. |
-| 3 | $\hat c=c+2-k$ | $14+2-8=8$ | **Calculo $\Phi$.** Antes, el tamaño es $k$ y la capacidad $m=k$, así que $2k-m$ es $k$, y $\max(0,k)=k$ porque $k\ge0$. |
-| 4 | $\hat c\le\big(k+(k-i)+1\big)+2-k$ | $14+2-8=8$ | **Acoto el costo real** con $c\le k+(k-i)+1$. La dirección se conserva: cambio un sumando por otro mayor o igual. |
-| 5 | $\hat c\le(k-i)+3$ | $5+3=8$ | **Cancelo** $k-k=0$ y sumo $1+2=3$ ✓ |
+**Paso 2. Escribo lo de adentro con $y$.** Por la distributiva, $2(k+1)-m$ es $2k+2-m$, y reordenando, $(2k-m)+2=y+2$. Queda la forma del Hecho 1:
+$$\hat c=c+\boxed{\max(0,\,y+2)}-\Phi$$
 
-En el renglón 5, el $k$ de la reubicación se cancela con el $-k$ del potencial: **la caída del potencial paga la reubicación**. Con la reubicación de C y C++, $c=k+1=9$ y $\hat c=9+2-8=3$, todavía menos.
+**Paso 3. Uso el Hecho 1** con $d=2\ge0$. Cambio un sumando por otro mayor o igual y lo demás no cambia, así que la dirección es $\le$:
+$$\hat c\le c+\max(0,y)+2-\Phi$$
 
-*Caso borde $m=0$.* La primera reserva no es de $2\cdot0$ sino de 1 elemento. Ahí $k=i=0$ y $c=1$; $\Phi$ pasa de 0 a $\max(0,2\cdot1-1)=1$, así que $\hat c=1+1-0=2$, que es $\le(0-0)+3=3$.
+**Paso 4. Cancelo** $\max(0,y)-\Phi=0$: son la misma cosa.
+$$\hat c\le c+2$$
 
-*Caso 3: `erase`.* Costo real: $c=k-i-1$ (Lema 1). Después de borrar, el tamaño baja a $k-1$ y $m$ no cambia. Así que $\Phi'=\max\big(0,2(k-1)-m\big)$, y lo de adentro es $y-2$: por la distributiva, $2(k-1)-m$ es $2k-2-m$, y reordenando, $(2k-m)-2$. Es decir, $\Phi'=\max(0,y-2)$. Los números usan $k=5$, $m=8$, $i=2$: $c=2$, $\Phi=\max(0,10-8)=2$ y $\Phi'=\max(0,8-8)=0$.
+**Paso 5. Sustituyo el costo real** $c=(k-i)+1$ y sumo $1+2=3$:
+$$\hat c\le(k-i)+3\ ✓$$
 
-| # | Expresión | Con $k=5$, $m=8$, $i=2$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $\hat c=c+\Phi'-\Phi$ | $2+0-2=0$ | **Parto de la definición** de costo amortizado. |
-| 2 | $\hat c=c+\max(0,y-2)-\Phi$ | $2+\max(0,0)-2=0$ | **Escribo $\Phi'$ como $\max(0,y-2)$** (arriba). |
-| 3 | $\hat c\le c+\max(0,y)-\Phi$ | $2+2-2=2$ | **Uso el Hecho 2 ← aquí,** con $d=2$. La dirección se conserva: cambio un sumando por otro mayor o igual. |
-| 4 | $\hat c\le c$ | $2$ | **Cancelo** $\max(0,y)-\Phi=0$. |
-| 5 | $\hat c\le k-i-1$ | $2$ | **Sustituyo el costo real** $c=k-i-1$ (Lema 1). |
-| 6 | $\hat c\le k-i$ | $3$ | **Agrando la cota:** $k-i-1\le k-i$, porque quitar el $-1$ suma 1. Si $\hat c$ es a lo más lo primero, es a lo más lo segundo (transitividad) ✓ |
+**Paso 6. Compruebo con $k=5$, $m=8$, $i=2$.** $c=3+1=4$, $\Phi=\max(0,10-8)=2$ y $\Phi'=\max(0,12-8)=4$. El valor real es $\hat c=4+4-2=6$, y la cota es $(5-2)+3=6$ ✓.
 
-Aquí sí se ve subir el número: el valor real es $\hat c=0$, y las cotas de los renglones 3 a 6 (2, 2, 2 y 3) no bajan de él.
+*Caso 2: `insert` con realojamiento* ($k=m$). Costo real: se reserva un bloque de $2m$, se reubican los $k$ viejos y se escribe $x$.
 
-*Por qué esto acota el costo real.* Como en L01 §6.4(c) Paso 2: sumando $\hat c_t=c_t+\Phi_t-\Phi_{t-1}$ sobre las operaciones $t=1,\dots,T$, los potenciales intermedios se cancelan en cadena (suma telescópica, L00 §7.6) y queda $\sum_t\hat c_t=\sum_t c_t+\Phi_T-\Phi_0\ge\sum_t c_t$, porque $\Phi_0=0$ (vector vacío) y $\Phi_T\ge0$ (es un máximo con 0). *Con tres `push_back` desde el vector vacío* ($c_t=1,2,3$ y $\Phi_t=0,1,2,2$, así que $\hat c_t=2,3,3$): $8=6+2-0\ge6$ ✓. $\blacksquare$
+- Si la reubicación deja cada elemento **ya en su posición final** (los de antes de $i$ en su lugar, los demás corridos uno, como hacen las soluciones de C y C++), el costo real es $c=k+1$.
+- Si primero se reubica y luego se corre (como la de Rust), es $c=k+(k-i)+1$.
+- En ambos casos $\boxed{\,c\le k+(k-i)+1\,}$, porque $k-i\ge0$ (la posición cumple $i\le k$).
+
+**Paso 1. Calculo $\Phi'$.** Después, el tamaño es $k+1$ y la capacidad $2m$, que es $2k$ porque $m=k$. Por la distributiva, $2(k+1)-2k$ es $2k+2-2k$, o sea 2, y $\max(0,2)=2$:
+$$\hat c=c+2-\Phi$$
+
+**Paso 2. Calculo $\Phi$.** Antes, el tamaño es $k$ y la capacidad $m=k$, así que $2k-m$ es $k$, y $\max(0,k)=k$ porque $k\ge0$:
+$$\hat c=\boxed{c}+2-k$$
+
+**Paso 3. Acoto el costo real** con $c\le k+(k-i)+1$. Cambio un sumando por otro mayor o igual, así que la dirección es $\le$:
+$$\hat c\le\big(k+(k-i)+1\big)+2-k$$
+
+**Paso 4. Cancelo** $k-k=0$ y sumo $1+2=3$:
+$$\hat c\le(k-i)+3\ ✓$$
+
+**Paso 5. Compruebo con $k=m=8$, $i=3$**, reubicando y luego corriendo. $c=8+5+1=14$, $\Phi=\max(0,16-8)=8$ y, con capacidad 16, $\Phi'=\max(0,18-16)=2$. El valor real es $\hat c=14+2-8=8$, y la cota es $5+3=8$ ✓. Con la reubicación de C y C++, $c=k+1=9$ y $\hat c=9+2-8=3$, todavía menos.
+
+En el paso 4, el $k$ de la reubicación se cancela con el $-k$ del potencial: **la caída del potencial paga la reubicación**.
+
+*Caso borde $m=0$.* La primera reserva no es de $2\cdot0$ sino de 1 elemento. Ahí $k=i=0$ y $c=1$; $\Phi$ pasa de 0 a $\max(0,2\cdot1-1)=1$. Entonces:
+$$\hat c=1+1-0=2\ \le\ (0-0)+3=3$$
+
+*Caso 3: `erase`.* Costo real: $c=k-i-1\le k-i$ (Lema 1). Después de borrar, el tamaño baja a $k-1$ y $m$ no cambia.
+
+**Paso 1. Escribo $\Phi'$** con el tamaño nuevo, $k-1$, y la misma capacidad $m$:
+$$\hat c=c+\max\big(0,\,2(k-1)-m\big)-\Phi$$
+
+**Paso 2. Escribo lo de adentro con $y$.** Por la distributiva, $2(k-1)-m$ es $2k-2-m$, y reordenando, $(2k-m)-2=y-2$. Queda la forma del Hecho 2:
+$$\hat c=c+\boxed{\max(0,\,y-2)}-\Phi$$
+
+**Paso 3. Uso el Hecho 2** con $d=2$. Cambio un sumando por otro mayor o igual, así que la dirección es $\le$:
+$$\hat c\le c+\max(0,y)-\Phi$$
+
+**Paso 4. Cancelo** $\max(0,y)-\Phi=0$:
+$$\hat c\le c$$
+
+**Paso 5. Uso $c\le k-i$:**
+$$\hat c\le k-i\ ✓$$
+
+**Paso 6. Compruebo con $k=5$, $m=8$, $i=2$.** $c=2$, $\Phi=\max(0,10-8)=2$ y $\Phi'=\max(0,8-8)=0$. El valor real es $\hat c=2+0-2=0$. Las cotas de los pasos 3 a 5 valen $2,2,3$: ninguna baja de 0 ✓.
+
+*Por qué esto acota el costo real.* Como $\Phi_0=0$ y $\Phi\ge0$, la suma de los $\hat c$ acota la suma de los $c$; es el mismo argumento de L01 §6.4(c), que no depende de qué operación sea. $\blacksquare$
 
 En palabras: **el realojamiento sigue siendo gratis amortizado; lo único que cuesta es el corrimiento**, y ese no se amortiza.
 
@@ -575,25 +595,34 @@ En palabras: **el realojamiento sigue siendo gratis amortizado; lo único que cu
 
 > **Proposición 5.** Sea $k_0\le N$ el tamaño al llamar `reserve(N)`. Las siguientes $N - k_0$ llamadas a `push_back` cuestan exactamente 1 cada una **en el peor caso** (no solo amortizado), y no invalidan ningún puntero.
 
-*Demostración.* `reserve` no cambia el tamaño, así que justo después sigue siendo $k_0$; la capacidad es $m\ge N$. Numeramos los `push_back` $t=1,\dots,N-k_0$. Antes del `push_back` número $t$ ya se hicieron $t-1$, así que el tamaño es $k=k_0+t-1$.
+*Demostración.* `reserve` no cambia el tamaño, así que justo después sigue siendo $k_0$; la capacidad es $m\ge N$. Numeramos los `push_back` $t=1,\dots,N-k_0$. Antes del `push_back` número $t$ el tamaño es $k=k_0+t-1$. Quiero ver que $k<m$. Uso dos datos (cuántos `push_back` cuento, y lo que garantiza `reserve`):
+$$\boxed{\,t\le N-k_0\,}\qquad\qquad\boxed{\,N\le m\,}$$
 
-- **Tengo:** $t\le N-k_0$ (solo contamos esos `push_back`) y $N\le m$ (lo garantiza `reserve`).
-- **Quiero:** $k\overset{?}{<}m$, es decir, que haya una celda libre.
-- **Plan:** cambiar $t$ por su cota y encadenar desigualdades hasta llegar a $m$.
+**Paso 1. Uso $t\le N-k_0$ en el tamaño.** En $k=k_0+t-1$ cambio $t$ por algo mayor o igual. La dirección se conserva porque a los dos lados de $t\le N-k_0$ solo les sumo $k_0$ y les resto 1:
+$$k\le k_0+(N-k_0)-1$$
 
-La columna de números usa el caso más justo: vector vacío ($k_0=0$), `reserve(100)` con $m=100$, y el último `push_back` contado, $t=100$.
+**Paso 2. Cancelo** $k_0-k_0=0$:
+$$k\le N-1$$
 
-| # | Expresión | Con $k_0=0$, $N=m=100$, $t=100$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $k=k_0+t-1$ | $0+100-1=99$ | **Parto del tamaño** antes del `push_back` $t$. |
-| 2 | $k\le k_0+(N-k_0)-1$ | $0+100-1=99$ | **Uso $t\le N-k_0$:** cambio $t$ por algo mayor o igual. La dirección se conserva porque a los dos lados de $t\le N-k_0$ solo les sumo $k_0$ y les resto 1. |
-| 3 | $k\le N-1$ | $100-1=99$ | **Cancelo** $k_0-k_0=0$. |
-| 4 | $k<N$ | $99<100$ | **Uso $N-1<N$:** si $k$ es a lo más $N-1$, y $N-1$ es menor que $N$, entonces $k$ es menor que $N$ (transitividad). |
-| 5 | $k<m$ | $99<100$ | **Uso $N\le m$:** si $k<N$ y $N\le m$, entonces $k<m$ (transitividad) ✓ |
+**Paso 3. Encadeno con $N\le m$.** $k\le N-1<N\le m$; por transitividad:
+$$k<m\ ✓$$
 
-Es decir, cada uno encuentra $k<m$: hay espacio y no realoja. Falta ver que $m$ no cambia por el camino: lo único que cambia $m$ es un realojamiento, así que, yendo en orden $t=1,2,\dots$ (inducción sobre $t$), si los anteriores no realojaron $m$ sigue igual y el $t$-ésimo tampoco realoja. Sin realojamiento, cada `push_back` es una escritura y el bloque no se mueve, así que ningún puntero se invalida. *Con números:* vector vacío y `reserve(100)` con $m=100$: los `push_back` 1 a 100 encuentran tamaños $0,\dots,99$, todos $<100$; el 101 encuentra tamaño $100=m$ y realoja. $\blacksquare$
+**Paso 4. Compruebo con el caso más justo:** vector vacío ($k_0=0$), `reserve(100)` con $m=100$, y el último `push_back` contado, $t=100$. Entonces $k=0+100-1=99$, y $99<100$ ✓. El 101 ya encontraría $k=100=m$ y realojaría.
 
-Úsalo cuando conoces el tamaño final. Sin `reserve`, $N$ `push_back` desde el vector vacío copian $1+2+4+\dots+2^j=2^{j+1}-1$ elementos, donde $2^j<N\le2^{j+1}$: entre $N-1$ y $2N-1$ copias, en $j+2\approx\lg N$ reservas (con $N=100$: $1+2+\dots+64=127$ copias y 8 reservas, de capacidades $1,2,4,\dots,128$). Con `reserve(N)` son 0 copias y una reserva. Además vuelve predecible la latencia (importante en sistemas de tiempo real, donde un `push_back` ocasional de $\Theta(n)$ es inaceptable aunque el promedio sea bueno).
+Es decir, cada uno encuentra $k<m$: hay espacio y no realoja. Falta ver dos cosas:
+
+- **$m$ no cambia por el camino.** Lo único que cambia $m$ es un realojamiento. Yendo en orden $t=1,2,\dots$ (inducción sobre $t$): si los anteriores no realojaron, $m$ sigue igual, y por los pasos 1 a 3 el $t$-ésimo tampoco realoja.
+- **Ningún puntero se invalida.** Sin realojamiento, cada `push_back` es una escritura (cuesta 1) y el bloque no se mueve. $\blacksquare$
+
+Úsalo cuando conoces el tamaño final. Compara:
+
+- **Sin `reserve`:** $N$ `push_back` desde el vector vacío realojan cuando el tamaño es $1,2,4,\dots,2^j$, donde $2^j<N\le2^{j+1}$, y cada vez copian ese tamaño. En total (suma geométrica, L00 §7.3):
+$$1+2+4+\dots+2^j=2^{j+1}-1\ \text{copias}$$
+Eso queda entre $N-1$ y $2N-1$ copias, en $j+2=\lceil\lg N\rceil+1$ reservas.
+- *Con $N=100$:* $j=6$, así que son $1+2+\dots+64=127$ copias y 8 reservas, de capacidades $1,2,4,\dots,128$.
+- **Con `reserve(N)`:** 0 copias y una reserva.
+
+Además vuelve predecible la latencia (importante en sistemas de tiempo real, donde un `push_back` ocasional de $\Theta(n)$ es inaceptable aunque el promedio sea bueno).
 
 ### 5.2 `shrink_to_fit`: el adversario
 
@@ -601,44 +630,59 @@ Es decir, cada uno encuentra $k<m$: hay espacio y no realoja. Falta ver que $m$ 
 
 > **Proposición 6.** La secuencia `(push_back; shrink_to_fit)` repetida $n$ veces cuesta $\Theta(n^2)$.
 
-*Demostración.* Numeramos las vueltas $t=0,1,\dots,n-1$. Antes de la vuelta $t$ hay $t$ elementos y, por el `shrink_to_fit` de la vuelta anterior, capacidad $m=t$ (en la vuelta 0, el vector vacío tiene $m=0$). El `push_back` encuentra $k=m=t$: realoja, copia los $t$ elementos y escribe el nuevo, $t+1$ escrituras. Después, `shrink_to_fit` deja $m=t+1$, copiando a lo más los $t+1$ elementos.
+*Demostración.* Numeramos las vueltas $t=0,1,\dots,n-1$.
 
-Llamo $V_t$ al costo de la vuelta $t$ y $C=\sum_{t=0}^{n-1}V_t$ al total. La columna de números usa $n=4$ con duplicación: el `push_back` de la vuelta $t$ cuesta $1,2,3,4$, y el `shrink_to_fit` copia $0,0,3,4$ elementos (en las vueltas 0 y 1 la capacidad nueva, 1 y 2, ya era igual al tamaño). Así $V_0,\dots,V_3=1,2,6,8$ y $C=17$.
+- Antes de la vuelta $t$ hay $t$ elementos y, por el `shrink_to_fit` de la vuelta anterior, capacidad $m=t$ (en la vuelta 0, el vector vacío tiene $m=0$).
+- El `push_back` encuentra $k=m=t$: realoja, copia los $t$ elementos y escribe el nuevo. Son $t+1$ escrituras.
+- Después, `shrink_to_fit` deja $m=t+1$, copiando a lo más los $t+1$ elementos.
 
-*Cota inferior.* Plan: quedarme solo con una parte del costo que ya sé sumar.
+Llamo $V_t$ al costo de la vuelta $t$ y $C=\sum_{t=0}^{n-1}V_t$ al total. *Con $n=4$ y duplicación:* el `push_back` de la vuelta $t$ cuesta $1,2,3,4$, y el `shrink_to_fit` copia $0,0,3,4$ elementos (en las vueltas 0 y 1 la capacidad nueva, 1 y 2, ya era igual al tamaño). Así $V_0,\dots,V_3=1,2,6,8$ y $C=17$.
 
-| # | Expresión | Con $n=4$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $C=\sum_{t=0}^{n-1}V_t$ | $1+2+6+8=17$ | **Parto del total.** |
-| 2 | $C\ge\sum_{t=0}^{n-1}t$ | $0+1+2+3=6$ | **Me quedo solo con las copias de los `push_back`** ($t$ en la vuelta $t$). Lo que dejo fuera (la escritura del nuevo y las copias de `shrink_to_fit`) es $\ge0$, y quitar sumandos no negativos no agranda: por eso el signo es $\ge$. |
-| 3 | $C\ge\dfrac{n(n-1)}{2}$ | $\dfrac{4\cdot3}{2}=6$ | **Uso el Teorema 2** (Parte 1) para la suma. |
+*Cota inferior.* Me quedo solo con una parte del costo que ya sé sumar, y uso la Parte 1 del Teorema 2:
+$$\boxed{\,\sum_{t=0}^{n-1}t=\frac{n(n-1)}{2}\,}\qquad\text{(Parte 1)}$$
 
-Tras el Teorema 2 vimos que $\frac{n(n-1)}{2}\ge\frac{n^2}{4}$ para $n\ge2$, así que $C=\Omega(n^2)$.
+**Paso 1. Me quedo solo con las copias de los `push_back`** ($t$ en la vuelta $t$). Lo que dejo fuera de $C$ (la escritura del nuevo y las copias de `shrink_to_fit`) es $\ge0$, y quitar sumandos no negativos no agranda: por eso el signo es $\ge$.
+$$C\ge\boxed{\sum_{t=0}^{n-1}t}$$
 
-*Cota superior.* Plan: acotar cada vuelta por lo mismo, $2n$, y sumar $n$ veces.
+**Paso 2. Uso la Parte 1:**
+$$C\ge\frac{n(n-1)}{2}$$
 
-| # | Expresión | Con $n=4$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $C=\sum_{t=0}^{n-1}V_t$ | $1+2+6+8=17$ | **Parto del total.** |
-| 2 | $C\le\sum_{t=0}^{n-1}\big((t+1)+(t+1)\big)$ | $2+4+6+8=20$ | **Acoto cada vuelta:** el `push_back` cuesta $t+1$ y `shrink_to_fit` a lo más $t+1$. Si cada sumando crece o se queda igual, la suma también: el $\le$ se conserva. |
-| 3 | $C\le\sum_{t=0}^{n-1}2(t+1)$ | $2+4+6+8=20$ | **Junto:** sumar algo consigo mismo da el doble, $x+x=2x$. |
-| 4 | $C\le\sum_{t=0}^{n-1}2n$ | $8+8+8+8=32$ | **Uso $t\le n-1$,** o sea $t+1\le n$. Multiplico por $2>0$, que no voltea la desigualdad: $2(t+1)\le2n$. |
-| 5 | $C\le2n\cdot n=2n^2$ | $8\cdot4=32$ | **Sumo $n$ veces lo mismo:** son $n$ sumandos iguales a $2n$ ✓ |
+**Paso 3. Uso la cota de después del Teorema 2.** Ahí vimos que $\frac{n(n-1)}{2}\ge\frac{n^2}{4}$ para $n\ge2$; por transitividad:
+$$C\ge\frac{n^2}{4}$$
+Entonces $C=\Omega(n^2)$.
 
-Entonces $C=O(n^2)$, y las dos cotas juntas dan $\Theta(n^2)$. *Con $n=4$:* $6\le17\le32$ ✓. $\blacksquare$
+**Paso 4. Compruebo con $n=4$:** $C=17$, el paso 2 da $\frac{4\cdot3}{2}=6$ y el paso 3 da $4$; $17\ge6\ge4$ ✓.
 
-Esto viola la intuición de L01, y el potencial $\Phi=\max(0,2k-m)$ dice exactamente por qué. Toma un vector con $m=2k$; por ejemplo, el `push_back` número 5 duplicó la capacidad a $m=8$ y luego un `pop_back` dejó $k=4$. Si ahora `shrink_to_fit` baja $m$ a $k$, copia los $k$ elementos ($c=k$) y el potencial cambia sin que el usuario haya pagado nada. La columna de números usa $k=4$ y $m=8$:
+*Cota superior.* Acoto cada vuelta por lo mismo, $2n$, y sumo $n$ veces.
 
-| # | Expresión | Con $k=4$, $m=8$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $\hat c=c+\Phi'-\Phi$ | $4+4-0=8$ | **Parto de la definición** de costo amortizado. |
-| 2 | $\hat c=k+\Phi'-\Phi$ | $4+4-0=8$ | **Sustituyo el costo real:** se copian los $k$ elementos. |
-| 3 | $\hat c=k+\max(0,2k-k)-\Phi$ | $4+\max(0,4)-0=8$ | **Escribo $\Phi'$:** el tamaño sigue siendo $k$ y la capacidad baja a $k$. |
-| 4 | $\hat c=k+k-\Phi$ | $4+4-0=8$ | **Calculo $\Phi'$:** $2k-k=k$, y $\max(0,k)=k$ porque $k\ge0$. |
-| 5 | $\hat c=k+k-\max(0,2k-2k)$ | $4+4-\max(0,0)=8$ | **Escribo $\Phi$:** antes, la capacidad era $m=2k$. |
-| 6 | $\hat c=2k$ | $8$ | **Calculo $\Phi$** ($\max(0,0)=0$) y **junto** $k+k=2k$. |
+**Paso 1. Acoto cada vuelta.** El `push_back` cuesta $t+1$ y `shrink_to_fit` a lo más $t+1$, así que la vuelta cuesta a lo más $(t+1)+(t+1)=2(t+1)$. Si cada sumando crece o se queda igual, la suma también, así que el signo es $\le$:
+$$C\le\sum_{t=0}^{n-1}2(t+1)$$
 
-El potencial pasa de 0 a $k$: **sube** $k$ unidades (renglones 4 y 5) sin que el usuario haya pagado por ellas, y el costo amortizado de ese `shrink_to_fit` es $2k=\Theta(k)$, no $O(1)$. Por eso `std::vector::shrink_to_fit` está especificada como una **petición no vinculante** y por eso `Vec::shrink_to_fit` documenta que puede realojar: son operaciones de $\Theta(k)$ que el usuario debe invocar con conocimiento de causa (típicamente una sola vez, cuando el contenedor deja de crecer).
+**Paso 2. Uso $t\le n-1$,** o sea $t+1\le n$. Multiplico por $2>0$, que no voltea la desigualdad: $2(t+1)\le2n$.
+$$C\le\sum_{t=0}^{n-1}2n$$
+
+**Paso 3. Sumo $n$ veces lo mismo.** Son $n$ sumandos iguales a $2n$, y $2n\cdot n=2n^2$:
+$$C\le2n^2$$
+Entonces $C=O(n^2)$.
+
+**Paso 4. Compruebo con $n=4$:** el paso 1 da $2+4+6+8=20$, el paso 3 da $2\cdot16=32$; $17\le20\le32$ ✓.
+
+Las dos cotas juntas dan $\Theta(n^2)$. *Con $n=4$:* $6\le17\le32$ ✓. $\blacksquare$
+
+Esto viola la intuición de L01, y el potencial $\Phi=\max(0,2k-m)$ dice exactamente por qué. Toma un vector con $m=2k$; por ejemplo, el `push_back` número 5 duplicó la capacidad a $m=8$ y luego un `pop_back` dejó $k=4$. Si ahora `shrink_to_fit` baja $m$ a $k$, copia los $k$ elementos ($c=k$) y el potencial cambia sin que el usuario haya pagado nada.
+
+**Paso 1. Calculo $\Phi$.** Antes, la capacidad es $m=2k$, así que $2k-m=0$:
+$$\Phi=\max(0,0)=0$$
+
+**Paso 2. Calculo $\Phi'$.** Después, la capacidad es $m=k$, así que $2k-m=k$, y $\max(0,k)=k$ porque $k\ge0$:
+$$\Phi'=\max(0,k)=k$$
+
+**Paso 3. Sustituyo en $\hat c=c+\Phi'-\Phi$**, con el costo real $c=k$:
+$$\hat c=k+k-0=2k$$
+
+**Paso 4. Compruebo con $k=4$, $m=8$.** $c=4$, $\Phi=\max(0,8-8)=0$ y $\Phi'=\max(0,8-4)=4$: $\hat c=4+4-0=8=2\cdot4$ ✓.
+
+El potencial pasa de 0 a $k$: **sube** $k$ unidades (pasos 1 y 2) sin que el usuario haya pagado por ellas, y el costo amortizado de ese `shrink_to_fit` es $2k=\Theta(k)$, no $O(1)$. Por eso `std::vector::shrink_to_fit` está especificada como una **petición no vinculante** y por eso `Vec::shrink_to_fit` documenta que puede realojar: son operaciones de $\Theta(k)$ que el usuario debe invocar con conocimiento de causa (típicamente una sola vez, cuando el contenedor deja de crecer).
 
 ### 5.3 Contracción automática
 
@@ -995,7 +1039,12 @@ Cuando todo pase, corre también `make c-fugas-lab02` (fugas en C) y Miri (§8.4
 
 <details><summary>Respuestas</summary>
 
-1. 16 bytes. `d` va en 0 y ocupa los bytes 0–7; el primer byte libre es 8, y `c` (alineación 1) va ahí; el fin es $8+1=9$, y se redondea al múltiplo de $a_{\max}=8$: $\lceil9/8\rceil\cdot8=16$. El arreglo de 10 ocupa $10\cdot16=160$, porque $s(T)$ ya incluye el relleno del final (§3.1).
+1. 16 bytes. Con la fórmula de §3.1, paso a paso:
+    - **Paso 1.** `d` va en el offset 0 y ocupa los bytes 0–7.
+    - **Paso 2.** El primer byte libre es $0+8=8$. `c` tiene alineación 1, así que va ahí: offset $\lceil8/1\rceil\cdot1=8$.
+    - **Paso 3.** El campo `c` termina en $8+1=9$: es el primer byte libre después del último campo.
+    - **Paso 4.** Redondeo al múltiplo de $a_{\max}=\max(8,1)=8$: $\lceil9/8\rceil\cdot8=2\cdot8=16$.
+    - **Paso 5.** El arreglo de 10 ocupa $10\cdot16=160$, porque $s(T)$ ya incluye el relleno del final (§3.1).
 2. Ninguna (Proposición 5: antes de cada uno el tamaño es $0,\dots,99$, siempre menor que $100\le m$). El 101 encuentra tamaño $100$; si la capacidad era exactamente 100, realoja una vez, a capacidad 200.
 3. Porque `erase` no recibe un elemento: el valor que devuelve se copia **antes** del corrimiento, y nada externo apunta a una celda que se vaya a sobrescribir.
 4. Devolvería 0 y el primer `push` intentaría `alloc` con un `Layout` de 0 bytes: UB.

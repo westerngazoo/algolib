@@ -116,7 +116,7 @@ pre.sourceCode a{display:none}
 </head><body>
 <header class="strip"><p class="curso">algolib · Estructuras de Datos y Algoritmos</p><h1>Lección 1 — Modelo de cómputo, análisis asintótico y el TAD Pila</h1><p class="desc">Modelo de cómputo, notación asintótica con taller de demostraciones, TAD Pila y análisis amortizado.</p><div class="pages"><a href="index.html">Inicio</a><a href="L00.html">L00 · Prerrequisitos</a><a href="L01.html" aria-current="page">L01 · Notas</a><a href="L02.html">L02 · Notas</a><a href="L03.html">L03 · Notas</a><a href="L04.html">L04 · Notas</a><a href="L05.html">L05 · Notas</a><a href="L06.html">L06 · Notas</a><a href="L07.html">L07 · Notas</a><a href="L08.html">L08 · Notas</a><a href="L09.html">L09 · Notas</a><a href="L10.html">L10 · Notas</a><a href="L11.html">L11 · Notas</a><a href="L12.html">L12 · Notas</a><a href="L13.html">L13 · Notas</a></div></header><nav class="toc" aria-label="Secciones"><div class="scroll"><a href="#objetivos-de-aprendizaje">Objetivos de aprendizaje</a><a href="#mapa-de-la-lección">Mapa de la lección</a><a href="#motivación">1. Motivación</a><a href="#modelo-de-cómputo">2. Modelo de cómputo</a><a href="#notación-asintótica">3. Notación asintótica</a><a href="#interfaz-vs.-estructura-de-datos">4. Interfaz vs. estructura de da…</a><a href="#arreglo-estático">5. Arreglo estático</a><a href="#arreglo-dinámico-y-análisis-amortizado">6. Arreglo dinámico y análisis a…</a><a href="#del-papel-al-código">7. Del papel al código</a><a href="#guía-del-lab-01">8. Guía del Lab 01</a><a href="#comprueba-tu-comprensión">9. Comprueba tu comprensión</a><a href="#problem-set-1">10. Problem Set 1</a><a href="#referencias">Referencias</a></div></nav><main><blockquote>
 <p><strong>Prerrequisitos:</strong> Lección 0 (§1 lógica y cuantificadores, donde también aparecen <span class="math inline">\(O\)</span>, <span class="math inline">\(\Omega\)</span>, <span class="math inline">\(\Theta\)</span> y <span class="math inline">\(\prec\)</span>; §2 demostraciones; §3 inducción; §4 invariantes; §5 logaritmos; §6 pisos y techos; §7 sumatorias: aritmética §7.2, geométrica §7.3 y §7.4, telescópicas §7.6; §11–12 memoria y los tres lenguajes).</p>
-<p><strong>Cómo estudiar esta lección:</strong> cada demostración está escrita paso a paso con la justificación de cada renglón. Antes de leer la solución de un ejemplo, intenta el siguiente paso tú mismo.</p>
+<p><strong>Cómo estudiar esta lección:</strong> cada demostración está escrita paso a paso: un paso por párrafo, con lo que hago y por qué se vale. Antes de leer la solución de un ejemplo, intenta el siguiente paso tú mismo.</p>
 <p><strong>Lab asociado:</strong> <code>lab01</code>: <code>ArrayStack&lt;T&gt;</code> y <code>MinStack&lt;T&gt;</code>.</p>
 </blockquote>
 <h2 id="objetivos-de-aprendizaje">Objetivos de aprendizaje</h2>
@@ -299,7 +299,7 @@ pre.sourceCode a{display:none}
 </blockquote>
 <h4 id="qué-hay-que-demostrar-exactamente">3.3.1 Qué hay que demostrar exactamente</h4>
 <p>Para demostrar <span class="math inline">\(f\in O(g)\)</span> debes <strong>exhibir</strong> dos números concretos, <span class="math inline">\(c&gt;0\)</span> y <span class="math inline">\(n_0\)</span>, y demostrar que <span class="math display">\[\text{para todo } n\ge n_0:\qquad f(n)\ \le\ c\cdot g(n).\]</span> Nada más y nada menos. “Exhibir” significa escribir valores concretos (“<span class="math inline">\(c = 8\)</span>, <span class="math inline">\(n_0 = 1\)</span>”), no decir “existe una <span class="math inline">\(c\)</span> suficientemente grande”.</p>
-<p><strong>La idea central:</strong> la desigualdad <span class="math inline">\(f(n)\le c\,g(n)\)</span> casi nunca se ve directamente. Lo que se hace es construir una <strong>cadena</strong> de desigualdades pequeñas, cada una justificada por una regla de la tabla siguiente, que va de <span class="math inline">\(f(n)\)</span> a <span class="math inline">\(c\cdot g(n)\)</span>: <span class="math display">\[f(n) \;\le\; (\text{algo un poco más grande}) \;\le\; \dots \;\le\; c\cdot g(n).\]</span> Cada eslabón se justifica con una de las reglas siguientes.</p>
+<p><strong>La idea central:</strong> la desigualdad <span class="math inline">\(f(n)\le c\,g(n)\)</span> casi nunca se ve directamente. Lo que se hace es construir una <strong>cadena</strong> de desigualdades pequeñas, cada una justificada por una regla de la tabla siguiente, que va de <span class="math inline">\(f(n)\)</span> a <span class="math inline">\(c\cdot g(n)\)</span>: <span class="math display">\[f(n) \;\le\; (\text{algo un poco más grande}) \;\le\; \dots \;\le\; c\cdot g(n).\]</span></p>
 <h4 id="las-reglas-que-puedes-usar">3.3.2 Las reglas que puedes usar</h4>
 <p>Todas son álgebra de bachillerato, pero conviene tenerlas a la vista y <strong>citarlas</strong> en cada paso.</p>
 <div class="scroll"><table>
@@ -361,69 +361,32 @@ pre.sourceCode a{display:none}
 <p><strong>¿Por qué valen R4, R5 y R6?</strong></p>
 <ul>
 <li><strong>R4.</strong> Si <span class="math inline">\(n\ge1\)</span>, multiplicamos ambos lados de <span class="math inline">\(1\le n\)</span> por <span class="math inline">\(n^{k}\)</span>, que es positivo (R2): <span class="math inline">\(n^k\le n^{k+1}\)</span>. Encadenando con R3 obtenemos <span class="math inline">\(1\le n\le n^2\le\cdots\)</span></li>
-<li><strong>R5.</strong> <span class="math inline">\(\lg n\ge0\)</span> porque <span class="math inline">\(n\ge1=2^0\)</span> y <span class="math inline">\(\lg\)</span> es creciente. Para <span class="math inline">\(\lg n\le n\)</span> basta demostrar <span class="math inline">\(n\le 2^n\)</span>: luego se aplica <span class="math inline">\(\lg\)</span>, que es creciente, a ambos lados, y <span class="math inline">\(\lg(2^n)=n\)</span>. La desigualdad <span class="math inline">\(n\le2^n\)</span> se demuestra por inducción abajo, justo después de esta lista.</li>
+<li><strong>R5.</strong> <span class="math inline">\(\lg n\ge0\)</span> porque <span class="math inline">\(n\ge1=2^0\)</span> y <span class="math inline">\(\lg\)</span> es creciente. Para <span class="math inline">\(\lg n\le n\)</span> basta demostrar <span class="math inline">\(n\le 2^n\)</span>: luego se aplica <span class="math inline">\(\lg\)</span>, que es creciente, a ambos lados, y <span class="math inline">\(\lg(2^n)=n\)</span>. La desigualdad <span class="math inline">\(n\le2^n\)</span> se demuestra por inducción; la demostración está abajo, plegada.</li>
 <li><strong>R6.</strong> <span class="math inline">\(\lg 2 = 1\)</span> y <span class="math inline">\(\lg\)</span> es creciente, así que <span class="math inline">\(n\ge2\)</span> implica <span class="math inline">\(\lg n\ge1\)</span>.</li>
 </ul>
-<p><strong>Demostración de <span class="math inline">\(n\le2^n\)</span> (la usa R5).</strong> Con la receta de inducción de L00 §3.1.</p>
-<p><strong>Afirmación <span class="math inline">\(P(n)\)</span>:</strong> <span class="math inline">\(n\le2^n\)</span>, para todo <span class="math inline">\(n\ge1\)</span>.</p>
-<p><strong>Base (<span class="math inline">\(n=1\)</span>):</strong> el lado izquierdo es <span class="math inline">\(1\)</span> y el derecho es <span class="math inline">\(2^1=2\)</span>. Como <span class="math inline">\(1\le2\)</span>, se cumple ✓.</p>
-<p><strong>HI:</strong> para un <span class="math inline">\(k\ge1\)</span> fijo pero cualquiera, <span class="math inline">\(k\le2^k\)</span>.</p>
-<p><strong>Paso.</strong> Antes de calcular nada, tres renglones en el cuaderno:</p>
-<ul>
-<li><strong>Tengo (la HI):</strong> <span class="math inline">\(k\le2^k\)</span>. Además tengo el dato <span class="math inline">\(k\ge1\)</span>, que viene con la HI.</li>
-<li><strong>Quiero (la meta, <span class="math inline">\(P(k+1)\)</span>):</strong> sustituyo cada <span class="math inline">\(n\)</span> por <span class="math inline">\((k+1)\)</span>, con paréntesis: <span class="math display">\[k+1\ \overset{?}{\le}\ 2^{k+1}.\]</span> Meta, traducida: el doble de <span class="math inline">\(2^k\)</span> todavía alcanza a <span class="math inline">\(k+1\)</span>.</li>
-<li><strong>Plan:</strong> el lado izquierdo de la meta, <span class="math inline">\(k+1\)</span>, no contiene a <span class="math inline">\(k\)</span> “solo”, que es de lo que habla la HI. Cambio el <span class="math inline">\(1\)</span> por <span class="math inline">\(k\)</span> (se vale porque <span class="math inline">\(k\ge1\)</span>) para tener <span class="math inline">\(2k\)</span>, que es el doble de <span class="math inline">\(k\)</span>; ahí uso la HI, y al final escribo <span class="math inline">\(2\cdot2^k\)</span> como <span class="math inline">\(2^{k+1}\)</span>.</li>
-</ul>
-<p>Todos los renglones empiezan con <span class="math inline">\(k+1\le\)</span>: el lado izquierdo de la meta no se toca, y lo que cambia es la cota de la derecha. <strong>Cómo leer la tabla:</strong></p>
-<ul>
-<li><strong>Expresión:</strong> cada renglón es una desigualdad completa que se lee sola, sin un “<span class="math inline">\(\le\)</span>” colgando.</li>
-<li><strong>Con <span class="math inline">\(k=3\)</span>:</strong> el mismo renglón con números. El lado izquierdo siempre vale <span class="math inline">\(4\)</span>, y cada cota de la derecha es al menos <span class="math inline">\(4\)</span>. Es una comprobación, no la demostración.</li>
-<li><strong>Qué hago · por qué se vale:</strong> primero la acción, en negritas; después la regla que la permite y por qué el <span class="math inline">\(\le\)</span> no se voltea.</li>
-</ul>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(k=3\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(k+1\le k+k\)</span></td>
-<td><span class="math inline">\(4\le3+3=6\)</span></td>
-<td><strong>Parto del lado izquierdo de la meta y cambio su <span class="math inline">\(1\)</span> por <span class="math inline">\(k\)</span>.</strong> Se vale porque <span class="math inline">\(1\le k\)</span>; sumando <span class="math inline">\(k\)</span> a cada miembro de <span class="math inline">\(1\le k\)</span> sale este renglón (R1), y sumar lo mismo no voltea la desigualdad.</td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(k+1\le 2k\)</span></td>
-<td><span class="math inline">\(4\le2\cdot3=6\)</span></td>
-<td><strong>Junto <span class="math inline">\(k+k\)</span> en <span class="math inline">\(2k\)</span>.</strong> Se vale porque algo más sí mismo es el doble: <span class="math inline">\(x+x=2x\)</span>. Es una igualdad, así que el <span class="math inline">\(\le\)</span> se queda.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(k+1\le 2\cdot2^k\)</span></td>
-<td><span class="math inline">\(4\le2\cdot8=16\)</span></td>
-<td><strong>Uso la HI ← aquí.</strong> Multiplico la HI, <span class="math inline">\(k\le2^k\)</span>, por <span class="math inline">\(2&gt;0\)</span> (R2): sale <span class="math inline">\(2k\le2\cdot2^k\)</span>, sin voltear. Lo encadeno con el renglón 2 por transitividad (R3).</td>
-</tr>
-<tr>
-<td>4</td>
-<td><span class="math inline">\(k+1\le 2^{k+1}\)</span></td>
-<td><span class="math inline">\(4\le16\)</span></td>
-<td><strong>Escribo <span class="math inline">\(2\cdot2^k\)</span> como <span class="math inline">\(2^{k+1}\)</span>.</strong> Se vale por la ley de exponentes <span class="math inline">\(a\cdot a^m=a^{m+1}\)</span>. Es la meta, letra por letra ✓</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>¿Por qué esto no es circular?</strong> Lee la última columna de arriba abajo: solo aparecen la HI, el dato <span class="math inline">\(k\ge1\)</span>, las reglas R1–R3 y reglas de álgebra (<span class="math inline">\(x+x=2x\)</span>, ley de exponentes). La meta nunca justifica un renglón; solo aparece al final, como el lugar al que llegamos.</p>
-<p><strong>Conclusión.</strong> La base demostró <span class="math inline">\(P(1)\)</span>. El paso demostró que, para <strong>cualquier</strong> <span class="math inline">\(k\ge1\)</span>, si <span class="math inline">\(P(k)\)</span> es verdadera, <span class="math inline">\(P(k+1)\)</span> también. Por el principio de inducción, <span class="math inline">\(n\le2^n\)</span> para todo <span class="math inline">\(n\ge1\)</span>, y con eso R5 queda demostrada. <span class="math inline">\(\square\)</span></p>
+<details>
+<summary>
+Demostración de n ≤ 2ⁿ (la usa R5)
+</summary>
+<p>Por inducción, con la forma de L00 §3.2.</p>
+<p><strong>Paso 1. Pruebo con números chicos.</strong> Calculo los dos lados para <span class="math inline">\(n=1,2,3\)</span>: <span class="math display">\[
+\begin{aligned}
+n=1:&amp;\quad 1\le2^1=2\ ✓\\
+n=2:&amp;\quad 2\le2^2=4\ ✓\\
+n=3:&amp;\quad 3\le2^3=8\ ✓
+\end{aligned}
+\]</span> Funciona, pero probar casos no es demostrar.</p>
+<p><strong>Paso 2. La base.</strong> El primer dominó es <span class="math inline">\(n=1\)</span>, y en el paso 1 ya vimos que cae ✓.</p>
+<p><strong>Paso 3. Supongo que vale para un <span class="math inline">\(n=k\)</span> cualquiera, con <span class="math inline">\(k\ge1\)</span>.</strong> Escribo la desigualdad con <span class="math inline">\(k\)</span> y la encierro en una caja. Es la hipótesis de inducción (HI); además sé que <span class="math inline">\(k\ge1\)</span>. <span class="math display">\[\boxed{\,k\le2^k\,}\qquad\text{(HI)}\]</span></p>
+<p><strong>Paso 4. Escribo lo que quiero: la desigualdad con <span class="math inline">\(n=k+1\)</span>.</strong> Cambio cada <span class="math inline">\(n\)</span> por <span class="math inline">\((k+1)\)</span>: <span class="math display">\[k+1\ \overset{?}{\le}\ 2^{k+1}\]</span></p>
+<p><strong>Paso 5. Cambio el <span class="math inline">\(1\)</span> por <span class="math inline">\(k\)</span>.</strong> Como <span class="math inline">\(1\le k\)</span>, sumo <span class="math inline">\(k\)</span> a los dos lados (R1); sumar lo mismo no voltea la desigualdad: <span class="math display">\[k+1\le k+k\]</span></p>
+<p><strong>Paso 6. Junto <span class="math inline">\(k+k\)</span> en <span class="math inline">\(2k\)</span>.</strong> Algo más sí mismo es el doble: <span class="math inline">\(x+x=2x\)</span>. Es una igualdad, así que el <span class="math inline">\(\le\)</span> se queda: <span class="math display">\[k+1\le2\cdot k\]</span></p>
+<p><strong>Paso 7. Busco la caja de la HI.</strong> El <span class="math inline">\(k\)</span> que multiplica al 2 es exactamente el lado izquierdo de la caja: <span class="math display">\[k+1\le2\cdot\boxed{\,k\,}\]</span></p>
+<p><strong>Paso 8. Uso la HI.</strong> La caja dice <span class="math inline">\(k\le2^k\)</span>. Multiplico por <span class="math inline">\(2&gt;0\)</span> (R2), sin voltear: <span class="math inline">\(2k\le2\cdot2^k\)</span>. Lo encadeno con el paso 7 (R3): <span class="math display">\[k+1\le2\cdot2^k\]</span></p>
+<p><strong>Paso 9. Escribo <span class="math inline">\(2\cdot2^k\)</span> como <span class="math inline">\(2^{k+1}\)</span></strong>, por la ley de exponentes <span class="math inline">\(a\cdot a^m=a^{m+1}\)</span>. Es una igualdad: <span class="math display">\[k+1\le2^{k+1}\]</span> Es la meta del paso 4 ✓.</p>
+<p><strong>Paso 10. Compruebo con un número.</strong> Con <span class="math inline">\(k=3\)</span>, el lado izquierdo vale <span class="math inline">\(4\)</span>. La derecha vale <span class="math inline">\(3+3=6\)</span> en el paso 5, <span class="math inline">\(2\cdot3=6\)</span> en el paso 6 y <span class="math inline">\(2\cdot8=16\)</span> en los pasos 8 y 9. Siempre es al menos <span class="math inline">\(4\)</span> ✓.</p>
+<p><strong>Conclusión.</strong> El paso 2 tiró el primer dominó (<span class="math inline">\(n=1\)</span>). Los pasos 3 a 9 demostraron que cualquier dominó <span class="math inline">\(k\ge1\)</span> tumba al siguiente. Entonces <span class="math inline">\(n\le2^n\)</span> para todo <span class="math inline">\(n\ge1\)</span>, y con eso R5 queda demostrada. <span class="math inline">\(\square\)</span></p>
+</details>
 <h4 id="la-receta">3.3.3 La receta</h4>
 <p><strong>Para demostrar <span class="math inline">\(f\in O(g)\)</span> (cota superior):</strong></p>
 <ol type="1">
@@ -448,46 +411,13 @@ pre.sourceCode a{display:none}
 <div class="callout atencion"><span class="lbl">Atención</span><strong>El error más común:</strong> usar la regla de la dirección equivocada. Para una cota <strong>superior</strong> se puede <em>agrandar</em> el lado derecho y <em>achicar</em> el izquierdo, nunca al revés. Antes de cada paso pregúntate: <em>¿este cambio hace mi expresión más grande o más chica? ¿Es la dirección que necesito?</em></div>
 </blockquote>
 <h4 id="ejemplo-a-calentamiento-5n3in-on">3.3.4 Ejemplo A (calentamiento): <span class="math inline">\(5n+3\in O(n)\)</span></h4>
-<p><strong>Paso 1. Meta.</strong> Encontrar <span class="math inline">\(c\)</span> y <span class="math inline">\(n_0\)</span> con <span class="math inline">\(5n+3\le c\cdot n\)</span> para todo <span class="math inline">\(n\ge n_0\)</span>.</p>
-<p><strong>Paso 2. Término por término.</strong></p>
-<ul>
-<li>Término <span class="math inline">\(5n\)</span>: ya es un múltiplo de <span class="math inline">\(n\)</span>. Cota: <span class="math inline">\(5n\le 5n\)</span>. Vale para todo <span class="math inline">\(n\)</span>.</li>
-<li>Término <span class="math inline">\(3\)</span>: hay que convertirlo en “algo por <span class="math inline">\(n\)</span>”. Por R4, para <span class="math inline">\(n\ge1\)</span>, <span class="math inline">\(1\le n\)</span>. Multiplicando por <span class="math inline">\(3&gt;0\)</span> (R2): <span class="math inline">\(3\le 3n\)</span>. <strong>Vale para <span class="math inline">\(n\ge1\)</span>.</strong></li>
-</ul>
-<p><strong>Paso 3. Sumar</strong> (R1). Todos los renglones empiezan con <span class="math inline">\(5n+3\le\)</span>: el lado izquierdo de la meta no se toca, y la columna de números usa <span class="math inline">\(n=10\)</span>, donde <span class="math inline">\(5n+3=53\)</span>.</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(n=10\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(5n+3\le5n+3n\)</span></td>
-<td><span class="math inline">\(53\le50+30=80\)</span></td>
-<td><strong>Cambio el <span class="math inline">\(3\)</span> por <span class="math inline">\(3n\)</span>.</strong> Se vale por el paso 2: <span class="math inline">\(3\le3n\)</span> para <span class="math inline">\(n\ge1\)</span>. Sumo <span class="math inline">\(5n\)</span> a cada miembro (R1), y sumar lo mismo no voltea la desigualdad.</td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(5n+3\le8n\)</span></td>
-<td><span class="math inline">\(53\le80\)</span></td>
-<td><strong>Junto términos semejantes.</strong> <span class="math inline">\(5n+3n\)</span> es lo mismo que <span class="math inline">\((5+3)n\)</span> (distributiva al revés). Es una igualdad, así que el <span class="math inline">\(\le\)</span> se queda.</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>Paso 4. Elegir.</strong> <span class="math inline">\(c = 5+3 = 8\)</span> y <span class="math inline">\(n_0 = 1\)</span> (el único “a partir de” que anotamos).</p>
-<p><strong>Paso 5. Verificar.</strong> Con <span class="math inline">\(n=1\)</span>: <span class="math inline">\(5+3 = 8\le 8\cdot1 = 8\)</span> ✓ (justo en el borde). Con <span class="math inline">\(n=10\)</span>: <span class="math inline">\(53\le80\)</span> ✓.</p>
-<p><strong>Paso 6. Demostración limpia.</strong></p>
+<p><strong>Paso 1. La meta.</strong> Encontrar <span class="math inline">\(c\)</span> y <span class="math inline">\(n_0\)</span> con <span class="math inline">\(5n+3\le c\cdot n\)</span> para todo <span class="math inline">\(n\ge n_0\)</span>. El término <span class="math inline">\(5n\)</span> ya es un múltiplo de <span class="math inline">\(n\)</span>; el que estorba es el <span class="math inline">\(3\)</span>.</p>
+<p><strong>Paso 2. Convierto el <span class="math inline">\(3\)</span> en algo por <span class="math inline">\(n\)</span>.</strong> Por R4, para <span class="math inline">\(n\ge1\)</span> se tiene <span class="math inline">\(1\le n\)</span>. Multiplico por <span class="math inline">\(3&gt;0\)</span> (R2), sin voltear. <strong>Vale para <span class="math inline">\(n\ge1\)</span>:</strong> <span class="math display">\[3\le3n\]</span></p>
+<p><strong>Paso 3. Sumo <span class="math inline">\(5n\)</span> a los dos lados.</strong> Sumar lo mismo no voltea la desigualdad (R1): <span class="math display">\[5n+3\le5n+3n\]</span></p>
+<p><strong>Paso 4. Junto términos semejantes.</strong> <span class="math inline">\(5n+3n\)</span> es lo mismo que <span class="math inline">\((5+3)\,n\)</span> (distributiva al revés). Es una igualdad, así que el <span class="math inline">\(\le\)</span> se queda: <span class="math display">\[5n+3\le8n\]</span></p>
+<p><strong>Paso 5. Elijo.</strong> <span class="math inline">\(c=5+3=8\)</span> y <span class="math inline">\(n_0=1\)</span> (el único “a partir de” que anoté, en el paso 2).</p>
+<p><strong>Paso 6. Compruebo con números.</strong> Con <span class="math inline">\(n=1\)</span>: <span class="math inline">\(5+3=8\le8\cdot1=8\)</span> ✓ (justo en el borde). Con <span class="math inline">\(n=10\)</span>: el paso 3 da <span class="math inline">\(53\le50+30=80\)</span> y el paso 4 da <span class="math inline">\(53\le80\)</span> ✓.</p>
+<p><strong>Paso 7. Demostración limpia.</strong></p>
 <blockquote>
 <p>Sean <span class="math inline">\(c=8\)</span> y <span class="math inline">\(n_0=1\)</span>. Para <span class="math inline">\(n\ge1\)</span> se cumple <span class="math inline">\(1\le n\)</span>, por lo que <span class="math inline">\(3\le3n\)</span>; sumando <span class="math inline">\(5n\)</span> a ambos lados, <span class="math inline">\(5n+3\le 8n = c\cdot n\)</span>. Por lo tanto, <span class="math inline">\(5n+3\in O(n)\)</span>. <span class="math inline">\(\square\)</span></p>
 </blockquote>
@@ -506,70 +436,24 @@ pre.sourceCode a{display:none}
 <p><strong>Cota superior.</strong> Meta: <span class="math inline">\(n^2-10n\le c\,n^2\)</span>. El término <span class="math inline">\(-10n\)</span> es <span class="math inline">\(\le0\)</span> para <span class="math inline">\(n\ge0\)</span>, así que por R8 se puede quitar: <span class="math display">\[n^2-10n\;\le\;n^2.\]</span> Elegimos <span class="math inline">\(c=1\)</span> y <span class="math inline">\(n_0=1\)</span>. ✓</p>
 <p><strong>Cota inferior.</strong> Meta: <span class="math inline">\(n^2-10n\ge c\,n^2\)</span>.</p>
 <p>Aquí <strong>no</strong> podemos quitar <span class="math inline">\(-10n\)</span>: eso daría <span class="math inline">\(n^2-10n\ge n^2\)</span>, que es <strong>falso</strong> (estaríamos diciendo que algo menos <span class="math inline">\(10n\)</span> es mayor que ese mismo algo).</p>
-<p><strong>Truco:</strong> sacrificar una <em>fracción</em> del término principal para “pagar” el negativo. Probemos con la mitad, <span class="math inline">\(c=\tfrac12\)</span>. Queremos encontrar para qué <span class="math inline">\(n\)</span> se cumple <span class="math display">\[n^2-10n\;\ge\;\tfrac12 n^2.\]</span> Lo despejamos paso a paso. Esta tabla no es una cadena que va de un lado a otro: es una <strong>cadena de equivalencias</strong>. Cada renglón es una desigualdad completa, y para <span class="math inline">\(n\ge1\)</span> cada paso se puede deshacer, así que cada renglón es verdadero <strong>exactamente</strong> para las mismas <span class="math inline">\(n\ge1\)</span> que el anterior. La columna de números usa <span class="math inline">\(n=20\)</span>, que resulta ser la frontera (el renglón 5): por eso en cada renglón los dos miembros salen <strong>iguales</strong>. Si algún renglón no diera igualdad en <span class="math inline">\(n=20\)</span>, ese paso habría movido la frontera, y estaría mal.</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Desigualdad</th>
-<th>Con <span class="math inline">\(n=20\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(n^2-10n\ge\tfrac12n^2\)</span></td>
-<td><span class="math inline">\(400-200=200\ge200\)</span></td>
-<td><strong>Escribo lo que quiero averiguar.</strong> Todavía no sé para qué <span class="math inline">\(n\)</span> es cierta: es la pregunta, no un dato.</td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(n^2-\tfrac12n^2\ge10n\)</span></td>
-<td><span class="math inline">\(400-200=200\ge200\)</span></td>
-<td><strong>Sumo <span class="math inline">\(10n-\tfrac12n^2\)</span> a cada miembro y cancelo:</strong> <span class="math inline">\(-10n+10n=0\)</span> y <span class="math inline">\(\tfrac12n^2-\tfrac12n^2=0\)</span>. Sumar lo mismo no voltea la desigualdad, y restándolo se regresa al renglón 1.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(\tfrac12n^2\ge10n\)</span></td>
-<td><span class="math inline">\(200\ge200\)</span></td>
-<td><strong>Simplifico el miembro izquierdo.</strong> <span class="math inline">\(n^2-\tfrac12n^2\)</span> es lo mismo que <span class="math inline">\((1-\tfrac12)\,n^2\)</span> (distributiva al revés). Es una igualdad: nada cambia.</td>
-</tr>
-<tr>
-<td>4</td>
-<td><span class="math inline">\(\tfrac12n\ge10\)</span></td>
-<td><span class="math inline">\(10\ge10\)</span></td>
-<td><strong>Divido cada miembro entre <span class="math inline">\(n\)</span>.</strong> Como <span class="math inline">\(n\ge1\)</span>, <span class="math inline">\(n&gt;0\)</span>, y dividir es multiplicar por <span class="math inline">\(\frac1n&gt;0\)</span> (R2): no se voltea. Multiplicando por <span class="math inline">\(n\)</span> se regresa.</td>
-</tr>
-<tr>
-<td>5</td>
-<td><span class="math inline">\(n\ge20\)</span></td>
-<td><span class="math inline">\(20\ge20\)</span></td>
-<td><strong>Multiplico cada miembro por 2.</strong> Como <span class="math inline">\(2&gt;0\)</span> (R2), no se voltea. Dividiendo entre 2 se regresa.</td>
-</tr>
-</tbody>
-</table></div>
-<p>Para <span class="math inline">\(n\ge1\)</span>, cada renglón equivale al anterior, así que el renglón 1 se cumple exactamente cuando <span class="math inline">\(n\ge20\)</span>. (En <span class="math inline">\(n=0\)</span> el renglón 1 también se cumple, <span class="math inline">\(0\ge0\)</span>, porque ahí no se puede dividir entre <span class="math inline">\(n\)</span>; no importa, porque <span class="math inline">\(n_0\)</span> solo pide que se cumpla de cierto punto en adelante.) Elegimos <span class="math inline">\(c=\tfrac12\)</span> y <span class="math inline">\(n_0=20\)</span>.</p>
-<p><strong>Verificar:</strong> con <span class="math inline">\(n=20\)</span>: <span class="math inline">\(400-200=200\ge\tfrac12\cdot400=200\)</span> ✓ (borde). Con <span class="math inline">\(n=30\)</span>: <span class="math inline">\(900-300=600\ge450\)</span> ✓. Con <span class="math inline">\(n=10\)</span> (antes de <span class="math inline">\(n_0\)</span>): <span class="math inline">\(100-100=0\ge50\)</span> ✗. Por eso necesitábamos <span class="math inline">\(n_0\)</span>.</p>
-<p><strong>¿Por qué <span class="math inline">\(\tfrac12\)</span>?</strong> Funciona cualquier fracción <span class="math inline">\(0&lt;c&lt;1\)</span>. Repitiendo los mismos pasos con <span class="math inline">\(c\)</span> en lugar de <span class="math inline">\(\tfrac12\)</span>: el renglón 3 queda <span class="math inline">\((1-c)\,n^2\ge10n\)</span>; el 4, <span class="math inline">\((1-c)\,n\ge10\)</span>; y en vez de multiplicar por 2, divido entre <span class="math inline">\(1-c\)</span>, que es positivo porque <span class="math inline">\(c&lt;1\)</span>. Queda <span class="math inline">\(n\ge\frac{10}{1-c}\)</span>. Una <span class="math inline">\(c\)</span> más cerca de 1 exige una <span class="math inline">\(n_0\)</span> más grande. Lo que <strong>no</strong> funciona es <span class="math inline">\(c\ge1\)</span>: con <span class="math inline">\(c=1\)</span> haría falta <span class="math inline">\(0\ge10\)</span>, y con <span class="math inline">\(c&gt;1\)</span> el miembro izquierdo <span class="math inline">\((1-c)\,n\)</span> es negativo para <span class="math inline">\(n\ge1\)</span>, así que nunca llega a 10.</p>
+<p><strong>Truco:</strong> sacrificar una <em>fracción</em> del término principal para “pagar” el negativo. Probemos con la mitad, <span class="math inline">\(c=\tfrac12\)</span>, y despejemos para qué <span class="math inline">\(n\)</span> se cumple. Para <span class="math inline">\(n\ge1\)</span> cada paso se puede deshacer, así que los pasos son <strong>equivalentes</strong>: cada desigualdad vale exactamente para las mismas <span class="math inline">\(n\ge1\)</span> que la anterior.</p>
+<p><strong>Paso 1. Escribo la pregunta.</strong> Todavía no sé para qué <span class="math inline">\(n\)</span> es cierta: <span class="math display">\[n^2-10n\ge\tfrac12n^2\]</span></p>
+<p><strong>Paso 2. Sumo <span class="math inline">\(10n\)</span> a los dos lados.</strong> A la izquierda, <span class="math inline">\(-10n+10n=0\)</span>. Sumar lo mismo no voltea, y restándolo se regresa: <span class="math display">\[n^2\ge\tfrac12n^2+10n\]</span></p>
+<p><strong>Paso 3. Resto <span class="math inline">\(\tfrac12n^2\)</span> a los dos lados.</strong> A la derecha, <span class="math inline">\(\tfrac12n^2-\tfrac12n^2=0\)</span>. Restar lo mismo no voltea, y sumándolo se regresa: <span class="math display">\[n^2-\tfrac12n^2\ge10n\]</span></p>
+<p><strong>Paso 4. Simplifico la izquierda.</strong> <span class="math inline">\(n^2-\tfrac12n^2\)</span> es lo mismo que <span class="math inline">\((1-\tfrac12)\,n^2\)</span> (distributiva al revés). Es una igualdad: <span class="math display">\[\tfrac12n^2\ge10n\]</span></p>
+<p><strong>Paso 5. Divido los dos lados entre <span class="math inline">\(n\)</span>.</strong> Como <span class="math inline">\(n\ge1\)</span>, <span class="math inline">\(n&gt;0\)</span>, y dividir es multiplicar por <span class="math inline">\(\frac1n&gt;0\)</span> (R2): no se voltea. Multiplicando por <span class="math inline">\(n\)</span> se regresa: <span class="math display">\[\tfrac12n\ge10\]</span></p>
+<p><strong>Paso 6. Multiplico los dos lados por 2.</strong> Como <span class="math inline">\(2&gt;0\)</span> (R2), no se voltea. Dividiendo entre 2 se regresa: <span class="math display">\[n\ge20\]</span></p>
+<p><strong>Paso 7. Compruebo con la frontera, <span class="math inline">\(n=20\)</span>.</strong> Ahí cada paso debe dar los dos lados <strong>iguales</strong>; si alguno no, ese paso movió la frontera y está mal. Paso 1: <span class="math inline">\(400-200=200\)</span> y <span class="math inline">\(200\)</span>. Paso 2: <span class="math inline">\(400\)</span> y <span class="math inline">\(200+200=400\)</span>. Paso 3: <span class="math inline">\(200\)</span> y <span class="math inline">\(200\)</span>. Paso 4: <span class="math inline">\(200\)</span> y <span class="math inline">\(200\)</span>. Paso 5: <span class="math inline">\(10\)</span> y <span class="math inline">\(10\)</span>. Paso 6: <span class="math inline">\(20\)</span> y <span class="math inline">\(20\)</span> ✓.</p>
+<p>Como los pasos son equivalentes, la desigualdad del paso 1 se cumple exactamente cuando <span class="math inline">\(n\ge20\)</span>. Elegimos <span class="math inline">\(c=\tfrac12\)</span> y <span class="math inline">\(n_0=20\)</span>.</p>
+<p><strong>Verificar</strong> fuera de la frontera: con <span class="math inline">\(n=30\)</span>: <span class="math inline">\(900-300=600\ge450\)</span> ✓. Con <span class="math inline">\(n=10\)</span> (antes de <span class="math inline">\(n_0\)</span>): <span class="math inline">\(100-100=0\ge50\)</span> ✗. Por eso necesitábamos <span class="math inline">\(n_0\)</span>.</p>
+<p><strong>¿Por qué <span class="math inline">\(\tfrac12\)</span>?</strong> Funciona cualquier fracción <span class="math inline">\(0&lt;c&lt;1\)</span>: los mismos pasos, con <span class="math inline">\(c\)</span> en lugar de <span class="math inline">\(\tfrac12\)</span>, dan <span class="math inline">\(n\ge\frac{10}{1-c}\)</span> (en el último divido entre <span class="math inline">\(1-c&gt;0\)</span>). Una <span class="math inline">\(c\)</span> más cerca de 1 exige una <span class="math inline">\(n_0\)</span> más grande: con <span class="math inline">\(c=0.9\)</span>, <span class="math inline">\(n\ge100\)</span>. Con <span class="math inline">\(c\ge1\)</span> no funciona ninguna: el paso 5 queda <span class="math inline">\((1-c)\,n\ge10\)</span> con <span class="math inline">\(1-c\le0\)</span>, y el lado izquierdo es <span class="math inline">\(\le0\)</span> para toda <span class="math inline">\(n\ge1\)</span>.</p>
 <h4 id="ejemplo-d-completo-3n210nlg-n7inthetan2">3.3.7 Ejemplo D (completo): <span class="math inline">\(3n^2+10n\lg n+7\in\Theta(n^2)\)</span></h4>
 <p>Ahora sí, el ejemplo de la lección, sin saltarse nada.</p>
-<p><strong>Parte (i): cota superior.</strong> Meta: <span class="math inline">\(3n^2+10n\lg n+7\le c\,n^2\)</span>.</p>
-<p><em>Término 1:</em> <span class="math inline">\(3n^2\)</span>. Ya es múltiplo de <span class="math inline">\(n^2\)</span>: <span class="math inline">\(3n^2\le3n^2\)</span>, para todo <span class="math inline">\(n\)</span>.</p>
-<p><em>Término 2:</em> <span class="math inline">\(10n\lg n\)</span>. Necesitamos convertir <span class="math inline">\(n\lg n\)</span> en algo con <span class="math inline">\(n^2\)</span>.</p>
-<ul>
-<li>Por R5, para <span class="math inline">\(n\ge1\)</span>: <span class="math inline">\(\lg n\le n\)</span>.</li>
-<li>Multiplicamos ambos lados por <span class="math inline">\(10n\)</span>, que es positivo cuando <span class="math inline">\(n\ge1\)</span> (R2): <span class="math display">\[10n\cdot\lg n\;\le\;10n\cdot n\;=\;10n^2.\]</span></li>
-<li><strong>Vale para <span class="math inline">\(n\ge1\)</span>.</strong></li>
-</ul>
-<p><em>Término 3:</em> <span class="math inline">\(7\)</span>. Por R4, para <span class="math inline">\(n\ge1\)</span>: <span class="math inline">\(1\le n^2\)</span>. Multiplicamos por 7 (R2): <span class="math inline">\(7\le7n^2\)</span>. <strong>Vale para <span class="math inline">\(n\ge1\)</span>.</strong></p>
-<p><em>Sumamos</em> las tres cotas (R1), lado izquierdo con lado izquierdo y lado derecho con lado derecho: <span class="math display">\[
+<p><strong>Parte (i): cota superior.</strong> Meta: <span class="math inline">\(3n^2+10n\lg n+7\le c\,n^2\)</span>. Acoto cada término por un múltiplo de <span class="math inline">\(n^2\)</span>.</p>
+<p><strong>Paso 1. El término <span class="math inline">\(3n^2\)</span>.</strong> Ya es múltiplo de <span class="math inline">\(n^2\)</span>. Vale para todo <span class="math inline">\(n\)</span>: <span class="math display">\[3n^2\le3n^2\]</span></p>
+<p><strong>Paso 2. El término <span class="math inline">\(10n\lg n\)</span>.</strong> Por R5, para <span class="math inline">\(n\ge1\)</span>, <span class="math inline">\(\lg n\le n\)</span>. Multiplico los dos lados por <span class="math inline">\(10n\)</span>, que es positivo cuando <span class="math inline">\(n\ge1\)</span> (R2), sin voltear. <strong>Vale para <span class="math inline">\(n\ge1\)</span>:</strong> <span class="math display">\[10n\lg n\;\le\;10n\cdot n\;=\;10n^2\]</span></p>
+<p><strong>Paso 3. El término <span class="math inline">\(7\)</span>.</strong> Por R4, para <span class="math inline">\(n\ge1\)</span>, <span class="math inline">\(1\le n^2\)</span>. Multiplico por <span class="math inline">\(7&gt;0\)</span> (R2). <strong>Vale para <span class="math inline">\(n\ge1\)</span>:</strong> <span class="math display">\[7\le7n^2\]</span></p>
+<p><strong>Paso 4. Sumo las tres cotas</strong> (R1), lado izquierdo con lado izquierdo y lado derecho con lado derecho: <span class="math display">\[
 \begin{array}{rcl}
 3n^2 &amp;\le&amp; 3n^2\\
 10n\lg n &amp;\le&amp; 10n^2\\
@@ -577,17 +461,17 @@ pre.sourceCode a{display:none}
 3n^2+10n\lg n+7 &amp;\le&amp; 3n^2+10n^2+7n^2 \;=\; 20n^2
 \end{array}
 \]</span></p>
-<p><em>Elegimos</em> <span class="math inline">\(c=3+10+7=20\)</span> y <span class="math inline">\(n_0=\max(1,1,1)=1\)</span>.</p>
-<p><em>Verificamos:</em> con <span class="math inline">\(n=1\)</span>, <span class="math inline">\(f(1)=3+10\cdot1\cdot0+7=10\le20\)</span> ✓. Con <span class="math inline">\(n=4\)</span>, <span class="math inline">\(f(4)=48+10\cdot4\cdot2+7=135\le20\cdot16=320\)</span> ✓.</p>
-<p><strong>Parte (ii): cota inferior.</strong> Meta: <span class="math inline">\(3n^2+10n\lg n+7\ge c\,n^2\)</span>.</p>
-<ul>
-<li><span class="math inline">\(10n\lg n\ge0\)</span> para <span class="math inline">\(n\ge1\)</span>, porque <span class="math inline">\(n&gt;0\)</span> y <span class="math inline">\(\lg n\ge0\)</span> (R5). Lo quitamos (R7).</li>
-<li><span class="math inline">\(7\ge0\)</span>. Lo quitamos (R7).</li>
-<li>Queda <span class="math inline">\(3n^2+10n\lg n+7\ge3n^2\)</span>. Elegimos <span class="math inline">\(c=3\)</span> y <span class="math inline">\(n_0=1\)</span>.</li>
-</ul>
+<p><strong>Paso 5. Elijo</strong> <span class="math inline">\(c=3+10+7=20\)</span> y <span class="math inline">\(n_0=\max(1,1,1)=1\)</span>.</p>
+<p><strong>Paso 6. Compruebo.</strong> Con <span class="math inline">\(n=1\)</span>, <span class="math inline">\(f(1)=3+10\cdot1\cdot0+7=10\le20\)</span> ✓. Con <span class="math inline">\(n=4\)</span>, <span class="math inline">\(f(4)=48+10\cdot4\cdot2+7=135\le20\cdot16=320\)</span> ✓.</p>
+<p><strong>Parte (ii): cota inferior.</strong> Meta: <span class="math inline">\(3n^2+10n\lg n+7\ge c\,n^2\)</span>. Para una cota inferior puedo <strong>achicar</strong> la expresión.</p>
+<p><strong>Paso 1. Quito <span class="math inline">\(10n\lg n\)</span>.</strong> Para <span class="math inline">\(n\ge1\)</span> es <span class="math inline">\(\ge0\)</span>, porque <span class="math inline">\(n&gt;0\)</span> y <span class="math inline">\(\lg n\ge0\)</span> (R5). Quitar un término <span class="math inline">\(\ge0\)</span> achica (R7): <span class="math display">\[3n^2+10n\lg n+7\ge3n^2+7\]</span></p>
+<p><strong>Paso 2. Quito el <span class="math inline">\(7\)</span>.</strong> Como <span class="math inline">\(7\ge0\)</span>, quitarlo achica (R7): <span class="math display">\[3n^2+10n\lg n+7\ge3n^2\]</span></p>
+<p><strong>Paso 3. Elijo</strong> <span class="math inline">\(c=3\)</span> y <span class="math inline">\(n_0=1\)</span>. Con <span class="math inline">\(n=4\)</span>: <span class="math inline">\(135\ge48\)</span> ✓.</p>
 <p><strong>Demostración limpia (así se entrega):</strong></p>
 <blockquote>
-<p><em>(i)</em> Sean <span class="math inline">\(c=20\)</span> y <span class="math inline">\(n_0=1\)</span>. Para <span class="math inline">\(n\ge1\)</span> se tiene <span class="math inline">\(\lg n\le n\)</span> y <span class="math inline">\(1\le n^2\)</span>; por lo tanto <span class="math inline">\(10n\lg n\le10n^2\)</span> y <span class="math inline">\(7\le7n^2\)</span>. Sumando estas dos desigualdades y <span class="math inline">\(3n^2\le3n^2\)</span> (R1), se obtiene <span class="math inline">\(f(n)\le20n^2\)</span>. <em>(ii)</em> Sean <span class="math inline">\(c=3\)</span> y <span class="math inline">\(n_0=1\)</span>. Para <span class="math inline">\(n\ge1\)</span>, <span class="math inline">\(10n\lg n\ge0\)</span> y <span class="math inline">\(7\ge0\)</span>, así que <span class="math inline">\(f(n)\ge3n^2\)</span>. Por (i) y (ii), <span class="math inline">\(f\in\Theta(n^2)\)</span>. <span class="math inline">\(\square\)</span></p>
+<p><em>(i)</em> Sean <span class="math inline">\(c=20\)</span> y <span class="math inline">\(n_0=1\)</span>. Para <span class="math inline">\(n\ge1\)</span> se tiene <span class="math inline">\(\lg n\le n\)</span> y <span class="math inline">\(1\le n^2\)</span>; por lo tanto <span class="math inline">\(10n\lg n\le10n^2\)</span> y <span class="math inline">\(7\le7n^2\)</span>. Sumando estas dos desigualdades y <span class="math inline">\(3n^2\le3n^2\)</span> (R1), se obtiene <span class="math inline">\(f(n)\le20n^2\)</span>.</p>
+<p><em>(ii)</em> Sean <span class="math inline">\(c=3\)</span> y <span class="math inline">\(n_0=1\)</span>. Para <span class="math inline">\(n\ge1\)</span>, <span class="math inline">\(10n\lg n\ge0\)</span> y <span class="math inline">\(7\ge0\)</span>, así que <span class="math inline">\(f(n)\ge3n^2\)</span>.</p>
+<p>Por (i) y (ii), <span class="math inline">\(f\in\Theta(n^2)\)</span>. <span class="math inline">\(\square\)</span></p>
 </blockquote>
 <h4 id="ejemplo-e-refutar-n2notin-on">3.3.8 Ejemplo E: refutar, <span class="math inline">\(n^2\notin O(n)\)</span></h4>
 <p><strong>Paso 1. Escribir qué significa “no”.</strong> Se niega la definición (L00 §1.3). Cada “existe” pasa a “para todo”, cada “para todo” pasa a “existe”, y la desigualdad final se invierte: <span class="math display">\[
@@ -692,131 +576,20 @@ n^2\notin O(n) &amp;\iff \forall c&gt;0\ \forall n_0\ \exists n\ge n_0:\ n^2&gt;
 <summary>
 Solución
 </summary>
-<p>Sea <span class="math inline">\(f(n)=2n^3-5n^2+100\)</span>. Las tres tablas usan <span class="math inline">\(n=5\)</span>, donde <span class="math inline">\(f(5)=250-125+100=225\)</span>.</p>
-<p><em>Superior.</em> Meta: <span class="math inline">\(f(n)\le c\,n^3\)</span>. Todos los renglones empiezan con <span class="math inline">\(f(n)\)</span>, y la relación es <span class="math inline">\(=\)</span> o <span class="math inline">\(\le\)</span>.</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(n=5\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(f(n)=2n^3-5n^2+100\)</span></td>
-<td><span class="math inline">\(225\)</span></td>
-<td><strong>Parto de la definición de <span class="math inline">\(f\)</span>.</strong></td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(f(n)\le2n^3+100\)</span></td>
-<td><span class="math inline">\(225\le250+100=350\)</span></td>
-<td><strong>Quito <span class="math inline">\(-5n^2\)</span>.</strong> Como <span class="math inline">\(-5n^2\le0\)</span>, quitarlo agranda la expresión (R8), y agrandar la cota de la derecha conserva el <span class="math inline">\(\le\)</span>.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(f(n)\le2n^3+100n^3\)</span></td>
-<td><span class="math inline">\(225\le250+12500=12750\)</span></td>
-<td><strong>Cambio <span class="math inline">\(100\)</span> por <span class="math inline">\(100n^3\)</span>, que es mayor o igual.</strong> Para <span class="math inline">\(n\ge1\)</span>, <span class="math inline">\(1\le n^3\)</span> (R4); multiplico por <span class="math inline">\(100&gt;0\)</span> (R2).</td>
-</tr>
-<tr>
-<td>4</td>
-<td><span class="math inline">\(f(n)\le102n^3\)</span></td>
-<td><span class="math inline">\(225\le102\cdot125=12750\)</span></td>
-<td><strong>Junto términos semejantes:</strong> <span class="math inline">\(2n^3+100n^3\)</span> es lo mismo que <span class="math inline">\((2+100)\,n^3\)</span>.</td>
-</tr>
-</tbody>
-</table></div>
+<p>Sea <span class="math inline">\(f(n)=2n^3-5n^2+100\)</span>. Para comprobar uso <span class="math inline">\(n=5\)</span>, donde <span class="math inline">\(f(5)=250-125+100=225\)</span>.</p>
+<p><em>Superior.</em> Meta: <span class="math inline">\(f(n)\le c\,n^3\)</span>. Para una cota superior puedo <strong>agrandar</strong> la derecha.</p>
+<p><strong>Paso 1. Quito <span class="math inline">\(-5n^2\)</span>.</strong> Como <span class="math inline">\(-5n^2\le0\)</span>, quitarlo agranda (R8): <span class="math display">\[f(n)\le2n^3+100\]</span></p>
+<p><strong>Paso 2. Cambio <span class="math inline">\(100\)</span> por <span class="math inline">\(100n^3\)</span>, que es mayor o igual.</strong> Para <span class="math inline">\(n\ge1\)</span>, <span class="math inline">\(1\le n^3\)</span> (R4); multiplico por <span class="math inline">\(100&gt;0\)</span> (R2) y sale <span class="math inline">\(100\le100n^3\)</span>. Sumo <span class="math inline">\(2n^3\)</span> a los dos lados (R1): <span class="math display">\[f(n)\le2n^3+100n^3\]</span></p>
+<p><strong>Paso 3. Junto términos semejantes.</strong> <span class="math inline">\(2n^3+100n^3\)</span> es lo mismo que <span class="math inline">\((2+100)\,n^3\)</span>: <span class="math display">\[f(n)\le102n^3\]</span></p>
+<p><strong>Paso 4. Compruebo con <span class="math inline">\(n=5\)</span>.</strong> <span class="math inline">\(225\le250+100=350\)</span> (paso 1), <span class="math inline">\(225\le250+12500=12750\)</span> (paso 2) y <span class="math inline">\(225\le102\cdot125=12750\)</span> (paso 3) ✓.</p>
 <p>Entonces <span class="math inline">\(c=102\)</span> y <span class="math inline">\(n_0=1\)</span>.</p>
-<p><em>Inferior.</em> Meta: <span class="math inline">\(f(n)\ge c\,n^3\)</span>. El <span class="math inline">\(+100\)</span> es positivo y se puede quitar (R7), pero el <span class="math inline">\(-5n^2\)</span> no: se paga con la mitad del término principal. Primero busco cuándo <span class="math inline">\(2n^3-5n^2\ge n^3\)</span> (es <span class="math inline">\(c=1\)</span>, la mitad de <span class="math inline">\(2\)</span>), despejando como en el Ejemplo C: para <span class="math inline">\(n\ge1\)</span> es una cadena de <strong>equivalencias</strong>, y <span class="math inline">\(n=5\)</span> es la frontera, así que cada renglón se cumple con igualdad.</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Desigualdad</th>
-<th>Con <span class="math inline">\(n=5\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(2n^3-5n^2\ge n^3\)</span></td>
-<td><span class="math inline">\(250-125=125\ge125\)</span></td>
-<td><strong>Escribo lo que quiero averiguar.</strong> Es la pregunta, no un dato.</td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(2n^3-n^3\ge5n^2\)</span></td>
-<td><span class="math inline">\(250-125=125\ge125\)</span></td>
-<td><strong>Sumo <span class="math inline">\(5n^2-n^3\)</span> a cada miembro y cancelo:</strong> <span class="math inline">\(-5n^2+5n^2=0\)</span> y <span class="math inline">\(n^3-n^3=0\)</span>. Sumar lo mismo no voltea, y restándolo se regresa.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(n^3\ge5n^2\)</span></td>
-<td><span class="math inline">\(125\ge125\)</span></td>
-<td><strong>Simplifico:</strong> <span class="math inline">\(2n^3-n^3\)</span> es lo mismo que <span class="math inline">\(n^3\)</span>.</td>
-</tr>
-<tr>
-<td>4</td>
-<td><span class="math inline">\(n\ge5\)</span></td>
-<td><span class="math inline">\(5\ge5\)</span></td>
-<td><strong>Divido cada miembro entre <span class="math inline">\(n^2\)</span>.</strong> Como <span class="math inline">\(n\ge1\)</span>, <span class="math inline">\(n^2&gt;0\)</span> (R2), no se voltea; multiplicando por <span class="math inline">\(n^2\)</span> se regresa.</td>
-</tr>
-</tbody>
-</table></div>
-<p>Para <span class="math inline">\(n\ge1\)</span>, cada renglón equivale al anterior, así que el renglón 1 vale exactamente para <span class="math inline">\(n\ge5\)</span>. Ahora la cadena, con todos los renglones anclados en <span class="math inline">\(f(n)\)</span> y la relación <span class="math inline">\(=\)</span> o <span class="math inline">\(\ge\)</span>:</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(n=5\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(f(n)=2n^3-5n^2+100\)</span></td>
-<td><span class="math inline">\(225\)</span></td>
-<td><strong>Parto de la definición de <span class="math inline">\(f\)</span>.</strong></td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(f(n)\ge2n^3-5n^2\)</span></td>
-<td><span class="math inline">\(225\ge125\)</span></td>
-<td><strong>Quito el <span class="math inline">\(+100\)</span>.</strong> Como <span class="math inline">\(100\ge0\)</span>, quitarlo achica la expresión (R7), y achicar la cota de la derecha conserva el <span class="math inline">\(\ge\)</span>.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(f(n)\ge n^3\)</span></td>
-<td><span class="math inline">\(225\ge125\)</span></td>
-<td><strong>Uso el despeje.</strong> Para <span class="math inline">\(n\ge5\)</span>, la tabla anterior da <span class="math inline">\(2n^3-5n^2\ge n^3\)</span>; lo encadeno con el renglón 2 por transitividad (R3).</td>
-</tr>
-</tbody>
-</table></div>
+<p><em>Inferior.</em> Meta: <span class="math inline">\(f(n)\ge c\,n^3\)</span>. El <span class="math inline">\(+100\)</span> es positivo y se puede quitar (R7), pero el <span class="math inline">\(-5n^2\)</span> no: se paga con la mitad del término principal, es decir, con <span class="math inline">\(c=1\)</span> (la mitad de <span class="math inline">\(2\)</span>). Eso funciona a partir de <span class="math inline">\(n=5\)</span>.</p>
+<p><strong>Paso 1. Quito el <span class="math inline">\(+100\)</span>.</strong> Como <span class="math inline">\(100\ge0\)</span>, quitarlo achica (R7), y achicar la derecha conserva el <span class="math inline">\(\ge\)</span>: <span class="math display">\[f(n)\ge2n^3-5n^2\]</span></p>
+<p><strong>Paso 2. Para <span class="math inline">\(n\ge5\)</span>, comparo <span class="math inline">\(5n^2\)</span> con <span class="math inline">\(n^3\)</span>.</strong> Multiplico <span class="math inline">\(5\le n\)</span> por <span class="math inline">\(n^2&gt;0\)</span> (R2), sin voltear: <span class="math display">\[5n^2\le n^3\]</span></p>
+<p><strong>Paso 3. Multiplico por <span class="math inline">\(-1\)</span>, y se voltea</strong> (R2: con un negativo la desigualdad se invierte): <span class="math display">\[-5n^2\ge-n^3\]</span></p>
+<p><strong>Paso 4. Sumo <span class="math inline">\(2n^3\)</span> a los dos lados</strong> (R1); sumar lo mismo no voltea: <span class="math display">\[2n^3-5n^2\ge n^3\]</span></p>
+<p><strong>Paso 5. Encadeno con el paso 1</strong> (R3): <span class="math display">\[f(n)\ge n^3\]</span></p>
+<p><strong>Paso 6. Compruebo con <span class="math inline">\(n=5\)</span>.</strong> Paso 1: <span class="math inline">\(225\ge250-125=125\)</span>. Paso 2: <span class="math inline">\(125\le125\)</span>. Paso 3: <span class="math inline">\(-125\ge-125\)</span>. Paso 4: <span class="math inline">\(125\ge125\)</span>. Paso 5: <span class="math inline">\(225\ge125\)</span> ✓.</p>
 <p>Entonces <span class="math inline">\(c=1\)</span> y <span class="math inline">\(n_0=5\)</span>.</p>
 </details>
 <strong>P2.</strong> Demuestra <span class="math inline">\(n\lg n+50n\in O(n\lg n)\)</span>. ¿Por qué <strong>no</strong> funciona <span class="math inline">\(n_0=1\)</span>?
@@ -824,43 +597,10 @@ Solución
 <summary>
 Solución
 </summary>
-<p>Sea <span class="math inline">\(f(n)=n\lg n+50n\)</span>. Todos los renglones empiezan con <span class="math inline">\(f(n)\)</span>; la columna de números usa <span class="math inline">\(n=4\)</span>, donde <span class="math inline">\(\lg4=2\)</span> y <span class="math inline">\(f(4)=8+200=208\)</span>.</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(n=4\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(f(n)=n\lg n+50n\)</span></td>
-<td><span class="math inline">\(208\)</span></td>
-<td><strong>Parto de la definición de <span class="math inline">\(f\)</span>.</strong></td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(f(n)\le n\lg n+50n\lg n\)</span></td>
-<td><span class="math inline">\(208\le8+400=408\)</span></td>
-<td><strong>Cambio <span class="math inline">\(50n\)</span> por <span class="math inline">\(50n\lg n\)</span>, que es mayor o igual.</strong> Para <span class="math inline">\(n\ge2\)</span>, <span class="math inline">\(1\le\lg n\)</span> (R6); multiplico por <span class="math inline">\(50n&gt;0\)</span> (R2) y sale <span class="math inline">\(50n\le50n\lg n\)</span>.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(f(n)\le51\,n\lg n\)</span></td>
-<td><span class="math inline">\(208\le51\cdot8=408\)</span></td>
-<td><strong>Junto términos semejantes:</strong> <span class="math inline">\(1\cdot n\lg n+50\,n\lg n\)</span> es lo mismo que <span class="math inline">\((1+50)\,n\lg n\)</span>.</td>
-</tr>
-</tbody>
-</table></div>
+<p>Sea <span class="math inline">\(f(n)=n\lg n+50n\)</span>. Para comprobar uso <span class="math inline">\(n=4\)</span>, donde <span class="math inline">\(\lg4=2\)</span> y <span class="math inline">\(f(4)=8+200=208\)</span>.</p>
+<p><strong>Paso 1. Cambio <span class="math inline">\(50n\)</span> por <span class="math inline">\(50n\lg n\)</span>, que es mayor o igual.</strong> Para <span class="math inline">\(n\ge2\)</span>, <span class="math inline">\(1\le\lg n\)</span> (R6); multiplico por <span class="math inline">\(50n&gt;0\)</span> (R2) y sale <span class="math inline">\(50n\le50n\lg n\)</span>. Sumo <span class="math inline">\(n\lg n\)</span> a los dos lados (R1): <span class="math display">\[f(n)\le n\lg n+50n\lg n\]</span></p>
+<p><strong>Paso 2. Junto términos semejantes.</strong> <span class="math inline">\(1\cdot n\lg n+50\,n\lg n\)</span> es lo mismo que <span class="math inline">\((1+50)\,n\lg n\)</span>: <span class="math display">\[f(n)\le51\,n\lg n\]</span></p>
+<p><strong>Paso 3. Compruebo con <span class="math inline">\(n=4\)</span>.</strong> <span class="math inline">\(208\le8+400=408\)</span> (paso 1) y <span class="math inline">\(208\le51\cdot8=408\)</span> (paso 2) ✓.</p>
 <p>Entonces <span class="math inline">\(c=51\)</span> y <span class="math inline">\(n_0=2\)</span>.</p>
 <p>Con <span class="math inline">\(n_0=1\)</span> falla porque en <span class="math inline">\(n=1\)</span> se tiene <span class="math inline">\(g(1)=1\cdot\lg1=0\)</span>, pero <span class="math inline">\(f(1)=0+50=50&gt;0=c\cdot g(1)\)</span> para <strong>cualquier</strong> <span class="math inline">\(c\)</span>. Moraleja: si <span class="math inline">\(g\)</span> vale 0 en algún punto, <span class="math inline">\(n_0\)</span> debe saltárselo.</p>
 </details>
@@ -869,7 +609,10 @@ Solución
 <summary>
 Solución
 </summary>
-<p>Negación: <span class="math inline">\(\forall c\ \forall n_0\ \exists n\ge n_0:\ n&gt;c\sqrt n\)</span>. Dividiendo entre <span class="math inline">\(\sqrt n&gt;0\)</span>, la condición es <span class="math inline">\(\sqrt n&gt;c\)</span>, es decir, <span class="math inline">\(n&gt;c^2\)</span>. Dados <span class="math inline">\(c\)</span> y <span class="math inline">\(n_0\)</span>, tomamos <span class="math inline">\(n=\max(n_0,\lfloor c^2\rfloor+1)\)</span>. Entonces <span class="math inline">\(n\ge\lfloor c^2\rfloor+1&gt;c^2\)</span> (mismo argumento del piso que en el Ejemplo E), así que <span class="math inline">\(\sqrt n&gt;c\)</span> (la raíz es creciente), y multiplicando por <span class="math inline">\(\sqrt n&gt;0\)</span> se obtiene <span class="math inline">\(n&gt;c\sqrt n\)</span>. <span class="math inline">\(\square\)</span></p>
+<p><strong>Paso 1. Niego la definición</strong>, como en el Ejemplo E: <span class="math display">\[\forall c&gt;0\ \forall n_0\ \exists n\ge n_0:\ n&gt;c\sqrt n\]</span></p>
+<p><strong>Paso 2. Busco cuándo falla la cota.</strong> Divido <span class="math inline">\(n&gt;c\sqrt n\)</span> entre <span class="math inline">\(\sqrt n&gt;0\)</span> (R2), sin voltear, y queda <span class="math inline">\(\sqrt n&gt;c\)</span>. Como los dos lados son positivos, elevo al cuadrado: <span class="math display">\[n&gt;c^2\]</span></p>
+<p><strong>Paso 3. Construyo la <span class="math inline">\(n\)</span>.</strong> Dados <span class="math inline">\(c\)</span> y <span class="math inline">\(n_0\)</span>, tomo <span class="math display">\[n=\max\!\big(n_0,\ \lfloor c^2\rfloor+1\big)\]</span> Por el <span class="math inline">\(\max\)</span>, <span class="math inline">\(n\ge n_0\)</span>; y <span class="math inline">\(n\ge\lfloor c^2\rfloor+1&gt;c^2\)</span>, con el mismo argumento del piso que en el Ejemplo E.</p>
+<p><strong>Paso 4. Verifico.</strong> De <span class="math inline">\(n&gt;c^2\)</span> sale <span class="math inline">\(\sqrt n&gt;c\)</span> (la raíz es creciente). Multiplico por <span class="math inline">\(\sqrt n&gt;0\)</span> (R2): <span class="math display">\[n&gt;c\sqrt n\]</span> Como <span class="math inline">\(c\)</span> y <span class="math inline">\(n_0\)</span> eran cualesquiera, <span class="math inline">\(n\notin O(\sqrt n)\)</span>. <span class="math inline">\(\square\)</span></p>
 </details>
 <strong>P4.</strong> Demuestra <span class="math inline">\(2^{n+1}\in\Theta(2^n)\)</span>.
 <details>
@@ -890,68 +633,20 @@ Solución
 <p><strong>Proposición 3.4.</strong> Si <span class="math inline">\(L = \lim_{n\to\infty} f(n)/g(n)\)</span> existe en <span class="math inline">\([0,\infty]\)</span> (y <span class="math inline">\(g(n)&gt;0\)</span> a partir de algún punto), entonces: <span class="math inline">\(L=0 \Rightarrow f\in o(g)\)</span>; <span class="math inline">\(\ 0&lt;L&lt;\infty \Rightarrow f\in\Theta(g)\)</span>; <span class="math inline">\(\ L=\infty \Rightarrow f\in\omega(g)\)</span>.</p>
 <p><strong>Demostración del caso <span class="math inline">\(0&lt;L&lt;\infty\)</span>, paso a paso.</strong></p>
 <p>Recuerda la definición de límite: <span class="math inline">\(\lim f(n)/g(n)=L\)</span> significa que para <strong>cada</strong> tolerancia <span class="math inline">\(\varepsilon&gt;0\)</span> existe <span class="math inline">\(N\)</span> tal que, para todo <span class="math inline">\(n\ge N\)</span>, <span class="math inline">\(\big|f(n)/g(n)-L\big|&lt;\varepsilon\)</span>.</p>
-<p>La hipótesis “<span class="math inline">\(g(n)&gt;0\)</span> a partir de algún punto” da un <span class="math inline">\(N'\)</span> tal que <span class="math inline">\(g(n)&gt;0\)</span> para todo <span class="math inline">\(n\ge N'\)</span>; lo usamos en el renglón 5. Para la columna de números imagina que <span class="math inline">\(L=2\)</span> y que en cierta <span class="math inline">\(n\ge\max(N,N')\)</span> se tiene <span class="math inline">\(f(n)=25\)</span> y <span class="math inline">\(g(n)=10\)</span>: el cociente es <span class="math inline">\(2.5\)</span>, a distancia <span class="math inline">\(0.5\)</span> de <span class="math inline">\(L\)</span>. Desde el renglón 3, cada renglón es una desigualdad doble sobre la misma cantidad, <span class="math inline">\(\frac{f(n)}{g(n)}\)</span> o <span class="math inline">\(f(n)\)</span>, que se queda en medio.</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Qué escribimos</th>
-<th>Con números</th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(\varepsilon=\frac L2\)</span></td>
-<td><span class="math inline">\(\varepsilon=1\)</span></td>
-<td><strong>Elijo la tolerancia.</strong> Es positiva porque <span class="math inline">\(L&gt;0\)</span>. Quiero que el cociente quede <strong>lejos de 0</strong>, y la mitad de <span class="math inline">\(L\)</span> lo logra.</td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(\big\lvert\frac{f(n)}{g(n)}-L\big\rvert&lt;\frac L2\)</span> para <span class="math inline">\(n\ge N\)</span></td>
-<td><span class="math inline">\(\lvert2.5-2\rvert=0.5&lt;1\)</span></td>
-<td><strong>Aplico la definición de límite</strong> con ese <span class="math inline">\(\varepsilon\)</span>: me da un <span class="math inline">\(N\)</span> a partir del cual se cumple.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(-\frac L2&lt;\frac{f(n)}{g(n)}-L&lt;\frac L2\)</span></td>
-<td><span class="math inline">\(-1&lt;0.5&lt;1\)</span></td>
-<td><strong>Quito el valor absoluto.</strong> Se vale porque <span class="math inline">\(\lvert x\rvert&lt;a\)</span> equivale a <span class="math inline">\(-a&lt;x&lt;a\)</span>.</td>
-</tr>
-<tr>
-<td>4</td>
-<td><span class="math inline">\(\frac L2&lt;\frac{f(n)}{g(n)}&lt;\frac{3L}2\)</span></td>
-<td><span class="math inline">\(1&lt;2.5&lt;3\)</span></td>
-<td><strong>Sumo <span class="math inline">\(L\)</span> a las tres partes.</strong> Sumar lo mismo no voltea ningún <span class="math inline">\(&lt;\)</span>; y <span class="math inline">\(L+\frac L2=\frac{3L}{2}\)</span>.</td>
-</tr>
-<tr>
-<td>5</td>
-<td><span class="math inline">\(\frac L2\,g(n)&lt;f(n)&lt;\frac{3L}2\,g(n)\)</span></td>
-<td><span class="math inline">\(10&lt;25&lt;30\)</span></td>
-<td><strong>Multiplico las tres partes por <span class="math inline">\(g(n)\)</span>.</strong> Para <span class="math inline">\(n\ge N'\)</span>, <span class="math inline">\(g(n)&gt;0\)</span> (R2), así que ningún <span class="math inline">\(&lt;\)</span> se voltea. Desde aquí, <span class="math inline">\(n\ge\max(N,N')\)</span>.</td>
-</tr>
-<tr>
-<td>6</td>
-<td><span class="math inline">\(f\in O(g)\)</span> con <span class="math inline">\(c=\frac{3L}2\)</span>, <span class="math inline">\(n_0=\max(N,N')\)</span></td>
-<td><span class="math inline">\(c=3\)</span></td>
-<td><strong>Leo la mitad derecha del renglón 5</strong>, <span class="math inline">\(f(n)&lt;\frac{3L}2\,g(n)\)</span>: es la definición de <span class="math inline">\(O\)</span>.</td>
-</tr>
-<tr>
-<td>7</td>
-<td><span class="math inline">\(f\in\Omega(g)\)</span> con <span class="math inline">\(c=\frac L2\)</span>, <span class="math inline">\(n_0=\max(N,N')\)</span></td>
-<td><span class="math inline">\(c=1\)</span></td>
-<td><strong>Leo la mitad izquierda del renglón 5</strong>, <span class="math inline">\(f(n)&gt;\frac L2\,g(n)\)</span>: es la definición de <span class="math inline">\(\Omega\)</span>. <span class="math inline">\(\square\)</span></td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>Ejemplo D con el atajo:</strong> <span class="math display">\[\frac{3n^2+10n\lg n+7}{n^2}=3+\frac{10\lg n}{n}+\frac7{n^2}\ \longrightarrow\ 3+0+0=3,\]</span> donde el primer <span class="math inline">\(=\)</span> divide cada término del numerador entre <span class="math inline">\(n^2\)</span> (<span class="math inline">\(\frac{3n^2}{n^2}=3\)</span> y <span class="math inline">\(\frac{10n\lg n}{n^2}=\frac{10\lg n}{n}\)</span>), y el límite es <span class="math inline">\(3\)</span> porque <span class="math inline">\(\frac{\lg n}{n}\to0\)</span> y <span class="math inline">\(\frac7{n^2}\to0\)</span>. Para el primero, por la regla de L’Hôpital (regla de cálculo, no vista en L00; se puede usar porque <span class="math inline">\(\lg n\to\infty\)</span> y <span class="math inline">\(n\to\infty\)</span>), con <span class="math inline">\(n\)</span> como variable real: <span class="math inline">\(\lg n=\frac{\ln n}{\ln 2}\)</span> (cambio de base), así que su derivada es <span class="math inline">\(\frac{1}{n\ln2}\)</span>, y <span class="math inline">\(\frac{(\lg n)'}{(n)'}=\frac{1/(n\ln2)}{1}=\frac{1}{n\ln2}\to0\)</span>. Como <span class="math inline">\(0&lt;3&lt;\infty\)</span>, se concluye <span class="math inline">\(f\in\Theta(n^2)\)</span>.</p>
+<p>La hipótesis “<span class="math inline">\(g(n)&gt;0\)</span> a partir de algún punto” da un <span class="math inline">\(N'\)</span> tal que <span class="math inline">\(g(n)&gt;0\)</span> para todo <span class="math inline">\(n\ge N'\)</span>; la uso en el paso 5.</p>
+<p><strong>Paso 1. Elijo la tolerancia.</strong> Quiero que el cociente quede <strong>lejos de 0</strong>, y la mitad de <span class="math inline">\(L\)</span> lo logra. Es positiva porque <span class="math inline">\(L&gt;0\)</span>: <span class="math display">\[\varepsilon=\frac L2\]</span></p>
+<p><strong>Paso 2. Aplico la definición de límite</strong> con ese <span class="math inline">\(\varepsilon\)</span>. Me da un <span class="math inline">\(N\)</span> tal que, para todo <span class="math inline">\(n\ge N\)</span>, <span class="math display">\[\Big|\frac{f(n)}{g(n)}-L\Big|&lt;\frac L2\]</span></p>
+<p><strong>Paso 3. Quito el valor absoluto.</strong> Se vale porque <span class="math inline">\(|x|&lt;a\)</span> equivale a <span class="math inline">\(-a&lt;x&lt;a\)</span>: <span class="math display">\[-\frac L2&lt;\frac{f(n)}{g(n)}-L&lt;\frac L2\]</span></p>
+<p><strong>Paso 4. Sumo <span class="math inline">\(L\)</span> a las tres partes.</strong> Sumar lo mismo no voltea ningún <span class="math inline">\(&lt;\)</span>. A la izquierda, <span class="math inline">\(-\frac L2+L=\frac L2\)</span>; a la derecha, <span class="math inline">\(\frac L2+L=\frac{3L}{2}\)</span>: <span class="math display">\[\frac L2&lt;\frac{f(n)}{g(n)}&lt;\frac{3L}{2}\]</span></p>
+<p><strong>Paso 5. Multiplico las tres partes por <span class="math inline">\(g(n)\)</span>.</strong> Para <span class="math inline">\(n\ge N'\)</span>, <span class="math inline">\(g(n)&gt;0\)</span> (R2), así que ningún <span class="math inline">\(&lt;\)</span> se voltea. Desde aquí, <span class="math inline">\(n\ge\max(N,N')\)</span>: <span class="math display">\[\frac L2\,g(n)&lt;f(n)&lt;\frac{3L}{2}\,g(n)\]</span></p>
+<p><strong>Paso 6. Leo la mitad derecha.</strong> <span class="math inline">\(f(n)&lt;\frac{3L}{2}\,g(n)\)</span> es la definición de <span class="math inline">\(O\)</span>: <span class="math inline">\(f\in O(g)\)</span> con <span class="math inline">\(c=\frac{3L}2\)</span> y <span class="math inline">\(n_0=\max(N,N')\)</span>.</p>
+<p><strong>Paso 7. Leo la mitad izquierda.</strong> <span class="math inline">\(f(n)&gt;\frac L2\,g(n)\)</span> es la definición de <span class="math inline">\(\Omega\)</span>: <span class="math inline">\(f\in\Omega(g)\)</span> con <span class="math inline">\(c=\frac L2\)</span> y el mismo <span class="math inline">\(n_0\)</span>. Con los pasos 6 y 7, <span class="math inline">\(f\in\Theta(g)\)</span>.</p>
+<p><strong>Paso 8. Compruebo con números.</strong> Imagina que <span class="math inline">\(L=2\)</span> y que en cierta <span class="math inline">\(n\ge\max(N,N')\)</span> se tiene <span class="math inline">\(f(n)=25\)</span> y <span class="math inline">\(g(n)=10\)</span>, así que el cociente es <span class="math inline">\(2.5\)</span>. Paso 1: <span class="math inline">\(\varepsilon=1\)</span>. Paso 2: <span class="math inline">\(|2.5-2|=0.5&lt;1\)</span>. Paso 3: <span class="math inline">\(-1&lt;0.5&lt;1\)</span>. Paso 4: <span class="math inline">\(1&lt;2.5&lt;3\)</span>. Paso 5: <span class="math inline">\(10&lt;25&lt;30\)</span>. Pasos 6 y 7: <span class="math inline">\(c=3\)</span> y <span class="math inline">\(c=1\)</span> ✓. <span class="math inline">\(\square\)</span></p>
+<p><strong>Ejemplo D con el atajo.</strong></p>
+<p><strong>Paso 1. Divido cada término del numerador entre <span class="math inline">\(n^2\)</span>.</strong> <span class="math inline">\(\frac{3n^2}{n^2}=3\)</span> y <span class="math inline">\(\frac{10n\lg n}{n^2}=\frac{10\lg n}{n}\)</span>: <span class="math display">\[\frac{3n^2+10n\lg n+7}{n^2}=3+\frac{10\lg n}{n}+\frac7{n^2}\]</span></p>
+<p><strong>Paso 2. <span class="math inline">\(\frac7{n^2}\to0\)</span></strong>, porque el numerador está fijo y el denominador crece sin límite.</p>
+<p><strong>Paso 3. <span class="math inline">\(\frac{\lg n}{n}\to0\)</span>.</strong> Uso la regla de L’Hôpital (regla de cálculo, no vista en L00; se puede usar porque <span class="math inline">\(\lg n\to\infty\)</span> y <span class="math inline">\(n\to\infty\)</span>), con <span class="math inline">\(n\)</span> como variable real. Como <span class="math inline">\(\lg n=\frac{\ln n}{\ln 2}\)</span> (cambio de base), su derivada es <span class="math inline">\(\frac{1}{n\ln2}\)</span>: <span class="math display">\[\frac{(\lg n)'}{(n)'}=\frac{1/(n\ln2)}{1}=\frac{1}{n\ln2}\ \longrightarrow\ 0\]</span></p>
+<p><strong>Paso 4. Junto los límites.</strong> <span class="math display">\[3+\frac{10\lg n}{n}+\frac7{n^2}\ \longrightarrow\ 3+0+0=3\]</span> Como <span class="math inline">\(0&lt;3&lt;\infty\)</span>, se concluye <span class="math inline">\(f\in\Theta(n^2)\)</span>.</p>
 <p><strong>Cuidado: el recíproco es falso.</strong> <span class="math inline">\(f(n)=n(2+\sin n)\)</span> cumple <span class="math inline">\(n\le f(n)\le3n\)</span> (porque <span class="math inline">\(-1\le\sin n\le1\)</span>), así que <span class="math inline">\(f\in\Theta(n)\)</span> con <span class="math inline">\(c=1\)</span> y <span class="math inline">\(c=3\)</span>. Sin embargo <span class="math inline">\(f(n)/n=2+\sin n\)</span> oscila y <strong>no tiene límite</strong>. Si el límite no existe, el atajo no dice nada y hay que volver a la definición.</p>
 <figure>
 <svg aria-label="El cociente 2 + sin n oscila entre 1 y 3 sin converger" fill="#111827" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" role="img" viewbox="0 0 720 260" xmlns="http://www.w3.org/2000/svg">
@@ -1580,134 +1275,20 @@ Solución
 <p>Lo demostramos tres veces porque cada método es una herramienta distinta que volverá en el curso (heaps, Union-Find, tablas hash).</p>
 <hr/>
 <h4 id="a-método-agregado-cuenta-todo-y-divide">(a) Método agregado: “cuenta todo y divide”</h4>
-<p><strong>Idea:</strong> calcular el costo <strong>total</strong> de la secuencia y dividir entre <span class="math inline">\(n\)</span>. Primero resolvemos el caso de solo <code>push</code> y después vemos qué cambia con <code>pop</code>.</p>
+<p><strong>Idea:</strong> calcular el costo <strong>total</strong> de la secuencia y dividir entre <span class="math inline">\(n\)</span>. Resolvemos el caso de solo <code>push</code>; con <code>pop</code> intercalados, el conteo lo hacen (b) y (c).</p>
 <p><strong>Paso 1. Separar el costo en dos partes.</strong> Cada <code>push</code> hace exactamente una escritura; algunos, además, copian. Entonces: <span class="math display">\[T(n)=\underbrace{n}_{\text{escrituras}}+\underbrace{(\text{número total de copias})}_{\text{lo difícil}}.\]</span></p>
 <p><strong>Paso 2. ¿Cuándo se copia y cuánto?</strong> Se copia cuando el arreglo está lleno (<span class="math inline">\(k=m\)</span>). La capacidad empieza en 0 y luego vale <span class="math inline">\(1,2,4,8,\dots\)</span>: siempre una potencia de 2. Cuando hay <span class="math inline">\(2^i\)</span> elementos y la capacidad es <span class="math inline">\(2^i\)</span>, el siguiente <code>push</code>, que es el número <span class="math inline">\(2^i+1\)</span>, copia <span class="math inline">\(2^i\)</span> elementos.</p>
 <p>Compruébalo con la tabla de §6.2: el push #2 copia <span class="math inline">\(1=2^0\)</span>, el #3 copia <span class="math inline">\(2=2^1\)</span>, el #5 copia <span class="math inline">\(4=2^2\)</span> y el #9 copia <span class="math inline">\(8=2^3\)</span>. ✓</p>
 <p><strong>Paso 3. ¿Cuántas duplicaciones hay en <span class="math inline">\(n\)</span> push?</strong> Hay una por cada <span class="math inline">\(i\)</span> tal que el push número <span class="math inline">\(2^i+1\)</span> <strong>ocurrió</strong>, es decir, <span class="math inline">\(2^i+1\le n\)</span>, es decir, <span class="math inline">\(2^i&lt;n\)</span>. Si <span class="math inline">\(n=1\)</span> no hay copias, y <span class="math inline">\(T(1)=1&lt;3\)</span>; de aquí en adelante <span class="math inline">\(n\ge2\)</span>. Sea <span class="math inline">\(j\)</span> el <strong>mayor</strong> entero con <span class="math inline">\(2^j&lt;n\)</span> (es un número fijo, que depende de <span class="math inline">\(n\)</span>; con <span class="math inline">\(n\ge2\)</span>, <span class="math inline">\(j\ge0\)</span>). Entonces las copias son <span class="math display">\[2^0+2^1+2^2+\dots+2^j=\sum_{i=0}^{j}2^i.\]</span></p>
-<p><strong>Paso 4. Calcular la suma.</strong> Una suma de potencias de 2 consecutivas, empezando en 1, es <em>la siguiente potencia menos 1</em>: <span class="math display">\[\sum_{i=0}^{j}2^i=2^{j+1}-1.\]</span> <em>¿Por qué?</em> En binario, <span class="math inline">\(1+2+4+8=1111_2\)</span>, y sumarle 1 da <span class="math inline">\(10000_2=16\)</span>. Formalmente es el Ejercicio 0.2 de L00; aquí está completo, por inducción. Como <span class="math inline">\(j\)</span> ya es un número fijo, la afirmación usa otra letra, <span class="math inline">\(t\)</span>, y al final la aplico con <span class="math inline">\(t=j\)</span>.</p>
-<p><strong>Afirmación <span class="math inline">\(P(t)\)</span>:</strong> <span class="math inline">\(\sum_{i=0}^{t}2^i=2^{t+1}-1\)</span>, para todo <span class="math inline">\(t\ge0\)</span>.</p>
-<p><strong>Base (<span class="math inline">\(t=0\)</span>):</strong> la suma tiene un solo término, <span class="math inline">\(2^0=1\)</span>, y el lado derecho es <span class="math inline">\(2^{0+1}-1=1\)</span> ✓.</p>
-<p><strong>HI:</strong> para un <span class="math inline">\(k\ge0\)</span> fijo pero cualquiera, <span class="math inline">\(\sum_{i=0}^{k}2^i=2^{k+1}-1\)</span>.</p>
-<p><strong>Paso.</strong></p>
-<ul>
-<li><strong>Tengo (la HI):</strong> la suma hasta <span class="math inline">\(k\)</span> vale <span class="math inline">\(2^{k+1}-1\)</span>.</li>
-<li><strong>Quiero (la meta, <span class="math inline">\(P(k+1)\)</span>):</strong> sustituyo cada <span class="math inline">\(t\)</span> por <span class="math inline">\((k+1)\)</span>: <span class="math display">\[\sum_{i=0}^{k+1}2^i\ \overset{?}{=}\ 2^{(k+1)+1}-1=2^{k+2}-1.\]</span></li>
-<li><strong>Plan:</strong> separo el último término del lado izquierdo de la meta, para que aparezca la suma hasta <span class="math inline">\(k\)</span>, que es de la que habla la HI.</li>
-</ul>
-<p>Le pongo nombre al lado izquierdo de la meta, <span class="math inline">\(S=\sum_{i=0}^{k+1}2^i\)</span>. La columna de números usa <span class="math inline">\(k=2\)</span>, donde <span class="math inline">\(S=1+2+4+8=15\)</span> (y la HI dice <span class="math inline">\(1+2+4=7=2^3-1\)</span>). La tabla se lee como la de R5 (§3.3.2).</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(k=2\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(S=\sum_{i=0}^{k+1}2^i\)</span></td>
-<td><span class="math inline">\(1+2+4+8=15\)</span></td>
-<td><strong>Parto del lado izquierdo de la meta.</strong> Es la definición de <span class="math inline">\(S\)</span>.</td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(S=\Big(\sum_{i=0}^{k}2^i\Big)+2^{k+1}\)</span></td>
-<td><span class="math inline">\((1+2+4)+8=15\)</span></td>
-<td><strong>Separo el último término</strong> (<span class="math inline">\(i=k+1\)</span>). Se vale porque la suma hasta <span class="math inline">\(k+1\)</span> es la suma hasta <span class="math inline">\(k\)</span> más el término <span class="math inline">\(k+1\)</span>.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(S=(2^{k+1}-1)+2^{k+1}\)</span></td>
-<td><span class="math inline">\((8-1)+8=15\)</span></td>
-<td><strong>Uso la HI ← aquí:</strong> el paréntesis vale <span class="math inline">\(2^{k+1}-1\)</span>.</td>
-</tr>
-<tr>
-<td>4</td>
-<td><span class="math inline">\(S=2\cdot2^{k+1}-1\)</span></td>
-<td><span class="math inline">\(2\cdot8-1=15\)</span></td>
-<td><strong>Junto los dos <span class="math inline">\(2^{k+1}\)</span>.</strong> Se vale porque algo más sí mismo es el doble: <span class="math inline">\(x+x=2x\)</span>.</td>
-</tr>
-<tr>
-<td>5</td>
-<td><span class="math inline">\(S=2^{k+2}-1\)</span></td>
-<td><span class="math inline">\(16-1=15\)</span></td>
-<td><strong>Escribo <span class="math inline">\(2\cdot2^{k+1}\)</span> como <span class="math inline">\(2^{k+2}\)</span></strong>, por la ley de exponentes <span class="math inline">\(a\cdot a^m=a^{m+1}\)</span>. Es el lado derecho de la meta ✓</td>
-</tr>
-</tbody>
-</table></div>
-<p>La última columna solo cita la HI y reglas de álgebra: no es circular. La base demostró <span class="math inline">\(P(0)\)</span> y el paso demostró que <span class="math inline">\(P(k)\)</span> implica <span class="math inline">\(P(k+1)\)</span> para cualquier <span class="math inline">\(k\ge0\)</span>; por el principio de inducción, la fórmula vale para todo <span class="math inline">\(t\ge0\)</span>, y en particular para <span class="math inline">\(t=j\)</span>. <span class="math inline">\(\square\)</span></p>
-<p><strong>Pasos 5 y 6. Acotar el total usando lo único que sabemos de <span class="math inline">\(j\)</span>.</strong></p>
-<ul>
-<li><strong>Tengo:</strong> <span class="math inline">\(T(n)=n+\text{copias}\)</span> (paso 1); <span class="math inline">\(\text{copias}=2^{j+1}-1\)</span> (paso 4); y <span class="math inline">\(2^j&lt;n\)</span>, por cómo se eligió <span class="math inline">\(j\)</span> (paso 3).</li>
-<li><strong>Quiero:</strong> <span class="math inline">\(T(n)\ \overset{?}{&lt;}\ 3n\)</span>.</li>
-<li><strong>Plan:</strong> cambiar las copias por algo un poco más grande que dependa solo de <span class="math inline">\(n\)</span>.</li>
-</ul>
-<p>Todos los renglones empiezan con <span class="math inline">\(T(n)\)</span>, y la relación es <span class="math inline">\(=\)</span> o <span class="math inline">\(&lt;\)</span>. La columna de números usa <span class="math inline">\(n=9\)</span>, donde <span class="math inline">\(j=3\)</span> y <span class="math inline">\(T(9)=24\)</span> (la tabla de §6.2).</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(n=9\)</span>, <span class="math inline">\(j=3\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(T(n)=n+\text{copias}\)</span></td>
-<td><span class="math inline">\(9+15=24\)</span></td>
-<td><strong>Parto del paso 1.</strong></td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(T(n)=n+(2^{j+1}-1)\)</span></td>
-<td><span class="math inline">\(9+(16-1)=24\)</span></td>
-<td><strong>Sustituyo las copias</strong> por lo que vale su suma (paso 4).</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(T(n)&lt;n+2^{j+1}\)</span></td>
-<td><span class="math inline">\(24&lt;9+16=25\)</span></td>
-<td><strong>Quito el <span class="math inline">\(-1\)</span>.</strong> Quitar un término negativo da algo estrictamente más grande (R8, y <span class="math inline">\(-1&lt;0\)</span>), así que la relación pasa a ser <span class="math inline">\(&lt;\)</span>.</td>
-</tr>
-<tr>
-<td>4</td>
-<td><span class="math inline">\(T(n)&lt;n+2n\)</span></td>
-<td><span class="math inline">\(24&lt;9+18=27\)</span></td>
-<td><strong>Cambio <span class="math inline">\(2^{j+1}\)</span> por <span class="math inline">\(2n\)</span>, que es más grande.</strong> De <span class="math inline">\(2^j&lt;n\)</span>, multiplicando por <span class="math inline">\(2&gt;0\)</span> (R2), sale <span class="math inline">\(2^{j+1}&lt;2n\)</span>. Agrandar la cota de la derecha conserva el <span class="math inline">\(&lt;\)</span>.</td>
-</tr>
-<tr>
-<td>5</td>
-<td><span class="math inline">\(T(n)&lt;3n\)</span></td>
-<td><span class="math inline">\(24&lt;27\)</span></td>
-<td><strong>Junto términos semejantes:</strong> <span class="math inline">\(n+2n\)</span> es lo mismo que <span class="math inline">\((1+2)\,n\)</span>. <span class="math inline">\(\square\)</span></td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>Paso 7. Verificar con la tabla.</strong> Con <span class="math inline">\(n=9\)</span>, el mayor <span class="math inline">\(j\)</span> con <span class="math inline">\(2^j&lt;9\)</span> es <span class="math inline">\(j=3\)</span>. Copias: <span class="math inline">\(1+2+4+8=15=2^4-1\)</span> ✓. Total: <span class="math inline">\(9+15=24\)</span> ✓ (coincide con la tabla), y <span class="math inline">\(24&lt;27=3\cdot9\)</span> ✓.</p>
-<p><strong>Paso 8. ¿Y si hay <code>pop</code> intercalados?</strong> Ahora el tamaño sube y baja, y el conteo de los pasos 2–3 ya no aplica tal cual. Lo arreglamos con una observación:</p>
-<blockquote>
-<p><strong>Afirmación.</strong> Si una duplicación copia <span class="math inline">\(m\)</span> elementos (pasa de capacidad <span class="math inline">\(m\)</span> a <span class="math inline">\(2m\)</span>), entonces desde la duplicación anterior hubo <strong>al menos <span class="math inline">\(m/2\)</span> push</strong>.</p>
-<p><em>Demostración.</em> Si <span class="math inline">\(m=1\)</span>, la duplicación la dispara un push, y <span class="math inline">\(1\ge\frac12\)</span> ✓. Si <span class="math inline">\(m\ge2\)</span>, la capacidad llegó a <span class="math inline">\(m\)</span> en la duplicación anterior, que pasó de <span class="math inline">\(m/2\)</span> a <span class="math inline">\(m\)</span>: copió <span class="math inline">\(m/2\)</span> elementos y luego escribió el que llegaba, así que dejó <span class="math inline">\(k=m/2+1\)</span>. La duplicación actual ocurre cuando <span class="math inline">\(k=m\)</span> y llega otro <code>push</code>. Entre las dos, cada <code>push</code> sumó 1 a <span class="math inline">\(k\)</span> y cada <code>pop</code> restó 1. Para subir de <span class="math inline">\(m/2+1\)</span> a <span class="math inline">\(m\)</span>, <span class="math inline">\(k\)</span> tuvo que ganar <span class="math inline">\(m-(m/2+1)=m/2-1\)</span> en neto, así que hubo al menos <span class="math inline">\(m/2-1\)</span> push (los pop solo obligan a que haya <strong>más</strong>). Sumando el push que dispara la duplicación: al menos <span class="math inline">\(m/2\)</span>. <span class="math inline">\(\square\)</span></p>
-<p><em>Con números</em> (<span class="math inline">\(m=8\)</span>): la duplicación anterior dejó <span class="math inline">\(k=5\)</span> con capacidad <span class="math inline">\(8\)</span>. Para llegar a <span class="math inline">\(k=8\)</span> hacen falta al menos 3 push, y el push que dispara la duplicación es el cuarto: <span class="math inline">\(4=8/2\)</span> ✓.</p>
-</blockquote>
-<p>Entonces le <strong>cobramos</strong> cada copia de <span class="math inline">\(m\)</span> elementos a <span class="math inline">\(m/2\)</span> de esos push, a 2 unidades cada uno (<span class="math inline">\(2\cdot m/2=m\)</span>; si <span class="math inline">\(m=1\)</span>, se le cobra 1 al push que la dispara). Ningún push paga dos veces: los push cobrados para una duplicación ocurren <strong>después</strong> de la duplicación anterior y <strong>hasta</strong> la actual (incluido el que la dispara), así que las ventanas de dos duplicaciones distintas no se traslapan. Cada push paga a lo más <span class="math inline">\(1\)</span> (su escritura) <span class="math inline">\(+\,2\)</span> (su parte de una copia) <span class="math inline">\(=3\)</span>, y cada pop paga 1, así que el total es <span class="math inline">\(\le3n\)</span>. Y es estrictamente menor (como dice el teorema), porque el primer push no copia nada y paga solo 1. <span class="math inline">\(\square\)</span></p>
+<p><strong>Paso 4. Calcular la suma.</strong> Una suma de potencias de 2 consecutivas, empezando en 1, es <em>la siguiente potencia menos 1</em>: <span class="math display">\[\sum_{i=0}^{j}2^i=2^{j+1}-1.\]</span> <em>¿Por qué?</em> En binario, <span class="math inline">\(1+2+4+8=1111_2\)</span>, y sumarle 1 da <span class="math inline">\(10000_2=16\)</span>. Es el Ejercicio 0.2 de L00, que se demuestra por inducción.</p>
+<p>Lo único que sé de <span class="math inline">\(j\)</span> es cómo se eligió en el paso 3, y lo encierro en una caja: <span class="math display">\[\boxed{\,2^j&lt;n\,}\]</span></p>
+<p><strong>Paso 5. Sustituyo las copias por su suma.</strong> Por el paso 1, <span class="math inline">\(T(n)=n+\text{copias}\)</span>, y por el paso 4 las copias valen <span class="math inline">\(2^{j+1}-1\)</span>: <span class="math display">\[T(n)=n+(2^{j+1}-1)\]</span></p>
+<p><strong>Paso 6. Quito el <span class="math inline">\(-1\)</span>.</strong> Quitar un término negativo da algo estrictamente más grande (R8, y <span class="math inline">\(-1&lt;0\)</span>), así que la relación pasa a ser <span class="math inline">\(&lt;\)</span>: <span class="math display">\[T(n)&lt;n+2^{j+1}\]</span></p>
+<p><strong>Paso 7. Escribo <span class="math inline">\(2^{j+1}\)</span> como <span class="math inline">\(2\cdot2^j\)</span> y aparece la caja.</strong> Es la ley de exponentes; es una igualdad: <span class="math display">\[T(n)&lt;n+2\cdot\boxed{\,2^j\,}\]</span></p>
+<p><strong>Paso 8. Uso la caja.</strong> Dice <span class="math inline">\(2^j&lt;n\)</span>; multiplico por <span class="math inline">\(2&gt;0\)</span> (R2), sin voltear: <span class="math inline">\(2\cdot2^j&lt;2n\)</span>. Agrandar la cota de la derecha conserva el <span class="math inline">\(&lt;\)</span>: <span class="math display">\[T(n)&lt;n+2n\]</span></p>
+<p><strong>Paso 9. Junto términos semejantes:</strong> <span class="math inline">\(n+2n\)</span> es lo mismo que <span class="math inline">\((1+2)\,n\)</span>. <span class="math display">\[T(n)&lt;3n\]</span></p>
+<p><strong>Paso 10. Compruebo con la tabla de §6.2.</strong> Con <span class="math inline">\(n=9\)</span>, el mayor <span class="math inline">\(j\)</span> con <span class="math inline">\(2^j&lt;9\)</span> es <span class="math inline">\(j=3\)</span>. Copias: <span class="math inline">\(1+2+4+8=15=2^4-1\)</span> ✓. Paso 5: <span class="math inline">\(T(9)=9+15=24\)</span>, como en la tabla ✓. Paso 6: <span class="math inline">\(24&lt;9+16=25\)</span>. Paso 8: <span class="math inline">\(24&lt;9+18=27\)</span>. Paso 9: <span class="math inline">\(24&lt;27=3\cdot9\)</span> ✓. Con solo <code>push</code>, el teorema queda demostrado. <span class="math inline">\(\square\)</span></p>
+<p><strong>Paso 11. ¿Y con <code>pop</code>?</strong> El conteo directo se complica; los métodos (b) y (c) lo resuelven sin esfuerzo.</p>
 <hr/>
 <h4 id="b-método-contable-del-banquero-cobra-de-más-ahora-para-pagar-después">(b) Método contable (del banquero): “cobra de más ahora para pagar después”</h4>
 <p><strong>Idea:</strong> cada operación paga un precio fijo en monedas. Si paga más de lo que cuesta, el sobrante va a un <strong>banco</strong>; si cuesta más, saca del banco. <strong>Regla:</strong> el banco nunca puede quedar negativo. Si se cumple, el total pagado es mayor o igual que el costo real.</p>
@@ -1718,122 +1299,33 @@ Solución
 <li><span aria-hidden="true" class="moneda"></span> 1 se ahorra para la <strong>copia futura de <span class="math inline">\(x\)</span></strong>;</li>
 <li><span aria-hidden="true" class="moneda"></span> 1 se ahorra para la copia futura de un elemento <strong>viejo</strong>, que ya gastó su moneda en la duplicación anterior.</li>
 </ul>
-<p><strong>Paso 3. Convertir la intuición en un invariante.</strong> “Intuición” no es demostración. Necesitamos una fórmula para el saldo: <span class="math display">\[\textbf{Invariante: }\quad B\;\ge\;2\cdot\max\!\left(0,\ k-\tfrac m2\right).\]</span> En palabras: por cada elemento por <strong>encima de la mitad</strong> de la capacidad hay 2 monedas en el banco.</p>
+<p><strong>Paso 3. Convertir la intuición en un invariante.</strong> “Intuición” no es demostración. Necesitamos una fórmula para el saldo. La encierro en una caja, porque es lo que vamos a mantener y a usar: <span class="math display">\[\boxed{\,B\;\ge\;2\cdot\max\!\left(0,\ k-\tfrac m2\right)\,}\qquad\text{(invariante)}\]</span> En palabras: por cada elemento por <strong>encima de la mitad</strong> de la capacidad hay 2 monedas en el banco.</p>
 <p><em>¿De dónde sale?</em> Se diseña <strong>hacia atrás</strong>. En el momento de copiar (<span class="math inline">\(k=m\)</span>) necesitamos <span class="math inline">\(m\)</span> monedas. La fórmula da <span class="math inline">\(2\cdot(m-m/2)=m\)</span>. Exacto.</p>
 <p><strong>Paso 4. Demostrar el invariante por inducción sobre las operaciones.</strong></p>
 <p><em>Base:</em> pila vacía, <span class="math inline">\(k=m=0\)</span>, <span class="math inline">\(B=0\)</span>. La cota es <span class="math inline">\(2\max(0,0)=0\le0\)</span> ✓.</p>
-<p><em>Paso inductivo:</em> suponemos el invariante antes de una operación y lo demostramos después. Hay cuatro casos.</p>
-<p><strong>Caso 1: <code>push</code> sin duplicar (<span class="math inline">\(k&lt;m\)</span>).</strong> Costo real 1, pagó 3, el banco recibe <span class="math inline">\(+2\)</span>. <em>HI:</em> antes de la operación, <span class="math inline">\(B\ge2\max(0,k-\frac m2)\)</span>. <em>Meta:</em> después, con <span class="math inline">\(k+1\)</span> en lugar de <span class="math inline">\(k\)</span> (la capacidad no cambia), <span class="math inline">\(B+2\ge2\max(0,k+1-\frac m2)\)</span>. Llamo <span class="math inline">\(a=k-\frac m2\)</span>. ¿Cuánto puede subir <span class="math inline">\(\max(0,a)\)</span> al cambiar <span class="math inline">\(a\)</span> por <span class="math inline">\(a+1\)</span>? Dos casos:</p>
+<p><em>Paso inductivo:</em> supongo que la caja vale antes de una operación y demuestro que vale después. Hay cuatro casos.</p>
+<p><em>Caso 1: <code>push</code> sin duplicar (<span class="math inline">\(k&lt;m\)</span>).</em> Costo real 1 y pagó 3: el banco pasa de <span class="math inline">\(B\)</span> a <span class="math inline">\(B+2\)</span>, <span class="math inline">\(k\)</span> pasa a <span class="math inline">\(k+1\)</span> y la capacidad no cambia.</p>
 <ul>
-<li>si <span class="math inline">\(a\ge0\)</span>: <span class="math inline">\(\max(0,a+1)-\max(0,a)=(a+1)-a=1\)</span>;</li>
-<li>si <span class="math inline">\(a&lt;0\)</span>: <span class="math inline">\(\max(0,a)=0\)</span> y <span class="math inline">\(a+1&lt;1\)</span>, así que <span class="math inline">\(\max(0,a+1)&lt;1\)</span>; sube menos de 1.</li>
+<li>Si <span class="math inline">\(k\ge\frac m2\)</span>: la cota pasa de <span class="math inline">\(2(k-\frac m2)\)</span> a <span class="math inline">\(2(k+1-\frac m2)\)</span>, es decir, sube exactamente 2. El banco también sube 2 ✓.</li>
+<li>Si <span class="math inline">\(k&lt;\frac m2\)</span>: la cota antes era 0, y después <span class="math inline">\(k+1-\frac m2&lt;1\)</span>, así que la cota nueva es <span class="math inline">\(&lt;2\)</span>. Como <span class="math inline">\(B\ge0\)</span> (la caja), <span class="math inline">\(2\le B+2\)</span> ✓.</li>
 </ul>
-<p>En ambos casos sube <strong>a lo más</strong> 1: para todo <span class="math inline">\(a\)</span>, <span class="math inline">\(\max(0,a+1)\le\max(0,a)+1\)</span>. Con ese dato armo la cadena.</p>
+<p><em>Caso 2: <code>push</code> que duplica (<span class="math inline">\(k=m\ge1\)</span>).</em> Costo real: <span class="math inline">\(m\)</span> copias más 1 escritura. Aquí el invariante se <strong>usa</strong> para pagar.</p>
 <ul>
-<li><strong>Tengo:</strong> la HI, <span class="math inline">\(2\max(0,k-\frac m2)\le B\)</span>, y el dato de arriba.</li>
-<li><strong>Quiero:</strong> la cota después del push no pasa del saldo nuevo, <span class="math inline">\(2\max(0,k+1-\frac m2)\ \overset{?}{\le}\ B+2\)</span>.</li>
-<li><strong>Plan:</strong> hacer aparecer <span class="math inline">\(a=k-\frac m2\)</span> dentro de la cota nueva, usar el dato, y al final usar la HI.</li>
+<li><em>Pongo <span class="math inline">\(k=m\)</span> en la caja.</em> Como <span class="math inline">\(m-\frac m2=\frac m2\ge0\)</span>, el <span class="math inline">\(\max\)</span> vale <span class="math inline">\(\frac m2\)</span>: <span class="math display">\[B\ge2\max\!\big(0,\ m-\tfrac m2\big)=2\cdot\tfrac m2=m\]</span> <strong>Hay suficiente</strong> para pagar las <span class="math inline">\(m\)</span> copias, y queda <span class="math inline">\(B-m\ge0\)</span>.</li>
+<li><em>Pago la escritura y deposito.</em> La escritura se paga con 1 de las 3 monedas y las otras 2 van al banco: el saldo nuevo es <span class="math inline">\(B-m+2\ge2\)</span>.</li>
+<li><em>La cota en el estado nuevo.</em> Ahora <span class="math inline">\(k=m+1\)</span> y la capacidad es <span class="math inline">\(2m\)</span>, cuya mitad es <span class="math inline">\(m\)</span>: la cota es <span class="math inline">\(2\max(0,(m+1)-m)=2\)</span>, y el saldo es <span class="math inline">\(\ge2\)</span> ✓.</li>
+<li><em>Con números</em> (push #5 de §6.2, <span class="math inline">\(m=4\)</span>). Si sigues los push 1 a 4 con estos precios, el banco queda en <span class="math inline">\(2,3,3,5\)</span>. Antes del push #5, <span class="math inline">\(B=5\ge4\)</span> ✓; paga 4 copias y queda 1; paga la escritura, deposita 2 y queda <span class="math inline">\(3\ge2\)</span> ✓.</li>
 </ul>
-<p>Le pongo nombre a la cota después del push: <span class="math inline">\(C'=2\max(0,\,k+1-\frac m2)\)</span>. Todos los renglones empiezan con <span class="math inline">\(C'\)</span>. La columna de números usa <span class="math inline">\(k=5\)</span>, <span class="math inline">\(m=8\)</span> y <span class="math inline">\(B=2\)</span> antes del push: ahí <span class="math inline">\(a=1\)</span>, la HI se cumple (<span class="math inline">\(2\max(0,1)=2\le2\)</span>) y <span class="math inline">\(C'=2\max(0,2)=4\)</span>. Es un caso justo, sin holgura: todos los renglones valen 4.</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(k=5\)</span>, <span class="math inline">\(m=8\)</span>, <span class="math inline">\(B=2\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(C'=2\max\!\big(0,(k-\tfrac m2)+1\big)\)</span></td>
-<td><span class="math inline">\(2\max(0,1+1)=4\)</span></td>
-<td><strong>Reagrupo</strong> <span class="math inline">\(k+1-\frac m2\)</span> como <span class="math inline">\((k-\frac m2)+1\)</span>, para que aparezca <span class="math inline">\(a\)</span>. Se vale porque en una suma el orden y los paréntesis no cambian el resultado.</td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(C'\le2\big(\max(0,k-\tfrac m2)+1\big)\)</span></td>
-<td><span class="math inline">\(4\le2\,(1+1)=4\)</span></td>
-<td><strong>Uso el dato:</strong> <span class="math inline">\(\max(0,a+1)\le\max(0,a)+1\)</span>. Lo multiplico por <span class="math inline">\(2&gt;0\)</span> (R2), así que el <span class="math inline">\(\le\)</span> no se voltea.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(C'\le2\max(0,k-\tfrac m2)+2\)</span></td>
-<td><span class="math inline">\(4\le2+2=4\)</span></td>
-<td><strong>Abro el paréntesis.</strong> Se vale por la distributiva: <span class="math inline">\(2(x+1)=2x+2\)</span>.</td>
-</tr>
-<tr>
-<td>4</td>
-<td><span class="math inline">\(C'\le B+2\)</span></td>
-<td><span class="math inline">\(4\le2+2=4\)</span></td>
-<td><strong>Uso la HI ← aquí:</strong> <span class="math inline">\(2\max(0,k-\frac m2)\le B\)</span>. Sumo 2 a cada miembro (R1) y encadeno con el renglón 3 (R3). Es la meta ✓</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>Caso 2: <code>push</code> que duplica (<span class="math inline">\(k=m\ge1\)</span>).</strong> Costo real: <span class="math inline">\(m\)</span> copias + 1 escritura.</p>
+<p><em>Caso 3: el primer <code>push</code> (<span class="math inline">\(k=m=0\)</span>).</em> Costo 1 (no hay nada que copiar) y el banco recibe <span class="math inline">\(+2\)</span>, así que <span class="math inline">\(B=2\)</span>. Estado: <span class="math inline">\(k=1\)</span>, <span class="math inline">\(m=1\)</span>. La cota es <span class="math inline">\(2\max(0,1-\frac12)=1\le2\)</span> ✓.</p>
+<p><em>Caso 4: <code>pop</code>.</em> Costo 1 y pagó 1: el banco no cambia y <span class="math inline">\(k\)</span> pasa a <span class="math inline">\(k-1\)</span>. Si <span class="math inline">\(k-1\ge\frac m2\)</span>, la cota baja 2; si no, vale 0. No sube, y <span class="math inline">\(B\)</span> no cambia ✓.</p>
+<p><strong>Paso 5. El costo real es lo pagado menos lo que queda en el banco.</strong> Por el paso 4, el banco nunca es negativo: <span class="math display">\[\text{costo real total}\;\le\;\text{total pagado}\]</span></p>
+<p><strong>Paso 6. Acoto lo pagado.</strong> Como <span class="math inline">\(1\cdot\#\text{pop}\le3\cdot\#\text{pop}\)</span> y <span class="math inline">\(\#\text{push}+\#\text{pop}=n\)</span>: <span class="math display">\[\text{total pagado}\;=\;3\cdot\#\text{push}+1\cdot\#\text{pop}\;\le\;3n\]</span></p>
+<p><strong>Paso 7. Y es menos de <span class="math inline">\(3n\)</span></strong>, como dice el teorema.</p>
 <ul>
-<li><strong>Aquí se usa el invariante:</strong> antes de la operación, con <span class="math inline">\(k=m\)</span>, <span class="math inline">\(B\ge2\cdot(m-\frac m2)=m\)</span> (porque <span class="math inline">\(m-\frac m2=\frac m2\)</span> y <span class="math inline">\(2\cdot\frac m2=m\)</span>). <strong>Hay suficiente</strong> para pagar las <span class="math inline">\(m\)</span> copias. Tras pagarlas, <span class="math inline">\(B\ge0\)</span>.</li>
-<li>La escritura se paga con la moneda 1 y las otras 2 se depositan: <span class="math inline">\(B\ge2\)</span>.</li>
-<li>Estado nuevo: <span class="math inline">\(k=m+1\)</span> y capacidad <span class="math inline">\(2m\)</span>. La cota es <span class="math inline">\(2\max(0,(m+1)-m)=2\)</span>. Como <span class="math inline">\(B\ge2\)</span>, se cumple ✓.</li>
+<li>La primera operación es un push (un pop en la pila vacía no está definido).</li>
+<li>Después de cualquier push, <span class="math inline">\(B\ge2\)</span>: en el caso 1 el banco tenía <span class="math inline">\(B\ge0\)</span> y recibe <span class="math inline">\(+2\)</span>; el caso 2 termina con <span class="math inline">\(B\ge2\)</span>; el caso 3 deja <span class="math inline">\(B=2\)</span>.</li>
+<li>Los pop no cambian <span class="math inline">\(B\)</span>. Entonces al final <span class="math inline">\(B\ge2\)</span>, y como el costo real es lo pagado menos lo que queda en el banco: <span class="math display">\[\text{costo real total}\;\le\;3n-2\;&lt;\;3n\qquad\square\]</span></li>
 </ul>
-<p><strong>Caso 3: el primer <code>push</code> (<span class="math inline">\(k=m=0\)</span>).</strong> Costo 1 (no hay nada que copiar) y el banco recibe <span class="math inline">\(+2\)</span>, así que <span class="math inline">\(B=2\)</span>. Estado: <span class="math inline">\(k=1\)</span>, <span class="math inline">\(m=1\)</span>. La cota es <span class="math inline">\(2\max(0,1-\frac12)=1\le2\)</span> ✓.</p>
-<p><strong>Caso 4: <code>pop</code>.</strong> Costo 1 y pagó 1, así que el banco no cambia. <em>HI:</em> antes de la operación, <span class="math inline">\(B\ge2\max(0,k-\frac m2)\)</span>. <em>Meta:</em> después, con <span class="math inline">\(k-1\)</span> en lugar de <span class="math inline">\(k\)</span> (la capacidad y el saldo no cambian), <span class="math inline">\(B\ge2\max(0,k-1-\frac m2)\)</span>. Llamo otra vez <span class="math inline">\(a=k-\frac m2\)</span>. ¿Qué le pasa a <span class="math inline">\(\max(0,a)\)</span> al cambiar <span class="math inline">\(a\)</span> por <span class="math inline">\(a-1\)</span>? Dos casos:</p>
-<ul>
-<li>si <span class="math inline">\(a-1\ge0\)</span>: <span class="math inline">\(\max(0,a-1)-\max(0,a)=(a-1)-a=-1\)</span>; baja 1;</li>
-<li>si <span class="math inline">\(a-1&lt;0\)</span>: <span class="math inline">\(\max(0,a-1)=0\)</span>, y <span class="math inline">\(\max(0,a)\ge0\)</span>; no sube.</li>
-</ul>
-<p>En ambos casos no sube: para todo <span class="math inline">\(a\)</span>, <span class="math inline">\(\max(0,a-1)\le\max(0,a)\)</span>. Con ese dato armo la cadena.</p>
-<ul>
-<li><strong>Tengo:</strong> la HI, <span class="math inline">\(2\max(0,k-\frac m2)\le B\)</span>, y el dato de arriba.</li>
-<li><strong>Quiero:</strong> la cota después del pop no pasa del saldo, <span class="math inline">\(2\max(0,k-1-\frac m2)\ \overset{?}{\le}\ B\)</span>.</li>
-<li><strong>Plan:</strong> hacer aparecer <span class="math inline">\(a=k-\frac m2\)</span> dentro de la cota nueva, usar el dato, y al final usar la HI.</li>
-</ul>
-<p>Le pongo nombre a la cota después del pop: <span class="math inline">\(C'=2\max(0,\,k-1-\frac m2)\)</span>. Todos los renglones empiezan con <span class="math inline">\(C'\)</span>. La columna de números usa otra vez <span class="math inline">\(k=5\)</span>, <span class="math inline">\(m=8\)</span> y <span class="math inline">\(B=2\)</span> antes del pop: ahí <span class="math inline">\(a=1\)</span> y <span class="math inline">\(C'=2\max(0,0)=0\)</span>.</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(k=5\)</span>, <span class="math inline">\(m=8\)</span>, <span class="math inline">\(B=2\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(C'=2\max\!\big(0,(k-\tfrac m2)-1\big)\)</span></td>
-<td><span class="math inline">\(2\max(0,1-1)=0\)</span></td>
-<td><strong>Reagrupo</strong> <span class="math inline">\(k-1-\frac m2\)</span> como <span class="math inline">\((k-\frac m2)-1\)</span>, para que aparezca <span class="math inline">\(a\)</span>. Se vale porque en una suma el orden y los paréntesis no cambian el resultado.</td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(C'\le2\max(0,k-\tfrac m2)\)</span></td>
-<td><span class="math inline">\(0\le2\max(0,1)=2\)</span></td>
-<td><strong>Uso el dato:</strong> <span class="math inline">\(\max(0,a-1)\le\max(0,a)\)</span>. Lo multiplico por <span class="math inline">\(2&gt;0\)</span> (R2), así que el <span class="math inline">\(\le\)</span> no se voltea.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(C'\le B\)</span></td>
-<td><span class="math inline">\(0\le2\)</span></td>
-<td><strong>Uso la HI ← aquí:</strong> <span class="math inline">\(2\max(0,k-\frac m2)\le B\)</span>, y encadeno (R3). Es la meta ✓</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>Paso 5. Concluir.</strong> El banco nunca es negativo, por lo que <span class="math display">\[\text{costo real total}\;\le\;\text{total pagado}\;=\;3\cdot\#\text{push}+1\cdot\#\text{pop}\;\le\;3n.\]</span> El primer <span class="math inline">\(\le\)</span>: lo pagado es lo gastado más lo que queda en el banco, y eso último es <span class="math inline">\(\ge0\)</span>. El último <span class="math inline">\(\le\)</span>: <span class="math inline">\(1\cdot\#\text{pop}\le3\cdot\#\text{pop}\)</span>, y <span class="math inline">\(\#\text{push}+\#\text{pop}=n\)</span>.</p>
-<p><strong>Y es menos de <span class="math inline">\(3n\)</span></strong>, como dice el teorema. La primera operación es un push (un pop en la pila vacía no está definido). Después de cualquier push, <span class="math inline">\(B\ge2\)</span>: en el caso 1 el banco tenía <span class="math inline">\(B\ge0\)</span> y recibe <span class="math inline">\(+2\)</span>; el caso 2 termina con <span class="math inline">\(B\ge2\)</span>; el caso 3 deja <span class="math inline">\(B=2\)</span>. Los pop no cambian <span class="math inline">\(B\)</span>. Entonces al final <span class="math inline">\(B\ge2\)</span>, y como el costo real es lo pagado menos lo que queda en el banco, el costo real total es <span class="math inline">\(\le3n-2&lt;3n\)</span>. <span class="math inline">\(\square\)</span></p>
 <blockquote>
 <p><strong>Observa el patrón:</strong> en los casos baratos (1, 3, 4) solo verificamos que el invariante <strong>no se rompe</strong>; en el caso caro (2) lo <strong>usamos</strong> para pagar. Así funcionan casi todas las demostraciones amortizadas.</p>
 </blockquote>
@@ -1851,81 +1343,21 @@ Solución
 <div class="callout nota"><span class="lbl">Nota para el profesor</span>Compárala con el invariante del banquero: <span class="math inline">\(2\max(0,k-\frac m2)=\max(0,2k-m)\)</span>. Se vale porque <span class="math inline">\(2\max(x,y)=\max(2x,2y)\)</span> (multiplicar por <span class="math inline">\(2&gt;0\)</span> no cambia cuál de los dos es mayor), con <span class="math inline">\(2\cdot0=0\)</span> y <span class="math inline">\(2(k-\frac m2)=2k-m\)</span> por la distributiva. <strong>Es la misma fórmula.</strong> El potencial es el saldo del banco visto desde fuera.</div>
 </blockquote>
 <p><strong>Paso 4. Calcular <span class="math inline">\(\hat c\)</span> en cada caso, escribiendo <span class="math inline">\(\Phi\)</span> antes y después.</strong></p>
-<p><strong>Caso 1: <code>push</code> sin duplicar (<span class="math inline">\(k&lt;m\)</span>).</strong></p>
+<p><em>Caso 1: <code>push</code> sin duplicar (<span class="math inline">\(k&lt;m\)</span>).</em> Costo real <span class="math inline">\(c=1\)</span>. <span class="math inline">\(\Phi\)</span> es la cota del banquero (💡 de arriba), y en (b), caso 1, vimos que sube a lo más 2: <span class="math display">\[\hat c=1+\Delta\Phi\le1+2=3\]</span></p>
+<p><em>Caso 2: <code>push</code> que duplica (<span class="math inline">\(k=m\ge1\)</span>).</em></p>
 <ul>
-<li>Real: <span class="math inline">\(c=1\)</span>.</li>
-<li>Antes: <span class="math inline">\(\Phi=\max(0,2k-m)\)</span>. Después: <span class="math inline">\(\Phi'=\max(0,2(k+1)-m)=\max(0,(2k-m)+2)\)</span>.</li>
-<li><span class="math inline">\(\Delta\Phi=\Phi'-\Phi\le2\)</span>. <em>¿Por qué <span class="math inline">\(\le\)</span> y no <span class="math inline">\(=\)</span>?</em> Si <span class="math inline">\(2k-m\)</span> era muy negativo (por ejemplo <span class="math inline">\(-5\)</span>), ambos <span class="math inline">\(\max\)</span> valen 0 y <span class="math inline">\(\Delta\Phi=0\)</span>. En general <span class="math inline">\(\max(0,a+2)-\max(0,a)\le2\)</span>: es el dato del método contable, caso 1 (<span class="math inline">\(\max\)</span> sube a lo más 1 cuando su argumento sube 1), aplicado dos veces.</li>
-<li><span class="math inline">\(\hat c=1+\Delta\Phi\le3\)</span>.</li>
+<li>Costo real: <span class="math inline">\(m\)</span> copias más 1 escritura, <span class="math inline">\(c=m+1\)</span>.</li>
+<li>Antes: <span class="math inline">\(k=m\)</span> y capacidad <span class="math inline">\(m\)</span>, así que <span class="math inline">\(\Phi=\max(0,\ 2m-m)=m\)</span>.</li>
+<li>Después: <span class="math inline">\(k=m+1\)</span> y capacidad <span class="math inline">\(2m\)</span>, así que <span class="math inline">\(\Phi'=\max(0,\ 2(m+1)-2m)=2\)</span>.</li>
+<li><em>Sustituyo</em> <span class="math inline">\(c=m+1\)</span>, <span class="math inline">\(\Phi'=2\)</span> y <span class="math inline">\(\Phi=m\)</span> en la definición <span class="math inline">\(\hat c=c+(\Phi'-\Phi)\)</span>: <span class="math display">\[\hat c=(m+1)+(2-m)\]</span></li>
+<li><em>Hago las cuentas:</em> <span class="math inline">\(m-m=0\)</span> y <span class="math inline">\(1+2=3\)</span>. <span class="math display">\[\hat c=3\]</span></li>
 </ul>
-<p><strong>Caso 2: <code>push</code> que duplica (<span class="math inline">\(k=m\ge1\)</span>).</strong></p>
-<ul>
-<li>Real: <span class="math inline">\(c=m\)</span> (copias) <span class="math inline">\(+\,1\)</span> (escritura) <span class="math inline">\(=m+1\)</span>.</li>
-<li>Antes: <span class="math inline">\(k=m\)</span> y capacidad <span class="math inline">\(m\)</span>, así que <span class="math inline">\(\Phi=\max(0,2m-m)=m\)</span>.</li>
-<li>Después: <span class="math inline">\(k=m+1\)</span> y capacidad <span class="math inline">\(2m\)</span>, así que <span class="math inline">\(\Phi'=\max(0,2(m+1)-2m)=\max(0,2)=2\)</span>.</li>
-</ul>
-<p>Con eso calculo <span class="math inline">\(\hat c\)</span>. Todos los renglones empiezan con <span class="math inline">\(\hat c\)</span>; la columna de números usa <span class="math inline">\(m=4\)</span> (es el push #5 de §6.2: copia 4 y escribe 1).</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(m=4\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(\hat c=c+(\Phi'-\Phi)\)</span></td>
-<td><span class="math inline">\(5+(2-4)=3\)</span></td>
-<td><strong>Parto de la definición</strong> de costo amortizado (paso 1).</td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(\hat c=(m+1)+(\Phi'-\Phi)\)</span></td>
-<td><span class="math inline">\((4+1)+(2-4)=3\)</span></td>
-<td><strong>Sustituyo el costo real</strong>, <span class="math inline">\(c=m+1\)</span>.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(\hat c=(m+1)+(2-m)\)</span></td>
-<td><span class="math inline">\(5+(2-4)=3\)</span></td>
-<td><strong>Sustituyo <span class="math inline">\(\Phi'=2\)</span> y <span class="math inline">\(\Phi=m\)</span></strong>, calculados arriba.</td>
-</tr>
-<tr>
-<td>4</td>
-<td><span class="math inline">\(\hat c=(m-m)+(1+2)\)</span></td>
-<td><span class="math inline">\(0+3=3\)</span></td>
-<td><strong>Quito los paréntesis y reordeno.</strong> Se vale porque en una suma el orden y la agrupación no cambian el resultado.</td>
-</tr>
-<tr>
-<td>5</td>
-<td><span class="math inline">\(\hat c=3\)</span></td>
-<td><span class="math inline">\(3\)</span></td>
-<td><strong>Hago las cuentas:</strong> <span class="math inline">\(m-m=0\)</span> y <span class="math inline">\(1+2=3\)</span>.</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>La <span class="math inline">\(m\)</span> se cancela:</strong> la caída de energía paga exactamente las copias.</p>
-<p><strong>Caso 3: primer <code>push</code> (<span class="math inline">\(k=m=0\)</span>).</strong></p>
-<ul>
-<li>Real: <span class="math inline">\(c=1\)</span>. Antes: <span class="math inline">\(\Phi=0\)</span>. Después: <span class="math inline">\(k=1\)</span>, <span class="math inline">\(m=1\)</span>, <span class="math inline">\(\Phi'=\max(0,1)=1\)</span>.</li>
-<li><span class="math inline">\(\hat c=1+1=2\le3\)</span>.</li>
-</ul>
-<p><strong>Caso 4: <code>pop</code>.</strong></p>
-<ul>
-<li>Real: <span class="math inline">\(c=1\)</span>. <span class="math inline">\(k\)</span> baja en 1, así que el argumento <span class="math inline">\(2k-m\)</span> baja 2 y <span class="math inline">\(\Delta\Phi\le0\)</span>.</li>
-<li><span class="math inline">\(\hat c\le1\)</span>.</li>
-</ul>
-<p><strong>Paso 5. Concluir.</strong> <span class="math inline">\(\hat c_{\text{push}}\le3\)</span> y <span class="math inline">\(\hat c_{\text{pop}}\le1\)</span>, así que <span class="math inline">\(\sum c_i\le\sum\hat c_i\le3n\)</span>. (El primer <span class="math inline">\(\le\)</span> es el paso 2; el segundo, sumar las <span class="math inline">\(n\)</span> cotas, cada una <span class="math inline">\(\le3\)</span>.) Y es menos de <span class="math inline">\(3n\)</span>, como dice el teorema: la primera operación es un push (un pop en la pila vacía no está definido), y ese primer push tiene <span class="math inline">\(\hat c=2\)</span> (caso 3). Por eso <span class="math inline">\(\sum c_i\le\sum\hat c_i\le3n-1&lt;3n\)</span>. <span class="math inline">\(\square\)</span></p>
-<p><strong>Paso 6. Verificar con la tabla.</strong> Push #5: antes <span class="math inline">\(k=4\)</span>, <span class="math inline">\(m=4\)</span>, <span class="math inline">\(\Phi=4\)</span>; después <span class="math inline">\(k=5\)</span>, <span class="math inline">\(m=8\)</span>, <span class="math inline">\(\Phi=\max(0,10-8)=2\)</span>. Costo real 5. <span class="math inline">\(\hat c=5+(2-4)=3\)</span> ✓.</p>
+<p><strong>La <span class="math inline">\(m\)</span> se cancela:</strong> la caída de energía paga exactamente las copias. <em>Con números</em> (push #5 de §6.2, <span class="math inline">\(m=4\)</span>): antes <span class="math inline">\(k=4\)</span>, <span class="math inline">\(m=4\)</span>, <span class="math inline">\(\Phi=4\)</span>; después <span class="math inline">\(k=5\)</span>, <span class="math inline">\(m=8\)</span>, <span class="math inline">\(\Phi'=\max(0,10-8)=2\)</span>; costo real 5; <span class="math inline">\(\hat c=5+(2-4)=3\)</span> ✓.</p>
+<p><em>Caso 3: primer <code>push</code> (<span class="math inline">\(k=m=0\)</span>).</em> Real: <span class="math inline">\(c=1\)</span>. Antes: <span class="math inline">\(\Phi=0\)</span>. Después: <span class="math inline">\(k=1\)</span>, <span class="math inline">\(m=1\)</span>, <span class="math inline">\(\Phi'=\max(0,1)=1\)</span>. Entonces: <span class="math display">\[\hat c=1+(1-0)=2\le3\]</span></p>
+<p><em>Caso 4: <code>pop</code>.</em> Real: <span class="math inline">\(c=1\)</span>. <span class="math inline">\(k\)</span> baja en 1, así que el argumento <span class="math inline">\(2k-m\)</span> baja 2; el <span class="math inline">\(\max\)</span> no sube cuando su argumento baja (como en (b), caso 4), así que <span class="math inline">\(\Delta\Phi\le0\)</span>: <span class="math display">\[\hat c=1+\Delta\Phi\le1\]</span></p>
+<p><strong>Paso 5. Uso el paso 2.</strong> Como <span class="math inline">\(\Phi(D_0)=0\)</span> y <span class="math inline">\(\Phi\ge0\)</span>: <span class="math display">\[\sum c_i\;\le\;\sum\hat c_i\]</span></p>
+<p><strong>Paso 6. Sumo las <span class="math inline">\(n\)</span> cotas.</strong> Cada <span class="math inline">\(\hat c_i\)</span> es <span class="math inline">\(\le3\)</span> (un pop da <span class="math inline">\(\le1\)</span>, que también es <span class="math inline">\(\le3\)</span>): <span class="math display">\[\sum c_i\;\le\;3n\]</span></p>
+<p><strong>Paso 7. Y es menos de <span class="math inline">\(3n\)</span></strong>, como dice el teorema. La primera operación es un push (un pop en la pila vacía no está definido), y ese primer push tiene <span class="math inline">\(\hat c=2\)</span> (caso 3), uno menos que 3: <span class="math display">\[\sum c_i\;\le\;\sum\hat c_i\;\le\;3n-1\;&lt;\;3n\qquad\square\]</span></p>
 <hr/>
 <blockquote>
 <p><strong>Cuándo usar cada método.</strong></p>
@@ -1936,124 +1368,27 @@ Solución
 <h3 id="por-qué-duplicar-el-crecimiento-aritmético-es-una-trampa">6.5 ¿Por qué duplicar? El crecimiento aritmético es una trampa</h3>
 <p><strong>Proposición 6.3.</strong> Si se crece sumando una constante <span class="math inline">\(c\)</span> (capacidades <span class="math inline">\(c, 2c, 3c, \dots\)</span>), entonces <span class="math inline">\(n\)</span> <code>push</code> cuestan <span class="math inline">\(\Theta(n^2/c)\)</span>.</p>
 <p><strong>Demostración paso a paso.</strong></p>
-<p><em>Paso 1. ¿Cuándo se copia y cuánto?</em> El arreglo se llena cuando <span class="math inline">\(k=jc\)</span> para <span class="math inline">\(j=1,2,3,\dots\)</span>, y entonces el siguiente <code>push</code> (el número <span class="math inline">\(jc+1\)</span>) copia <span class="math inline">\(jc\)</span> elementos.</p>
-<p><em>Paso 2. ¿Cuántas ampliaciones hay?</em> La ampliación <span class="math inline">\(j\)</span> ocurre si el push <span class="math inline">\(jc+1\)</span> existe, es decir, <span class="math inline">\(jc+1\le n\)</span>, es decir, <span class="math inline">\(j\le\frac{n-1}{c}\)</span>. El número de ampliaciones es entonces <span class="math display">\[q=\Big\lfloor\frac{n-1}{c}\Big\rfloor.\]</span></p>
-<p><em>Paso 3. Sumar las copias.</em> Factorizamos <span class="math inline">\(c\)</span> y usamos la suma aritmética <span class="math inline">\(1+2+\dots+q=\frac{q(q+1)}2\)</span> (L00 §3.2 y §7.2): <span class="math display">\[\text{copias}=c+2c+\dots+qc=c\,(1+2+\dots+q)=c\cdot\frac{q(q+1)}{2}.\]</span></p>
-<p>Las dos tablas que siguen usan <span class="math inline">\(c=10\)</span> y <span class="math inline">\(n=101\)</span>: ahí <span class="math inline">\(q=\lfloor100/10\rfloor=10\)</span>, <span class="math inline">\(\frac nc=10.1\)</span> y copias <span class="math inline">\(=10\cdot\frac{10\cdot11}{2}=550\)</span>.</p>
-<p><em>Paso 4. Cota superior.</em> Como <span class="math inline">\(q\le\frac{n-1}{c}&lt;\frac nc\)</span>, y <span class="math inline">\(q(q+1)\)</span> crece con <span class="math inline">\(q\)</span> (para <span class="math inline">\(q\ge0\)</span>), puedo cambiar <span class="math inline">\(q\)</span> por <span class="math inline">\(\frac nc\)</span> y la expresión solo crece. Todos los renglones empiezan con <span class="math inline">\(\text{copias}\)</span>, y la relación es <span class="math inline">\(=\)</span> o <span class="math inline">\(\le\)</span>.</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(c=10\)</span>, <span class="math inline">\(n=101\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(\text{copias}=c\cdot\dfrac{q(q+1)}{2}\)</span></td>
-<td><span class="math inline">\(10\cdot\dfrac{10\cdot11}{2}=550\)</span></td>
-<td><strong>Parto del paso 3.</strong></td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(\text{copias}\le c\cdot\dfrac{\frac nc\left(\frac nc+1\right)}{2}\)</span></td>
-<td><span class="math inline">\(550\le10\cdot\dfrac{10.1\cdot11.1}{2}=560.55\)</span></td>
-<td><strong>Cambio <span class="math inline">\(q\)</span> por <span class="math inline">\(\frac nc\)</span>, que es más grande.</strong> <span class="math inline">\(q(q+1)\)</span> crece con <span class="math inline">\(q\)</span>, y multiplicar por <span class="math inline">\(\frac c2&gt;0\)</span> no voltea (R2).</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(\text{copias}\le\dfrac{n\left(\frac nc+1\right)}{2}\)</span></td>
-<td><span class="math inline">\(550\le\dfrac{101\cdot11.1}{2}=560.55\)</span></td>
-<td><strong>Simplifico</strong> <span class="math inline">\(c\cdot\frac nc\)</span> a <span class="math inline">\(n\)</span>. Es una igualdad.</td>
-</tr>
-<tr>
-<td>4</td>
-<td><span class="math inline">\(\text{copias}\le\dfrac{\frac{n^2}{c}+n}{2}\)</span></td>
-<td><span class="math inline">\(550\le\dfrac{1020.1+101}{2}=560.55\)</span></td>
-<td><strong>Abro el paréntesis</strong> por la distributiva: <span class="math inline">\(n\cdot\frac nc=\frac{n^2}c\)</span> y <span class="math inline">\(n\cdot1=n\)</span>.</td>
-</tr>
-<tr>
-<td>5</td>
-<td><span class="math inline">\(\text{copias}\le\dfrac{n^2}{2c}+\dfrac n2\)</span></td>
-<td><span class="math inline">\(550\le510.05+50.5=560.55\)</span></td>
-<td><strong>Divido cada término entre 2.</strong> Se vale porque <span class="math inline">\(\frac{a+b}{2}=\frac a2+\frac b2\)</span>.</td>
-</tr>
-</tbody>
-</table></div>
-<p>Falta ver que esto está en <span class="math inline">\(O\!\left(\frac{n^2}{c}\right)\)</span>. Para <span class="math inline">\(n\ge c\)</span>, multiplico <span class="math inline">\(c\le n\)</span> por <span class="math inline">\(\frac{n}{2c}&gt;0\)</span> (R2) y sale <span class="math inline">\(\frac n2\le\frac{n^2}{2c}\)</span>. Entonces copias <span class="math inline">\(\le\frac{n^2}{2c}+\frac{n^2}{2c}=\frac{n^2}{c}\)</span>, con constante 1 y <span class="math inline">\(n_0=c\)</span>.</p>
-<p><em>Paso 5. Cota inferior.</em> Primero cuatro datos sobre <span class="math inline">\(q\)</span>, uno por uno:</p>
-<ol type="1">
-<li><span class="math inline">\(\lfloor x\rfloor&gt;x-1\)</span> (el piso le quita a <span class="math inline">\(x\)</span> menos de 1). Con <span class="math inline">\(x=\frac{n-1}{c}\)</span>: <span class="math inline">\(q&gt;\frac{n-1}c-1=\frac{n-1-c}{c}\)</span>.</li>
-<li>Quiero cambiar <span class="math inline">\(n-1-c\)</span> por algo sin la resta. ¿Cuándo vale <span class="math inline">\(n-1-c\ge\frac{n-1}2\)</span>? Restando <span class="math inline">\(\frac{n-1}2\)</span> a ambos lados: <span class="math inline">\(\frac{n-1}2-c\ge0\)</span>, es decir, <span class="math inline">\(n-1\ge2c\)</span>, es decir, <span class="math inline">\(n\ge2c+1\)</span>. Divido entre <span class="math inline">\(c&gt;0\)</span> (R2), que no voltea: <span class="math inline">\(\frac{n-1-c}{c}\ge\frac{n-1}{2c}\)</span>. Entonces, para <span class="math inline">\(n\ge2c+1\)</span>, <span class="math inline">\(q&gt;\frac{n-1-c}{c}\ge\frac{n-1}{2c}\)</span>.</li>
-<li>Copias: <span class="math inline">\(c\cdot\frac{q(q+1)}{2}\ge c\cdot\frac{q^2}{2}\)</span>, porque <span class="math inline">\(q+1\ge q\)</span> (achico el lado derecho, la dirección correcta para una cota inferior).</li>
-<li>De <span class="math inline">\(q\ge\frac{n-1}{2c}\ge0\)</span>, elevando al cuadrado (ambos lados son <span class="math inline">\(\ge0\)</span>): <span class="math inline">\(q^2\ge\frac{(n-1)^2}{4c^2}\)</span>.</li>
-</ol>
-<p>Con números: el dato 1 da <span class="math inline">\(10&gt;9\)</span>, y el dato 2 da <span class="math inline">\(10&gt;9\ge5\)</span>.</p>
-<p>Ahora la cadena. Todos los renglones empiezan con <span class="math inline">\(\text{copias}\)</span>, y la relación es <span class="math inline">\(=\)</span> o <span class="math inline">\(\ge\)</span>.</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(c=10\)</span>, <span class="math inline">\(n=101\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(\text{copias}=c\cdot\dfrac{q(q+1)}{2}\)</span></td>
-<td><span class="math inline">\(550\)</span></td>
-<td><strong>Parto del paso 3.</strong></td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(\text{copias}\ge c\cdot\dfrac{q^2}{2}\)</span></td>
-<td><span class="math inline">\(550\ge\dfrac{10\cdot100}{2}=500\)</span></td>
-<td><strong>Cambio <span class="math inline">\(q+1\)</span> por <span class="math inline">\(q\)</span>, que es más chico</strong> (dato 3). Achicar la cota de la derecha conserva el <span class="math inline">\(\ge\)</span>.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(\text{copias}\ge\dfrac c2\cdot\dfrac{(n-1)^2}{4c^2}\)</span></td>
-<td><span class="math inline">\(550\ge5\cdot\dfrac{10000}{400}=125\)</span></td>
-<td><strong>Cambio <span class="math inline">\(q^2\)</span> por <span class="math inline">\(\frac{(n-1)^2}{4c^2}\)</span>, que es más chico</strong> (dato 4). Multiplico por <span class="math inline">\(\frac c2&gt;0\)</span> (R2): no se voltea.</td>
-</tr>
-<tr>
-<td>4</td>
-<td><span class="math inline">\(\text{copias}\ge\dfrac{(n-1)^2}{8c}\)</span></td>
-<td><span class="math inline">\(550\ge\dfrac{10000}{80}=125\)</span></td>
-<td><strong>Simplifico:</strong> <span class="math inline">\(\frac{c}{2\cdot4c^2}\)</span> es lo mismo que <span class="math inline">\(\frac{1}{8c}\)</span>. Es una igualdad.</td>
-</tr>
-<tr>
-<td>5</td>
-<td><span class="math inline">\(\text{copias}\ge\dfrac{n^2}{32c}\)</span></td>
-<td><span class="math inline">\(550\ge\dfrac{10201}{320}\approx31.9\)</span></td>
-<td><strong>Cambio <span class="math inline">\((n-1)^2\)</span> por <span class="math inline">\(\frac{n^2}{4}\)</span>, que es más chico, y simplifico</strong> <span class="math inline">\(\frac{n^2}{4\cdot8c}=\frac{n^2}{32c}\)</span>. Para <span class="math inline">\(n\ge2\)</span>, <span class="math inline">\(n-1\ge\frac n2\)</span>; los dos son <span class="math inline">\(\ge0\)</span>, así que al cuadrado se conserva.</td>
-</tr>
-</tbody>
-</table></div>
-<p>En el renglón 5, <span class="math inline">\(n-1\ge\frac n2\)</span> equivale a <span class="math inline">\(n\ge2\)</span>: resto <span class="math inline">\(\frac n2\)</span> a cada miembro y queda <span class="math inline">\(\frac n2-1\ge0\)</span>. Por lo tanto copias <span class="math inline">\(\ge\frac{n^2}{32c}\)</span>, que está en <span class="math inline">\(\Omega\!\left(\frac{n^2}c\right)\)</span>, con <span class="math inline">\(n_0=\max(2,2c+1)\)</span>: el renglón 5 pide <span class="math inline">\(n\ge2\)</span> y el dato 2 pide <span class="math inline">\(n\ge2c+1\)</span>.</p>
-<p><em>Paso 6. Del número de copias al costo total.</em> La proposición habla del costo de los <span class="math inline">\(n\)</span> push, que es <span class="math inline">\(T(n)=n+\text{copias}\)</span> (<span class="math inline">\(n\)</span> escrituras, como en §6.4(a)).</p>
+<p><em>Las copias.</em></p>
+<p><strong>Paso 1. ¿Cuándo se copia y cuánto?</strong> El arreglo se llena cuando <span class="math inline">\(k=jc\)</span> para <span class="math inline">\(j=1,2,3,\dots\)</span>, y entonces el siguiente <code>push</code> (el número <span class="math inline">\(jc+1\)</span>) copia <span class="math inline">\(jc\)</span> elementos.</p>
+<p><strong>Paso 2. ¿Cuántas ampliaciones hay?</strong> La ampliación <span class="math inline">\(j\)</span> ocurre si el push <span class="math inline">\(jc+1\)</span> existe, es decir, <span class="math inline">\(jc+1\le n\)</span>, es decir, <span class="math inline">\(j\le\frac{n-1}{c}\)</span>. El número de ampliaciones es entonces <span class="math display">\[q=\Big\lfloor\frac{n-1}{c}\Big\rfloor.\]</span></p>
+<p><strong>Paso 3. Sumar las copias.</strong> Factorizamos <span class="math inline">\(c\)</span> y usamos la suma aritmética <span class="math inline">\(1+2+\dots+q=\frac{q(q+1)}2\)</span> (L00 §3.2 y §7.2): <span class="math display">\[\text{copias}=c+2c+\dots+qc=c\,(1+2+\dots+q)=c\cdot\frac{q(q+1)}{2}.\]</span></p>
+<p>Para comprobar uso <span class="math inline">\(c=10\)</span> y <span class="math inline">\(n=101\)</span>: ahí <span class="math inline">\(q=\lfloor100/10\rfloor=10\)</span>, <span class="math inline">\(\frac nc=10.1\)</span> y copias <span class="math inline">\(=10\cdot\frac{10\cdot11}{2}=550\)</span>.</p>
+<p><em>Cota superior.</em> Lo único que necesito de <span class="math inline">\(q\)</span> es que <span class="math inline">\(q\le\frac{n-1}{c}&lt;\frac nc\)</span>: <span class="math display">\[\boxed{\,q&lt;\frac nc\,}\]</span></p>
+<p><strong>Paso 1. Si <span class="math inline">\(n\ge c+1\)</span>, entonces <span class="math inline">\(q\ge1\)</span>.</strong> En ese caso <span class="math inline">\(\frac{n-1}{c}\ge1\)</span>, y su piso también es <span class="math inline">\(\ge1\)</span>. Sumo <span class="math inline">\(q\)</span> a los dos lados de <span class="math inline">\(1\le q\)</span> (R1): <span class="math display">\[q+1\le2q\]</span></p>
+<p><strong>Paso 2. Lo uso en la fórmula de las copias.</strong> Multiplico <span class="math inline">\(q+1\le2q\)</span> por <span class="math inline">\(\frac{cq}{2}&gt;0\)</span> (R2), sin voltear: <span class="math display">\[\text{copias}=c\cdot\frac{q(q+1)}{2}\le c\cdot\frac{q\cdot2q}{2}=c\,q^2\]</span></p>
+<p><strong>Paso 3. Uso la caja.</strong> Como <span class="math inline">\(0\le q&lt;\frac nc\)</span>, al cuadrado se conserva: <span class="math inline">\(q^2&lt;\frac{n^2}{c^2}\)</span>. Multiplico por <span class="math inline">\(c&gt;0\)</span> (R2): <span class="math display">\[\text{copias}\le c\,q^2&lt;c\cdot\frac{n^2}{c^2}=\frac{n^2}{c}\]</span> Con números: <span class="math inline">\(550\le10\cdot100=1000&lt;1020.1\)</span> ✓. Para <span class="math inline">\(n\ge c+1\)</span>, copias <span class="math inline">\(&lt;\frac{n^2}{c}\)</span>: está en <span class="math inline">\(O\!\left(\frac{n^2}{c}\right)\)</span>.</p>
+<p><em>Cota inferior.</em> Ahora necesito lo contrario: que <span class="math inline">\(q\)</span> no sea demasiado chico.</p>
+<p><strong>Paso 1. El piso le quita a <span class="math inline">\(x\)</span> menos de 1</strong>, así que <span class="math inline">\(\lfloor x\rfloor&gt;x-1\)</span>. Con <span class="math inline">\(x=\frac{n-1}{c}\)</span>, y escribiendo <span class="math inline">\(1=\frac cc\)</span>: <span class="math display">\[q&gt;\frac{n-1}{c}-1=\frac{n-1-c}{c}\]</span></p>
+<p><strong>Paso 2. Si <span class="math inline">\(n\ge2c+1\)</span>, entonces <span class="math inline">\(c\le\frac{n-1}{2}\)</span></strong> (resto 1 y divido entre <span class="math inline">\(2&gt;0\)</span>). Restar algo más chico deja más: <span class="math inline">\(n-1-c\ge(n-1)-\frac{n-1}{2}=\frac{n-1}{2}\)</span>. Divido entre <span class="math inline">\(c&gt;0\)</span> (R2) y encadeno con el paso 1 (R3): <span class="math display">\[\boxed{\,q\ge\frac{n-1}{2c}\,}\]</span></p>
+<p><strong>Paso 3. Quito el <span class="math inline">\(+q\)</span> (R7) y uso la caja.</strong> Por la distributiva, <span class="math inline">\(q(q+1)=q^2+q\)</span>, y como <span class="math inline">\(q\ge0\)</span>, quitarlo achica. Luego elevo la caja al cuadrado (los dos lados son <span class="math inline">\(\ge0\)</span>) y multiplico por <span class="math inline">\(\frac c2&gt;0\)</span> (R2): <span class="math display">\[\text{copias}\ge\frac c2\,q^2\ge\frac c2\cdot\frac{(n-1)^2}{4c^2}=\frac{(n-1)^2}{8c}\]</span></p>
+<p><strong>Paso 4. Para <span class="math inline">\(n\ge2\)</span>, <span class="math inline">\(n-1\ge\frac n2\)</span></strong> (resto <span class="math inline">\(\frac n2\)</span> a los dos lados: queda <span class="math inline">\(\frac n2-1\ge0\)</span>). Al cuadrado se conserva, <span class="math inline">\((n-1)^2\ge\frac{n^2}{4}\)</span>, y divido entre <span class="math inline">\(8c&gt;0\)</span> (R2): <span class="math display">\[\text{copias}\ge\frac{(n-1)^2}{8c}\ge\frac{n^2}{32c}\]</span> Con números: <span class="math inline">\(q=10&gt;9\ge5\)</span>, y <span class="math inline">\(550\ge500\ge125\ge\frac{10201}{320}\approx31.9\)</span> ✓. Está en <span class="math inline">\(\Omega\!\left(\frac{n^2}c\right)\)</span>, con <span class="math inline">\(n_0=\max(2,\ 2c+1)\)</span>.</p>
+<p><em>Costo total.</em> La proposición habla del costo de los <span class="math inline">\(n\)</span> push, que es <span class="math inline">\(T(n)=n+\text{copias}\)</span> (<span class="math inline">\(n\)</span> escrituras, como en §6.4(a)).</p>
 <ul>
-<li>Por arriba: para <span class="math inline">\(n\ge c\)</span>, multiplico <span class="math inline">\(c\le n\)</span> por <span class="math inline">\(\frac nc&gt;0\)</span> (R2) y sale <span class="math inline">\(n\le\frac{n^2}{c}\)</span>. Con el paso 4, <span class="math inline">\(T(n)\le\frac{n^2}{c}+\frac{n^2}{c}=\frac{2n^2}{c}\)</span>.</li>
-<li>Por abajo: <span class="math inline">\(n\ge0\)</span>, así que quitarlo achica (R7): <span class="math inline">\(T(n)\ge\text{copias}\ge\frac{n^2}{32c}\)</span> por el paso 5.</li>
+<li><em>Por arriba:</em> para <span class="math inline">\(n\ge c\)</span>, multiplico <span class="math inline">\(c\le n\)</span> por <span class="math inline">\(\frac nc&gt;0\)</span> (R2) y sale <span class="math inline">\(n\le\frac{n^2}{c}\)</span>. Con la cota superior, <span class="math inline">\(T(n)&lt;\frac{n^2}{c}+\frac{n^2}{c}=\frac{2n^2}{c}\)</span>.</li>
+<li><em>Por abajo:</em> <span class="math inline">\(n\ge0\)</span>, así que quitarlo achica (R7): <span class="math inline">\(T(n)\ge\text{copias}\ge\frac{n^2}{32c}\)</span>.</li>
+<li><em>Condiciones:</em> <span class="math inline">\(n\ge c+1\)</span>, <span class="math inline">\(n\ge2\)</span> y <span class="math inline">\(n\ge2c+1\)</span>; como <span class="math inline">\(c\ge1\)</span>, basta <span class="math inline">\(n\ge2c+1\)</span>. Para esas <span class="math inline">\(n\)</span>: <span class="math display">\[\frac{n^2}{32c}\le T(n)&lt;\frac{2n^2}{c}\]</span></li>
 </ul>
-<p>Las condiciones son <span class="math inline">\(n\ge c\)</span>, <span class="math inline">\(n\ge2\)</span> y <span class="math inline">\(n\ge2c+1\)</span>; como <span class="math inline">\(c\ge1\)</span>, basta <span class="math inline">\(n\ge2c+1\)</span>. Entonces, para <span class="math inline">\(n\ge2c+1\)</span>, <span class="math inline">\(\frac{n^2}{32c}\le T(n)\le\frac{2n^2}{c}\)</span>, y <span class="math inline">\(T(n)\in\Theta\!\left(\frac{n^2}c\right)\)</span>. <span class="math inline">\(\square\)</span> <em>Con números</em> (<span class="math inline">\(c=10\)</span>, <span class="math inline">\(n=101\)</span>): <span class="math inline">\(T=101+550=651\)</span>, y <span class="math inline">\(31.9\le651\le2040.2\)</span> ✓.</p>
+<p>Entonces <span class="math inline">\(T(n)\in\Theta\!\left(\frac{n^2}c\right)\)</span>. <span class="math inline">\(\square\)</span> <em>Con números</em> (<span class="math inline">\(c=10\)</span>, <span class="math inline">\(n=101\)</span>): <span class="math inline">\(T=101+550=651\)</span>, y <span class="math inline">\(31.9\le651&lt;2040.2\)</span> ✓.</p>
 <p><em>Intuición:</em> sumar una constante en cada paso produce copias que crecen <strong>linealmente</strong> (<span class="math inline">\(c, 2c, 3c, \dots\)</span>), y la suma de algo lineal es <strong>cuadrática</strong>. Al duplicar, las copias crecen <strong>geométricamente</strong>, y la suma la domina su último término.</p>
 <p><strong>En números</strong>, para <span class="math inline">\(n=10^6\)</span>:</p>
 <div class="scroll"><table>
@@ -2081,121 +1416,21 @@ Solución
 <h3 id="y-si-el-factor-no-es-2">6.6 ¿Y si el factor no es 2?</h3>
 <p><strong>Proposición 6.4.</strong> Con un factor <span class="math inline">\(\alpha&gt;1\)</span> (la capacidad pasa de <span class="math inline">\(m\)</span> a <span class="math inline">\(\max(1,\lceil\alpha m\rceil)\)</span>, como en §6.1), el costo amortizado de <code>push</code> es a lo más <span class="math inline">\(1+\frac{\alpha}{\alpha-1}\)</span>. Sin <code>pop</code>, la memoria desperdiciada es a lo más una fracción <span class="math inline">\(1-\frac1\alpha\)</span> de la capacidad.</p>
 <p><strong>Demostración paso a paso (costo).</strong></p>
-<p><em>Paso 1. Nombrar las copias.</em> Sean <span class="math inline">\(s_1&lt;s_2&lt;\dots&lt;s_t\)</span> los tamaños copiados en cada ampliación, en orden. Se copia justo cuando el arreglo está lleno, así que <span class="math inline">\(s_i\)</span> es también la capacidad en ese momento. La ampliación deja capacidad <span class="math inline">\(\lceil\alpha s_i\rceil\)</span>, y la siguiente copia ocurre cuando esa capacidad se llena: <span class="math inline">\(s_{i+1}=\lceil\alpha s_i\rceil\ge\alpha s_i\)</span> (el techo nunca achica).</p>
-<p><em>Paso 2. La última copia es menor que <span class="math inline">\(n\)</span>.</em> Lo que se copia ya estaba en la pila antes del push que dispara la ampliación, así que <span class="math inline">\(s_t\le n-1&lt;n\)</span>.</p>
-<p><em>Paso 3. Leer hacia atrás.</em> De <span class="math inline">\(s_{i+1}\ge\alpha s_i\)</span> se obtiene <span class="math inline">\(s_i\le s_{i+1}/\alpha\)</span>. Aplicándolo repetidamente desde el final: <span class="math display">\[s_{t-1}\le\frac{s_t}{\alpha},\qquad s_{t-2}\le\frac{s_t}{\alpha^2},\qquad\dots,\qquad s_{t-r}\le\frac{s_t}{\alpha^r}.\]</span></p>
-<p><em>Paso 4. Sumar con una geométrica decreciente.</em> La razón es <span class="math inline">\(\frac1\alpha&lt;1\)</span>, así que la serie infinita converge (L00 §7.3 y §7.4).</p>
-<ul>
-<li><strong>Tengo:</strong> <span class="math inline">\(s_{t-r}\le\frac{s_t}{\alpha^r}\)</span> para cada <span class="math inline">\(r\)</span> (paso 3), y <span class="math inline">\(s_t&lt;n\)</span> (paso 2).</li>
-<li><strong>Quiero:</strong> <span class="math inline">\(\sum_{i=1}^{t}s_i\ \overset{?}{&lt;}\ n\cdot\frac{\alpha}{\alpha-1}\)</span>.</li>
-<li><strong>Plan:</strong> acotar cada sumando con el paso 3, para que todos queden en términos de <span class="math inline">\(s_t\)</span>; completar la serie geométrica infinita, que tiene fórmula; y al final cambiar <span class="math inline">\(s_t\)</span> por <span class="math inline">\(n\)</span>.</li>
-</ul>
-<p>Todos los renglones empiezan con <span class="math inline">\(\sum s_i\)</span>, que abrevia <span class="math inline">\(\sum_{i=1}^{t}s_i\)</span>, y la relación es <span class="math inline">\(=\)</span>, <span class="math inline">\(\le\)</span> o <span class="math inline">\(&lt;\)</span>. La columna de números usa <span class="math inline">\(\alpha=2\)</span> y <span class="math inline">\(n=9\)</span>: las copias son <span class="math inline">\(s=1,2,4,8\)</span> (como en §6.2), así que <span class="math inline">\(t=4\)</span>, <span class="math inline">\(s_t=8\)</span> y <span class="math inline">\(\sum s_i=15\)</span>.</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(\alpha=2\)</span>, <span class="math inline">\(n=9\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(\sum s_i=s_t+s_{t-1}+\dots+s_1\)</span></td>
-<td><span class="math inline">\(8+4+2+1=15\)</span></td>
-<td><strong>Escribo la suma de la última a la primera.</strong> El orden de los sumandos no cambia el resultado.</td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(\sum s_i\le s_t+\dfrac{s_t}{\alpha}+\dots+\dfrac{s_t}{\alpha^{t-1}}\)</span></td>
-<td><span class="math inline">\(15\le8+4+2+1=15\)</span></td>
-<td><strong>Acoto cada sumando con el paso 3</strong> y sumo las cotas (R1).</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(\sum s_i\le s_t\left(1+\dfrac1\alpha+\dots+\dfrac1{\alpha^{t-1}}\right)\)</span></td>
-<td><span class="math inline">\(15\le8\cdot\dfrac{15}{8}=15\)</span></td>
-<td><strong>Saco el factor común <span class="math inline">\(s_t\)</span>.</strong> Es la distributiva al revés; es una igualdad.</td>
-</tr>
-<tr>
-<td>4</td>
-<td><span class="math inline">\(\sum s_i\le s_t\left(1+\dfrac1\alpha+\dfrac1{\alpha^2}+\cdots\right)\)</span></td>
-<td><span class="math inline">\(15\le8\cdot2=16\)</span></td>
-<td><strong>Agrego los términos que faltan de la serie infinita.</strong> Todos son positivos, así que la cota solo crece y el <span class="math inline">\(\le\)</span> se conserva.</td>
-</tr>
-<tr>
-<td>5</td>
-<td><span class="math inline">\(\sum s_i\le s_t\cdot\dfrac{1}{1-\frac1\alpha}\)</span></td>
-<td><span class="math inline">\(15\le\dfrac{8}{1/2}=16\)</span></td>
-<td><strong>Uso la fórmula de la geométrica infinita:</strong> con razón <span class="math inline">\(r=\frac1\alpha&lt;1\)</span>, la suma es <span class="math inline">\(\frac{1}{1-r}\)</span> (L00 §7.3 y §7.4).</td>
-</tr>
-<tr>
-<td>6</td>
-<td><span class="math inline">\(\sum s_i\le s_t\cdot\dfrac{\alpha}{\alpha-1}\)</span></td>
-<td><span class="math inline">\(15\le8\cdot\dfrac21=16\)</span></td>
-<td><strong>Multiplico arriba y abajo por <span class="math inline">\(\alpha\)</span>:</strong> <span class="math inline">\(\frac{1}{1-\frac1\alpha}\)</span> es lo mismo que <span class="math inline">\(\frac{\alpha}{\alpha-1}\)</span>. Multiplicar por <span class="math inline">\(\frac\alpha\alpha=1\)</span> no cambia nada.</td>
-</tr>
-<tr>
-<td>7</td>
-<td><span class="math inline">\(\sum s_i&lt;n\cdot\dfrac{\alpha}{\alpha-1}\)</span></td>
-<td><span class="math inline">\(15&lt;9\cdot2=18\)</span></td>
-<td><strong>Cambio <span class="math inline">\(s_t\)</span> por <span class="math inline">\(n\)</span>, que es más grande</strong> (paso 2). Multiplico <span class="math inline">\(s_t&lt;n\)</span> por <span class="math inline">\(\frac{\alpha}{\alpha-1}&gt;0\)</span> (R2): no se voltea, y la relación pasa a ser <span class="math inline">\(&lt;\)</span>.</td>
-</tr>
-</tbody>
-</table></div>
-<p><em>Paso 5. Total.</em> Con <span class="math inline">\(n\)</span> escrituras más las copias, el costo es menor que <span class="math inline">\(n+n\frac{\alpha}{\alpha-1}=n\left(1+\frac{\alpha}{\alpha-1}\right)\)</span> (factor común <span class="math inline">\(n\)</span>). Al dividir entre <span class="math inline">\(n\)</span> queda el costo amortizado. Con <span class="math inline">\(\alpha=2\)</span>: <span class="math inline">\(1+2=3\)</span> ✓, que coincide con el Teorema 6.2. <span class="math inline">\(\square\)</span></p>
-<p><strong>Demostración (memoria).</strong> Justo después de ampliar de <span class="math inline">\(m\ge1\)</span> a <span class="math inline">\(\lceil\alpha m\rceil\)</span> hay <span class="math inline">\(m+1\)</span> elementos. (La primera ampliación, de <span class="math inline">\(0\)</span> a <span class="math inline">\(1\)</span>, deja el bloque lleno: fracción ocupada <span class="math inline">\(1\)</span>.) Le pongo nombre a la fracción ocupada en ese momento: <span class="math inline">\(F=\frac{m+1}{\lceil\alpha m\rceil}\)</span>.</p>
-<ul>
-<li><strong>Tengo:</strong> <span class="math inline">\(\lceil\alpha m\rceil&lt;\alpha m+1\)</span> (el techo le suma a <span class="math inline">\(\alpha m\)</span> menos de 1), y <span class="math inline">\(\alpha&gt;1\)</span>.</li>
-<li><strong>Quiero:</strong> <span class="math inline">\(F\ \overset{?}{\ge}\ \frac1\alpha\)</span>.</li>
-<li><strong>Plan:</strong> cambiar el denominador con techo por uno sin techo, y luego comparar con <span class="math inline">\(\frac1\alpha\)</span>.</li>
-</ul>
-<p>Antes de la tabla, un dato auxiliar: <span class="math inline">\(\frac{m+1}{\alpha m+1}\ge\frac1\alpha\)</span>. Multiplico en cruz, cosa que puedo hacer porque los dos denominadores son positivos, y la desigualdad equivale a <span class="math inline">\(\alpha(m+1)\ge\alpha m+1\)</span>; por la distributiva, a <span class="math inline">\(\alpha m+\alpha\ge\alpha m+1\)</span>; restando <span class="math inline">\(\alpha m\)</span> a cada miembro, a <span class="math inline">\(\alpha\ge1\)</span>, que es cierto porque <span class="math inline">\(\alpha&gt;1\)</span>. Cada paso se puede deshacer, así que el dato es cierto.</p>
-<p>Todos los renglones empiezan con <span class="math inline">\(F\)</span>. La columna de números usa <span class="math inline">\(\alpha=1.5\)</span> y <span class="math inline">\(m=4\)</span>: <span class="math inline">\(\lceil6\rceil=6\)</span>, así que <span class="math inline">\(F=\frac56\)</span>, y <span class="math inline">\(\alpha m+1=7\)</span>.</p>
-<div class="scroll"><table>
-<colgroup>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-<col style="width: 25%"/>
-</colgroup>
-<thead>
-<tr>
-<th>#</th>
-<th>Expresión</th>
-<th>Con <span class="math inline">\(\alpha=1.5\)</span>, <span class="math inline">\(m=4\)</span></th>
-<th>Qué hago · por qué se vale</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td><span class="math inline">\(F=\dfrac{m+1}{\lceil\alpha m\rceil}\)</span></td>
-<td><span class="math inline">\(\dfrac56\approx0.83\)</span></td>
-<td><strong>Parto de la definición de <span class="math inline">\(F\)</span>.</strong></td>
-</tr>
-<tr>
-<td>2</td>
-<td><span class="math inline">\(F&gt;\dfrac{m+1}{\alpha m+1}\)</span></td>
-<td><span class="math inline">\(\dfrac56&gt;\dfrac57\approx0.71\)</span></td>
-<td><strong>Cambio el denominador por <span class="math inline">\(\alpha m+1\)</span>, que es más grande.</strong> Con el mismo numerador positivo, un denominador más grande da una fracción más chica, así que <span class="math inline">\(F\)</span> queda estrictamente arriba.</td>
-</tr>
-<tr>
-<td>3</td>
-<td><span class="math inline">\(F&gt;\dfrac1\alpha\)</span></td>
-<td><span class="math inline">\(\dfrac56&gt;\dfrac23\approx0.67\)</span></td>
-<td><strong>Uso el dato auxiliar</strong> y encadeno (R3): un <span class="math inline">\(&gt;\)</span> seguido de un <span class="math inline">\(\ge\)</span> da <span class="math inline">\(&gt;\)</span>.</td>
-</tr>
-</tbody>
-</table></div>
+<p><strong>Paso 1. Nombrar las copias.</strong> Sean <span class="math inline">\(s_1&lt;s_2&lt;\dots&lt;s_t\)</span> los tamaños copiados en cada ampliación, en orden. Se copia justo cuando el arreglo está lleno, así que <span class="math inline">\(s_i\)</span> es también la capacidad en ese momento. La ampliación deja capacidad <span class="math inline">\(\lceil\alpha s_i\rceil\)</span>, y la siguiente copia ocurre cuando esa capacidad se llena: <span class="math inline">\(s_{i+1}=\lceil\alpha s_i\rceil\ge\alpha s_i\)</span> (el techo nunca achica).</p>
+<p><strong>Paso 2. La última copia es menor que <span class="math inline">\(n\)</span>.</strong> Lo que se copia ya estaba en la pila antes del push que dispara la ampliación, así que <span class="math inline">\(s_t\le n-1&lt;n\)</span>: <span class="math display">\[\boxed{\,s_t&lt;n\,}\]</span></p>
+<p><strong>Paso 3. Leer hacia atrás.</strong> De <span class="math inline">\(s_{i+1}\ge\alpha s_i\)</span> se obtiene <span class="math inline">\(s_i\le s_{i+1}/\alpha\)</span>. Aplicándolo <span class="math inline">\(r\)</span> veces desde el final (<span class="math inline">\(s_{t-1}\le\frac{s_t}{\alpha}\)</span>, <span class="math inline">\(s_{t-2}\le\frac{s_t}{\alpha^2}\)</span>, …): <span class="math display">\[\boxed{\,s_{t-r}\le\frac{s_t}{\alpha^r}\,}\]</span></p>
+<p><strong>Paso 4. Escribo la suma de la última copia a la primera y acoto cada sumando con la caja del paso 3</strong> (R1). Abrevio <span class="math inline">\(\sum s_i=\sum_{i=1}^{t}s_i\)</span>: <span class="math display">\[\sum s_i=s_t+s_{t-1}+\dots+s_1\le s_t+\frac{s_t}{\alpha}+\dots+\frac{s_t}{\alpha^{t-1}}\]</span></p>
+<p><strong>Paso 5. Saco el factor común <span class="math inline">\(s_t\)</span>.</strong> Es la distributiva al revés; es una igualdad: <span class="math display">\[\sum s_i\le s_t\left(1+\frac1\alpha+\dots+\frac1{\alpha^{t-1}}\right)\]</span></p>
+<p><strong>Paso 6. Agrego los términos que faltan de la serie infinita.</strong> Todos son positivos, así que la cota solo crece y el <span class="math inline">\(\le\)</span> se conserva. La razón es <span class="math inline">\(\frac1\alpha&lt;1\)</span>, así que la serie converge (L00 §7.3 y §7.4): <span class="math display">\[\sum s_i\le s_t\left(1+\frac1\alpha+\frac1{\alpha^2}+\cdots\right)\]</span></p>
+<p><strong>Paso 7. Uso la fórmula de la geométrica infinita:</strong> con razón <span class="math inline">\(r=\frac1\alpha&lt;1\)</span>, la suma es <span class="math inline">\(\frac{1}{1-r}\)</span>. <span class="math display">\[\sum s_i\le s_t\cdot\frac{1}{1-\frac1\alpha}\]</span></p>
+<p><strong>Paso 8. Multiplico arriba y abajo por <span class="math inline">\(\alpha\)</span>.</strong> Multiplicar por <span class="math inline">\(\frac\alpha\alpha=1\)</span> no cambia nada, y <span class="math inline">\(\frac{1}{1-\frac1\alpha}=\frac{\alpha}{\alpha-1}\)</span>: <span class="math display">\[\sum s_i\le s_t\cdot\frac{\alpha}{\alpha-1}\]</span></p>
+<p><strong>Paso 9. Uso la caja del paso 2: cambio <span class="math inline">\(s_t\)</span> por <span class="math inline">\(n\)</span>, que es más grande.</strong> Multiplico <span class="math inline">\(s_t&lt;n\)</span> por <span class="math inline">\(\frac{\alpha}{\alpha-1}&gt;0\)</span> (R2): no se voltea, y la relación pasa a ser <span class="math inline">\(&lt;\)</span>: <span class="math display">\[\sum s_i&lt;n\cdot\frac{\alpha}{\alpha-1}\]</span></p>
+<p><strong>Paso 10. Compruebo con <span class="math inline">\(\alpha=2\)</span> y <span class="math inline">\(n=9\)</span>.</strong> Las copias son <span class="math inline">\(s=1,2,4,8\)</span> (como en §6.2), así que <span class="math inline">\(t=4\)</span>, <span class="math inline">\(s_t=8\)</span> y <span class="math inline">\(\sum s_i=15\)</span>. La derecha vale <span class="math inline">\(8+4+2+1=15\)</span> en el paso 4, <span class="math inline">\(8\cdot\frac{15}{8}=15\)</span> en el 5, <span class="math inline">\(8\cdot2=16\)</span> en los pasos 6 a 8 y <span class="math inline">\(9\cdot2=18\)</span> en el 9: <span class="math inline">\(15\le15\le16&lt;18\)</span> ✓.</p>
+<p><strong>Paso 11. Total.</strong> Con <span class="math inline">\(n\)</span> escrituras más las copias, el costo es menor que <span class="math inline">\(n+n\frac{\alpha}{\alpha-1}=n\left(1+\frac{\alpha}{\alpha-1}\right)\)</span> (factor común <span class="math inline">\(n\)</span>). Al dividir entre <span class="math inline">\(n\)</span> queda el costo amortizado. Con <span class="math inline">\(\alpha=2\)</span>: <span class="math inline">\(1+2=3\)</span> ✓, que coincide con el Teorema 6.2. <span class="math inline">\(\square\)</span></p>
+<p><strong>Demostración (memoria).</strong> Justo después de ampliar de <span class="math inline">\(m\ge1\)</span> a <span class="math inline">\(\lceil\alpha m\rceil\)</span> hay <span class="math inline">\(m+1\)</span> elementos. (La primera ampliación, de <span class="math inline">\(0\)</span> a <span class="math inline">\(1\)</span>, deja el bloque lleno: fracción ocupada <span class="math inline">\(1\)</span>.) La fracción ocupada en ese momento es <span class="math inline">\(F=\frac{m+1}{\lceil\alpha m\rceil}\)</span>, y quiero ver que <span class="math inline">\(F&gt;\frac1\alpha\)</span>.</p>
+<p><strong>Paso 1. El techo le suma a <span class="math inline">\(\alpha m\)</span> menos de 1:</strong> <span class="math display">\[\lceil\alpha m\rceil&lt;\alpha m+1\]</span></p>
+<p><strong>Paso 2. Como <span class="math inline">\(1&lt;\alpha\)</span></strong>, sumo <span class="math inline">\(\alpha m\)</span> a los dos lados (R1), y luego saco <span class="math inline">\(\alpha\)</span> de factor común: <span class="math display">\[\alpha m+1&lt;\alpha m+\alpha=\alpha(m+1)\]</span></p>
+<p><strong>Paso 3. Un denominador más grande da una fracción más chica.</strong> Por los pasos 1 y 2, <span class="math inline">\(\lceil\alpha m\rceil&lt;\alpha(m+1)\)</span>, y el numerador <span class="math inline">\(m+1\)</span> es positivo: <span class="math display">\[F=\frac{m+1}{\lceil\alpha m\rceil}&gt;\frac{m+1}{\alpha(m+1)}=\frac1\alpha\]</span> Con <span class="math inline">\(\alpha=1.5\)</span> y <span class="math inline">\(m=4\)</span>: <span class="math inline">\(6&lt;7&lt;7.5\)</span>, y <span class="math inline">\(\frac56&gt;\frac23\)</span> ✓.</p>
 <p>Sin <code>pop</code>, <span class="math inline">\(k\)</span> solo crece hasta la siguiente ampliación, así que la fracción ocupada nunca baja de <span class="math inline">\(\frac1\alpha\)</span> y la vacía nunca supera <span class="math inline">\(1-\frac1\alpha\)</span>. <span class="math inline">\(\square\)</span></p>
 <div class="scroll"><table>
 <thead>
@@ -2351,7 +1586,7 @@ Solución
 <hr/>
 <h2 id="del-papel-al-código">7. Del papel al código</h2>
 <h3 id="invariante-de-representación-y-función-de-abstracción">7.1 Invariante de representación y función de abstracción</h3>
-<p>Una implementación es correcta si (1) <strong>toda operación pública preserva el invariante</strong> y (2) <strong>conmuta con la función de abstracción</strong> <span class="math inline">\(\mathcal A\)</span>, que traduce la representación concreta a la pila abstracta de §4.2: <span class="math display">\[\mathcal{A}(\texttt{data}, k) = \mathsf{push}(\cdots\mathsf{push}(\mathsf{push}(\mathsf{new}, \texttt{data}[0]), \texttt{data}[1])\cdots, \texttt{data}[k-1]).\]</span></p>
+<p>Una implementación es correcta si (1) <strong>toda operación pública preserva el invariante</strong> y (2) <strong>conmuta con la función de abstracción</strong> <span class="math inline">\(\mathcal A\)</span>, que traduce la representación concreta a la pila abstracta de §4.2: <span class="math display">\[\begin{aligned}\mathcal{A}(\texttt{data}, k) = \mathsf{push}(\cdots&amp;\mathsf{push}(\mathsf{push}(\mathsf{new}, \texttt{data}[0]), \texttt{data}[1])\\ &amp;\cdots, \texttt{data}[k-1]).\end{aligned}\]</span></p>
 <div class="scroll"><table>
 <colgroup>
 <col style="width: 50%"/>

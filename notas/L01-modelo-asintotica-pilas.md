@@ -2,7 +2,7 @@
 
 > **Prerrequisitos:** Lección 0 (§1 lógica y cuantificadores, donde también aparecen $O$, $\Omega$, $\Theta$ y $\prec$; §2 demostraciones; §3 inducción; §4 invariantes; §5 logaritmos; §6 pisos y techos; §7 sumatorias: aritmética §7.2, geométrica §7.3 y §7.4, telescópicas §7.6; §11–12 memoria y los tres lenguajes).
 >
-> **Cómo estudiar esta lección:** cada demostración está escrita paso a paso con la justificación de cada renglón. Antes de leer la solución de un ejemplo, intenta el siguiente paso tú mismo.
+> **Cómo estudiar esta lección:** cada demostración está escrita paso a paso: un paso por párrafo, con lo que hago y por qué se vale. Antes de leer la solución de un ejemplo, intenta el siguiente paso tú mismo.
 >
 > **Lab asociado:** `lab01`: `ArrayStack<T>` y `MinStack<T>`.
 
@@ -94,7 +94,6 @@ Nada más y nada menos. "Exhibir" significa escribir valores concretos ("$c = 8$
 
 **La idea central:** la desigualdad $f(n)\le c\,g(n)$ casi nunca se ve directamente. Lo que se hace es construir una **cadena** de desigualdades pequeñas, cada una justificada por una regla de la tabla siguiente, que va de $f(n)$ a $c\cdot g(n)$:
 $$f(n) \;\le\; (\text{algo un poco más grande}) \;\le\; \dots \;\le\; c\cdot g(n).$$
-Cada eslabón se justifica con una de las reglas siguientes.
 
 #### 3.3.2 Las reglas que puedes usar
 
@@ -114,41 +113,52 @@ Todas son álgebra de bachillerato, pero conviene tenerlas a la vista y **citarl
 **¿Por qué valen R4, R5 y R6?**
 
 - **R4.** Si $n\ge1$, multiplicamos ambos lados de $1\le n$ por $n^{k}$, que es positivo (R2): $n^k\le n^{k+1}$. Encadenando con R3 obtenemos $1\le n\le n^2\le\cdots$
-- **R5.** $\lg n\ge0$ porque $n\ge1=2^0$ y $\lg$ es creciente. Para $\lg n\le n$ basta demostrar $n\le 2^n$: luego se aplica $\lg$, que es creciente, a ambos lados, y $\lg(2^n)=n$. La desigualdad $n\le2^n$ se demuestra por inducción abajo, justo después de esta lista.
+- **R5.** $\lg n\ge0$ porque $n\ge1=2^0$ y $\lg$ es creciente. Para $\lg n\le n$ basta demostrar $n\le 2^n$: luego se aplica $\lg$, que es creciente, a ambos lados, y $\lg(2^n)=n$. La desigualdad $n\le2^n$ se demuestra por inducción; la demostración está abajo, plegada.
 - **R6.** $\lg 2 = 1$ y $\lg$ es creciente, así que $n\ge2$ implica $\lg n\ge1$.
 
-**Demostración de $n\le2^n$ (la usa R5).** Con la receta de inducción de L00 §3.1.
+<details><summary>Demostración de n ≤ 2ⁿ (la usa R5)</summary>
 
-**Afirmación $P(n)$:** $n\le2^n$, para todo $n\ge1$.
+Por inducción, con la forma de L00 §3.2.
 
-**Base ($n=1$):** el lado izquierdo es $1$ y el derecho es $2^1=2$. Como $1\le2$, se cumple ✓.
+**Paso 1. Pruebo con números chicos.** Calculo los dos lados para $n=1,2,3$:
+$$
+\begin{aligned}
+n=1:&\quad 1\le2^1=2\ ✓\\
+n=2:&\quad 2\le2^2=4\ ✓\\
+n=3:&\quad 3\le2^3=8\ ✓
+\end{aligned}
+$$
+Funciona, pero probar casos no es demostrar.
 
-**HI:** para un $k\ge1$ fijo pero cualquiera, $k\le2^k$.
+**Paso 2. La base.** El primer dominó es $n=1$, y en el paso 1 ya vimos que cae ✓.
 
-**Paso.** Antes de calcular nada, tres renglones en el cuaderno:
+**Paso 3. Supongo que vale para un $n=k$ cualquiera, con $k\ge1$.** Escribo la desigualdad con $k$ y la encierro en una caja. Es la hipótesis de inducción (HI); además sé que $k\ge1$.
+$$\boxed{\,k\le2^k\,}\qquad\text{(HI)}$$
 
-- **Tengo (la HI):** $k\le2^k$. Además tengo el dato $k\ge1$, que viene con la HI.
-- **Quiero (la meta, $P(k+1)$):** sustituyo cada $n$ por $(k+1)$, con paréntesis:
-$$k+1\ \overset{?}{\le}\ 2^{k+1}.$$
-Meta, traducida: el doble de $2^k$ todavía alcanza a $k+1$.
-- **Plan:** el lado izquierdo de la meta, $k+1$, no contiene a $k$ "solo", que es de lo que habla la HI. Cambio el $1$ por $k$ (se vale porque $k\ge1$) para tener $2k$, que es el doble de $k$; ahí uso la HI, y al final escribo $2\cdot2^k$ como $2^{k+1}$.
+**Paso 4. Escribo lo que quiero: la desigualdad con $n=k+1$.** Cambio cada $n$ por $(k+1)$:
+$$k+1\ \overset{?}{\le}\ 2^{k+1}$$
 
-Todos los renglones empiezan con $k+1\le$: el lado izquierdo de la meta no se toca, y lo que cambia es la cota de la derecha. **Cómo leer la tabla:**
+**Paso 5. Cambio el $1$ por $k$.** Como $1\le k$, sumo $k$ a los dos lados (R1); sumar lo mismo no voltea la desigualdad:
+$$k+1\le k+k$$
 
-- **Expresión:** cada renglón es una desigualdad completa que se lee sola, sin un "$\le$" colgando.
-- **Con $k=3$:** el mismo renglón con números. El lado izquierdo siempre vale $4$, y cada cota de la derecha es al menos $4$. Es una comprobación, no la demostración.
-- **Qué hago · por qué se vale:** primero la acción, en negritas; después la regla que la permite y por qué el $\le$ no se voltea.
+**Paso 6. Junto $k+k$ en $2k$.** Algo más sí mismo es el doble: $x+x=2x$. Es una igualdad, así que el $\le$ se queda:
+$$k+1\le2\cdot k$$
 
-| # | Expresión | Con $k=3$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $k+1\le k+k$ | $4\le3+3=6$ | **Parto del lado izquierdo de la meta y cambio su $1$ por $k$.** Se vale porque $1\le k$; sumando $k$ a cada miembro de $1\le k$ sale este renglón (R1), y sumar lo mismo no voltea la desigualdad. |
-| 2 | $k+1\le 2k$ | $4\le2\cdot3=6$ | **Junto $k+k$ en $2k$.** Se vale porque algo más sí mismo es el doble: $x+x=2x$. Es una igualdad, así que el $\le$ se queda. |
-| 3 | $k+1\le 2\cdot2^k$ | $4\le2\cdot8=16$ | **Uso la HI ← aquí.** Multiplico la HI, $k\le2^k$, por $2>0$ (R2): sale $2k\le2\cdot2^k$, sin voltear. Lo encadeno con el renglón 2 por transitividad (R3). |
-| 4 | $k+1\le 2^{k+1}$ | $4\le16$ | **Escribo $2\cdot2^k$ como $2^{k+1}$.** Se vale por la ley de exponentes $a\cdot a^m=a^{m+1}$. Es la meta, letra por letra ✓ |
+**Paso 7. Busco la caja de la HI.** El $k$ que multiplica al 2 es exactamente el lado izquierdo de la caja:
+$$k+1\le2\cdot\boxed{\,k\,}$$
 
-**¿Por qué esto no es circular?** Lee la última columna de arriba abajo: solo aparecen la HI, el dato $k\ge1$, las reglas R1–R3 y reglas de álgebra ($x+x=2x$, ley de exponentes). La meta nunca justifica un renglón; solo aparece al final, como el lugar al que llegamos.
+**Paso 8. Uso la HI.** La caja dice $k\le2^k$. Multiplico por $2>0$ (R2), sin voltear: $2k\le2\cdot2^k$. Lo encadeno con el paso 7 (R3):
+$$k+1\le2\cdot2^k$$
 
-**Conclusión.** La base demostró $P(1)$. El paso demostró que, para **cualquier** $k\ge1$, si $P(k)$ es verdadera, $P(k+1)$ también. Por el principio de inducción, $n\le2^n$ para todo $n\ge1$, y con eso R5 queda demostrada. $\square$
+**Paso 9. Escribo $2\cdot2^k$ como $2^{k+1}$**, por la ley de exponentes $a\cdot a^m=a^{m+1}$. Es una igualdad:
+$$k+1\le2^{k+1}$$
+Es la meta del paso 4 ✓.
+
+**Paso 10. Compruebo con un número.** Con $k=3$, el lado izquierdo vale $4$. La derecha vale $3+3=6$ en el paso 5, $2\cdot3=6$ en el paso 6 y $2\cdot8=16$ en los pasos 8 y 9. Siempre es al menos $4$ ✓.
+
+**Conclusión.** El paso 2 tiró el primer dominó ($n=1$). Los pasos 3 a 9 demostraron que cualquier dominó $k\ge1$ tumba al siguiente. Entonces $n\le2^n$ para todo $n\ge1$, y con eso R5 queda demostrada. $\square$
+
+</details>
 
 #### 3.3.3 La receta
 
@@ -173,24 +183,22 @@ Todos los renglones empiezan con $k+1\le$: el lado izquierdo de la meta no se to
 
 #### 3.3.4 Ejemplo A (calentamiento): $5n+3\in O(n)$
 
-**Paso 1. Meta.** Encontrar $c$ y $n_0$ con $5n+3\le c\cdot n$ para todo $n\ge n_0$.
+**Paso 1. La meta.** Encontrar $c$ y $n_0$ con $5n+3\le c\cdot n$ para todo $n\ge n_0$. El término $5n$ ya es un múltiplo de $n$; el que estorba es el $3$.
 
-**Paso 2. Término por término.**
-- Término $5n$: ya es un múltiplo de $n$. Cota: $5n\le 5n$. Vale para todo $n$.
-- Término $3$: hay que convertirlo en "algo por $n$". Por R4, para $n\ge1$, $1\le n$. Multiplicando por $3>0$ (R2): $3\le 3n$. **Vale para $n\ge1$.**
+**Paso 2. Convierto el $3$ en algo por $n$.** Por R4, para $n\ge1$ se tiene $1\le n$. Multiplico por $3>0$ (R2), sin voltear. **Vale para $n\ge1$:**
+$$3\le3n$$
 
-**Paso 3. Sumar** (R1). Todos los renglones empiezan con $5n+3\le$: el lado izquierdo de la meta no se toca, y la columna de números usa $n=10$, donde $5n+3=53$.
+**Paso 3. Sumo $5n$ a los dos lados.** Sumar lo mismo no voltea la desigualdad (R1):
+$$5n+3\le5n+3n$$
 
-| # | Expresión | Con $n=10$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $5n+3\le5n+3n$ | $53\le50+30=80$ | **Cambio el $3$ por $3n$.** Se vale por el paso 2: $3\le3n$ para $n\ge1$. Sumo $5n$ a cada miembro (R1), y sumar lo mismo no voltea la desigualdad. |
-| 2 | $5n+3\le8n$ | $53\le80$ | **Junto términos semejantes.** $5n+3n$ es lo mismo que $(5+3)n$ (distributiva al revés). Es una igualdad, así que el $\le$ se queda. |
+**Paso 4. Junto términos semejantes.** $5n+3n$ es lo mismo que $(5+3)\,n$ (distributiva al revés). Es una igualdad, así que el $\le$ se queda:
+$$5n+3\le8n$$
 
-**Paso 4. Elegir.** $c = 5+3 = 8$ y $n_0 = 1$ (el único "a partir de" que anotamos).
+**Paso 5. Elijo.** $c=5+3=8$ y $n_0=1$ (el único "a partir de" que anoté, en el paso 2).
 
-**Paso 5. Verificar.** Con $n=1$: $5+3 = 8\le 8\cdot1 = 8$ ✓ (justo en el borde). Con $n=10$: $53\le80$ ✓.
+**Paso 6. Compruebo con números.** Con $n=1$: $5+3=8\le8\cdot1=8$ ✓ (justo en el borde). Con $n=10$: el paso 3 da $53\le50+30=80$ y el paso 4 da $53\le80$ ✓.
 
-**Paso 6. Demostración limpia.**
+**Paso 7. Demostración limpia.**
 
 > Sean $c=8$ y $n_0=1$. Para $n\ge1$ se cumple $1\le n$, por lo que $3\le3n$; sumando $5n$ a ambos lados, $5n+3\le 8n = c\cdot n$. Por lo tanto, $5n+3\in O(n)$. $\square$
 
@@ -216,41 +224,50 @@ Elegimos $c=1$ y $n_0=1$. ✓
 
 Aquí **no** podemos quitar $-10n$: eso daría $n^2-10n\ge n^2$, que es **falso** (estaríamos diciendo que algo menos $10n$ es mayor que ese mismo algo).
 
-**Truco:** sacrificar una *fracción* del término principal para "pagar" el negativo. Probemos con la mitad, $c=\tfrac12$. Queremos encontrar para qué $n$ se cumple
-$$n^2-10n\;\ge\;\tfrac12 n^2.$$
-Lo despejamos paso a paso. Esta tabla no es una cadena que va de un lado a otro: es una **cadena de equivalencias**. Cada renglón es una desigualdad completa, y para $n\ge1$ cada paso se puede deshacer, así que cada renglón es verdadero **exactamente** para las mismas $n\ge1$ que el anterior. La columna de números usa $n=20$, que resulta ser la frontera (el renglón 5): por eso en cada renglón los dos miembros salen **iguales**. Si algún renglón no diera igualdad en $n=20$, ese paso habría movido la frontera, y estaría mal.
+**Truco:** sacrificar una *fracción* del término principal para "pagar" el negativo. Probemos con la mitad, $c=\tfrac12$, y despejemos para qué $n$ se cumple. Para $n\ge1$ cada paso se puede deshacer, así que los pasos son **equivalentes**: cada desigualdad vale exactamente para las mismas $n\ge1$ que la anterior.
 
-| # | Desigualdad | Con $n=20$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $n^2-10n\ge\tfrac12n^2$ | $400-200=200\ge200$ | **Escribo lo que quiero averiguar.** Todavía no sé para qué $n$ es cierta: es la pregunta, no un dato. |
-| 2 | $n^2-\tfrac12n^2\ge10n$ | $400-200=200\ge200$ | **Sumo $10n-\tfrac12n^2$ a cada miembro y cancelo:** $-10n+10n=0$ y $\tfrac12n^2-\tfrac12n^2=0$. Sumar lo mismo no voltea la desigualdad, y restándolo se regresa al renglón 1. |
-| 3 | $\tfrac12n^2\ge10n$ | $200\ge200$ | **Simplifico el miembro izquierdo.** $n^2-\tfrac12n^2$ es lo mismo que $(1-\tfrac12)\,n^2$ (distributiva al revés). Es una igualdad: nada cambia. |
-| 4 | $\tfrac12n\ge10$ | $10\ge10$ | **Divido cada miembro entre $n$.** Como $n\ge1$, $n>0$, y dividir es multiplicar por $\frac1n>0$ (R2): no se voltea. Multiplicando por $n$ se regresa. |
-| 5 | $n\ge20$ | $20\ge20$ | **Multiplico cada miembro por 2.** Como $2>0$ (R2), no se voltea. Dividiendo entre 2 se regresa. |
+**Paso 1. Escribo la pregunta.** Todavía no sé para qué $n$ es cierta:
+$$n^2-10n\ge\tfrac12n^2$$
 
-Para $n\ge1$, cada renglón equivale al anterior, así que el renglón 1 se cumple exactamente cuando $n\ge20$. (En $n=0$ el renglón 1 también se cumple, $0\ge0$, porque ahí no se puede dividir entre $n$; no importa, porque $n_0$ solo pide que se cumpla de cierto punto en adelante.) Elegimos $c=\tfrac12$ y $n_0=20$.
+**Paso 2. Sumo $10n$ a los dos lados.** A la izquierda, $-10n+10n=0$. Sumar lo mismo no voltea, y restándolo se regresa:
+$$n^2\ge\tfrac12n^2+10n$$
 
-**Verificar:** con $n=20$: $400-200=200\ge\tfrac12\cdot400=200$ ✓ (borde). Con $n=30$: $900-300=600\ge450$ ✓. Con $n=10$ (antes de $n_0$): $100-100=0\ge50$ ✗. Por eso necesitábamos $n_0$.
+**Paso 3. Resto $\tfrac12n^2$ a los dos lados.** A la derecha, $\tfrac12n^2-\tfrac12n^2=0$. Restar lo mismo no voltea, y sumándolo se regresa:
+$$n^2-\tfrac12n^2\ge10n$$
 
-**¿Por qué $\tfrac12$?** Funciona cualquier fracción $0<c<1$. Repitiendo los mismos pasos con $c$ en lugar de $\tfrac12$: el renglón 3 queda $(1-c)\,n^2\ge10n$; el 4, $(1-c)\,n\ge10$; y en vez de multiplicar por 2, divido entre $1-c$, que es positivo porque $c<1$. Queda $n\ge\frac{10}{1-c}$. Una $c$ más cerca de 1 exige una $n_0$ más grande. Lo que **no** funciona es $c\ge1$: con $c=1$ haría falta $0\ge10$, y con $c>1$ el miembro izquierdo $(1-c)\,n$ es negativo para $n\ge1$, así que nunca llega a 10.
+**Paso 4. Simplifico la izquierda.** $n^2-\tfrac12n^2$ es lo mismo que $(1-\tfrac12)\,n^2$ (distributiva al revés). Es una igualdad:
+$$\tfrac12n^2\ge10n$$
+
+**Paso 5. Divido los dos lados entre $n$.** Como $n\ge1$, $n>0$, y dividir es multiplicar por $\frac1n>0$ (R2): no se voltea. Multiplicando por $n$ se regresa:
+$$\tfrac12n\ge10$$
+
+**Paso 6. Multiplico los dos lados por 2.** Como $2>0$ (R2), no se voltea. Dividiendo entre 2 se regresa:
+$$n\ge20$$
+
+**Paso 7. Compruebo con la frontera, $n=20$.** Ahí cada paso debe dar los dos lados **iguales**; si alguno no, ese paso movió la frontera y está mal. Paso 1: $400-200=200$ y $200$. Paso 2: $400$ y $200+200=400$. Paso 3: $200$ y $200$. Paso 4: $200$ y $200$. Paso 5: $10$ y $10$. Paso 6: $20$ y $20$ ✓.
+
+Como los pasos son equivalentes, la desigualdad del paso 1 se cumple exactamente cuando $n\ge20$. Elegimos $c=\tfrac12$ y $n_0=20$.
+
+**Verificar** fuera de la frontera: con $n=30$: $900-300=600\ge450$ ✓. Con $n=10$ (antes de $n_0$): $100-100=0\ge50$ ✗. Por eso necesitábamos $n_0$.
+
+**¿Por qué $\tfrac12$?** Funciona cualquier fracción $0<c<1$: los mismos pasos, con $c$ en lugar de $\tfrac12$, dan $n\ge\frac{10}{1-c}$ (en el último divido entre $1-c>0$). Una $c$ más cerca de 1 exige una $n_0$ más grande: con $c=0.9$, $n\ge100$. Con $c\ge1$ no funciona ninguna: el paso 5 queda $(1-c)\,n\ge10$ con $1-c\le0$, y el lado izquierdo es $\le0$ para toda $n\ge1$.
 
 #### 3.3.7 Ejemplo D (completo): $3n^2+10n\lg n+7\in\Theta(n^2)$
 
 Ahora sí, el ejemplo de la lección, sin saltarse nada.
 
-**Parte (i): cota superior.** Meta: $3n^2+10n\lg n+7\le c\,n^2$.
+**Parte (i): cota superior.** Meta: $3n^2+10n\lg n+7\le c\,n^2$. Acoto cada término por un múltiplo de $n^2$.
 
-*Término 1:* $3n^2$. Ya es múltiplo de $n^2$: $3n^2\le3n^2$, para todo $n$.
+**Paso 1. El término $3n^2$.** Ya es múltiplo de $n^2$. Vale para todo $n$:
+$$3n^2\le3n^2$$
 
-*Término 2:* $10n\lg n$. Necesitamos convertir $n\lg n$ en algo con $n^2$.
-- Por R5, para $n\ge1$: $\lg n\le n$.
-- Multiplicamos ambos lados por $10n$, que es positivo cuando $n\ge1$ (R2):
-$$10n\cdot\lg n\;\le\;10n\cdot n\;=\;10n^2.$$
-- **Vale para $n\ge1$.**
+**Paso 2. El término $10n\lg n$.** Por R5, para $n\ge1$, $\lg n\le n$. Multiplico los dos lados por $10n$, que es positivo cuando $n\ge1$ (R2), sin voltear. **Vale para $n\ge1$:**
+$$10n\lg n\;\le\;10n\cdot n\;=\;10n^2$$
 
-*Término 3:* $7$. Por R4, para $n\ge1$: $1\le n^2$. Multiplicamos por 7 (R2): $7\le7n^2$. **Vale para $n\ge1$.**
+**Paso 3. El término $7$.** Por R4, para $n\ge1$, $1\le n^2$. Multiplico por $7>0$ (R2). **Vale para $n\ge1$:**
+$$7\le7n^2$$
 
-*Sumamos* las tres cotas (R1), lado izquierdo con lado izquierdo y lado derecho con lado derecho:
+**Paso 4. Sumo las tres cotas** (R1), lado izquierdo con lado izquierdo y lado derecho con lado derecho:
 $$
 \begin{array}{rcl}
 3n^2 &\le& 3n^2\\
@@ -260,19 +277,26 @@ $$
 \end{array}
 $$
 
-*Elegimos* $c=3+10+7=20$ y $n_0=\max(1,1,1)=1$.
+**Paso 5. Elijo** $c=3+10+7=20$ y $n_0=\max(1,1,1)=1$.
 
-*Verificamos:* con $n=1$, $f(1)=3+10\cdot1\cdot0+7=10\le20$ ✓. Con $n=4$, $f(4)=48+10\cdot4\cdot2+7=135\le20\cdot16=320$ ✓.
+**Paso 6. Compruebo.** Con $n=1$, $f(1)=3+10\cdot1\cdot0+7=10\le20$ ✓. Con $n=4$, $f(4)=48+10\cdot4\cdot2+7=135\le20\cdot16=320$ ✓.
 
-**Parte (ii): cota inferior.** Meta: $3n^2+10n\lg n+7\ge c\,n^2$.
-- $10n\lg n\ge0$ para $n\ge1$, porque $n>0$ y $\lg n\ge0$ (R5). Lo quitamos (R7).
-- $7\ge0$. Lo quitamos (R7).
-- Queda $3n^2+10n\lg n+7\ge3n^2$. Elegimos $c=3$ y $n_0=1$.
+**Parte (ii): cota inferior.** Meta: $3n^2+10n\lg n+7\ge c\,n^2$. Para una cota inferior puedo **achicar** la expresión.
+
+**Paso 1. Quito $10n\lg n$.** Para $n\ge1$ es $\ge0$, porque $n>0$ y $\lg n\ge0$ (R5). Quitar un término $\ge0$ achica (R7):
+$$3n^2+10n\lg n+7\ge3n^2+7$$
+
+**Paso 2. Quito el $7$.** Como $7\ge0$, quitarlo achica (R7):
+$$3n^2+10n\lg n+7\ge3n^2$$
+
+**Paso 3. Elijo** $c=3$ y $n_0=1$. Con $n=4$: $135\ge48$ ✓.
 
 **Demostración limpia (así se entrega):**
 
 > *(i)* Sean $c=20$ y $n_0=1$. Para $n\ge1$ se tiene $\lg n\le n$ y $1\le n^2$; por lo tanto $10n\lg n\le10n^2$ y $7\le7n^2$. Sumando estas dos desigualdades y $3n^2\le3n^2$ (R1), se obtiene $f(n)\le20n^2$.
+>
 > *(ii)* Sean $c=3$ y $n_0=1$. Para $n\ge1$, $10n\lg n\ge0$ y $7\ge0$, así que $f(n)\ge3n^2$.
+>
 > Por (i) y (ii), $f\in\Theta(n^2)$. $\square$
 
 #### 3.3.8 Ejemplo E: refutar, $n^2\notin O(n)$
@@ -309,35 +333,41 @@ $$
 **P1.** Demuestra $2n^3-5n^2+100\in\Theta(n^3)$.
 <details><summary>Solución</summary>
 
-Sea $f(n)=2n^3-5n^2+100$. Las tres tablas usan $n=5$, donde $f(5)=250-125+100=225$.
+Sea $f(n)=2n^3-5n^2+100$. Para comprobar uso $n=5$, donde $f(5)=250-125+100=225$.
 
-*Superior.* Meta: $f(n)\le c\,n^3$. Todos los renglones empiezan con $f(n)$, y la relación es $=$ o $\le$.
+*Superior.* Meta: $f(n)\le c\,n^3$. Para una cota superior puedo **agrandar** la derecha.
 
-| # | Expresión | Con $n=5$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $f(n)=2n^3-5n^2+100$ | $225$ | **Parto de la definición de $f$.** |
-| 2 | $f(n)\le2n^3+100$ | $225\le250+100=350$ | **Quito $-5n^2$.** Como $-5n^2\le0$, quitarlo agranda la expresión (R8), y agrandar la cota de la derecha conserva el $\le$. |
-| 3 | $f(n)\le2n^3+100n^3$ | $225\le250+12500=12750$ | **Cambio $100$ por $100n^3$, que es mayor o igual.** Para $n\ge1$, $1\le n^3$ (R4); multiplico por $100>0$ (R2). |
-| 4 | $f(n)\le102n^3$ | $225\le102\cdot125=12750$ | **Junto términos semejantes:** $2n^3+100n^3$ es lo mismo que $(2+100)\,n^3$. |
+**Paso 1. Quito $-5n^2$.** Como $-5n^2\le0$, quitarlo agranda (R8):
+$$f(n)\le2n^3+100$$
+
+**Paso 2. Cambio $100$ por $100n^3$, que es mayor o igual.** Para $n\ge1$, $1\le n^3$ (R4); multiplico por $100>0$ (R2) y sale $100\le100n^3$. Sumo $2n^3$ a los dos lados (R1):
+$$f(n)\le2n^3+100n^3$$
+
+**Paso 3. Junto términos semejantes.** $2n^3+100n^3$ es lo mismo que $(2+100)\,n^3$:
+$$f(n)\le102n^3$$
+
+**Paso 4. Compruebo con $n=5$.** $225\le250+100=350$ (paso 1), $225\le250+12500=12750$ (paso 2) y $225\le102\cdot125=12750$ (paso 3) ✓.
 
 Entonces $c=102$ y $n_0=1$.
 
-*Inferior.* Meta: $f(n)\ge c\,n^3$. El $+100$ es positivo y se puede quitar (R7), pero el $-5n^2$ no: se paga con la mitad del término principal. Primero busco cuándo $2n^3-5n^2\ge n^3$ (es $c=1$, la mitad de $2$), despejando como en el Ejemplo C: para $n\ge1$ es una cadena de **equivalencias**, y $n=5$ es la frontera, así que cada renglón se cumple con igualdad.
+*Inferior.* Meta: $f(n)\ge c\,n^3$. El $+100$ es positivo y se puede quitar (R7), pero el $-5n^2$ no: se paga con la mitad del término principal, es decir, con $c=1$ (la mitad de $2$). Eso funciona a partir de $n=5$.
 
-| # | Desigualdad | Con $n=5$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $2n^3-5n^2\ge n^3$ | $250-125=125\ge125$ | **Escribo lo que quiero averiguar.** Es la pregunta, no un dato. |
-| 2 | $2n^3-n^3\ge5n^2$ | $250-125=125\ge125$ | **Sumo $5n^2-n^3$ a cada miembro y cancelo:** $-5n^2+5n^2=0$ y $n^3-n^3=0$. Sumar lo mismo no voltea, y restándolo se regresa. |
-| 3 | $n^3\ge5n^2$ | $125\ge125$ | **Simplifico:** $2n^3-n^3$ es lo mismo que $n^3$. |
-| 4 | $n\ge5$ | $5\ge5$ | **Divido cada miembro entre $n^2$.** Como $n\ge1$, $n^2>0$ (R2), no se voltea; multiplicando por $n^2$ se regresa. |
+**Paso 1. Quito el $+100$.** Como $100\ge0$, quitarlo achica (R7), y achicar la derecha conserva el $\ge$:
+$$f(n)\ge2n^3-5n^2$$
 
-Para $n\ge1$, cada renglón equivale al anterior, así que el renglón 1 vale exactamente para $n\ge5$. Ahora la cadena, con todos los renglones anclados en $f(n)$ y la relación $=$ o $\ge$:
+**Paso 2. Para $n\ge5$, comparo $5n^2$ con $n^3$.** Multiplico $5\le n$ por $n^2>0$ (R2), sin voltear:
+$$5n^2\le n^3$$
 
-| # | Expresión | Con $n=5$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $f(n)=2n^3-5n^2+100$ | $225$ | **Parto de la definición de $f$.** |
-| 2 | $f(n)\ge2n^3-5n^2$ | $225\ge125$ | **Quito el $+100$.** Como $100\ge0$, quitarlo achica la expresión (R7), y achicar la cota de la derecha conserva el $\ge$. |
-| 3 | $f(n)\ge n^3$ | $225\ge125$ | **Uso el despeje.** Para $n\ge5$, la tabla anterior da $2n^3-5n^2\ge n^3$; lo encadeno con el renglón 2 por transitividad (R3). |
+**Paso 3. Multiplico por $-1$, y se voltea** (R2: con un negativo la desigualdad se invierte):
+$$-5n^2\ge-n^3$$
+
+**Paso 4. Sumo $2n^3$ a los dos lados** (R1); sumar lo mismo no voltea:
+$$2n^3-5n^2\ge n^3$$
+
+**Paso 5. Encadeno con el paso 1** (R3):
+$$f(n)\ge n^3$$
+
+**Paso 6. Compruebo con $n=5$.** Paso 1: $225\ge250-125=125$. Paso 2: $125\le125$. Paso 3: $-125\ge-125$. Paso 4: $125\ge125$. Paso 5: $225\ge125$ ✓.
 
 Entonces $c=1$ y $n_0=5$.
 </details>
@@ -345,13 +375,15 @@ Entonces $c=1$ y $n_0=5$.
 **P2.** Demuestra $n\lg n+50n\in O(n\lg n)$. ¿Por qué **no** funciona $n_0=1$?
 <details><summary>Solución</summary>
 
-Sea $f(n)=n\lg n+50n$. Todos los renglones empiezan con $f(n)$; la columna de números usa $n=4$, donde $\lg4=2$ y $f(4)=8+200=208$.
+Sea $f(n)=n\lg n+50n$. Para comprobar uso $n=4$, donde $\lg4=2$ y $f(4)=8+200=208$.
 
-| # | Expresión | Con $n=4$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $f(n)=n\lg n+50n$ | $208$ | **Parto de la definición de $f$.** |
-| 2 | $f(n)\le n\lg n+50n\lg n$ | $208\le8+400=408$ | **Cambio $50n$ por $50n\lg n$, que es mayor o igual.** Para $n\ge2$, $1\le\lg n$ (R6); multiplico por $50n>0$ (R2) y sale $50n\le50n\lg n$. |
-| 3 | $f(n)\le51\,n\lg n$ | $208\le51\cdot8=408$ | **Junto términos semejantes:** $1\cdot n\lg n+50\,n\lg n$ es lo mismo que $(1+50)\,n\lg n$. |
+**Paso 1. Cambio $50n$ por $50n\lg n$, que es mayor o igual.** Para $n\ge2$, $1\le\lg n$ (R6); multiplico por $50n>0$ (R2) y sale $50n\le50n\lg n$. Sumo $n\lg n$ a los dos lados (R1):
+$$f(n)\le n\lg n+50n\lg n$$
+
+**Paso 2. Junto términos semejantes.** $1\cdot n\lg n+50\,n\lg n$ es lo mismo que $(1+50)\,n\lg n$:
+$$f(n)\le51\,n\lg n$$
+
+**Paso 3. Compruebo con $n=4$.** $208\le8+400=408$ (paso 1) y $208\le51\cdot8=408$ (paso 2) ✓.
 
 Entonces $c=51$ y $n_0=2$.
 
@@ -361,7 +393,19 @@ Con $n_0=1$ falla porque en $n=1$ se tiene $g(1)=1\cdot\lg1=0$, pero $f(1)=0+50=
 **P3.** Demuestra $n\notin O(\sqrt n)$.
 <details><summary>Solución</summary>
 
-Negación: $\forall c\ \forall n_0\ \exists n\ge n_0:\ n>c\sqrt n$. Dividiendo entre $\sqrt n>0$, la condición es $\sqrt n>c$, es decir, $n>c^2$. Dados $c$ y $n_0$, tomamos $n=\max(n_0,\lfloor c^2\rfloor+1)$. Entonces $n\ge\lfloor c^2\rfloor+1>c^2$ (mismo argumento del piso que en el Ejemplo E), así que $\sqrt n>c$ (la raíz es creciente), y multiplicando por $\sqrt n>0$ se obtiene $n>c\sqrt n$. $\square$
+**Paso 1. Niego la definición**, como en el Ejemplo E:
+$$\forall c>0\ \forall n_0\ \exists n\ge n_0:\ n>c\sqrt n$$
+
+**Paso 2. Busco cuándo falla la cota.** Divido $n>c\sqrt n$ entre $\sqrt n>0$ (R2), sin voltear, y queda $\sqrt n>c$. Como los dos lados son positivos, elevo al cuadrado:
+$$n>c^2$$
+
+**Paso 3. Construyo la $n$.** Dados $c$ y $n_0$, tomo
+$$n=\max\!\big(n_0,\ \lfloor c^2\rfloor+1\big)$$
+Por el $\max$, $n\ge n_0$; y $n\ge\lfloor c^2\rfloor+1>c^2$, con el mismo argumento del piso que en el Ejemplo E.
+
+**Paso 4. Verifico.** De $n>c^2$ sale $\sqrt n>c$ (la raíz es creciente). Multiplico por $\sqrt n>0$ (R2):
+$$n>c\sqrt n$$
+Como $c$ y $n_0$ eran cualesquiera, $n\notin O(\sqrt n)$. $\square$
 </details>
 
 **P4.** Demuestra $2^{n+1}\in\Theta(2^n)$.
@@ -387,21 +431,42 @@ $L=0 \Rightarrow f\in o(g)$; $\ 0<L<\infty \Rightarrow f\in\Theta(g)$; $\ L=\inf
 
 Recuerda la definición de límite: $\lim f(n)/g(n)=L$ significa que para **cada** tolerancia $\varepsilon>0$ existe $N$ tal que, para todo $n\ge N$, $\big|f(n)/g(n)-L\big|<\varepsilon$.
 
-La hipótesis "$g(n)>0$ a partir de algún punto" da un $N'$ tal que $g(n)>0$ para todo $n\ge N'$; lo usamos en el renglón 5. Para la columna de números imagina que $L=2$ y que en cierta $n\ge\max(N,N')$ se tiene $f(n)=25$ y $g(n)=10$: el cociente es $2.5$, a distancia $0.5$ de $L$. Desde el renglón 3, cada renglón es una desigualdad doble sobre la misma cantidad, $\frac{f(n)}{g(n)}$ o $f(n)$, que se queda en medio.
+La hipótesis "$g(n)>0$ a partir de algún punto" da un $N'$ tal que $g(n)>0$ para todo $n\ge N'$; la uso en el paso 5.
 
-| # | Qué escribimos | Con números | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $\varepsilon=\frac L2$ | $\varepsilon=1$ | **Elijo la tolerancia.** Es positiva porque $L>0$. Quiero que el cociente quede **lejos de 0**, y la mitad de $L$ lo logra. |
-| 2 | $\big\lvert\frac{f(n)}{g(n)}-L\big\rvert<\frac L2$ para $n\ge N$ | $\lvert2.5-2\rvert=0.5<1$ | **Aplico la definición de límite** con ese $\varepsilon$: me da un $N$ a partir del cual se cumple. |
-| 3 | $-\frac L2<\frac{f(n)}{g(n)}-L<\frac L2$ | $-1<0.5<1$ | **Quito el valor absoluto.** Se vale porque $\lvert x\rvert<a$ equivale a $-a<x<a$. |
-| 4 | $\frac L2<\frac{f(n)}{g(n)}<\frac{3L}2$ | $1<2.5<3$ | **Sumo $L$ a las tres partes.** Sumar lo mismo no voltea ningún $<$; y $L+\frac L2=\frac{3L}{2}$. |
-| 5 | $\frac L2\,g(n)<f(n)<\frac{3L}2\,g(n)$ | $10<25<30$ | **Multiplico las tres partes por $g(n)$.** Para $n\ge N'$, $g(n)>0$ (R2), así que ningún $<$ se voltea. Desde aquí, $n\ge\max(N,N')$. |
-| 6 | $f\in O(g)$ con $c=\frac{3L}2$, $n_0=\max(N,N')$ | $c=3$ | **Leo la mitad derecha del renglón 5**, $f(n)<\frac{3L}2\,g(n)$: es la definición de $O$. |
-| 7 | $f\in\Omega(g)$ con $c=\frac L2$, $n_0=\max(N,N')$ | $c=1$ | **Leo la mitad izquierda del renglón 5**, $f(n)>\frac L2\,g(n)$: es la definición de $\Omega$. $\square$ |
+**Paso 1. Elijo la tolerancia.** Quiero que el cociente quede **lejos de 0**, y la mitad de $L$ lo logra. Es positiva porque $L>0$:
+$$\varepsilon=\frac L2$$
 
-**Ejemplo D con el atajo:**
-$$\frac{3n^2+10n\lg n+7}{n^2}=3+\frac{10\lg n}{n}+\frac7{n^2}\ \longrightarrow\ 3+0+0=3,$$
-donde el primer $=$ divide cada término del numerador entre $n^2$ ($\frac{3n^2}{n^2}=3$ y $\frac{10n\lg n}{n^2}=\frac{10\lg n}{n}$), y el límite es $3$ porque $\frac{\lg n}{n}\to0$ y $\frac7{n^2}\to0$. Para el primero, por la regla de L'Hôpital (regla de cálculo, no vista en L00; se puede usar porque $\lg n\to\infty$ y $n\to\infty$), con $n$ como variable real: $\lg n=\frac{\ln n}{\ln 2}$ (cambio de base), así que su derivada es $\frac{1}{n\ln2}$, y $\frac{(\lg n)'}{(n)'}=\frac{1/(n\ln2)}{1}=\frac{1}{n\ln2}\to0$. Como $0<3<\infty$, se concluye $f\in\Theta(n^2)$.
+**Paso 2. Aplico la definición de límite** con ese $\varepsilon$. Me da un $N$ tal que, para todo $n\ge N$,
+$$\Big|\frac{f(n)}{g(n)}-L\Big|<\frac L2$$
+
+**Paso 3. Quito el valor absoluto.** Se vale porque $|x|<a$ equivale a $-a<x<a$:
+$$-\frac L2<\frac{f(n)}{g(n)}-L<\frac L2$$
+
+**Paso 4. Sumo $L$ a las tres partes.** Sumar lo mismo no voltea ningún $<$. A la izquierda, $-\frac L2+L=\frac L2$; a la derecha, $\frac L2+L=\frac{3L}{2}$:
+$$\frac L2<\frac{f(n)}{g(n)}<\frac{3L}{2}$$
+
+**Paso 5. Multiplico las tres partes por $g(n)$.** Para $n\ge N'$, $g(n)>0$ (R2), así que ningún $<$ se voltea. Desde aquí, $n\ge\max(N,N')$:
+$$\frac L2\,g(n)<f(n)<\frac{3L}{2}\,g(n)$$
+
+**Paso 6. Leo la mitad derecha.** $f(n)<\frac{3L}{2}\,g(n)$ es la definición de $O$: $f\in O(g)$ con $c=\frac{3L}2$ y $n_0=\max(N,N')$.
+
+**Paso 7. Leo la mitad izquierda.** $f(n)>\frac L2\,g(n)$ es la definición de $\Omega$: $f\in\Omega(g)$ con $c=\frac L2$ y el mismo $n_0$. Con los pasos 6 y 7, $f\in\Theta(g)$.
+
+**Paso 8. Compruebo con números.** Imagina que $L=2$ y que en cierta $n\ge\max(N,N')$ se tiene $f(n)=25$ y $g(n)=10$, así que el cociente es $2.5$. Paso 1: $\varepsilon=1$. Paso 2: $|2.5-2|=0.5<1$. Paso 3: $-1<0.5<1$. Paso 4: $1<2.5<3$. Paso 5: $10<25<30$. Pasos 6 y 7: $c=3$ y $c=1$ ✓. $\square$
+
+**Ejemplo D con el atajo.**
+
+**Paso 1. Divido cada término del numerador entre $n^2$.** $\frac{3n^2}{n^2}=3$ y $\frac{10n\lg n}{n^2}=\frac{10\lg n}{n}$:
+$$\frac{3n^2+10n\lg n+7}{n^2}=3+\frac{10\lg n}{n}+\frac7{n^2}$$
+
+**Paso 2. $\frac7{n^2}\to0$**, porque el numerador está fijo y el denominador crece sin límite.
+
+**Paso 3. $\frac{\lg n}{n}\to0$.** Uso la regla de L'Hôpital (regla de cálculo, no vista en L00; se puede usar porque $\lg n\to\infty$ y $n\to\infty$), con $n$ como variable real. Como $\lg n=\frac{\ln n}{\ln 2}$ (cambio de base), su derivada es $\frac{1}{n\ln2}$:
+$$\frac{(\lg n)'}{(n)'}=\frac{1/(n\ln2)}{1}=\frac{1}{n\ln2}\ \longrightarrow\ 0$$
+
+**Paso 4. Junto los límites.**
+$$3+\frac{10\lg n}{n}+\frac7{n^2}\ \longrightarrow\ 3+0+0=3$$
+Como $0<3<\infty$, se concluye $f\in\Theta(n^2)$.
 
 **Cuidado: el recíproco es falso.** $f(n)=n(2+\sin n)$ cumple $n\le f(n)\le3n$ (porque $-1\le\sin n\le1$), así que $f\in\Theta(n)$ con $c=1$ y $c=3$. Sin embargo $f(n)/n=2+\sin n$ oscila y **no tiene límite**. Si el límite no existe, el atajo no dice nada y hay que volver a la definición.
 
@@ -785,7 +850,7 @@ Lo demostramos tres veces porque cada método es una herramienta distinta que vo
 
 #### (a) Método agregado: "cuenta todo y divide"
 
-**Idea:** calcular el costo **total** de la secuencia y dividir entre $n$. Primero resolvemos el caso de solo `push` y después vemos qué cambia con `pop`.
+**Idea:** calcular el costo **total** de la secuencia y dividir entre $n$. Resolvemos el caso de solo `push`; con `pop` intercalados, el conteo lo hacen (b) y (c).
 
 **Paso 1. Separar el costo en dos partes.** Cada `push` hace exactamente una escritura; algunos, además, copian. Entonces:
 $$T(n)=\underbrace{n}_{\text{escrituras}}+\underbrace{(\text{número total de copias})}_{\text{lo difícil}}.$$
@@ -799,60 +864,29 @@ $$2^0+2^1+2^2+\dots+2^j=\sum_{i=0}^{j}2^i.$$
 
 **Paso 4. Calcular la suma.** Una suma de potencias de 2 consecutivas, empezando en 1, es *la siguiente potencia menos 1*:
 $$\sum_{i=0}^{j}2^i=2^{j+1}-1.$$
-*¿Por qué?* En binario, $1+2+4+8=1111_2$, y sumarle 1 da $10000_2=16$. Formalmente es el Ejercicio 0.2 de L00; aquí está completo, por inducción. Como $j$ ya es un número fijo, la afirmación usa otra letra, $t$, y al final la aplico con $t=j$.
+*¿Por qué?* En binario, $1+2+4+8=1111_2$, y sumarle 1 da $10000_2=16$. Es el Ejercicio 0.2 de L00, que se demuestra por inducción.
 
-**Afirmación $P(t)$:** $\sum_{i=0}^{t}2^i=2^{t+1}-1$, para todo $t\ge0$.
+Lo único que sé de $j$ es cómo se eligió en el paso 3, y lo encierro en una caja:
+$$\boxed{\,2^j<n\,}$$
 
-**Base ($t=0$):** la suma tiene un solo término, $2^0=1$, y el lado derecho es $2^{0+1}-1=1$ ✓.
+**Paso 5. Sustituyo las copias por su suma.** Por el paso 1, $T(n)=n+\text{copias}$, y por el paso 4 las copias valen $2^{j+1}-1$:
+$$T(n)=n+(2^{j+1}-1)$$
 
-**HI:** para un $k\ge0$ fijo pero cualquiera, $\sum_{i=0}^{k}2^i=2^{k+1}-1$.
+**Paso 6. Quito el $-1$.** Quitar un término negativo da algo estrictamente más grande (R8, y $-1<0$), así que la relación pasa a ser $<$:
+$$T(n)<n+2^{j+1}$$
 
-**Paso.**
+**Paso 7. Escribo $2^{j+1}$ como $2\cdot2^j$ y aparece la caja.** Es la ley de exponentes; es una igualdad:
+$$T(n)<n+2\cdot\boxed{\,2^j\,}$$
 
-- **Tengo (la HI):** la suma hasta $k$ vale $2^{k+1}-1$.
-- **Quiero (la meta, $P(k+1)$):** sustituyo cada $t$ por $(k+1)$:
-$$\sum_{i=0}^{k+1}2^i\ \overset{?}{=}\ 2^{(k+1)+1}-1=2^{k+2}-1.$$
-- **Plan:** separo el último término del lado izquierdo de la meta, para que aparezca la suma hasta $k$, que es de la que habla la HI.
+**Paso 8. Uso la caja.** Dice $2^j<n$; multiplico por $2>0$ (R2), sin voltear: $2\cdot2^j<2n$. Agrandar la cota de la derecha conserva el $<$:
+$$T(n)<n+2n$$
 
-Le pongo nombre al lado izquierdo de la meta, $S=\sum_{i=0}^{k+1}2^i$. La columna de números usa $k=2$, donde $S=1+2+4+8=15$ (y la HI dice $1+2+4=7=2^3-1$). La tabla se lee como la de R5 (§3.3.2).
+**Paso 9. Junto términos semejantes:** $n+2n$ es lo mismo que $(1+2)\,n$.
+$$T(n)<3n$$
 
-| # | Expresión | Con $k=2$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $S=\sum_{i=0}^{k+1}2^i$ | $1+2+4+8=15$ | **Parto del lado izquierdo de la meta.** Es la definición de $S$. |
-| 2 | $S=\Big(\sum_{i=0}^{k}2^i\Big)+2^{k+1}$ | $(1+2+4)+8=15$ | **Separo el último término** ($i=k+1$). Se vale porque la suma hasta $k+1$ es la suma hasta $k$ más el término $k+1$. |
-| 3 | $S=(2^{k+1}-1)+2^{k+1}$ | $(8-1)+8=15$ | **Uso la HI ← aquí:** el paréntesis vale $2^{k+1}-1$. |
-| 4 | $S=2\cdot2^{k+1}-1$ | $2\cdot8-1=15$ | **Junto los dos $2^{k+1}$.** Se vale porque algo más sí mismo es el doble: $x+x=2x$. |
-| 5 | $S=2^{k+2}-1$ | $16-1=15$ | **Escribo $2\cdot2^{k+1}$ como $2^{k+2}$**, por la ley de exponentes $a\cdot a^m=a^{m+1}$. Es el lado derecho de la meta ✓ |
+**Paso 10. Compruebo con la tabla de §6.2.** Con $n=9$, el mayor $j$ con $2^j<9$ es $j=3$. Copias: $1+2+4+8=15=2^4-1$ ✓. Paso 5: $T(9)=9+15=24$, como en la tabla ✓. Paso 6: $24<9+16=25$. Paso 8: $24<9+18=27$. Paso 9: $24<27=3\cdot9$ ✓. Con solo `push`, el teorema queda demostrado. $\square$
 
-La última columna solo cita la HI y reglas de álgebra: no es circular. La base demostró $P(0)$ y el paso demostró que $P(k)$ implica $P(k+1)$ para cualquier $k\ge0$; por el principio de inducción, la fórmula vale para todo $t\ge0$, y en particular para $t=j$. $\square$
-
-**Pasos 5 y 6. Acotar el total usando lo único que sabemos de $j$.**
-
-- **Tengo:** $T(n)=n+\text{copias}$ (paso 1); $\text{copias}=2^{j+1}-1$ (paso 4); y $2^j<n$, por cómo se eligió $j$ (paso 3).
-- **Quiero:** $T(n)\ \overset{?}{<}\ 3n$.
-- **Plan:** cambiar las copias por algo un poco más grande que dependa solo de $n$.
-
-Todos los renglones empiezan con $T(n)$, y la relación es $=$ o $<$. La columna de números usa $n=9$, donde $j=3$ y $T(9)=24$ (la tabla de §6.2).
-
-| # | Expresión | Con $n=9$, $j=3$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $T(n)=n+\text{copias}$ | $9+15=24$ | **Parto del paso 1.** |
-| 2 | $T(n)=n+(2^{j+1}-1)$ | $9+(16-1)=24$ | **Sustituyo las copias** por lo que vale su suma (paso 4). |
-| 3 | $T(n)<n+2^{j+1}$ | $24<9+16=25$ | **Quito el $-1$.** Quitar un término negativo da algo estrictamente más grande (R8, y $-1<0$), así que la relación pasa a ser $<$. |
-| 4 | $T(n)<n+2n$ | $24<9+18=27$ | **Cambio $2^{j+1}$ por $2n$, que es más grande.** De $2^j<n$, multiplicando por $2>0$ (R2), sale $2^{j+1}<2n$. Agrandar la cota de la derecha conserva el $<$. |
-| 5 | $T(n)<3n$ | $24<27$ | **Junto términos semejantes:** $n+2n$ es lo mismo que $(1+2)\,n$. $\square$ |
-
-**Paso 7. Verificar con la tabla.** Con $n=9$, el mayor $j$ con $2^j<9$ es $j=3$. Copias: $1+2+4+8=15=2^4-1$ ✓. Total: $9+15=24$ ✓ (coincide con la tabla), y $24<27=3\cdot9$ ✓.
-
-**Paso 8. ¿Y si hay `pop` intercalados?** Ahora el tamaño sube y baja, y el conteo de los pasos 2–3 ya no aplica tal cual. Lo arreglamos con una observación:
-
-> **Afirmación.** Si una duplicación copia $m$ elementos (pasa de capacidad $m$ a $2m$), entonces desde la duplicación anterior hubo **al menos $m/2$ push**.
->
-> *Demostración.* Si $m=1$, la duplicación la dispara un push, y $1\ge\frac12$ ✓. Si $m\ge2$, la capacidad llegó a $m$ en la duplicación anterior, que pasó de $m/2$ a $m$: copió $m/2$ elementos y luego escribió el que llegaba, así que dejó $k=m/2+1$. La duplicación actual ocurre cuando $k=m$ y llega otro `push`. Entre las dos, cada `push` sumó 1 a $k$ y cada `pop` restó 1. Para subir de $m/2+1$ a $m$, $k$ tuvo que ganar $m-(m/2+1)=m/2-1$ en neto, así que hubo al menos $m/2-1$ push (los pop solo obligan a que haya **más**). Sumando el push que dispara la duplicación: al menos $m/2$. $\square$
->
-> *Con números* ($m=8$): la duplicación anterior dejó $k=5$ con capacidad $8$. Para llegar a $k=8$ hacen falta al menos 3 push, y el push que dispara la duplicación es el cuarto: $4=8/2$ ✓.
-
-Entonces le **cobramos** cada copia de $m$ elementos a $m/2$ de esos push, a 2 unidades cada uno ($2\cdot m/2=m$; si $m=1$, se le cobra 1 al push que la dispara). Ningún push paga dos veces: los push cobrados para una duplicación ocurren **después** de la duplicación anterior y **hasta** la actual (incluido el que la dispara), así que las ventanas de dos duplicaciones distintas no se traslapan. Cada push paga a lo más $1$ (su escritura) $+\,2$ (su parte de una copia) $=3$, y cada pop paga 1, así que el total es $\le3n$. Y es estrictamente menor (como dice el teorema), porque el primer push no copia nada y paga solo 1. $\square$
+**Paso 11. ¿Y con `pop`?** El conteo directo se complica; los métodos (b) y (c) lo resuelven sin esfuerzo.
 
 ---
 
@@ -867,8 +901,8 @@ Entonces le **cobramos** cada copia de $m$ elementos a $m/2$ de esos push, a 2 u
 - 🪙 1 se ahorra para la **copia futura de $x$**;
 - 🪙 1 se ahorra para la copia futura de un elemento **viejo**, que ya gastó su moneda en la duplicación anterior.
 
-**Paso 3. Convertir la intuición en un invariante.** "Intuición" no es demostración. Necesitamos una fórmula para el saldo:
-$$\textbf{Invariante: }\quad B\;\ge\;2\cdot\max\!\left(0,\ k-\tfrac m2\right).$$
+**Paso 3. Convertir la intuición en un invariante.** "Intuición" no es demostración. Necesitamos una fórmula para el saldo. La encierro en una caja, porque es lo que vamos a mantener y a usar:
+$$\boxed{\,B\;\ge\;2\cdot\max\!\left(0,\ k-\tfrac m2\right)\,}\qquad\text{(invariante)}$$
 En palabras: por cada elemento por **encima de la mitad** de la capacidad hay 2 monedas en el banco.
 
 *¿De dónde sale?* Se diseña **hacia atrás**. En el momento de copiar ($k=m$) necesitamos $m$ monedas. La fórmula da $2\cdot(m-m/2)=m$. Exacto.
@@ -877,61 +911,38 @@ En palabras: por cada elemento por **encima de la mitad** de la capacidad hay 2 
 
 *Base:* pila vacía, $k=m=0$, $B=0$. La cota es $2\max(0,0)=0\le0$ ✓.
 
-*Paso inductivo:* suponemos el invariante antes de una operación y lo demostramos después. Hay cuatro casos.
+*Paso inductivo:* supongo que la caja vale antes de una operación y demuestro que vale después. Hay cuatro casos.
 
-**Caso 1: `push` sin duplicar ($k<m$).** Costo real 1, pagó 3, el banco recibe $+2$.
-*HI:* antes de la operación, $B\ge2\max(0,k-\frac m2)$. *Meta:* después, con $k+1$ en lugar de $k$ (la capacidad no cambia), $B+2\ge2\max(0,k+1-\frac m2)$.
-Llamo $a=k-\frac m2$. ¿Cuánto puede subir $\max(0,a)$ al cambiar $a$ por $a+1$? Dos casos:
-- si $a\ge0$: $\max(0,a+1)-\max(0,a)=(a+1)-a=1$;
-- si $a<0$: $\max(0,a)=0$ y $a+1<1$, así que $\max(0,a+1)<1$; sube menos de 1.
+*Caso 1: `push` sin duplicar ($k<m$).* Costo real 1 y pagó 3: el banco pasa de $B$ a $B+2$, $k$ pasa a $k+1$ y la capacidad no cambia.
 
-En ambos casos sube **a lo más** 1: para todo $a$, $\max(0,a+1)\le\max(0,a)+1$. Con ese dato armo la cadena.
+- Si $k\ge\frac m2$: la cota pasa de $2(k-\frac m2)$ a $2(k+1-\frac m2)$, es decir, sube exactamente 2. El banco también sube 2 ✓.
+- Si $k<\frac m2$: la cota antes era 0, y después $k+1-\frac m2<1$, así que la cota nueva es $<2$. Como $B\ge0$ (la caja), $2\le B+2$ ✓.
 
-- **Tengo:** la HI, $2\max(0,k-\frac m2)\le B$, y el dato de arriba.
-- **Quiero:** la cota después del push no pasa del saldo nuevo, $2\max(0,k+1-\frac m2)\ \overset{?}{\le}\ B+2$.
-- **Plan:** hacer aparecer $a=k-\frac m2$ dentro de la cota nueva, usar el dato, y al final usar la HI.
+*Caso 2: `push` que duplica ($k=m\ge1$).* Costo real: $m$ copias más 1 escritura. Aquí el invariante se **usa** para pagar.
 
-Le pongo nombre a la cota después del push: $C'=2\max(0,\,k+1-\frac m2)$. Todos los renglones empiezan con $C'$. La columna de números usa $k=5$, $m=8$ y $B=2$ antes del push: ahí $a=1$, la HI se cumple ($2\max(0,1)=2\le2$) y $C'=2\max(0,2)=4$. Es un caso justo, sin holgura: todos los renglones valen 4.
+- *Pongo $k=m$ en la caja.* Como $m-\frac m2=\frac m2\ge0$, el $\max$ vale $\frac m2$:
+  $$B\ge2\max\!\big(0,\ m-\tfrac m2\big)=2\cdot\tfrac m2=m$$
+  **Hay suficiente** para pagar las $m$ copias, y queda $B-m\ge0$.
+- *Pago la escritura y deposito.* La escritura se paga con 1 de las 3 monedas y las otras 2 van al banco: el saldo nuevo es $B-m+2\ge2$.
+- *La cota en el estado nuevo.* Ahora $k=m+1$ y la capacidad es $2m$, cuya mitad es $m$: la cota es $2\max(0,(m+1)-m)=2$, y el saldo es $\ge2$ ✓.
+- *Con números* (push #5 de §6.2, $m=4$). Si sigues los push 1 a 4 con estos precios, el banco queda en $2,3,3,5$. Antes del push #5, $B=5\ge4$ ✓; paga 4 copias y queda 1; paga la escritura, deposita 2 y queda $3\ge2$ ✓.
 
-| # | Expresión | Con $k=5$, $m=8$, $B=2$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $C'=2\max\!\big(0,(k-\tfrac m2)+1\big)$ | $2\max(0,1+1)=4$ | **Reagrupo** $k+1-\frac m2$ como $(k-\frac m2)+1$, para que aparezca $a$. Se vale porque en una suma el orden y los paréntesis no cambian el resultado. |
-| 2 | $C'\le2\big(\max(0,k-\tfrac m2)+1\big)$ | $4\le2\,(1+1)=4$ | **Uso el dato:** $\max(0,a+1)\le\max(0,a)+1$. Lo multiplico por $2>0$ (R2), así que el $\le$ no se voltea. |
-| 3 | $C'\le2\max(0,k-\tfrac m2)+2$ | $4\le2+2=4$ | **Abro el paréntesis.** Se vale por la distributiva: $2(x+1)=2x+2$. |
-| 4 | $C'\le B+2$ | $4\le2+2=4$ | **Uso la HI ← aquí:** $2\max(0,k-\frac m2)\le B$. Sumo 2 a cada miembro (R1) y encadeno con el renglón 3 (R3). Es la meta ✓ |
+*Caso 3: el primer `push` ($k=m=0$).* Costo 1 (no hay nada que copiar) y el banco recibe $+2$, así que $B=2$. Estado: $k=1$, $m=1$. La cota es $2\max(0,1-\frac12)=1\le2$ ✓.
 
-**Caso 2: `push` que duplica ($k=m\ge1$).** Costo real: $m$ copias + 1 escritura.
-- **Aquí se usa el invariante:** antes de la operación, con $k=m$, $B\ge2\cdot(m-\frac m2)=m$ (porque $m-\frac m2=\frac m2$ y $2\cdot\frac m2=m$). **Hay suficiente** para pagar las $m$ copias. Tras pagarlas, $B\ge0$.
-- La escritura se paga con la moneda 1 y las otras 2 se depositan: $B\ge2$.
-- Estado nuevo: $k=m+1$ y capacidad $2m$. La cota es $2\max(0,(m+1)-m)=2$. Como $B\ge2$, se cumple ✓.
+*Caso 4: `pop`.* Costo 1 y pagó 1: el banco no cambia y $k$ pasa a $k-1$. Si $k-1\ge\frac m2$, la cota baja 2; si no, vale 0. No sube, y $B$ no cambia ✓.
 
-**Caso 3: el primer `push` ($k=m=0$).** Costo 1 (no hay nada que copiar) y el banco recibe $+2$, así que $B=2$. Estado: $k=1$, $m=1$. La cota es $2\max(0,1-\frac12)=1\le2$ ✓.
+**Paso 5. El costo real es lo pagado menos lo que queda en el banco.** Por el paso 4, el banco nunca es negativo:
+$$\text{costo real total}\;\le\;\text{total pagado}$$
 
-**Caso 4: `pop`.** Costo 1 y pagó 1, así que el banco no cambia.
-*HI:* antes de la operación, $B\ge2\max(0,k-\frac m2)$. *Meta:* después, con $k-1$ en lugar de $k$ (la capacidad y el saldo no cambian), $B\ge2\max(0,k-1-\frac m2)$.
-Llamo otra vez $a=k-\frac m2$. ¿Qué le pasa a $\max(0,a)$ al cambiar $a$ por $a-1$? Dos casos:
-- si $a-1\ge0$: $\max(0,a-1)-\max(0,a)=(a-1)-a=-1$; baja 1;
-- si $a-1<0$: $\max(0,a-1)=0$, y $\max(0,a)\ge0$; no sube.
+**Paso 6. Acoto lo pagado.** Como $1\cdot\#\text{pop}\le3\cdot\#\text{pop}$ y $\#\text{push}+\#\text{pop}=n$:
+$$\text{total pagado}\;=\;3\cdot\#\text{push}+1\cdot\#\text{pop}\;\le\;3n$$
 
-En ambos casos no sube: para todo $a$, $\max(0,a-1)\le\max(0,a)$. Con ese dato armo la cadena.
+**Paso 7. Y es menos de $3n$**, como dice el teorema.
 
-- **Tengo:** la HI, $2\max(0,k-\frac m2)\le B$, y el dato de arriba.
-- **Quiero:** la cota después del pop no pasa del saldo, $2\max(0,k-1-\frac m2)\ \overset{?}{\le}\ B$.
-- **Plan:** hacer aparecer $a=k-\frac m2$ dentro de la cota nueva, usar el dato, y al final usar la HI.
-
-Le pongo nombre a la cota después del pop: $C'=2\max(0,\,k-1-\frac m2)$. Todos los renglones empiezan con $C'$. La columna de números usa otra vez $k=5$, $m=8$ y $B=2$ antes del pop: ahí $a=1$ y $C'=2\max(0,0)=0$.
-
-| # | Expresión | Con $k=5$, $m=8$, $B=2$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $C'=2\max\!\big(0,(k-\tfrac m2)-1\big)$ | $2\max(0,1-1)=0$ | **Reagrupo** $k-1-\frac m2$ como $(k-\frac m2)-1$, para que aparezca $a$. Se vale porque en una suma el orden y los paréntesis no cambian el resultado. |
-| 2 | $C'\le2\max(0,k-\tfrac m2)$ | $0\le2\max(0,1)=2$ | **Uso el dato:** $\max(0,a-1)\le\max(0,a)$. Lo multiplico por $2>0$ (R2), así que el $\le$ no se voltea. |
-| 3 | $C'\le B$ | $0\le2$ | **Uso la HI ← aquí:** $2\max(0,k-\frac m2)\le B$, y encadeno (R3). Es la meta ✓ |
-
-**Paso 5. Concluir.** El banco nunca es negativo, por lo que
-$$\text{costo real total}\;\le\;\text{total pagado}\;=\;3\cdot\#\text{push}+1\cdot\#\text{pop}\;\le\;3n.$$
-El primer $\le$: lo pagado es lo gastado más lo que queda en el banco, y eso último es $\ge0$. El último $\le$: $1\cdot\#\text{pop}\le3\cdot\#\text{pop}$, y $\#\text{push}+\#\text{pop}=n$.
-
-**Y es menos de $3n$**, como dice el teorema. La primera operación es un push (un pop en la pila vacía no está definido). Después de cualquier push, $B\ge2$: en el caso 1 el banco tenía $B\ge0$ y recibe $+2$; el caso 2 termina con $B\ge2$; el caso 3 deja $B=2$. Los pop no cambian $B$. Entonces al final $B\ge2$, y como el costo real es lo pagado menos lo que queda en el banco, el costo real total es $\le3n-2<3n$. $\square$
+- La primera operación es un push (un pop en la pila vacía no está definido).
+- Después de cualquier push, $B\ge2$: en el caso 1 el banco tenía $B\ge0$ y recibe $+2$; el caso 2 termina con $B\ge2$; el caso 3 deja $B=2$.
+- Los pop no cambian $B$. Entonces al final $B\ge2$, y como el costo real es lo pagado menos lo que queda en el banco:
+$$\text{costo real total}\;\le\;3n-2\;<\;3n\qquad\square$$
 
 > **Observa el patrón:** en los casos baratos (1, 3, 4) solo verificamos que el invariante **no se rompe**; en el caso caro (2) lo **usamos** para pagar. Así funcionan casi todas las demostraciones amortizadas.
 
@@ -962,40 +973,35 @@ $$\Phi(D)=\max(0,\ 2k-m).$$
 
 **Paso 4. Calcular $\hat c$ en cada caso, escribiendo $\Phi$ antes y después.**
 
-**Caso 1: `push` sin duplicar ($k<m$).**
-- Real: $c=1$.
-- Antes: $\Phi=\max(0,2k-m)$. Después: $\Phi'=\max(0,2(k+1)-m)=\max(0,(2k-m)+2)$.
-- $\Delta\Phi=\Phi'-\Phi\le2$. *¿Por qué $\le$ y no $=$?* Si $2k-m$ era muy negativo (por ejemplo $-5$), ambos $\max$ valen 0 y $\Delta\Phi=0$. En general $\max(0,a+2)-\max(0,a)\le2$: es el dato del método contable, caso 1 ($\max$ sube a lo más 1 cuando su argumento sube 1), aplicado dos veces.
-- $\hat c=1+\Delta\Phi\le3$.
+*Caso 1: `push` sin duplicar ($k<m$).* Costo real $c=1$. $\Phi$ es la cota del banquero (💡 de arriba), y en (b), caso 1, vimos que sube a lo más 2:
+$$\hat c=1+\Delta\Phi\le1+2=3$$
 
-**Caso 2: `push` que duplica ($k=m\ge1$).**
-- Real: $c=m$ (copias) $+\,1$ (escritura) $=m+1$.
-- Antes: $k=m$ y capacidad $m$, así que $\Phi=\max(0,2m-m)=m$.
-- Después: $k=m+1$ y capacidad $2m$, así que $\Phi'=\max(0,2(m+1)-2m)=\max(0,2)=2$.
+*Caso 2: `push` que duplica ($k=m\ge1$).*
 
-Con eso calculo $\hat c$. Todos los renglones empiezan con $\hat c$; la columna de números usa $m=4$ (es el push #5 de §6.2: copia 4 y escribe 1).
+- Costo real: $m$ copias más 1 escritura, $c=m+1$.
+- Antes: $k=m$ y capacidad $m$, así que $\Phi=\max(0,\ 2m-m)=m$.
+- Después: $k=m+1$ y capacidad $2m$, así que $\Phi'=\max(0,\ 2(m+1)-2m)=2$.
+- *Sustituyo* $c=m+1$, $\Phi'=2$ y $\Phi=m$ en la definición $\hat c=c+(\Phi'-\Phi)$:
+  $$\hat c=(m+1)+(2-m)$$
+- *Hago las cuentas:* $m-m=0$ y $1+2=3$.
+  $$\hat c=3$$
 
-| # | Expresión | Con $m=4$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $\hat c=c+(\Phi'-\Phi)$ | $5+(2-4)=3$ | **Parto de la definición** de costo amortizado (paso 1). |
-| 2 | $\hat c=(m+1)+(\Phi'-\Phi)$ | $(4+1)+(2-4)=3$ | **Sustituyo el costo real**, $c=m+1$. |
-| 3 | $\hat c=(m+1)+(2-m)$ | $5+(2-4)=3$ | **Sustituyo $\Phi'=2$ y $\Phi=m$**, calculados arriba. |
-| 4 | $\hat c=(m-m)+(1+2)$ | $0+3=3$ | **Quito los paréntesis y reordeno.** Se vale porque en una suma el orden y la agrupación no cambian el resultado. |
-| 5 | $\hat c=3$ | $3$ | **Hago las cuentas:** $m-m=0$ y $1+2=3$. |
+**La $m$ se cancela:** la caída de energía paga exactamente las copias. *Con números* (push #5 de §6.2, $m=4$): antes $k=4$, $m=4$, $\Phi=4$; después $k=5$, $m=8$, $\Phi'=\max(0,10-8)=2$; costo real 5; $\hat c=5+(2-4)=3$ ✓.
 
-**La $m$ se cancela:** la caída de energía paga exactamente las copias.
+*Caso 3: primer `push` ($k=m=0$).* Real: $c=1$. Antes: $\Phi=0$. Después: $k=1$, $m=1$, $\Phi'=\max(0,1)=1$. Entonces:
+$$\hat c=1+(1-0)=2\le3$$
 
-**Caso 3: primer `push` ($k=m=0$).**
-- Real: $c=1$. Antes: $\Phi=0$. Después: $k=1$, $m=1$, $\Phi'=\max(0,1)=1$.
-- $\hat c=1+1=2\le3$.
+*Caso 4: `pop`.* Real: $c=1$. $k$ baja en 1, así que el argumento $2k-m$ baja 2; el $\max$ no sube cuando su argumento baja (como en (b), caso 4), así que $\Delta\Phi\le0$:
+$$\hat c=1+\Delta\Phi\le1$$
 
-**Caso 4: `pop`.**
-- Real: $c=1$. $k$ baja en 1, así que el argumento $2k-m$ baja 2 y $\Delta\Phi\le0$.
-- $\hat c\le1$.
+**Paso 5. Uso el paso 2.** Como $\Phi(D_0)=0$ y $\Phi\ge0$:
+$$\sum c_i\;\le\;\sum\hat c_i$$
 
-**Paso 5. Concluir.** $\hat c_{\text{push}}\le3$ y $\hat c_{\text{pop}}\le1$, así que $\sum c_i\le\sum\hat c_i\le3n$. (El primer $\le$ es el paso 2; el segundo, sumar las $n$ cotas, cada una $\le3$.) Y es menos de $3n$, como dice el teorema: la primera operación es un push (un pop en la pila vacía no está definido), y ese primer push tiene $\hat c=2$ (caso 3). Por eso $\sum c_i\le\sum\hat c_i\le3n-1<3n$. $\square$
+**Paso 6. Sumo las $n$ cotas.** Cada $\hat c_i$ es $\le3$ (un pop da $\le1$, que también es $\le3$):
+$$\sum c_i\;\le\;3n$$
 
-**Paso 6. Verificar con la tabla.** Push #5: antes $k=4$, $m=4$, $\Phi=4$; después $k=5$, $m=8$, $\Phi=\max(0,10-8)=2$. Costo real 5. $\hat c=5+(2-4)=3$ ✓.
+**Paso 7. Y es menos de $3n$**, como dice el teorema. La primera operación es un push (un pop en la pila vacía no está definido), y ese primer push tiene $\hat c=2$ (caso 3), uno menos que 3:
+$$\sum c_i\;\le\;\sum\hat c_i\;\le\;3n-1\;<\;3n\qquad\square$$
 
 ---
 
@@ -1014,55 +1020,54 @@ Con eso calculo $\hat c$. Todos los renglones empiezan con $\hat c$; la columna 
 
 **Demostración paso a paso.**
 
-*Paso 1. ¿Cuándo se copia y cuánto?* El arreglo se llena cuando $k=jc$ para $j=1,2,3,\dots$, y entonces el siguiente `push` (el número $jc+1$) copia $jc$ elementos.
+*Las copias.*
 
-*Paso 2. ¿Cuántas ampliaciones hay?* La ampliación $j$ ocurre si el push $jc+1$ existe, es decir, $jc+1\le n$, es decir, $j\le\frac{n-1}{c}$. El número de ampliaciones es entonces
+**Paso 1. ¿Cuándo se copia y cuánto?** El arreglo se llena cuando $k=jc$ para $j=1,2,3,\dots$, y entonces el siguiente `push` (el número $jc+1$) copia $jc$ elementos.
+
+**Paso 2. ¿Cuántas ampliaciones hay?** La ampliación $j$ ocurre si el push $jc+1$ existe, es decir, $jc+1\le n$, es decir, $j\le\frac{n-1}{c}$. El número de ampliaciones es entonces
 $$q=\Big\lfloor\frac{n-1}{c}\Big\rfloor.$$
 
-*Paso 3. Sumar las copias.* Factorizamos $c$ y usamos la suma aritmética $1+2+\dots+q=\frac{q(q+1)}2$ (L00 §3.2 y §7.2):
+**Paso 3. Sumar las copias.** Factorizamos $c$ y usamos la suma aritmética $1+2+\dots+q=\frac{q(q+1)}2$ (L00 §3.2 y §7.2):
 $$\text{copias}=c+2c+\dots+qc=c\,(1+2+\dots+q)=c\cdot\frac{q(q+1)}{2}.$$
 
-Las dos tablas que siguen usan $c=10$ y $n=101$: ahí $q=\lfloor100/10\rfloor=10$, $\frac nc=10.1$ y copias $=10\cdot\frac{10\cdot11}{2}=550$.
+Para comprobar uso $c=10$ y $n=101$: ahí $q=\lfloor100/10\rfloor=10$, $\frac nc=10.1$ y copias $=10\cdot\frac{10\cdot11}{2}=550$.
 
-*Paso 4. Cota superior.* Como $q\le\frac{n-1}{c}<\frac nc$, y $q(q+1)$ crece con $q$ (para $q\ge0$), puedo cambiar $q$ por $\frac nc$ y la expresión solo crece. Todos los renglones empiezan con $\text{copias}$, y la relación es $=$ o $\le$.
+*Cota superior.* Lo único que necesito de $q$ es que $q\le\frac{n-1}{c}<\frac nc$:
+$$\boxed{\,q<\frac nc\,}$$
 
-| # | Expresión | Con $c=10$, $n=101$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $\text{copias}=c\cdot\dfrac{q(q+1)}{2}$ | $10\cdot\dfrac{10\cdot11}{2}=550$ | **Parto del paso 3.** |
-| 2 | $\text{copias}\le c\cdot\dfrac{\frac nc\left(\frac nc+1\right)}{2}$ | $550\le10\cdot\dfrac{10.1\cdot11.1}{2}=560.55$ | **Cambio $q$ por $\frac nc$, que es más grande.** $q(q+1)$ crece con $q$, y multiplicar por $\frac c2>0$ no voltea (R2). |
-| 3 | $\text{copias}\le\dfrac{n\left(\frac nc+1\right)}{2}$ | $550\le\dfrac{101\cdot11.1}{2}=560.55$ | **Simplifico** $c\cdot\frac nc$ a $n$. Es una igualdad. |
-| 4 | $\text{copias}\le\dfrac{\frac{n^2}{c}+n}{2}$ | $550\le\dfrac{1020.1+101}{2}=560.55$ | **Abro el paréntesis** por la distributiva: $n\cdot\frac nc=\frac{n^2}c$ y $n\cdot1=n$. |
-| 5 | $\text{copias}\le\dfrac{n^2}{2c}+\dfrac n2$ | $550\le510.05+50.5=560.55$ | **Divido cada término entre 2.** Se vale porque $\frac{a+b}{2}=\frac a2+\frac b2$. |
+**Paso 1. Si $n\ge c+1$, entonces $q\ge1$.** En ese caso $\frac{n-1}{c}\ge1$, y su piso también es $\ge1$. Sumo $q$ a los dos lados de $1\le q$ (R1):
+$$q+1\le2q$$
 
-Falta ver que esto está en $O\!\left(\frac{n^2}{c}\right)$. Para $n\ge c$, multiplico $c\le n$ por $\frac{n}{2c}>0$ (R2) y sale $\frac n2\le\frac{n^2}{2c}$. Entonces copias $\le\frac{n^2}{2c}+\frac{n^2}{2c}=\frac{n^2}{c}$, con constante 1 y $n_0=c$.
+**Paso 2. Lo uso en la fórmula de las copias.** Multiplico $q+1\le2q$ por $\frac{cq}{2}>0$ (R2), sin voltear:
+$$\text{copias}=c\cdot\frac{q(q+1)}{2}\le c\cdot\frac{q\cdot2q}{2}=c\,q^2$$
 
-*Paso 5. Cota inferior.* Primero cuatro datos sobre $q$, uno por uno:
+**Paso 3. Uso la caja.** Como $0\le q<\frac nc$, al cuadrado se conserva: $q^2<\frac{n^2}{c^2}$. Multiplico por $c>0$ (R2):
+$$\text{copias}\le c\,q^2<c\cdot\frac{n^2}{c^2}=\frac{n^2}{c}$$
+Con números: $550\le10\cdot100=1000<1020.1$ ✓. Para $n\ge c+1$, copias $<\frac{n^2}{c}$: está en $O\!\left(\frac{n^2}{c}\right)$.
 
-1. $\lfloor x\rfloor>x-1$ (el piso le quita a $x$ menos de 1). Con $x=\frac{n-1}{c}$: $q>\frac{n-1}c-1=\frac{n-1-c}{c}$.
-2. Quiero cambiar $n-1-c$ por algo sin la resta. ¿Cuándo vale $n-1-c\ge\frac{n-1}2$? Restando $\frac{n-1}2$ a ambos lados: $\frac{n-1}2-c\ge0$, es decir, $n-1\ge2c$, es decir, $n\ge2c+1$. Divido entre $c>0$ (R2), que no voltea: $\frac{n-1-c}{c}\ge\frac{n-1}{2c}$. Entonces, para $n\ge2c+1$, $q>\frac{n-1-c}{c}\ge\frac{n-1}{2c}$.
-3. Copias: $c\cdot\frac{q(q+1)}{2}\ge c\cdot\frac{q^2}{2}$, porque $q+1\ge q$ (achico el lado derecho, la dirección correcta para una cota inferior).
-4. De $q\ge\frac{n-1}{2c}\ge0$, elevando al cuadrado (ambos lados son $\ge0$): $q^2\ge\frac{(n-1)^2}{4c^2}$.
+*Cota inferior.* Ahora necesito lo contrario: que $q$ no sea demasiado chico.
 
-Con números: el dato 1 da $10>9$, y el dato 2 da $10>9\ge5$.
+**Paso 1. El piso le quita a $x$ menos de 1**, así que $\lfloor x\rfloor>x-1$. Con $x=\frac{n-1}{c}$, y escribiendo $1=\frac cc$:
+$$q>\frac{n-1}{c}-1=\frac{n-1-c}{c}$$
 
-Ahora la cadena. Todos los renglones empiezan con $\text{copias}$, y la relación es $=$ o $\ge$.
+**Paso 2. Si $n\ge2c+1$, entonces $c\le\frac{n-1}{2}$** (resto 1 y divido entre $2>0$). Restar algo más chico deja más: $n-1-c\ge(n-1)-\frac{n-1}{2}=\frac{n-1}{2}$. Divido entre $c>0$ (R2) y encadeno con el paso 1 (R3):
+$$\boxed{\,q\ge\frac{n-1}{2c}\,}$$
 
-| # | Expresión | Con $c=10$, $n=101$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $\text{copias}=c\cdot\dfrac{q(q+1)}{2}$ | $550$ | **Parto del paso 3.** |
-| 2 | $\text{copias}\ge c\cdot\dfrac{q^2}{2}$ | $550\ge\dfrac{10\cdot100}{2}=500$ | **Cambio $q+1$ por $q$, que es más chico** (dato 3). Achicar la cota de la derecha conserva el $\ge$. |
-| 3 | $\text{copias}\ge\dfrac c2\cdot\dfrac{(n-1)^2}{4c^2}$ | $550\ge5\cdot\dfrac{10000}{400}=125$ | **Cambio $q^2$ por $\frac{(n-1)^2}{4c^2}$, que es más chico** (dato 4). Multiplico por $\frac c2>0$ (R2): no se voltea. |
-| 4 | $\text{copias}\ge\dfrac{(n-1)^2}{8c}$ | $550\ge\dfrac{10000}{80}=125$ | **Simplifico:** $\frac{c}{2\cdot4c^2}$ es lo mismo que $\frac{1}{8c}$. Es una igualdad. |
-| 5 | $\text{copias}\ge\dfrac{n^2}{32c}$ | $550\ge\dfrac{10201}{320}\approx31.9$ | **Cambio $(n-1)^2$ por $\frac{n^2}{4}$, que es más chico, y simplifico** $\frac{n^2}{4\cdot8c}=\frac{n^2}{32c}$. Para $n\ge2$, $n-1\ge\frac n2$; los dos son $\ge0$, así que al cuadrado se conserva. |
+**Paso 3. Quito el $+q$ (R7) y uso la caja.** Por la distributiva, $q(q+1)=q^2+q$, y como $q\ge0$, quitarlo achica. Luego elevo la caja al cuadrado (los dos lados son $\ge0$) y multiplico por $\frac c2>0$ (R2):
+$$\text{copias}\ge\frac c2\,q^2\ge\frac c2\cdot\frac{(n-1)^2}{4c^2}=\frac{(n-1)^2}{8c}$$
 
-En el renglón 5, $n-1\ge\frac n2$ equivale a $n\ge2$: resto $\frac n2$ a cada miembro y queda $\frac n2-1\ge0$. Por lo tanto copias $\ge\frac{n^2}{32c}$, que está en $\Omega\!\left(\frac{n^2}c\right)$, con $n_0=\max(2,2c+1)$: el renglón 5 pide $n\ge2$ y el dato 2 pide $n\ge2c+1$.
+**Paso 4. Para $n\ge2$, $n-1\ge\frac n2$** (resto $\frac n2$ a los dos lados: queda $\frac n2-1\ge0$). Al cuadrado se conserva, $(n-1)^2\ge\frac{n^2}{4}$, y divido entre $8c>0$ (R2):
+$$\text{copias}\ge\frac{(n-1)^2}{8c}\ge\frac{n^2}{32c}$$
+Con números: $q=10>9\ge5$, y $550\ge500\ge125\ge\frac{10201}{320}\approx31.9$ ✓. Está en $\Omega\!\left(\frac{n^2}c\right)$, con $n_0=\max(2,\ 2c+1)$.
 
-*Paso 6. Del número de copias al costo total.* La proposición habla del costo de los $n$ push, que es $T(n)=n+\text{copias}$ ($n$ escrituras, como en §6.4(a)).
+*Costo total.* La proposición habla del costo de los $n$ push, que es $T(n)=n+\text{copias}$ ($n$ escrituras, como en §6.4(a)).
 
-- Por arriba: para $n\ge c$, multiplico $c\le n$ por $\frac nc>0$ (R2) y sale $n\le\frac{n^2}{c}$. Con el paso 4, $T(n)\le\frac{n^2}{c}+\frac{n^2}{c}=\frac{2n^2}{c}$.
-- Por abajo: $n\ge0$, así que quitarlo achica (R7): $T(n)\ge\text{copias}\ge\frac{n^2}{32c}$ por el paso 5.
+- *Por arriba:* para $n\ge c$, multiplico $c\le n$ por $\frac nc>0$ (R2) y sale $n\le\frac{n^2}{c}$. Con la cota superior, $T(n)<\frac{n^2}{c}+\frac{n^2}{c}=\frac{2n^2}{c}$.
+- *Por abajo:* $n\ge0$, así que quitarlo achica (R7): $T(n)\ge\text{copias}\ge\frac{n^2}{32c}$.
+- *Condiciones:* $n\ge c+1$, $n\ge2$ y $n\ge2c+1$; como $c\ge1$, basta $n\ge2c+1$. Para esas $n$:
+  $$\frac{n^2}{32c}\le T(n)<\frac{2n^2}{c}$$
 
-Las condiciones son $n\ge c$, $n\ge2$ y $n\ge2c+1$; como $c\ge1$, basta $n\ge2c+1$. Entonces, para $n\ge2c+1$, $\frac{n^2}{32c}\le T(n)\le\frac{2n^2}{c}$, y $T(n)\in\Theta\!\left(\frac{n^2}c\right)$. $\square$ *Con números* ($c=10$, $n=101$): $T=101+550=651$, y $31.9\le651\le2040.2$ ✓.
+Entonces $T(n)\in\Theta\!\left(\frac{n^2}c\right)$. $\square$ *Con números* ($c=10$, $n=101$): $T=101+550=651$, y $31.9\le651<2040.2$ ✓.
 
 *Intuición:* sumar una constante en cada paso produce copias que crecen **linealmente** ($c, 2c, 3c, \dots$), y la suma de algo lineal es **cuadrática**. Al duplicar, las copias crecen **geométricamente**, y la suma la domina su último término.
 
@@ -1079,48 +1084,47 @@ Las condiciones son $n\ge c$, $n\ge2$ y $n\ge2c+1$; como $c\ge1$, basta $n\ge2c+
 
 **Demostración paso a paso (costo).**
 
-*Paso 1. Nombrar las copias.* Sean $s_1<s_2<\dots<s_t$ los tamaños copiados en cada ampliación, en orden. Se copia justo cuando el arreglo está lleno, así que $s_i$ es también la capacidad en ese momento. La ampliación deja capacidad $\lceil\alpha s_i\rceil$, y la siguiente copia ocurre cuando esa capacidad se llena: $s_{i+1}=\lceil\alpha s_i\rceil\ge\alpha s_i$ (el techo nunca achica).
+**Paso 1. Nombrar las copias.** Sean $s_1<s_2<\dots<s_t$ los tamaños copiados en cada ampliación, en orden. Se copia justo cuando el arreglo está lleno, así que $s_i$ es también la capacidad en ese momento. La ampliación deja capacidad $\lceil\alpha s_i\rceil$, y la siguiente copia ocurre cuando esa capacidad se llena: $s_{i+1}=\lceil\alpha s_i\rceil\ge\alpha s_i$ (el techo nunca achica).
 
-*Paso 2. La última copia es menor que $n$.* Lo que se copia ya estaba en la pila antes del push que dispara la ampliación, así que $s_t\le n-1<n$.
+**Paso 2. La última copia es menor que $n$.** Lo que se copia ya estaba en la pila antes del push que dispara la ampliación, así que $s_t\le n-1<n$:
+$$\boxed{\,s_t<n\,}$$
 
-*Paso 3. Leer hacia atrás.* De $s_{i+1}\ge\alpha s_i$ se obtiene $s_i\le s_{i+1}/\alpha$. Aplicándolo repetidamente desde el final:
-$$s_{t-1}\le\frac{s_t}{\alpha},\qquad s_{t-2}\le\frac{s_t}{\alpha^2},\qquad\dots,\qquad s_{t-r}\le\frac{s_t}{\alpha^r}.$$
+**Paso 3. Leer hacia atrás.** De $s_{i+1}\ge\alpha s_i$ se obtiene $s_i\le s_{i+1}/\alpha$. Aplicándolo $r$ veces desde el final ($s_{t-1}\le\frac{s_t}{\alpha}$, $s_{t-2}\le\frac{s_t}{\alpha^2}$, …):
+$$\boxed{\,s_{t-r}\le\frac{s_t}{\alpha^r}\,}$$
 
-*Paso 4. Sumar con una geométrica decreciente.* La razón es $\frac1\alpha<1$, así que la serie infinita converge (L00 §7.3 y §7.4).
+**Paso 4. Escribo la suma de la última copia a la primera y acoto cada sumando con la caja del paso 3** (R1). Abrevio $\sum s_i=\sum_{i=1}^{t}s_i$:
+$$\sum s_i=s_t+s_{t-1}+\dots+s_1\le s_t+\frac{s_t}{\alpha}+\dots+\frac{s_t}{\alpha^{t-1}}$$
 
-- **Tengo:** $s_{t-r}\le\frac{s_t}{\alpha^r}$ para cada $r$ (paso 3), y $s_t<n$ (paso 2).
-- **Quiero:** $\sum_{i=1}^{t}s_i\ \overset{?}{<}\ n\cdot\frac{\alpha}{\alpha-1}$.
-- **Plan:** acotar cada sumando con el paso 3, para que todos queden en términos de $s_t$; completar la serie geométrica infinita, que tiene fórmula; y al final cambiar $s_t$ por $n$.
+**Paso 5. Saco el factor común $s_t$.** Es la distributiva al revés; es una igualdad:
+$$\sum s_i\le s_t\left(1+\frac1\alpha+\dots+\frac1{\alpha^{t-1}}\right)$$
 
-Todos los renglones empiezan con $\sum s_i$, que abrevia $\sum_{i=1}^{t}s_i$, y la relación es $=$, $\le$ o $<$. La columna de números usa $\alpha=2$ y $n=9$: las copias son $s=1,2,4,8$ (como en §6.2), así que $t=4$, $s_t=8$ y $\sum s_i=15$.
+**Paso 6. Agrego los términos que faltan de la serie infinita.** Todos son positivos, así que la cota solo crece y el $\le$ se conserva. La razón es $\frac1\alpha<1$, así que la serie converge (L00 §7.3 y §7.4):
+$$\sum s_i\le s_t\left(1+\frac1\alpha+\frac1{\alpha^2}+\cdots\right)$$
 
-| # | Expresión | Con $\alpha=2$, $n=9$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $\sum s_i=s_t+s_{t-1}+\dots+s_1$ | $8+4+2+1=15$ | **Escribo la suma de la última a la primera.** El orden de los sumandos no cambia el resultado. |
-| 2 | $\sum s_i\le s_t+\dfrac{s_t}{\alpha}+\dots+\dfrac{s_t}{\alpha^{t-1}}$ | $15\le8+4+2+1=15$ | **Acoto cada sumando con el paso 3** y sumo las cotas (R1). |
-| 3 | $\sum s_i\le s_t\left(1+\dfrac1\alpha+\dots+\dfrac1{\alpha^{t-1}}\right)$ | $15\le8\cdot\dfrac{15}{8}=15$ | **Saco el factor común $s_t$.** Es la distributiva al revés; es una igualdad. |
-| 4 | $\sum s_i\le s_t\left(1+\dfrac1\alpha+\dfrac1{\alpha^2}+\cdots\right)$ | $15\le8\cdot2=16$ | **Agrego los términos que faltan de la serie infinita.** Todos son positivos, así que la cota solo crece y el $\le$ se conserva. |
-| 5 | $\sum s_i\le s_t\cdot\dfrac{1}{1-\frac1\alpha}$ | $15\le\dfrac{8}{1/2}=16$ | **Uso la fórmula de la geométrica infinita:** con razón $r=\frac1\alpha<1$, la suma es $\frac{1}{1-r}$ (L00 §7.3 y §7.4). |
-| 6 | $\sum s_i\le s_t\cdot\dfrac{\alpha}{\alpha-1}$ | $15\le8\cdot\dfrac21=16$ | **Multiplico arriba y abajo por $\alpha$:** $\frac{1}{1-\frac1\alpha}$ es lo mismo que $\frac{\alpha}{\alpha-1}$. Multiplicar por $\frac\alpha\alpha=1$ no cambia nada. |
-| 7 | $\sum s_i<n\cdot\dfrac{\alpha}{\alpha-1}$ | $15<9\cdot2=18$ | **Cambio $s_t$ por $n$, que es más grande** (paso 2). Multiplico $s_t<n$ por $\frac{\alpha}{\alpha-1}>0$ (R2): no se voltea, y la relación pasa a ser $<$. |
+**Paso 7. Uso la fórmula de la geométrica infinita:** con razón $r=\frac1\alpha<1$, la suma es $\frac{1}{1-r}$.
+$$\sum s_i\le s_t\cdot\frac{1}{1-\frac1\alpha}$$
 
-*Paso 5. Total.* Con $n$ escrituras más las copias, el costo es menor que $n+n\frac{\alpha}{\alpha-1}=n\left(1+\frac{\alpha}{\alpha-1}\right)$ (factor común $n$). Al dividir entre $n$ queda el costo amortizado. Con $\alpha=2$: $1+2=3$ ✓, que coincide con el Teorema 6.2. $\square$
+**Paso 8. Multiplico arriba y abajo por $\alpha$.** Multiplicar por $\frac\alpha\alpha=1$ no cambia nada, y $\frac{1}{1-\frac1\alpha}=\frac{\alpha}{\alpha-1}$:
+$$\sum s_i\le s_t\cdot\frac{\alpha}{\alpha-1}$$
 
-**Demostración (memoria).** Justo después de ampliar de $m\ge1$ a $\lceil\alpha m\rceil$ hay $m+1$ elementos. (La primera ampliación, de $0$ a $1$, deja el bloque lleno: fracción ocupada $1$.) Le pongo nombre a la fracción ocupada en ese momento: $F=\frac{m+1}{\lceil\alpha m\rceil}$.
+**Paso 9. Uso la caja del paso 2: cambio $s_t$ por $n$, que es más grande.** Multiplico $s_t<n$ por $\frac{\alpha}{\alpha-1}>0$ (R2): no se voltea, y la relación pasa a ser $<$:
+$$\sum s_i<n\cdot\frac{\alpha}{\alpha-1}$$
 
-- **Tengo:** $\lceil\alpha m\rceil<\alpha m+1$ (el techo le suma a $\alpha m$ menos de 1), y $\alpha>1$.
-- **Quiero:** $F\ \overset{?}{\ge}\ \frac1\alpha$.
-- **Plan:** cambiar el denominador con techo por uno sin techo, y luego comparar con $\frac1\alpha$.
+**Paso 10. Compruebo con $\alpha=2$ y $n=9$.** Las copias son $s=1,2,4,8$ (como en §6.2), así que $t=4$, $s_t=8$ y $\sum s_i=15$. La derecha vale $8+4+2+1=15$ en el paso 4, $8\cdot\frac{15}{8}=15$ en el 5, $8\cdot2=16$ en los pasos 6 a 8 y $9\cdot2=18$ en el 9: $15\le15\le16<18$ ✓.
 
-Antes de la tabla, un dato auxiliar: $\frac{m+1}{\alpha m+1}\ge\frac1\alpha$. Multiplico en cruz, cosa que puedo hacer porque los dos denominadores son positivos, y la desigualdad equivale a $\alpha(m+1)\ge\alpha m+1$; por la distributiva, a $\alpha m+\alpha\ge\alpha m+1$; restando $\alpha m$ a cada miembro, a $\alpha\ge1$, que es cierto porque $\alpha>1$. Cada paso se puede deshacer, así que el dato es cierto.
+**Paso 11. Total.** Con $n$ escrituras más las copias, el costo es menor que $n+n\frac{\alpha}{\alpha-1}=n\left(1+\frac{\alpha}{\alpha-1}\right)$ (factor común $n$). Al dividir entre $n$ queda el costo amortizado. Con $\alpha=2$: $1+2=3$ ✓, que coincide con el Teorema 6.2. $\square$
 
-Todos los renglones empiezan con $F$. La columna de números usa $\alpha=1.5$ y $m=4$: $\lceil6\rceil=6$, así que $F=\frac56$, y $\alpha m+1=7$.
+**Demostración (memoria).** Justo después de ampliar de $m\ge1$ a $\lceil\alpha m\rceil$ hay $m+1$ elementos. (La primera ampliación, de $0$ a $1$, deja el bloque lleno: fracción ocupada $1$.) La fracción ocupada en ese momento es $F=\frac{m+1}{\lceil\alpha m\rceil}$, y quiero ver que $F>\frac1\alpha$.
 
-| # | Expresión | Con $\alpha=1.5$, $m=4$ | Qué hago · por qué se vale |
-|---|---|---|---|
-| 1 | $F=\dfrac{m+1}{\lceil\alpha m\rceil}$ | $\dfrac56\approx0.83$ | **Parto de la definición de $F$.** |
-| 2 | $F>\dfrac{m+1}{\alpha m+1}$ | $\dfrac56>\dfrac57\approx0.71$ | **Cambio el denominador por $\alpha m+1$, que es más grande.** Con el mismo numerador positivo, un denominador más grande da una fracción más chica, así que $F$ queda estrictamente arriba. |
-| 3 | $F>\dfrac1\alpha$ | $\dfrac56>\dfrac23\approx0.67$ | **Uso el dato auxiliar** y encadeno (R3): un $>$ seguido de un $\ge$ da $>$. |
+**Paso 1. El techo le suma a $\alpha m$ menos de 1:**
+$$\lceil\alpha m\rceil<\alpha m+1$$
+
+**Paso 2. Como $1<\alpha$**, sumo $\alpha m$ a los dos lados (R1), y luego saco $\alpha$ de factor común:
+$$\alpha m+1<\alpha m+\alpha=\alpha(m+1)$$
+
+**Paso 3. Un denominador más grande da una fracción más chica.** Por los pasos 1 y 2, $\lceil\alpha m\rceil<\alpha(m+1)$, y el numerador $m+1$ es positivo:
+$$F=\frac{m+1}{\lceil\alpha m\rceil}>\frac{m+1}{\alpha(m+1)}=\frac1\alpha$$
+Con $\alpha=1.5$ y $m=4$: $6<7<7.5$, y $\frac56>\frac23$ ✓.
 
 Sin `pop`, $k$ solo crece hasta la siguiente ampliación, así que la fracción ocupada nunca baja de $\frac1\alpha$ y la vacía nunca supera $1-\frac1\alpha$. $\square$
 
@@ -1159,7 +1163,7 @@ En sistemas con requisitos de **latencia** (tiempo real, el percentil p99 de un 
 ### 7.1 Invariante de representación y función de abstracción
 
 Una implementación es correcta si (1) **toda operación pública preserva el invariante** y (2) **conmuta con la función de abstracción** $\mathcal A$, que traduce la representación concreta a la pila abstracta de §4.2:
-$$\mathcal{A}(\texttt{data}, k) = \mathsf{push}(\cdots\mathsf{push}(\mathsf{push}(\mathsf{new}, \texttt{data}[0]), \texttt{data}[1])\cdots, \texttt{data}[k-1]).$$
+$$\begin{aligned}\mathcal{A}(\texttt{data}, k) = \mathsf{push}(\cdots&\mathsf{push}(\mathsf{push}(\mathsf{new}, \texttt{data}[0]), \texttt{data}[1])\\ &\cdots, \texttt{data}[k-1]).\end{aligned}$$
 
 | | Invariante de representación |
 |---|---|
