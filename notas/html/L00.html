@@ -960,6 +960,330 @@ Solución
 <li><strong>Toma un lado de <span class="math inline">\(P(k+1)\)</span> y transfórmalo hasta que aparezca algo de lo que habla <span class="math inline">\(P(k)\)</span>.</strong> Ese es el renglón donde <strong>usas la HI</strong>: sustituyes ese pedazo por lo que la HI dice que vale.</li>
 <li><strong>Sigue transformando hasta llegar al otro lado de <span class="math inline">\(P(k+1)\)</span>.</strong> Cuando llegas, el paso está demostrado.</li>
 </ol>
+<h4 id="la-receta-de-cocina-paso-a-paso">La receta de cocina, paso a paso</h4>
+<p>Una inducción se cocina siempre igual. Hazla <strong>primero en borrador</strong> y pásala en limpio después: nadie escribe una demostración de corrido; primero se explora y luego se redacta. La columna de en medio usa la suma de §3.2 como ejemplo.</p>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>Qué haces</th>
+<th>Cómo se ve con <span class="math inline">\(1+\dots+n=\frac{n(n+1)}{2}\)</span></th>
+<th>Pregunta de control</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td><strong>Juega con números.</strong> Evalúa los dos lados para <span class="math inline">\(n=1,2,3\)</span>.</td>
+<td><span class="math inline">\(1=\frac{1\cdot2}{2}\)</span>; <span class="math inline">\(1+2=3=\frac{2\cdot3}{2}\)</span>; <span class="math inline">\(1+2+3=6=\frac{3\cdot4}{2}\)</span></td>
+<td>¿Se cumple? Si un caso falla, no hay nada que demostrar (§2.4).</td>
+</tr>
+<tr>
+<td>1</td>
+<td><strong>Escribe <span class="math inline">\(P(n)\)</span></strong>: su lado izquierdo, su lado derecho y desde qué <span class="math inline">\(n_0\)</span> vale.</td>
+<td>izquierdo: <span class="math inline">\(1+\dots+n\)</span>; derecho: <span class="math inline">\(\frac{n(n+1)}{2}\)</span>; <span class="math inline">\(n\ge1\)</span></td>
+<td>¿Dónde está el hueco <span class="math inline">\(n\)</span> en cada lado?</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Base:</strong> sustituye <span class="math inline">\(n_0\)</span> en cada lado <strong>por separado</strong> y calcula.</td>
+<td>izquierdo: <span class="math inline">\(1\)</span>; derecho: <span class="math inline">\(\frac{1\cdot2}{2}=1\)</span></td>
+<td>¿Los dos lados dan lo mismo?</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>HI:</strong> copia <span class="math inline">\(P(n)\)</span> con <span class="math inline">\(k\)</span> y enciérrala en un recuadro. Es lo <strong>único</strong> que tienes permiso de suponer.</td>
+<td><span class="math inline">\(1+\dots+k=\frac{k(k+1)}{2}\)</span></td>
+<td>¿Dice <span class="math inline">\(k\)</span>, y no <span class="math inline">\(n\)</span> ni <span class="math inline">\(k+1\)</span>?</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Meta:</strong> copia <span class="math inline">\(P(n)\)</span> con <span class="math inline">\((k+1)\)</span> y márcala “por demostrar”. <strong>Todavía no es verdad:</strong> no puedes usarla.</td>
+<td><span class="math inline">\(1+\dots+k+(k+1)\overset{?}{=}\frac{(k+1)(k+2)}{2}\)</span></td>
+<td>¿Cada <span class="math inline">\((k+1)\)</span> lleva paréntesis?</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Compara</strong> la HI y la meta, lado por lado: ¿qué cambió?</td>
+<td>izquierdo: apareció el sumando <span class="math inline">\((k+1)\)</span>; derecho: cada <span class="math inline">\(k\)</span> es ahora <span class="math inline">\(k+1\)</span></td>
+<td>¿Dónde está la HI escondida dentro de la meta?</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Arranca del lado de la meta que contiene el pedazo de la HI.</strong> Haz que el pedazo aparezca tal cual y <strong>cámbialo</strong> por el otro lado de la HI.</td>
+<td><span class="math inline">\(\underbrace{1+\dots+k}_{\text{pedazo de la HI}}+(k+1)=\frac{k(k+1)}{2}+(k+1)\)</span></td>
+<td>¿Marcaste “aquí uso la HI”?</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>Álgebra hasta el otro lado.</strong> Aquí ya no hay inducción: solo transformar lo que tienes hasta que sea el otro lado de la meta.</td>
+<td><span class="math inline">\(\frac{k(k+1)}{2}+(k+1)=\dots=\frac{(k+1)(k+2)}{2}\)</span></td>
+<td>¿Cada signo tiene su porqué?</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>Cierra y comprueba</strong> con un número.</td>
+<td>“Por inducción, vale para todo <span class="math inline">\(n\ge1\)</span>”; con <span class="math inline">\(k=3\)</span>: <span class="math inline">\(10=10\)</span></td>
+<td>¿Usaste la HI al menos una vez?</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="qué-pasa-con-el-lado-izquierdo-y-con-el-lado-derecho">Qué pasa con el lado izquierdo y con el lado derecho</h4>
+<p>El paso 5 es el que decide todo. Pon la HI y la meta una encima de la otra:</p>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 20%"/>
+<col style="width: 20%"/>
+<col style="width: 20%"/>
+<col style="width: 20%"/>
+<col style="width: 20%"/>
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>Lado izquierdo</th>
+<th></th>
+<th>Lado derecho</th>
+<th>Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HI, <span class="math inline">\(P(k)\)</span></td>
+<td><span class="math inline">\(1+\dots+k\)</span></td>
+<td><span class="math inline">\(=\)</span></td>
+<td><span class="math inline">\(\dfrac{k(k+1)}{2}\)</span></td>
+<td><strong>la supongo</strong></td>
+</tr>
+<tr>
+<td>Meta, <span class="math inline">\(P(k+1)\)</span></td>
+<td><span class="math inline">\(1+\dots+k+(k+1)\)</span></td>
+<td><span class="math inline">\(\overset{?}{=}\)</span></td>
+<td><span class="math inline">\(\dfrac{(k+1)(k+2)}{2}\)</span></td>
+<td><strong>por demostrar</strong></td>
+</tr>
+<tr>
+<td>Qué cambió</td>
+<td>se agregó <span class="math inline">\(+(k+1)\)</span></td>
+<td></td>
+<td>cada <span class="math inline">\(k\)</span> se volvió <span class="math inline">\(k+1\)</span></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>Léela así: el lado izquierdo de la meta es <strong>el lado izquierdo de la HI, más <span class="math inline">\((k+1)\)</span></strong>. La HI me deja cambiar ese pedazo por <span class="math inline">\(\frac{k(k+1)}{2}\)</span>. Al hacerlo, la suma con puntos suspensivos (de largo desconocido) desaparece, y lo que queda es una pregunta de <strong>puro álgebra entre dos fórmulas</strong>: <span class="math display">\[\underbrace{\frac{k(k+1)}{2}}_{\text{derecho de la HI}}+\underbrace{(k+1)}_{\text{lo que se agregó}}\ \overset{?}{=}\ \underbrace{\frac{(k+1)(k+2)}{2}}_{\text{derecho de la meta}}.\]</span> Eso es todo lo que hace la inducción: <strong>convierte un problema sobre <span class="math inline">\(k+1\)</span> cosas en “lo que ya sabía de <span class="math inline">\(k\)</span> cosas, más el pedazo nuevo”</strong>. Lo demás es álgebra de secundaria. En casi todas las inducciones con sumas la pregunta final tiene esta misma forma: <em>derecho de la HI + lo que se agregó <span class="math inline">\(\overset{?}{=}\)</span> derecho de la meta</em>.</p>
+<p><strong>Tres formas válidas de hacer que los lados coincidan, y una que no lo es.</strong></p>
+<p><strong>Forma A: la cadena (la que se entrega).</strong> Empiezas en un lado de la meta y, renglón por renglón, llegas al otro. Cada renglón es igual al anterior por una razón que escribes. Así está redactado §3.2.</p>
+<p><strong>Forma B: encontrarse en medio.</strong> Si no ves cómo llegar de un lado al otro, trabaja <strong>cada lado en su propia columna</strong> hasta que los dos sean la misma expresión:</p>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>Columna izquierda</th>
+<th>Columna derecha</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Empiezo en</td>
+<td><span class="math inline">\(1+\dots+k+(k+1)\)</span></td>
+<td><span class="math inline">\(\dfrac{(k+1)(k+2)}{2}\)</span></td>
+</tr>
+<tr>
+<td>Primer paso</td>
+<td><span class="math inline">\(=\dfrac{k(k+1)}{2}+(k+1)\)</span></td>
+<td><span class="math inline">\(=\dfrac{k^2+2k+k+2}{2}\)</span></td>
+</tr>
+<tr>
+<td>Por qué</td>
+<td><strong>HI</strong></td>
+<td>distributiva: cada término de <span class="math inline">\((k+1)\)</span> por cada término de <span class="math inline">\((k+2)\)</span></td>
+</tr>
+<tr>
+<td>Segundo paso</td>
+<td><span class="math inline">\(=\dfrac{k^2+k}{2}+\dfrac{2k+2}{2}\)</span></td>
+<td><span class="math inline">\(=\dfrac{k^2+3k+2}{2}\)</span></td>
+</tr>
+<tr>
+<td>Por qué</td>
+<td>distributiva arriba; y <span class="math inline">\((k+1)=\frac{2(k+1)}{2}\)</span></td>
+<td>junto <span class="math inline">\(2k+k=3k\)</span></td>
+</tr>
+<tr>
+<td>Tercer paso</td>
+<td><span class="math inline">\(=\dfrac{k^2+3k+2}{2}\)</span></td>
+<td>(ya terminó)</td>
+</tr>
+<tr>
+<td>Por qué</td>
+<td>sumo fracciones; <span class="math inline">\(k+2k=3k\)</span></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>Las dos columnas llegaron a <span class="math inline">\(\frac{k^2+3k+2}{2}\)</span>. Entonces <em>izquierdo <span class="math inline">\(=\frac{k^2+3k+2}{2}=\)</span> derecho</em>, y la meta queda demostrada. Es válido porque dentro de cada columna solo hay igualdades justificadas, y <strong>nada cruza de una columna a la otra</strong>: nunca usé la meta, solo tomé cada uno de sus lados como punto de partida.</p>
+<p><strong>Forma C: hacia atrás, solo en borrador.</strong> Partir de la meta y simplificarla para descubrir qué álgebra hace falta. Sirve para <strong>encontrar</strong> el camino; no es la demostración. En limpio se escribe con la forma A o la B.</p>
+<p><strong>❌ Lo que no vale: lo circular.</strong> Escribir la meta como primer renglón, como si ya fuera cierta, y operar <strong>en los dos lados a la vez</strong> (pasar restando, multiplicar ambos lados, cancelar) hasta llegar a algo obvio como <span class="math inline">\(0=0\)</span>. Está mal porque supusiste justo lo que querías demostrar, y llegar a algo verdadero no prueba que el punto de partida lo fuera. Ejemplo: parto de <span class="math inline">\(-1=1\)</span>, que es falso; elevo al cuadrado los dos lados y obtengo <span class="math inline">\(1=1\)</span>, que es verdadero. Si “llegar a algo cierto” demostrara el inicio, habría demostrado que <span class="math inline">\(-1=1\)</span>.</p>
+<p><strong>Prueba rápida de que tu demostración no es circular:</strong></p>
+<ol type="1">
+<li>Lo único que supones es el recuadro de la HI (con <span class="math inline">\(k\)</span>).</li>
+<li>La meta aparece solo como <strong>destino</strong>, nunca como justificación de un renglón.</li>
+<li>Se lee de arriba hacia abajo: cada renglón sale del anterior o de la HI, nunca del siguiente.</li>
+</ol>
+<p>Con desigualdades es igual, pero la cadena lleva <span class="math inline">\(\ge\)</span> (todos en la <strong>misma</strong> dirección) y no hay “encontrarse en medio”: para cerrar se resta y se mira el signo (§3.3).</p>
+<h4 id="caja-de-herramientas-trucos-para-el-paso">Caja de herramientas: trucos para el paso</h4>
+<p>Todos estos trucos hacen lo mismo: <strong>reescriben una expresión sin cambiar su valor</strong>, para que aparezca el pedazo de la HI o la forma de la meta.</p>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+<col style="width: 25%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Truco</th>
+<th>La idea</th>
+<th>Ejemplo</th>
+<th>Cuándo usarlo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Separar el último</strong></td>
+<td>lo de tamaño <span class="math inline">\(k+1\)</span> es lo de tamaño <span class="math inline">\(k\)</span> más un pedazo</td>
+<td><span class="math inline">\(\sum_{i=1}^{k+1}a_i=\big(\sum_{i=1}^{k}a_i\big)+a_{k+1}\)</span>; <span class="math inline">\((k+1)!=(k+1)\cdot k!\)</span>; <span class="math inline">\(a^{k+1}=a\cdot a^k\)</span></td>
+<td>siempre es el primer intento: así aparece la HI</td>
+</tr>
+<tr>
+<td><strong>Sumar cero</strong></td>
+<td><span class="math inline">\(x=x-c+c\)</span>: restar y sumar lo mismo</td>
+<td><span class="math inline">\(5\cdot5^k-1=5\cdot5^k-5+5-1\)</span></td>
+<td>el pedazo de la HI <em>casi</em> aparece, pero le falta un término</td>
+</tr>
+<tr>
+<td><strong>Multiplicar por uno</strong></td>
+<td><span class="math inline">\(x=x\cdot\frac{c}{c}\)</span></td>
+<td><span class="math inline">\((k+1)=\frac{2(k+1)}{2}\)</span></td>
+<td>para sumar fracciones o conseguir el denominador de la meta</td>
+</tr>
+<tr>
+<td><strong>Factor común (no expandas)</strong></td>
+<td>si la meta tiene el factor <span class="math inline">\((k+1)\)</span>, sácalo en vez de multiplicar todo</td>
+<td><span class="math inline">\(k(k+1)+2(k+1)=(k+1)(k+2)\)</span></td>
+<td>la meta está factorizada</td>
+</tr>
+<tr>
+<td><strong>Expandir los dos lados</strong></td>
+<td>la forma B de arriba</td>
+<td><span class="math inline">\(\frac{k^2+3k+2}{2}\)</span> en ambas columnas</td>
+<td>no ves la factorización</td>
+</tr>
+<tr>
+<td><strong>Traducir la definición</strong></td>
+<td>“múltiplo de 4” es “<span class="math inline">\(=4m\)</span> para algún entero <span class="math inline">\(m\)</span>”; “par” es “<span class="math inline">\(=2m\)</span>”</td>
+<td>HI: <span class="math inline">\(5^k-1=4m\)</span></td>
+<td>divisibilidad y paridad</td>
+</tr>
+<tr>
+<td><strong>Cadena y transitividad</strong></td>
+<td><span class="math inline">\(a\ge b\)</span> y <span class="math inline">\(b\ge c\)</span> dan <span class="math inline">\(a\ge c\)</span></td>
+<td><span class="math inline">\(2^{k+1}\ge2k+2\ge k+2\)</span></td>
+<td>desigualdades</td>
+</tr>
+<tr>
+<td><strong>Tirar lo que sobra</strong></td>
+<td>en una cadena de <span class="math inline">\(\ge\)</span> puedes cambiar algo por algo más chico</td>
+<td><span class="math inline">\(2k+2\ge k+2\)</span></td>
+<td>la HI da más de lo que pide la meta</td>
+</tr>
+<tr>
+<td><strong>Restar y ver el signo</strong></td>
+<td>para comparar <span class="math inline">\(A\)</span> con <span class="math inline">\(B\)</span>, calcula <span class="math inline">\(A-B\)</span></td>
+<td><span class="math inline">\((2k+2)-(k+2)=k\ge0\)</span></td>
+<td>cerrar una desigualdad</td>
+</tr>
+<tr>
+<td><strong>Usar <span class="math inline">\(k\ge n_0\)</span></strong></td>
+<td>la HI también te da ese dato</td>
+<td><span class="math inline">\(k\ge0\)</span> en el renglón de arriba</td>
+<td>falta un dato chiquito para cerrar</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>¿Cómo sé cuál usar? Mirando la meta.</strong> El álgebra del paso no se hace a ciegas: en cada renglón compara lo que tienes con lo que quieres y pregúntate qué les falta para parecerse. ¿La meta tiene denominador 2? Multiplica por <span class="math inline">\(\frac22\)</span>. ¿Tiene el factor <span class="math inline">\((k+1)\)</span>? Sácalo. ¿La HI habla de <span class="math inline">\(5^k-1\)</span> y tú tienes <span class="math inline">\(5\cdot5^k-1\)</span>? Fabrica el <span class="math inline">\(5^k-1\)</span> sumando cero.</p>
+<p><strong>Señales de alarma:</strong></p>
+<ul>
+<li><strong>Nunca usaste la HI.</strong> O no hacía falta inducción, o el álgebra está mal.</li>
+<li><strong>Usaste la meta</strong> para justificar un renglón. Es circular.</li>
+<li><strong>El paso no funciona con el <span class="math inline">\(k\)</span> más chico</strong> (<span class="math inline">\(k=n_0\)</span>). Te falta una base (§3.6).</li>
+</ul>
+<p><strong>Los trucos en acción.</strong> <span class="math inline">\(P(n)\)</span>: “<span class="math inline">\(5^n-1\)</span> es múltiplo de 4”, para todo <span class="math inline">\(n\ge0\)</span>. Aquí no hay un “lado derecho” con fórmula: la meta es <strong>exhibir</strong> el entero que multiplica al 4.</p>
+<ul>
+<li><em>Juego con números:</em> <span class="math inline">\(5^0-1=0\)</span>, <span class="math inline">\(5^1-1=4\)</span>, <span class="math inline">\(5^2-1=24\)</span>, <span class="math inline">\(5^3-1=124=4\cdot31\)</span> ✓.</li>
+<li><em>Base</em> (<span class="math inline">\(n=0\)</span>): <span class="math inline">\(5^0-1=0=4\cdot0\)</span> ✓.</li>
+<li><em>HI</em> (traduciendo la definición): <span class="math inline">\(5^k-1=4m\)</span> para algún entero <span class="math inline">\(m\)</span>.</li>
+<li><em>Meta:</em> <span class="math inline">\(5^{k+1}-1=4\cdot(\text{algún entero})\)</span>.</li>
+<li><em>Comparo:</em> la HI sabe algo de <span class="math inline">\(5^k-1\)</span>; la meta tiene <span class="math inline">\(5^{k+1}-1\)</span>. Plan: hacer aparecer <span class="math inline">\(5^k-1\)</span> dentro de <span class="math inline">\(5^{k+1}-1\)</span>.</li>
+</ul>
+<div class="scroll"><table>
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Renglón</th>
+<th>Expresión</th>
+<th>Justificación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><span class="math inline">\(5^{k+1}-1\)</span></td>
+<td>la expresión de la meta</td>
+</tr>
+<tr>
+<td>2</td>
+<td><span class="math inline">\(=5\cdot5^k-1\)</span></td>
+<td><strong>separar el último:</strong> <span class="math inline">\(a^{k+1}=a\cdot a^k\)</span></td>
+</tr>
+<tr>
+<td>3</td>
+<td><span class="math inline">\(=5\cdot5^k-5+5-1\)</span></td>
+<td><strong>sumar cero:</strong> <span class="math inline">\(-5+5=0\)</span>. ¿Por qué 5? Quiero <span class="math inline">\(5\cdot(5^k-1)\)</span>, que es <span class="math inline">\(5\cdot5^k-5\)</span>, y me falta ese <span class="math inline">\(-5\)</span></td>
+</tr>
+<tr>
+<td>4</td>
+<td><span class="math inline">\(=5\,(5^k-1)+4\)</span></td>
+<td>factor común 5 en los dos primeros términos; y <span class="math inline">\(5-1=4\)</span></td>
+</tr>
+<tr>
+<td>5</td>
+<td><span class="math inline">\(=5\cdot4m+4\)</span></td>
+<td><strong>aquí uso la HI:</strong> <span class="math inline">\(5^k-1=4m\)</span></td>
+</tr>
+<tr>
+<td>6</td>
+<td><span class="math inline">\(=4\,(5m+1)\)</span></td>
+<td>factor común 4</td>
+</tr>
+</tbody>
+</table></div>
+<p>Como <span class="math inline">\(m\)</span> es entero, <span class="math inline">\(5m+1\)</span> también lo es, así que <span class="math inline">\(5^{k+1}-1\)</span> es 4 por un entero ✓. Por inducción, vale para todo <span class="math inline">\(n\ge0\)</span>. <span class="math inline">\(\square\)</span> <em>Con números</em> (<span class="math inline">\(k=1\)</span>): la HI es <span class="math inline">\(5-1=4\cdot1\)</span>, o sea <span class="math inline">\(m=1\)</span>; el renglón 6 da <span class="math inline">\(4\cdot(5\cdot1+1)=24=5^2-1\)</span> ✓.</p>
 <h3 id="ejemplo-resuelto-la-suma-12dotsn">3.2 Ejemplo resuelto: la suma <span class="math inline">\(1+2+\dots+n\)</span></h3>
 <p><strong>Afirmación <span class="math inline">\(P(n)\)</span>:</strong> <span class="math inline">\(\displaystyle 1+2+\dots+n=\frac{n(n+1)}{2}\)</span>, para todo <span class="math inline">\(n\ge1\)</span>.</p>
 <p><strong>Base (<span class="math inline">\(n=1\)</span>):</strong> el lado izquierdo es <span class="math inline">\(1\)</span>. El derecho es <span class="math inline">\(\frac{1\cdot2}{2}=1\)</span>. Son iguales ✓.</p>

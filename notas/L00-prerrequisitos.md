@@ -495,6 +495,110 @@ Con eso, cae el 0; como cae el 0, cae el 1; como cae el 1, cae el 2; y así **pa
 2. **Toma un lado de $P(k+1)$ y transfórmalo hasta que aparezca algo de lo que habla $P(k)$.** Ese es el renglón donde **usas la HI**: sustituyes ese pedazo por lo que la HI dice que vale.
 3. **Sigue transformando hasta llegar al otro lado de $P(k+1)$.** Cuando llegas, el paso está demostrado.
 
+#### La receta de cocina, paso a paso
+
+Una inducción se cocina siempre igual. Hazla **primero en borrador** y pásala en limpio después: nadie escribe una demostración de corrido; primero se explora y luego se redacta. La columna de en medio usa la suma de §3.2 como ejemplo.
+
+| # | Qué haces | Cómo se ve con $1+\dots+n=\frac{n(n+1)}{2}$ | Pregunta de control |
+|---|---|---|---|
+| 0 | **Juega con números.** Evalúa los dos lados para $n=1,2,3$. | $1=\frac{1\cdot2}{2}$; $1+2=3=\frac{2\cdot3}{2}$; $1+2+3=6=\frac{3\cdot4}{2}$ | ¿Se cumple? Si un caso falla, no hay nada que demostrar (§2.4). |
+| 1 | **Escribe $P(n)$**: su lado izquierdo, su lado derecho y desde qué $n_0$ vale. | izquierdo: $1+\dots+n$; derecho: $\frac{n(n+1)}{2}$; $n\ge1$ | ¿Dónde está el hueco $n$ en cada lado? |
+| 2 | **Base:** sustituye $n_0$ en cada lado **por separado** y calcula. | izquierdo: $1$; derecho: $\frac{1\cdot2}{2}=1$ | ¿Los dos lados dan lo mismo? |
+| 3 | **HI:** copia $P(n)$ con $k$ y enciérrala en un recuadro. Es lo **único** que tienes permiso de suponer. | $1+\dots+k=\frac{k(k+1)}{2}$ | ¿Dice $k$, y no $n$ ni $k+1$? |
+| 4 | **Meta:** copia $P(n)$ con $(k+1)$ y márcala "por demostrar". **Todavía no es verdad:** no puedes usarla. | $1+\dots+k+(k+1)\overset{?}{=}\frac{(k+1)(k+2)}{2}$ | ¿Cada $(k+1)$ lleva paréntesis? |
+| 5 | **Compara** la HI y la meta, lado por lado: ¿qué cambió? | izquierdo: apareció el sumando $(k+1)$; derecho: cada $k$ es ahora $k+1$ | ¿Dónde está la HI escondida dentro de la meta? |
+| 6 | **Arranca del lado de la meta que contiene el pedazo de la HI.** Haz que el pedazo aparezca tal cual y **cámbialo** por el otro lado de la HI. | $\underbrace{1+\dots+k}_{\text{pedazo de la HI}}+(k+1)=\frac{k(k+1)}{2}+(k+1)$ | ¿Marcaste "aquí uso la HI"? |
+| 7 | **Álgebra hasta el otro lado.** Aquí ya no hay inducción: solo transformar lo que tienes hasta que sea el otro lado de la meta. | $\frac{k(k+1)}{2}+(k+1)=\dots=\frac{(k+1)(k+2)}{2}$ | ¿Cada signo tiene su porqué? |
+| 8 | **Cierra y comprueba** con un número. | "Por inducción, vale para todo $n\ge1$"; con $k=3$: $10=10$ | ¿Usaste la HI al menos una vez? |
+
+#### Qué pasa con el lado izquierdo y con el lado derecho
+
+El paso 5 es el que decide todo. Pon la HI y la meta una encima de la otra:
+
+| | Lado izquierdo | | Lado derecho | Estado |
+|---|---|---|---|---|
+| HI, $P(k)$ | $1+\dots+k$ | $=$ | $\dfrac{k(k+1)}{2}$ | **la supongo** |
+| Meta, $P(k+1)$ | $1+\dots+k+(k+1)$ | $\overset{?}{=}$ | $\dfrac{(k+1)(k+2)}{2}$ | **por demostrar** |
+| Qué cambió | se agregó $+(k+1)$ | | cada $k$ se volvió $k+1$ | |
+
+Léela así: el lado izquierdo de la meta es **el lado izquierdo de la HI, más $(k+1)$**. La HI me deja cambiar ese pedazo por $\frac{k(k+1)}{2}$. Al hacerlo, la suma con puntos suspensivos (de largo desconocido) desaparece, y lo que queda es una pregunta de **puro álgebra entre dos fórmulas**:
+$$\underbrace{\frac{k(k+1)}{2}}_{\text{derecho de la HI}}+\underbrace{(k+1)}_{\text{lo que se agregó}}\ \overset{?}{=}\ \underbrace{\frac{(k+1)(k+2)}{2}}_{\text{derecho de la meta}}.$$
+Eso es todo lo que hace la inducción: **convierte un problema sobre $k+1$ cosas en "lo que ya sabía de $k$ cosas, más el pedazo nuevo"**. Lo demás es álgebra de secundaria. En casi todas las inducciones con sumas la pregunta final tiene esta misma forma: *derecho de la HI + lo que se agregó $\overset{?}{=}$ derecho de la meta*.
+
+**Tres formas válidas de hacer que los lados coincidan, y una que no lo es.**
+
+**Forma A: la cadena (la que se entrega).** Empiezas en un lado de la meta y, renglón por renglón, llegas al otro. Cada renglón es igual al anterior por una razón que escribes. Así está redactado §3.2.
+
+**Forma B: encontrarse en medio.** Si no ves cómo llegar de un lado al otro, trabaja **cada lado en su propia columna** hasta que los dos sean la misma expresión:
+
+| | Columna izquierda | Columna derecha |
+|---|---|---|
+| Empiezo en | $1+\dots+k+(k+1)$ | $\dfrac{(k+1)(k+2)}{2}$ |
+| Primer paso | $=\dfrac{k(k+1)}{2}+(k+1)$ | $=\dfrac{k^2+2k+k+2}{2}$ |
+| Por qué | **HI** | distributiva: cada término de $(k+1)$ por cada término de $(k+2)$ |
+| Segundo paso | $=\dfrac{k^2+k}{2}+\dfrac{2k+2}{2}$ | $=\dfrac{k^2+3k+2}{2}$ |
+| Por qué | distributiva arriba; y $(k+1)=\frac{2(k+1)}{2}$ | junto $2k+k=3k$ |
+| Tercer paso | $=\dfrac{k^2+3k+2}{2}$ | (ya terminó) |
+| Por qué | sumo fracciones; $k+2k=3k$ | |
+
+Las dos columnas llegaron a $\frac{k^2+3k+2}{2}$. Entonces *izquierdo $=\frac{k^2+3k+2}{2}=$ derecho*, y la meta queda demostrada. Es válido porque dentro de cada columna solo hay igualdades justificadas, y **nada cruza de una columna a la otra**: nunca usé la meta, solo tomé cada uno de sus lados como punto de partida.
+
+**Forma C: hacia atrás, solo en borrador.** Partir de la meta y simplificarla para descubrir qué álgebra hace falta. Sirve para **encontrar** el camino; no es la demostración. En limpio se escribe con la forma A o la B.
+
+**❌ Lo que no vale: lo circular.** Escribir la meta como primer renglón, como si ya fuera cierta, y operar **en los dos lados a la vez** (pasar restando, multiplicar ambos lados, cancelar) hasta llegar a algo obvio como $0=0$. Está mal porque supusiste justo lo que querías demostrar, y llegar a algo verdadero no prueba que el punto de partida lo fuera. Ejemplo: parto de $-1=1$, que es falso; elevo al cuadrado los dos lados y obtengo $1=1$, que es verdadero. Si "llegar a algo cierto" demostrara el inicio, habría demostrado que $-1=1$.
+
+**Prueba rápida de que tu demostración no es circular:**
+
+1. Lo único que supones es el recuadro de la HI (con $k$).
+2. La meta aparece solo como **destino**, nunca como justificación de un renglón.
+3. Se lee de arriba hacia abajo: cada renglón sale del anterior o de la HI, nunca del siguiente.
+
+Con desigualdades es igual, pero la cadena lleva $\ge$ (todos en la **misma** dirección) y no hay "encontrarse en medio": para cerrar se resta y se mira el signo (§3.3).
+
+#### Caja de herramientas: trucos para el paso
+
+Todos estos trucos hacen lo mismo: **reescriben una expresión sin cambiar su valor**, para que aparezca el pedazo de la HI o la forma de la meta.
+
+| Truco | La idea | Ejemplo | Cuándo usarlo |
+|---|---|---|---|
+| **Separar el último** | lo de tamaño $k+1$ es lo de tamaño $k$ más un pedazo | $\sum_{i=1}^{k+1}a_i=\big(\sum_{i=1}^{k}a_i\big)+a_{k+1}$; $(k+1)!=(k+1)\cdot k!$; $a^{k+1}=a\cdot a^k$ | siempre es el primer intento: así aparece la HI |
+| **Sumar cero** | $x=x-c+c$: restar y sumar lo mismo | $5\cdot5^k-1=5\cdot5^k-5+5-1$ | el pedazo de la HI *casi* aparece, pero le falta un término |
+| **Multiplicar por uno** | $x=x\cdot\frac{c}{c}$ | $(k+1)=\frac{2(k+1)}{2}$ | para sumar fracciones o conseguir el denominador de la meta |
+| **Factor común (no expandas)** | si la meta tiene el factor $(k+1)$, sácalo en vez de multiplicar todo | $k(k+1)+2(k+1)=(k+1)(k+2)$ | la meta está factorizada |
+| **Expandir los dos lados** | la forma B de arriba | $\frac{k^2+3k+2}{2}$ en ambas columnas | no ves la factorización |
+| **Traducir la definición** | "múltiplo de 4" es "$=4m$ para algún entero $m$"; "par" es "$=2m$" | HI: $5^k-1=4m$ | divisibilidad y paridad |
+| **Cadena y transitividad** | $a\ge b$ y $b\ge c$ dan $a\ge c$ | $2^{k+1}\ge2k+2\ge k+2$ | desigualdades |
+| **Tirar lo que sobra** | en una cadena de $\ge$ puedes cambiar algo por algo más chico | $2k+2\ge k+2$ | la HI da más de lo que pide la meta |
+| **Restar y ver el signo** | para comparar $A$ con $B$, calcula $A-B$ | $(2k+2)-(k+2)=k\ge0$ | cerrar una desigualdad |
+| **Usar $k\ge n_0$** | la HI también te da ese dato | $k\ge0$ en el renglón de arriba | falta un dato chiquito para cerrar |
+
+**¿Cómo sé cuál usar? Mirando la meta.** El álgebra del paso no se hace a ciegas: en cada renglón compara lo que tienes con lo que quieres y pregúntate qué les falta para parecerse. ¿La meta tiene denominador 2? Multiplica por $\frac22$. ¿Tiene el factor $(k+1)$? Sácalo. ¿La HI habla de $5^k-1$ y tú tienes $5\cdot5^k-1$? Fabrica el $5^k-1$ sumando cero.
+
+**Señales de alarma:**
+
+- **Nunca usaste la HI.** O no hacía falta inducción, o el álgebra está mal.
+- **Usaste la meta** para justificar un renglón. Es circular.
+- **El paso no funciona con el $k$ más chico** ($k=n_0$). Te falta una base (§3.6).
+
+**Los trucos en acción.** $P(n)$: "$5^n-1$ es múltiplo de 4", para todo $n\ge0$. Aquí no hay un "lado derecho" con fórmula: la meta es **exhibir** el entero que multiplica al 4.
+
+- *Juego con números:* $5^0-1=0$, $5^1-1=4$, $5^2-1=24$, $5^3-1=124=4\cdot31$ ✓.
+- *Base* ($n=0$): $5^0-1=0=4\cdot0$ ✓.
+- *HI* (traduciendo la definición): $5^k-1=4m$ para algún entero $m$.
+- *Meta:* $5^{k+1}-1=4\cdot(\text{algún entero})$.
+- *Comparo:* la HI sabe algo de $5^k-1$; la meta tiene $5^{k+1}-1$. Plan: hacer aparecer $5^k-1$ dentro de $5^{k+1}-1$.
+
+| Renglón | Expresión | Justificación |
+|---|---|---|
+| 1 | $5^{k+1}-1$ | la expresión de la meta |
+| 2 | $=5\cdot5^k-1$ | **separar el último:** $a^{k+1}=a\cdot a^k$ |
+| 3 | $=5\cdot5^k-5+5-1$ | **sumar cero:** $-5+5=0$. ¿Por qué 5? Quiero $5\cdot(5^k-1)$, que es $5\cdot5^k-5$, y me falta ese $-5$ |
+| 4 | $=5\,(5^k-1)+4$ | factor común 5 en los dos primeros términos; y $5-1=4$ |
+| 5 | $=5\cdot4m+4$ | **aquí uso la HI:** $5^k-1=4m$ |
+| 6 | $=4\,(5m+1)$ | factor común 4 |
+
+Como $m$ es entero, $5m+1$ también lo es, así que $5^{k+1}-1$ es 4 por un entero ✓. Por inducción, vale para todo $n\ge0$. $\square$ *Con números* ($k=1$): la HI es $5-1=4\cdot1$, o sea $m=1$; el renglón 6 da $4\cdot(5\cdot1+1)=24=5^2-1$ ✓.
+
 ### 3.2 Ejemplo resuelto: la suma $1+2+\dots+n$
 
 **Afirmación $P(n)$:** $\displaystyle 1+2+\dots+n=\frac{n(n+1)}{2}$, para todo $n\ge1$.
