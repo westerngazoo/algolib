@@ -1,6 +1,6 @@
 # Lección 2 — Memoria cruda y el TAD Secuencia: Vector
 
-> **Prerrequisitos:** Lección 0 (§3 sumas, §4 probabilidad y linealidad de la esperanza, §7–9 memoria, C++ y Rust) y Lección 1 completa (en especial §6 análisis amortizado y §7 invariante de representación).
+> **Prerrequisitos:** Lección 0 (§6 pisos y techos, §7 sumatorias, §9.2 probabilidad y linealidad de la esperanza, §11–12 memoria y los tres lenguajes) y Lección 1 completa (en especial §6 análisis amortizado y §7 invariante de representación).
 >
 > **Cómo estudiar esta lección:** la lección 1 te dio la herramienta (análisis amortizado); esta te pide usarla sobre una interfaz más rica y, sobre todo, **escribir código que maneja memoria sin red de seguridad**. Cada afirmación sobre memoria viene con un programa que puedes correr.
 >
@@ -70,6 +70,8 @@ Ninguna gana en todo. El arreglo dinámico gana donde más importa en la prácti
 
 > **Teorema (cota inferior informal).** Ninguna estructura que guarde los elementos en un arreglo contiguo, en el orden de la secuencia, puede hacer `insert(0, x)` en $o(n)$ en el peor caso: tras insertar, los $n$ elementos viejos deben ocupar posiciones distintas a las que ocupaban, y cada uno requiere al menos una escritura.
 
+*Por qué.* Antes de insertar, el elemento $x_j$ está en la celda $j$, para $j=0,\dots,n-1$. Después de `insert(0, x)`, la especificación de §2.2 (caso $j>i$ con $i=0$) dice que $x_j$ es el elemento número $j+1$ de la secuencia; como el arreglo guarda la secuencia en orden, $x_j$ tiene que estar en la celda $j+1$. La celda $j+1$ no es la celda $j$, así que cada uno de los $n$ elementos viejos se tiene que escribir en una celda donde antes no estaba: al menos $n$ escrituras. Una operación que hace al menos $n$ escrituras no puede costar $o(n)$. (Es "informal" porque supone que el único modo de cambiar el contenido de una celda es escribir en ella, que es lo que hace el modelo RAM de L01 §2.)
+
 Romper esa cota exige abandonar la contigüidad (listas, L03) o el orden físico (buffer circular, L04; árboles de secuencia, problem set).
 
 ---
@@ -82,13 +84,24 @@ Para manejar memoria cruda hay que saber exactamente **cuántos bytes** ocupa un
 
 - **Tamaño** $s(T)$: bytes entre el inicio de un `T` y el inicio del siguiente en un arreglo (`sizeof`, `size_of`).
 - **Alineación** $a(T)$: una potencia de 2; un `T` solo puede vivir en direcciones múltiplo de $a(T)$ (`alignof`, `align_of`). En la mayoría de las plataformas de 64 bits, $a(\texttt{int}) = 4$, $a(\texttt{double}) = 8$.
-- **Invariante:** $a(T) \mid s(T)$. Si no fuera así, en un arreglo `T[2]` el segundo elemento quedaría desalineado. Por eso el compilador agrega **relleno** al final de un `struct`.
+- **Invariante:** $a(T) \mid s(T)$ ("$a(T)$ divide a $s(T)$": el tamaño es múltiplo de la alineación). *Por qué tiene que ser así:* en un arreglo `T[2]` que empieza en $p$, el elemento 0 empieza en $p$ (múltiplo de $a(T)$) y el elemento 1 en $p+s(T)$. Para que $p+s(T)$ también sea múltiplo de $a(T)$, sabiendo que $p$ ya lo es, hace falta que $s(T)$ lo sea. *Con números:* si un `struct` con un `int` ($a=4$) midiera 5 bytes, con $p=0$ el segundo elemento empezaría en 5, que no es múltiplo de 4. Por eso el compilador agrega **relleno** al final de un `struct`.
 
 **Layout de un `struct` con orden fijo (C, C++, `#[repr(C)]` en Rust).** Los campos se colocan en el orden declarado; cada uno en el primer desplazamiento múltiplo de su alineación; el tamaño total se redondea hacia arriba a un múltiplo de la mayor alineación.
 
 $$\text{offset}_k = \Big\lceil \frac{\text{offset}_{k-1} + s_{k-1}}{a_k} \Big\rceil a_k,\qquad s(\texttt{struct}) = \Big\lceil \frac{\text{offset}_{\text{último}} + s_{\text{último}}}{a_{\max}} \Big\rceil a_{\max}.$$
 
-**Ejemplo.** `struct A { char a; int b; char c; }`: `a` en 0; `b` necesita múltiplo de 4, así que va en 4 (3 bytes de relleno); `c` en 8; el total $9$ se redondea a $12$. En cambio `struct B { int b; char a; char c; }` ocupa $8$. **El orden de los campos cambia el tamaño.**
+**Cómo leer la fórmula.** $\text{offset}_{k-1}+s_{k-1}$ es el primer byte libre después del campo anterior (donde empieza, más lo que ocupa). Y $\lceil x/a\rceil\,a$ es el **menor múltiplo de $a$ que es $\ge x$**: $x/a$ dice cuántos bloques de $a$ bytes caben en $x$; redondear hacia arriba (L00 §6) da el menor número entero de bloques que cubren $x$; multiplicar por $a$ lo vuelve a convertir en bytes. *Con números:* $x=5$, $a=4$: $5/4=1.25$, $\lceil1.25\rceil=2$, $2\cdot4=8$, y en efecto 8 es el primer múltiplo de 4 que no es menor que 5. Si $x$ ya es múltiplo de $a$, no cambia: $\lceil8/4\rceil\cdot4=8$.
+
+**Ejemplo.** `struct A { char a; int b; char c; }`, aplicando la fórmula campo por campo:
+
+| Campo | $s$ | $a$ | primer byte libre | offset $=\lceil\text{libre}/a\rceil\,a$ | relleno antes |
+|---|---|---|---|---|---|
+| `a` | 1 | 1 | 0 (es el primero) | $\lceil0/1\rceil\cdot1=0$ | 0 |
+| `b` | 4 | 4 | $0+1=1$ | $\lceil1/4\rceil\cdot4=4$ | 3 (bytes 1, 2, 3) |
+| `c` | 1 | 1 | $4+4=8$ | $\lceil8/1\rceil\cdot1=8$ | 0 |
+| total | | $a_{\max}=4$ | $8+1=9$ | $\lceil9/4\rceil\cdot4=12$ | 3 al final |
+
+En cambio `struct B { int b; char a; char c; }`: `b` en 0; el primer libre es $0+4=4$ y `a` va en 4; luego $4+1=5$ y `c` va en 5; el fin es $5+1=6$ y $\lceil6/4\rceil\cdot4=8$. Ocupa $8$. **El orden de los campos cambia el tamaño.**
 
 ::: {.tabs}
 ```c
@@ -195,15 +208,37 @@ Para `insert(i, x)` en un bloque con espacio libre, los elementos $x_i, \dots, x
 
 > **Lema 1.** Si hay espacio libre, `insert(i, x)` hace exactamente $n - i$ movimientos y una escritura; `erase(i)` hace exactamente $n - i - 1$ movimientos.
 
-*Demostración.* Las posiciones $j < i$ no cambian por la especificación de §2.2 ($\mathsf{get}(S', j) = \mathsf{get}(S, j)$), así que no se tocan. Cada posición $j\ge i$ del resultado contiene $x_{j-1}$, que antes estaba en otra posición, así que cada una de las $n-i$ posiciones $i+1,\dots,n$ recibe exactamente un movimiento, y la posición $i$ recibe la escritura de $x$. Para `erase`, las posiciones $i,\dots,n-2$ reciben $x_{i+1},\dots,x_{n-1}$: $n-i-1$ movimientos. $\blacksquare$
+*Demostración.* Contamos qué celdas del arreglo tienen que cambiar de contenido. Antes de la operación, la celda $j$ guarda $x_j$ ($0\le j<n$). Después, la celda $j$ debe guardar $\mathsf{get}(S',j)$, donde $S'$ es la secuencia nueva que fija la especificación de §2.2. Comparamos celda por celda para `insert(i, x)`:
+
+| Celdas | Antes | Después (§2.2) | Trabajo |
+|---|---|---|---|
+| $j<i$ | $x_j$ | $\mathsf{get}(S,j)=x_j$ | ninguno: ya está ahí |
+| $j=i$ | $x_i$ (o libre, si $i=n$) | $x$ | 1 escritura |
+| $i<j\le n$ | $x_j$ (o libre, si $j=n$) | $\mathsf{get}(S,j-1)=x_{j-1}$ | 1 movimiento cada una |
+
+Las celdas de la última fila son $i+1,\,i+2,\,\dots,\,n$. ¿Cuántas son? Los enteros de $a$ a $b$ son $b-a+1$ (de 1 a 3 hay $3-1+1=3$), así que son $n-(i+1)+1=n-i$. Cada una recibe exactamente un movimiento, porque su contenido nuevo es distinto del viejo; y ninguna otra celda se toca. Total: exactamente $n-i$ movimientos y una escritura.
+
+Para `erase(i)`, la secuencia nueva tiene $n-1$ elementos: $\mathsf{get}(S',j)=x_j$ si $j<i$, y $\mathsf{get}(S',j)=x_{j+1}$ si $i\le j\le n-2$. Las celdas $j<i$ no cambian; las celdas $i,\dots,n-2$ reciben un movimiento cada una, y son $(n-2)-i+1=n-i-1$. ($x_i$ se devuelve, no se escribe en el arreglo, y la celda $n-1$ queda fuera de la secuencia.)
+
+*Con números* ($n=5$, $i=2$): `insert` escribe $x$ en la celda 2 y mueve a las celdas 3, 4, 5 los elementos $x_2,x_3,x_4$: $3=5-2$ movimientos ✓. `erase` llena las celdas 2 y 3 con $x_3,x_4$: $2=5-2-1$ ✓. $\blacksquare$
 
 ### 4.2 Peor caso, mejor caso y un patrón cuadrático
 
 > **Teorema 2.** $n$ llamadas `insert(0, ·)` sobre una secuencia vacía hacen $\binom{n}{2} = \Theta(n^2)$ movimientos; $n$ llamadas `push_back` hacen 0 movimientos de corrimiento (y $<2n$ copias por realojamiento, L01 §6.4).
 
-*Demostración.* La $k$-ésima inserción ($k=0,\dots,n-1$) ocurre con $k$ elementos presentes y, por el Lema 1 con $i=0$, mueve $k$ elementos: $\sum_{k=0}^{n-1} k = n(n-1)/2$. Para `push_back`, $i = k$ y el Lema da $k - k = 0$. $\blacksquare$
+*Demostración.* *Parte 1: `insert(0, ·)`.* Numeramos las inserciones $k=0,1,\dots,n-1$. Antes de la inserción $k$ ya se hicieron $k$ inserciones, así que hay $k$ elementos: en el Lema 1 el tamaño es $k$ (hace el papel de $n$) y la posición es $i=0$, de modo que se mueven $k-0=k$ elementos. Sumando las $n$ inserciones:
+$$\sum_{k=0}^{n-1}k=0+1+\dots+(n-1)=\frac{(n-1)\,n}{2},$$
+que es la suma de Gauss (L00 §7.2) con $n-1$ en el lugar de $n$ (el término $k=0$ no aporta nada). Y $\binom n2=\frac{n(n-1)}{2}$ por definición (pares que se pueden formar con $n$ cosas). Como $\frac{n(n-1)}2=\frac{n^2}2-\frac n2$, el término dominante es $\frac{n^2}2$ y la suma es $\Theta(n^2)$ (L01 §3). *Con números* ($n=1000$): $\frac{1000\cdot999}{2}=499\,500$, exactamente lo que imprime el programa de abajo.
 
-Insertar siempre **a la mitad** (posición $\lfloor k/2\rfloor$) mueve $k - \lfloor k/2 \rfloor = \lceil k/2\rceil$ elementos en la inserción $k$; en total $\sum_{k=0}^{n-1}\lceil k/2\rceil$, que para $n$ par vale $\sum_{j=0}^{n/2-1}(j + (j+1)) = (n/2)^2$. Sigue siendo $\Theta(n^2)$: **la mitad de cuadrático sigue siendo cuadrático.** El programa lo cuenta:
+*Parte 2: `push_back`.* `push_back` con $k$ elementos es `insert(k, ·)`: la posición es $i=k$, y el Lema 1 da $k-k=0$ movimientos. Las copias por realojamiento son otra cuenta, ya hecha en L01 §6.4. $\blacksquare$
+
+Insertar siempre **a la mitad**: la inserción $k$ (con $k$ elementos) va en la posición $i=\lfloor k/2\rfloor$ y, por el Lema 1, mueve $k-\lfloor k/2\rfloor$ elementos. Ese número es $\lceil k/2\rceil$, por casos: si $k=2j$ es par, $k-\lfloor k/2\rfloor=2j-j=j=\lceil k/2\rceil$; si $k=2j+1$ es impar, $\lfloor k/2\rfloor=j$ y $k-j=j+1=\lceil k/2\rceil$.
+
+Para sumar $\sum_{k=0}^{n-1}\lceil k/2\rceil$ con $n$ par, juntamos cada par $k=2j$ con el impar que le sigue, $k=2j+1$. Juntos aportan $j+(j+1)=2j+1$, y $j$ recorre $0,1,\dots,n/2-1$ (el último par es $k=n-2$, que es $2j$ con $j=n/2-1$):
+$$\sum_{k=0}^{n-1}\Big\lceil\frac k2\Big\rceil=\sum_{j=0}^{n/2-1}(2j+1)=2\cdot\frac{(n/2-1)(n/2)}{2}+\frac n2=\Big(\frac n2\Big)^2.$$
+El segundo signo separa la suma en $2\sum j$ (Gauss hasta $n/2-1$) más $\sum 1$ ($n/2$ términos que valen 1). El tercero desarrolla: el 2 se cancela con el $\frac12$ y queda $(n/2)^2-n/2+n/2=(n/2)^2$. *Con números:* $n=4$: $0+1+1+2=4=2^2$ ✓; $n=1000$: $500^2=250\,000$, lo que imprime el programa.
+
+Sigue siendo $\Theta(n^2)$: **la mitad de cuadrático sigue siendo cuadrático.** El programa lo cuenta:
 
 ::: {.tabs}
 ```c
@@ -300,10 +335,15 @@ al final:   0 movimientos
 
 > **Teorema 3.** Si cada inserción elige su posición de manera uniforme e independiente entre las $k+1$ posibles, el número esperado de movimientos de $n$ inserciones desde la secuencia vacía es $n(n-1)/4$.
 
-*Demostración.* Sea $M_k$ el número de movimientos de la inserción $k$ (con $k$ elementos presentes) e $I_k$ su posición, uniforme en $\{0,\dots,k\}$. Por el Lema 1, $M_k = k - I_k$, así que
-$$\mathbb{E}[M_k] = k - \mathbb{E}[I_k] = k - \frac{1}{k+1}\sum_{i=0}^{k} i = k - \frac{k}{2} = \frac{k}{2}.$$
-Por **linealidad de la esperanza** (L0 §4), que no requiere independencia,
-$$\mathbb{E}\Big[\sum_{k=0}^{n-1} M_k\Big] = \sum_{k=0}^{n-1}\frac{k}{2} = \frac{n(n-1)}{4}. \qquad\blacksquare$$
+*Demostración.* Sea $M_k$ el número de movimientos de la inserción $k$ (con $k$ elementos presentes) e $I_k$ su posición, uniforme en $\{0,\dots,k\}$: cada una de las $k+1$ posiciones sale con probabilidad $\frac1{k+1}$. Por el Lema 1, con tamaño $k$ y posición $I_k$, $M_k = k - I_k$.
+
+*Paso 1: una inserción.* La esperanza es el promedio ponderado por la probabilidad (L00 §9.2):
+$$\mathbb{E}[I_k]=\sum_{i=0}^{k} i\cdot\frac{1}{k+1}=\frac{1}{k+1}\cdot\frac{k(k+1)}{2}=\frac k2.$$
+El segundo signo saca el factor común $\frac1{k+1}$ y usa Gauss para $0+1+\dots+k$; el tercero cancela $k+1$ arriba y abajo. Como $k$ es un número fijo (no es aleatorio), la linealidad da $\mathbb{E}[k-I_k]=k-\mathbb{E}[I_k]$, así que $\mathbb{E}[M_k]=k-\frac k2=\frac k2$. *Con números* ($k=2$): $I_2\in\{0,1,2\}$ da $2,1,0$ movimientos; el promedio es $\frac{2+1+0}{3}=1=\frac22$ ✓.
+
+*Paso 2: las $n$ inserciones.* Por **linealidad de la esperanza** (L00 §9.2), que no requiere independencia,
+$$\mathbb{E}\Big[\sum_{k=0}^{n-1} M_k\Big]=\sum_{k=0}^{n-1}\mathbb{E}[M_k]=\sum_{k=0}^{n-1}\frac{k}{2}=\frac12\cdot\frac{(n-1)\,n}{2}=\frac{n(n-1)}{4}.$$
+El tercer signo saca el $\frac12$ de la suma; lo que queda es Gauss hasta $n-1$, como en el Teorema 2. *Con números* ($n=3$): $0+\frac12+1=\frac32=\frac{3\cdot2}{4}$ ✓. $\blacksquare$
 
 Observa que **esperado** ($n^2/4$, promedio sobre el azar de las entradas) y **amortizado** (garantía sobre toda secuencia, L01 §6.8) son conceptos distintos, y aquí ambos dan $\Theta(n^2)$ para $n$ inserciones en medio: no hay contabilidad que salve un corrimiento.
 
@@ -313,15 +353,26 @@ Del L01 sabemos que $\Phi(D) = \max(0, 2k - m)$ (con $k$ = tamaño, $m$ = capaci
 
 > **Teorema 4.** Con duplicación y sin contracción, y la misma $\Phi$, el costo amortizado de `insert(i, x)` es a lo más $(k - i) + 3$ y el de `erase(i)` a lo más $k - i$, donde $k$ es el tamaño antes de la operación.
 
-*Demostración.* Contamos como costo cada escritura de un elemento (movimiento, copia o escritura del nuevo).
+*Demostración.* Contamos como costo cada escritura de un elemento (movimiento, copia o escritura del nuevo). Recuerda (L01 §6.4) que el costo amortizado es $\hat c=c+\Delta\Phi$, con $\Delta\Phi=\Phi_{\text{después}}-\Phi_{\text{antes}}$. En cada caso calculamos $c$, luego $\Delta\Phi$, y sumamos.
 
-*`insert` sin realojar* ($k < m$): costo real $c = (k - i) + 1$ (Lema 1). $k$ sube en 1 y $m$ no cambia, así que $\Delta\Phi \le 2$. Amortizado: $\hat c \le (k-i) + 3$.
+*Un hecho sobre $\max$ que usaremos dos veces.* Para cualquier número $y$ y cualquier $d\ge0$:
 
-*`insert` con realojamiento* ($k = m$): se reserva un bloque de $2m$, se reubican los $k$ viejos y se escribe $x$. Si la reubicación deja cada elemento **ya en su posición final** (los de antes de $i$ en su lugar, los demás corridos uno, como hacen las soluciones de C y C++), el costo real es $c = k + 1$; si primero se reubica y luego se corre (como la de Rust), es $c = k + (k - i) + 1$. En ambos casos $c \le k + (k-i) + 1$. Antes, $\Phi = 2k - k = k$; después, $\Phi = \max(0, 2(k+1) - 2k) = 2$. Amortizado: $\hat c \le k + (k-i) + 1 + 2 - k = (k - i) + 3$.
+- $\max(0,y+d)\le\max(0,y)+d$. Si $y+d\le0$, el lado izquierdo es $0$, y $0\le\max(0,y)+d$ porque ambos sumandos son $\ge0$. Si no, el lado izquierdo es $y+d$, y $y+d\le\max(0,y)+d$ porque $y\le\max(0,y)$.
+- $\max(0,y-d)\le\max(0,y)$. Los dos candidatos del máximo izquierdo no pasan de $\max(0,y)$: $0\le\max(0,y)$, y $y-d\le y\le\max(0,y)$.
 
-*`erase`*: costo real $k - i - 1$, y $k$ baja en 1, así que $\Delta\Phi \le 0$. Amortizado: $\hat c \le k - i - 1$.
+*Caso 1: `insert` sin realojar* ($k<m$). Costo real: $c=(k-i)+1$ ($k-i$ movimientos y una escritura, Lema 1). Potencial: antes, $\Phi=\max(0,2k-m)$. Después el tamaño es $k+1$ y la capacidad sigue siendo $m$:
+$$\Phi'=\max\big(0,\,2(k+1)-m\big)=\max\big(0,\,(2k-m)+2\big)\le\max(0,\,2k-m)+2,$$
+por el primer hecho con $y=2k-m$ y $d=2$. Entonces $\Delta\Phi\le2$ y $\hat c\le(k-i)+1+2=(k-i)+3$.
 
-Como $\Phi(D_0) = 0$ y $\Phi \ge 0$, la suma de costos amortizados acota la de costos reales (L01 §6.4). $\blacksquare$
+*Caso 2: `insert` con realojamiento* ($k=m$). Costo real: se reserva un bloque de $2m$, se reubican los $k$ viejos y se escribe $x$. Si la reubicación deja cada elemento **ya en su posición final** (los de antes de $i$ en su lugar, los demás corridos uno, como hacen las soluciones de C y C++), el costo real es $c=k+1$; si primero se reubica y luego se corre (como la de Rust), es $c=k+(k-i)+1$. En ambos casos $c\le k+(k-i)+1$, porque $k-i\ge0$ (la posición cumple $i\le k$). Potencial: antes, como $m=k$, $\Phi=\max(0,2k-k)=\max(0,k)=k$. Después la capacidad es $2m=2k$ y el tamaño $k+1$, así que $\Phi'=\max\big(0,2(k+1)-2k\big)=\max(0,2)=2$. Entonces $\Delta\Phi=2-k$ y
+$$\hat c\le\big(k+(k-i)+1\big)+(2-k)=(k-i)+3,$$
+porque el $k$ de la reubicación se cancela con el $-k$ del potencial: **la caída del potencial paga la reubicación**. *Con números* ($k=m=8$, $i=3$, reubicando y luego corriendo): $c=8+5+1=14$; $\Phi$ pasa de 8 a 2, $\Delta\Phi=-6$; $\hat c=14-6=8=(8-3)+3$ ✓. (Caso borde $m=0$: la primera reserva no es de $2\cdot0$ sino de 1 elemento. Ahí $k=i=0$, $c=1$, $\Phi$ pasa de 0 a $\max(0,2\cdot1-1)=1$, y $\hat c=2\le3$.)
+
+*Caso 3: `erase`.* Costo real: $c=k-i-1$ (Lema 1). Potencial: el tamaño baja a $k-1$ y $m$ no cambia:
+$$\Phi'=\max\big(0,\,2(k-1)-m\big)=\max\big(0,\,(2k-m)-2\big)\le\max(0,\,2k-m),$$
+por el segundo hecho con $d=2$. Entonces $\Delta\Phi\le0$ y $\hat c\le k-i-1\le k-i$.
+
+*Por qué esto acota el costo real.* Sumando $\hat c_t=c_t+\Phi_t-\Phi_{t-1}$ sobre las operaciones $t=1,\dots,T$, los potenciales se cancelan en cadena (suma telescópica, L00 §7.6): $\sum_t\hat c_t=\sum_t c_t+\Phi_T-\Phi_0$. Como $\Phi_0=\max(0,0-0)=0$ (vector vacío) y $\Phi_T\ge0$ (es un máximo con 0), queda $\sum_t c_t\le\sum_t\hat c_t$. $\blacksquare$
 
 En palabras: **el realojamiento sigue siendo gratis amortizado; lo único que cuesta es el corrimiento**, y ese no se amortiza.
 
@@ -335,7 +386,9 @@ En palabras: **el realojamiento sigue siendo gratis amortizado; lo único que cu
 
 > **Proposición 5.** Después de `reserve(N)`, las siguientes $N - k$ llamadas a `push_back` cuestan exactamente 1 cada una **en el peor caso** (no solo amortizado), y no invalidan ningún puntero.
 
-*Demostración.* Ninguna de esas operaciones encuentra $k = m$, porque $k$ empieza en el tamaño actual, sube de uno en uno hasta a lo más $N\le m$ y $m$ no cambia. Sin realojamiento, cada `push_back` es una escritura y el bloque no se mueve. $\blacksquare$
+*Demostración.* Sea $k_0$ el tamaño justo después de `reserve(N)`, y $m\ge N$ la capacidad. Numeramos los `push_back` $t=1,\dots,N-k_0$. Antes del `push_back` número $t$ ya se hicieron $t-1$, así que el tamaño es $k_0+t-1$. Como $t\le N-k_0$:
+$$k_0+t-1\;\le\;k_0+(N-k_0)-1\;=\;N-1\;<\;N\;\le\;m.$$
+Es decir, cada uno encuentra $k<m$: hay espacio y no realoja. Falta ver que $m$ no cambia por el camino: lo único que cambia $m$ es un realojamiento, así que, yendo en orden $t=1,2,\dots$ (inducción sobre $t$), si los anteriores no realojaron $m$ sigue igual y el $t$-ésimo tampoco realoja. Sin realojamiento, cada `push_back` es una escritura y el bloque no se mueve, así que ningún puntero se invalida. *Con números:* vector vacío y `reserve(100)` con $m=100$: los `push_back` 1 a 100 encuentran tamaños $0,\dots,99$, todos $<100$; el 101 encuentra tamaño $100=m$ y realoja. $\blacksquare$
 
 Úsalo cuando conoces el tamaño final: ahorra $\approx 2N$ copias y $\lg N$ reservas, y vuelve predecible la latencia (importante en sistemas de tiempo real, donde un `push_back` ocasional de $\Theta(n)$ es inaceptable aunque el promedio sea bueno).
 
@@ -345,9 +398,15 @@ En palabras: **el realojamiento sigue siendo gratis amortizado; lo único que cu
 
 > **Proposición 6.** La secuencia `(push_back; shrink_to_fit)` repetida $n$ veces cuesta $\Theta(n^2)$.
 
-*Demostración.* Tras cada `shrink_to_fit`, $k = m$. El siguiente `push_back` encuentra el bloque lleno y copia los $k$ elementos. Con $k = 0, 1, \dots, n-1$ el total es $\sum k = \Theta(n^2)$. $\blacksquare$
+*Demostración.* Numeramos las vueltas $t=0,1,\dots,n-1$. Antes de la vuelta $t$ hay $t$ elementos y, por el `shrink_to_fit` de la vuelta anterior, capacidad $m=t$ (en la vuelta 0, el vector vacío tiene $m=0$). El `push_back` encuentra $k=m=t$: realoja, copia los $t$ elementos y escribe el nuevo, $t+1$ escrituras. Después, `shrink_to_fit` deja $m=t+1$, copiando a lo más los $t+1$ elementos.
 
-Esto viola la intuición de L01: el potencial $\Phi = \max(0,2k-m)$ **salta** de $\approx k$ a... nada: `shrink_to_fit` baja $m$ de $\approx 2k$ a $k$, lo que **sube** $\Phi$ en $\approx k$ unidades sin que el usuario pague por ello. Por eso `std::vector::shrink_to_fit` está especificada como una **petición no vinculante** y por eso `Vec::shrink_to_fit` documenta que puede realojar: son operaciones de $\Theta(k)$ que el usuario debe invocar con conocimiento de causa (típicamente una sola vez, cuando el contenedor deja de crecer).
+*Cota inferior:* contando solo las copias de los `push_back`, $\sum_{t=0}^{n-1}t=\frac{n(n-1)}{2}$ (Gauss, como en el Teorema 2), que es $\Omega(n^2)$.
+
+*Cota superior:* la vuelta $t$ cuesta a lo más $(t+1)+(t+1)\le 2n$, porque $t\le n-1$. Con $n$ vueltas, el total es $\le2n^2=O(n^2)$.
+
+Las dos cotas juntas dan $\Theta(n^2)$. *Con números* ($n=4$): los `push_back` copian $0+1+2+3=6=\frac{4\cdot3}{2}$ elementos. $\blacksquare$
+
+Esto viola la intuición de L01, y el potencial $\Phi=\max(0,2k-m)$ dice exactamente por qué. Justo después de duplicar, $m=2k$ y $\Phi=\max(0,2k-2k)=0$. Si ahora `shrink_to_fit` baja $m$ a $k$, el potencial pasa a $\max(0,2k-k)=k$: **sube** $k$ unidades sin que el usuario haya pagado por ellas. El costo amortizado de ese `shrink_to_fit` es su costo real ($k$ copias) más $\Delta\Phi=k$: $\Theta(k)$, no $O(1)$. Por eso `std::vector::shrink_to_fit` está especificada como una **petición no vinculante** y por eso `Vec::shrink_to_fit` documenta que puede realojar: son operaciones de $\Theta(k)$ que el usuario debe invocar con conocimiento de causa (típicamente una sola vez, cuando el contenedor deja de crecer).
 
 ### 5.3 Contracción automática
 
@@ -431,7 +490,7 @@ fn main() {
 ```
 :::
 
-En C y C++ el programa compila y, con suerte, AddressSanitizer lo detecta en ejecución (`heap-use-after-free`). En Rust **no compila**: el préstamo `r` vive hasta el `println!`, y `push` necesita `&mut v`. La regla "un `&mut` o varios `&`, nunca ambos" (L00 §9) es exactamente la regla de invalidación de `std::vector`, verificada por el compilador.
+En C y C++ el programa compila y, con suerte, AddressSanitizer lo detecta en ejecución (`heap-use-after-free`). En Rust **no compila**: el préstamo `r` vive hasta el `println!`, y `push` necesita `&mut v`. La regla "un `&mut` o varios `&`, nunca ambos" (L00 §11.3 y §12) es exactamente la regla de invalidación de `std::vector`, verificada por el compilador.
 
 ### 6.3 Aliasing al insertar
 
@@ -553,8 +612,11 @@ Recuerda los tres niveles de Abrahams (L01 §7.3). Queremos que `push_back`, `re
 > **Proposición 7.** Si el constructor de movimiento de `T` es `noexcept` o `T` es copiable, el algoritmo da la garantía fuerte.
 
 *Demostración.* Dividimos en dos casos según lo que elige `move_if_noexcept`.
+
 *(a) Mover es `noexcept`:* el paso 3 no puede lanzar. Las únicas excepciones posibles están en los pasos 1 y 2, antes de tocar `data_`.
+
 *(b) Mover puede lanzar:* `move_if_noexcept` devuelve una referencia a `const` y se **copia**. Copiar no modifica el original, así que mientras el paso 3 avanza, las celdas $[0,k)$ de `data_` siguen intactas. Si la copia $j$ lanza, el paso de limpieza destruye exactamente los objetos construidos en `nd` (los $j$ copiados y el nuevo) y libera `nd`: el estado observable (`data_`, `size_`, `cap_` y los valores) es el de antes.
+
 En ambos casos, el paso 4 solo contiene operaciones que no lanzan (destructores, que en C++ son `noexcept` por defecto, y `deallocate`). $\blacksquare$
 
 ¿Por qué no basta con mover siempre? Si un movimiento lanza a la mitad, los primeros $j$ objetos viejos **ya fueron movidos** (vaciados): no hay vuelta atrás. Este es el motivo de que `std::vector` copie en lugar de mover si tu constructor de movimiento no es `noexcept`, y es un problema de rendimiento real: **declara `noexcept` tus constructores de movimiento**. El test `vector_garantia_fuerte` usa un tipo `Bomba` con movimiento sin `noexcept` y una copia que lanza a propósito.
@@ -701,8 +763,8 @@ Cuando todo pase, corre también `make c-fugas-lab02` (fugas en C) y Miri (§8.4
 
 <details><summary>Respuestas</summary>
 
-1. 16 bytes (8 + 1, redondeado a múltiplo de 8); el arreglo, 160.
-2. Ninguna (Proposición 5). El `push_back` 101 realoja una vez, a capacidad 200.
+1. 16 bytes. `d` va en 0 y ocupa los bytes 0–7; el primer byte libre es 8, y `c` (alineación 1) va ahí; el fin es $8+1=9$, y se redondea al múltiplo de $a_{\max}=8$: $\lceil9/8\rceil\cdot8=16$. El arreglo de 10 ocupa $10\cdot16=160$, porque $s(T)$ ya incluye el relleno del final (§3.1).
+2. Ninguna (Proposición 5: antes de cada uno el tamaño es $0,\dots,99$, siempre menor que $100\le m$). El 101 encuentra tamaño $100$; si la capacidad era exactamente 100, realoja una vez, a capacidad 200.
 3. Porque `erase` no recibe un elemento: el valor que devuelve se copia **antes** del corrimiento, y nada externo apunta a una celda que se vaya a sobrescribir.
 4. Devolvería 0 y el primer `push` intentaría `alloc` con un `Layout` de 0 bytes: UB.
 5. El desenrollado ejecutaría `Drop for Vector`, que llamaría `clear` otra vez y destruiría de nuevo los elementos ya destruidos: doble `drop`, UB.
