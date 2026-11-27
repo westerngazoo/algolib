@@ -140,7 +140,9 @@ En cambio, $n^2\notin O(n)$. Supón que alguien propone una constante $c$. En cu
 
 ![n² contra 2n, 5n y 10n: la parábola cruza cada recta en n = c y queda arriba](diagramas/n2-vs-cn.svg)
 
-En la gráfica: la parábola $n^2$ cruza a cada recta $c\cdot n$ justo en $n=c$, y de ahí en adelante queda arriba para siempre. Subir $c$ no resuelve nada: solo mueve el cruce más a la derecha.
+En la gráfica: la parábola $n^2$ cruza a cada recta $c\cdot n$ justo en $n=c$, y de ahí en adelante queda arriba para siempre. Subir $c$ no resuelve nada: solo mueve el cruce más a la derecha. Y no importa qué $n_0$ propongan: basta tomar una $n$ que sea mayor que $c$ **y** mayor que $n_0$.
+
+**Sus dos hermanas, $\Omega$ y $\Theta$.** $O$ es una cota **por arriba**. La cota **por abajo** es $\Omega$: $f\in\Omega(g)$ si existen $c>0$ y $n_0$ tales que $f(n)\ge c\,g(n)$ para todo $n\ge n_0$ ("de ahí en adelante, $f$ nunca baja de $c$ veces $g$"). Y $f\in\Theta(g)$ si está en las dos: en $O(g)$ y en $\Omega(g)$, o sea que crece **igual** que $g$, ignorando constantes. También escribiremos $f\prec g$ para decir que $f$ crece **estrictamente** más lento que $g$. *Con números:* $3n+5$ es $\Omega(n)$ con $c=3$, $n_0=1$ (porque $3n+5\ge3n$), y junto con lo de arriba, $3n+5\in\Theta(n)$. En la L01 (§3) se estudian a fondo.
 
 > 💭 **Para reflexionar.** ¿Por qué la definición deja escoger $c$ y $n_0$, en lugar de exigir simplemente $f(n)\le g(n)$ para toda $n$? Piensa en dos algoritmos: uno hace $100n$ pasos y otro $n^2$. ¿Cuál es mejor para $n=10$? ¿Y para $n=10^6$? La notación $O$ está diseñada para responder la segunda pregunta.
 
@@ -330,12 +332,18 @@ Partes de la hipótesis y avanzas con pasos válidos hasta la conclusión.
 
 **Meta, traducida.** "Par" significa "el doble de un entero". Así que tengo que llegar a escribir $n^2$ con la forma $2\cdot(\text{algún entero})$. Saber a qué forma quiero llegar es lo que guía el álgebra.
 
-1. "$n$ es par" significa que existe un entero $k$ con $n=2k$. ($k$ es solo el nombre de la mitad de $n$: si $n=6$, $k=3$.)
-2. Sustituyo $n$ por $2k$ y desarrollo el cuadrado: $n^2=(2k)^2=(2k)\cdot(2k)=4k^2$.
-3. Saco un $2$ de factor común para que aparezca la forma que busco: $4k^2=2\cdot(2k^2)$.
-4. $2k^2$ es entero (es producto de enteros), así que $n^2=2\cdot(\text{entero})$: es par. $\square$
+- **Tengo:** $n$ es par, es decir, existe un entero $k$ con $n=2k$. ($k$ es solo el nombre de la mitad de $n$: si $n=6$, $k=3$.)
+- **Quiero:** $n^2=2\cdot(\text{algún entero})$.
+- **Plan:** sustituir $n$ por $2k$ dentro de $n^2$ y acomodar hasta que aparezca un $2$ multiplicando a todo.
 
-*Con números:* $n=6$, $k=3$: $n^2=36$ y $2\cdot(2\cdot3^2)=2\cdot18=36$ ✓.
+| # | Expresión | Con $n=6$, $k=3$ | Qué hago · por qué se vale |
+|---|---|---|---|
+| 1 | $n^2=(2k)^2$ | $6^2=36$ | **Sustituyo $n$ por $2k$.** Se vale porque $n=2k$ (lo que tengo). |
+| 2 | $n^2=(2k)\cdot(2k)$ | $6\cdot6=36$ | **Escribo el cuadrado como producto:** $x^2=x\cdot x$. |
+| 3 | $n^2=4k^2$ | $4\cdot9=36$ | **Multiplico:** $2\cdot2=4$ y $k\cdot k=k^2$; el orden de los factores no cambia un producto. |
+| 4 | $n^2=2\cdot(2k^2)$ | $2\cdot18=36$ | **Saco un 2:** $4=2\cdot2$. Ya tiene la forma "2 por algo" ✓ |
+
+**Conclusión.** $2k^2$ es entero, porque es producto de enteros. Entonces $n^2$ es 2 por un entero: es par. $\square$
 
 ### 2.2 Contrapositiva
 
@@ -345,14 +353,18 @@ $P\Rightarrow Q$ es **equivalente** a $\neg Q\Rightarrow\neg P$ (si la promesa "
 Directamente es incómodo. Probamos la contrapositiva: **si $n$ es impar, entonces $n^2$ es impar.**
 **Meta, traducida.** "Impar" significa "el doble de un entero, más uno". Tengo que llegar a $n^2=2\cdot(\text{entero})+1$.
 
-1. $n$ impar: existe un entero $k$ con $n=2k+1$.
-2. Desarrollo el cuadrado con $(a+b)^2=a^2+2ab+b^2$, usando $a=2k$ y $b=1$:
-$$n^2=(2k+1)^2=(2k)^2+2\cdot(2k)\cdot1+1^2=4k^2+4k+1.$$
-3. Saco un $2$ de factor común de los dos primeros términos; el $+1$ se queda aparte, porque es justo el "más uno" que busco:
-$$4k^2+4k+1=2\cdot(2k^2+2k)+1.$$
-4. $2k^2+2k$ es entero, así que $n^2$ es impar. $\square$
+- **Tengo:** $n$ impar, es decir, existe un entero $k$ con $n=2k+1$.
+- **Quiero:** $n^2=2\cdot(\text{algún entero})+1$.
+- **Plan:** sustituir, desarrollar el cuadrado y juntar todo lo que lleve un 2, dejando aparte el $+1$.
 
-*Con números:* $n=7$, $k=3$: $n^2=49$ y $2\cdot(2\cdot9+2\cdot3)+1=2\cdot24+1=49$ ✓.
+| # | Expresión | Con $n=7$, $k=3$ | Qué hago · por qué se vale |
+|---|---|---|---|
+| 1 | $n^2=(2k+1)^2$ | $7^2=49$ | **Sustituyo $n$ por $2k+1$.** |
+| 2 | $n^2=(2k)^2+2\cdot(2k)\cdot1+1^2$ | $36+12+1=49$ | **Desarrollo el binomio:** $(a+b)^2=a^2+2ab+b^2$ con $a=2k$, $b=1$. (Sale de multiplicar $(a+b)(a+b)=a^2+ab+ba+b^2$.) |
+| 3 | $n^2=4k^2+4k+1$ | $36+12+1=49$ | **Simplifico cada término:** $(2k)^2=4k^2$, $2\cdot2k\cdot1=4k$, $1^2=1$. |
+| 4 | $n^2=2\cdot(2k^2+2k)+1$ | $2\cdot24+1=49$ | **Saco un 2 de los dos primeros términos:** $4k^2+4k=2\,(2k^2+2k)$, por la distributiva al revés. El $+1$ se queda aparte: es justo el "más uno" que busco ✓ |
+
+**Conclusión.** $2k^2+2k$ es entero, así que $n^2$ es impar. $\square$
 
 **Por qué esto demuestra la afirmación original.** Probé "$n$ impar $\Rightarrow$ $n^2$ impar", que es $\neg Q\Rightarrow\neg P$ con $P$="$n^2$ es par" y $Q$="$n$ es par". Como es equivalente a $P\Rightarrow Q$, también quedó probado "$n^2$ par $\Rightarrow$ $n$ par".
 
@@ -365,7 +377,7 @@ Supones que la conclusión es **falsa** y llegas a algo imposible. Entonces la c
 2. Consideremos $N=p_1\cdot p_2\cdots p_k+1$.
 3. Tomo cualquier primo $p_i$ de la lista. Puedo escribir $N=p_i\cdot(\text{el producto de los demás primos})+1$: es un múltiplo de $p_i$ **más uno**. Por eso, al dividir $N$ entre $p_i$, el residuo es $1$, no $0$: $p_i$ no divide a $N$. Como $p_i$ era cualquiera, **ningún** primo de la lista divide a $N$.
    *Con números:* si la lista fuera $2,3,5$, $N=31=2\cdot15+1=3\cdot10+1=5\cdot6+1$.
-4. Cada primo es $\ge2$, así que $N\ge2+1\ge2$. Todo entero $\ge2$ tiene algún divisor primo (lo demostramos en §3.5). Ese primo divide a $N$, así que, por el paso 3, **no** está en la lista. Pero el paso 1 decía que la lista tenía **todos** los primos. Contradicción: la suposición del paso 1 es falsa, y los primos son infinitos. $\square$
+4. Cada primo es $\ge2$, así que $N\ge2+1=3$. Todo entero $\ge2$ tiene algún divisor primo (§3.5 demuestra que es un producto de primos, y cualquiera de ellos lo divide). Ese primo divide a $N$, así que, por el paso 3, **no** está en la lista. Pero el paso 1 decía que la lista tenía **todos** los primos. Contradicción: la suposición del paso 1 es falsa, y los primos son infinitos. $\square$
 
 ### 2.4 Contraejemplo: para refutar un "para todo"
 
@@ -471,9 +483,13 @@ Con eso, cae el 0; como cae el 0, cae el 1; como cae el 1, cae el 2; y así **pa
 **Plantilla de una demostración por inducción** (cópiala tal cual en tus tareas):
 
 > **Afirmación $P(n)$:** … (escríbela explícitamente, con $n$)
+>
 > **Base:** demuestro $P(n_0)$ (normalmente $n_0=0$ o $1$) sustituyendo y calculando.
+>
 > **Hipótesis de inducción (HI):** supongo que $P(k)$ es verdadera para un $k\ge n_0$ **cualquiera**.
+>
 > **Paso:** usando la HI, demuestro $P(k+1)$. *(Señala en qué renglón usas la HI.)*
+>
 > **Conclusión:** por inducción, $P(n)$ vale para todo $n\ge n_0$. $\square$
 
 **Qué es cada letra, y por qué aparece $k$.** Esta es la parte que más confunde, así que vamos despacio.
@@ -558,7 +574,7 @@ Eso es todo lo que hace la inducción: **convierte un problema sobre $k+1$ cosas
 2. La meta aparece solo como **destino**, nunca como justificación de un renglón.
 3. Se lee de arriba hacia abajo: cada renglón sale del anterior o de la HI, nunca del siguiente.
 
-Con desigualdades es igual, pero la cadena lleva $\ge$ (todos en la **misma** dirección) y no hay "encontrarse en medio": para cerrar se resta y se mira el signo (§3.3).
+Con desigualdades también puedes encontrarte en medio (si $I\ge C$ y $C\ge D$, entonces $I\ge D$), pero lo usual es una cadena de $\ge$, todos en la **misma** dirección, que se cierra restando y mirando el signo (§3.3).
 
 #### Caja de herramientas: trucos para el paso
 
@@ -583,28 +599,32 @@ Todos estos trucos hacen lo mismo: **reescriben una expresión sin cambiar su va
 
 - **Nunca usaste la HI.** O no hacía falta inducción, o el álgebra está mal.
 - **Usaste la meta** para justificar un renglón. Es circular.
-- **El paso no funciona con el $k$ más chico** ($k=n_0$). Te falta una base (§3.6).
+- **El paso no funciona con el $k$ más chico** ($k=n_0$). O te falta una base (como en las monedas de la tarea de §15), o la afirmación es falsa (como en los caballos de §3.6).
 
 **Los trucos en acción.** $P(n)$: "$5^n-1$ es múltiplo de 4", para todo $n\ge0$. Aquí no hay un "lado derecho" con fórmula: la meta es **exhibir** el entero que multiplica al 4.
 
 - *Juego con números:* $5^0-1=0$, $5^1-1=4$, $5^2-1=24$, $5^3-1=124=4\cdot31$ ✓.
 - *Base* ($n=0$): $5^0-1=0=4\cdot0$ ✓.
-- *HI* (traduciendo la definición): $5^k-1=4m$ para algún entero $m$.
-- *Meta:* $5^{k+1}-1=4\cdot(\text{algún entero})$.
-- *Comparo:* la HI sabe algo de $5^k-1$; la meta tiene $5^{k+1}-1$. Plan: hacer aparecer $5^k-1$ dentro de $5^{k+1}-1$.
+- **Tengo (la HI, traduciendo la definición):** $5^k-1=4m$ para algún entero $m$.
+- **Quiero (la meta):** $5^{k+1}-1\overset{?}{=}4\cdot(\text{algún entero})$.
+- **Plan:** la HI sabe algo de $5^k-1$; la meta tiene $5^{k+1}-1$. Hago aparecer $5^k-1$ dentro de $5^{k+1}-1$.
 
-Le pongo nombre a la expresión de la meta, $A=5^{k+1}-1$, y la comprobación numérica usa $k=1$ (ahí la HI es $5^1-1=4=4\cdot1$, o sea $m=1$, y $A=5^2-1=24$).
+Le pongo nombre a la expresión de la meta, $A=5^{k+1}-1$, y la comprobación numérica usa $k=2$ (ahí la HI es $5^2-1=24=4\cdot6$, o sea $m=6$, y $A=5^3-1=124$).
 
-| # | Expresión | Con $k=1$, $m=1$ | Qué hago · por qué se vale |
+| # | Expresión | Con $k=2$, $m=6$ | Qué hago · por qué se vale |
 |---|---|---|---|
-| 1 | $A=5^{k+1}-1$ | $25-1=24$ | **Parto de la expresión de la meta.** |
-| 2 | $A=5\cdot5^k-1$ | $5\cdot5-1=24$ | **Separo el último factor.** Se vale por la ley de exponentes $a^{k+1}=a\cdot a^k$. |
-| 3 | $A=5\cdot5^k-5+5-1$ | $25-5+5-1=24$ | **Sumo cero:** resto 5 y sumo 5. Se vale porque $-5+5=0$. ¿Por qué 5? Quiero que aparezca $5\cdot(5^k-1)$, que es $5\cdot5^k-5$, y me falta ese $-5$. |
-| 4 | $A=5\,(5^k-1)+4$ | $5\cdot4+4=24$ | **Saco el factor común 5** de los dos primeros términos, y hago $5-1=4$. Se vale por la distributiva al revés: $5\cdot5^k-5\cdot1=5\,(5^k-1)$. |
-| 5 | $A=5\cdot4m+4$ | $5\cdot4\cdot1+4=24$ | **Uso la HI ← aquí:** cambio $5^k-1$ por $4m$. |
-| 6 | $A=4\,(5m+1)$ | $4\cdot6=24$ | **Saco el factor común 4.** Se vale por la distributiva al revés: $20m+4=4\cdot5m+4\cdot1$. |
+| 1 | $A=5^{k+1}-1$ | $125-1=124$ | **Parto de la expresión de la meta.** |
+| 2 | $A=5\cdot5^k-1$ | $5\cdot25-1=124$ | **Separo el último factor.** Se vale por la ley de exponentes $a^{k+1}=a\cdot a^k$. |
+| 3 | $A=5\cdot5^k-5+5-1$ | $125-5+5-1=124$ | **Sumo cero:** resto 5 y sumo 5. Se vale porque $-5+5=0$. ¿Por qué 5? Quiero que aparezca $5\cdot(5^k-1)$, que es $5\cdot5^k-5$, y me falta ese $-5$. |
+| 4 | $A=5\,(5^k-1)+4$ | $5\cdot24+4=124$ | **Saco el factor común 5** de los dos primeros términos, y hago $5-1=4$. Se vale por la distributiva al revés: $5\cdot5^k-5\cdot1=5\,(5^k-1)$. |
+| 5 | $A=5\cdot4m+4$ | $5\cdot4\cdot6+4=124$ | **Uso la HI ← aquí:** cambio $5^k-1$ por $4m$. |
+| 6 | $A=4\,(5m+1)$ | $4\cdot31=124$ | **Reordeno y saco el factor común 4:** $5\cdot4m=4\cdot5m$ (el orden de los factores no cambia el producto), y $4\cdot5m+4\cdot1=4\,(5m+1)$ por la distributiva al revés. |
 
-Como $m$ es entero, $5m+1$ también lo es, así que $A=5^{k+1}-1$ es 4 por un entero ✓. Por inducción, vale para todo $n\ge0$. $\square$
+Como $m$ es entero, $5m+1$ también lo es, así que $A=5^{k+1}-1$ es 4 por un entero ✓.
+
+**¿Por qué no es circular?** La última columna solo cita la ley de exponentes, sumar cero, factorizar y la HI. La meta aparece al final, como el lugar al que llegué.
+
+**Conclusión.** La base demostró $P(0)$ y el paso demostró que $P(k)$ implica $P(k+1)$ para cualquier $k\ge0$. Por inducción, vale para todo $n\ge0$. $\square$
 
 ### 3.2 Ejemplo resuelto: la suma $1+2+\dots+n$
 
@@ -697,38 +717,33 @@ fn main() {
 
 **Afirmación $P(n)$:** $2^n\ge n+1$ para todo $n\ge0$.
 
-**Base ($n=0$):** $2^0=1\ge0+1=1$ ✓.
-**HI:** $2^k\ge k+1$ para un $k\ge0$.
-**Paso:** quiero demostrar $P(k+1)$, que es la afirmación con $k+1$ en lugar de $n$:
-$$2^{k+1}\ \ge\ (k+1)+1 \;=\; k+2.$$
+**Juego con números:** $n=0$: $1\ge1$; $n=1$: $2\ge2$; $n=2$: $4\ge3$; $n=3$: $8\ge4$ ✓. Se cumple, y cada vez con más holgura.
 
-**Qué tengo y qué me falta.** La HI me dice algo sobre $2^k$; la meta habla de $2^{k+1}$. Antes de calcular nada, el plan es **conectar** las dos: escribir $2^{k+1}$ en términos de $2^k$, usar la HI y ver cuánto falta para llegar a $k+2$. Lo hago en tres pasos, uno por cada signo de la cadena.
+**Base ($n=0$):** lado izquierdo $2^0=1$; lado derecho $0+1=1$; $1\ge1$ ✓.
 
-**Paso 1: hacer aparecer $2^k$.** Por la ley de exponentes $a^{m+1}=a\cdot a^m$:
-$$2^{k+1}=2\cdot 2^k.$$
-Es una igualdad: no gano ni pierdo nada, solo reescribo para que aparezca la cantidad de la que la HI sabe algo.
+**Paso.** Antes de calcular, los tres renglones del cuaderno:
 
-**Paso 2: usar la HI.** La HI dice $2^k\ge k+1$. Multiplico **ambos lados** por $2$. Multiplicar una desigualdad por un número **positivo** no cambia su dirección (si fuera negativo, sí la voltearía):
-$$2^k\ge k+1 \quad\Longrightarrow\quad 2\cdot 2^k\ \ge\ 2\cdot(k+1).$$
-Ahora quito el paréntesis con la **ley distributiva**, $a\cdot(b+c)=a\cdot b+a\cdot c$: el $2$ multiplica a **cada** sumando de dentro.
-$$2\cdot(k+1)=2\cdot k+2\cdot 1=2k+2.$$
-(Con números: si $k=3$, $2\cdot(3+1)=2\cdot4=8$ y $2\cdot3+2=6+2=8$. Mismo resultado.)
-Juntando con el paso 1: $2^{k+1}=2\cdot2^k\ge 2(k+1)=2k+2$.
+- **Tengo (la HI):** para un $k\ge0$ cualquiera, $2^k\ge k+1$.
+- **Quiero (la meta, $P(k+1)$):** sustituyo cada $n$ por $(k+1)$:
+$$2^{k+1}\ \overset{?}{\ge}\ (k+1)+1=k+2.$$
+- **Plan:** el lado izquierdo, $2^{k+1}$, no se parece todavía a la HI, que habla de $2^k$. Lo reescribo para que aparezca $2^k$, uso la HI, y luego veo si lo que obtuve todavía le gana al lado derecho, $k+2$.
 
-**Paso 3: cerrar la distancia.** Ya sé que $2^{k+1}\ge 2k+2$, pero la meta es $2^{k+1}\ge k+2$. Me basta con que $2k+2$ sea **al menos** $k+2$, porque si $2^{k+1}$ supera a $2k+2$ y $2k+2$ supera a $k+2$, entonces $2^{k+1}$ supera a $k+2$ (transitividad: $a\ge b$ y $b\ge c$ implican $a\ge c$). Para comparar dos expresiones, resto:
-$$(2k+2)-(k+2)=k\ \ge\ 0 \qquad\text{porque } k\ge 0 \text{ (así lo fija la HI)}.$$
-Diferencia no negativa significa $2k+2\ge k+2$.
+**Meta, traducida:** quiero ver que el doble de $2^k$ todavía le gana a $k+2$.
 
-**Todo junto**, leyendo la cadena de izquierda a derecha (cada signo está justificado arriba):
-$$2^{k+1}\ \underset{\text{paso 1}}{=}\ 2\cdot2^k\ \underset{\text{paso 2 (HI)}}{\ge}\ 2(k+1)\ \underset{\text{distributiva}}{=}\ 2k+2\ \underset{\text{paso 3}}{\ge}\ k+2. \qquad\checkmark\ \square$$
+**Cómo leer la tabla.** Cada renglón empieza con $2^{k+1}$ y dice algo sobre él: que es **igual** a otra cosa, o que es **mayor o igual**. En una cadena de $\ge$, todos los signos van en la **misma** dirección; por eso, al final, $2^{k+1}$ es $\ge$ que lo último (transitividad: si $a\ge b$ y $b\ge c$, entonces $a\ge c$). La columna con números usa $k=3$, donde $2^{k+1}=16$.
 
-**Comprobación con números** (no demuestra nada, pero confirma que no me equivoqué en el álgebra), con $k=3$:
+| # | Expresión | Con $k=3$ | Qué hago · por qué se vale |
+|---|---|---|---|
+| 1 | $2^{k+1}=2\cdot2^k$ | $16=2\cdot8$ | **Separo el último factor**, para que aparezca $2^k$. Se vale por la ley de exponentes $a^{m+1}=a\cdot a^m$. Es una igualdad: no gano ni pierdo nada. |
+| 2 | $2^{k+1}\ge2\cdot(k+1)$ | $16\ge2\cdot4=8$ | **Uso la HI ← aquí**, multiplicada por 2. La HI dice $2^k\ge k+1$; multiplico **los dos lados** por $2$, y como $2$ es **positivo** la desigualdad no se voltea (con un negativo sí se voltearía). |
+| 3 | $2^{k+1}\ge2k+2$ | $16\ge6+2=8$ | **Abro el paréntesis** con la distributiva, $a(b+c)=ab+ac$: el 2 multiplica a cada sumando. (Con $k=3$: $2\cdot4=8$ y $2\cdot3+2=8$.) |
+| 4 | $2^{k+1}\ge k+2$ | $16\ge5$ | **Cierro la distancia.** Me basta con que $2k+2\ge k+2$, y para comparar, resto: $(2k+2)-(k+2)=k\ge0$, porque la HI fija $k\ge0$. Como $2^{k+1}\ge2k+2$ y $2k+2\ge k+2$, por transitividad $2^{k+1}\ge k+2$. Es la meta ✓ |
 
-| | $2^{k+1}$ | $2\cdot 2^k$ | $2k+2$ | $k+2$ |
-|---|---|---|---|---|
-| $k=3$ | $16$ | $2\cdot 8=16$ | $8$ | $5$ |
+Fíjate en la holgura de la columna con números ($16$ contra $5$): la HI me da más de lo que necesito, y el renglón 4 solo tira la parte que sobra.
 
-Se lee $16=16\ge8\ge5$: cada eslabón de la cadena se cumple. Fíjate que hay "holgura" de sobra ($16$ contra $5$): la HI me da más de lo que necesito, y el paso 3 solo tira la parte que sobra.
+**¿Por qué esto no es circular?** La última columna solo cita la ley de exponentes, la HI, la distributiva y una resta. La meta aparece una sola vez: al final, como el lugar al que llegué.
+
+**Conclusión.** La base demostró $P(0)$. El paso demostró que, para cualquier $k\ge0$, si $P(k)$ es verdadera, $P(k+1)$ también. Por inducción, $2^n\ge n+1$ para todo $n\ge0$. $\square$
 
 > **Truco para desigualdades:** reescribe el lado izquierdo de la meta hasta que **aparezca** la cantidad de la que habla la HI (aquí $2^k$, con $2^{k+1}=2\cdot 2^k$), aplica la HI y luego cierra la distancia que falta con álgebra. "Cerrar la distancia" casi siempre es lo mismo: **restar** lo que obtuviste menos lo que querías y comprobar que la diferencia es $\ge 0$.
 
@@ -789,7 +804,15 @@ suma(100) = 5050
 - *Afirmación $P(n)$:* `suma(n)` devuelve $1+\dots+n$ (y $0$ cuando $n=0$, la suma de cero términos).
 - *Base:* con $n=0$ el código entra al `if` y devuelve 0, que es la suma de cero términos ✓.
 - *HI:* para un $k\ge0$ cualquiera, `suma(k)` devuelve $1+\dots+k$.
-- *Paso.* Meta, $P(k+1)$: `suma(k+1)` devuelve $1+\dots+(k+1)$. Sigo el código con $n=k+1$: como $k+1\ge1$, no entra al `if` y ejecuta `return (k+1) + suma(k)`. La llamada `suma(k)` es justo de lo que habla la HI, así que devuelve $1+\dots+k$. Sustituyo: el resultado es $(k+1)+(1+\dots+k)$, que son los mismos números que $1+\dots+k+(k+1)$ en otro orden, y sumar en otro orden no cambia el resultado ✓. $\square$
+- *Paso.* Tengo la HI. **Quiero** que `suma(k+1)` devuelva $1+\dots+k+(k+1)$. **Plan:** seguir el código con $n=k+1$ hasta que aparezca la llamada `suma(k)`, de la que habla la HI.
+
+| # | Expresión | Con $k=3$ | Qué hago · por qué se vale |
+|---|---|---|---|
+| 1 | `suma(k+1)` $=(k+1)+$ `suma(k)` | $4+$ `suma(3)` | **Sigo el código.** Como $k+1\ge1$, no entra al `if` y ejecuta `return n + suma(n - 1)` con $n=k+1$. |
+| 2 | `suma(k+1)` $=(k+1)+(1+\dots+k)$ | $4+6=10$ | **Uso la HI ← aquí:** `suma(k)` devuelve $1+\dots+k$. |
+| 3 | `suma(k+1)` $=1+\dots+k+(k+1)$ | $1+2+3+4=10$ | **Reordeno los sumandos.** Sumar en otro orden no cambia el resultado. Es la meta ✓ |
+
+**Conclusión.** Por inducción, `suma(n)` devuelve $1+\dots+n$ para todo $n\ge0$. $\square$
 
 > Esta forma de razonar ("supongo que la llamada recursiva funciona") es exactamente cómo se diseñan los algoritmos recursivos del curso: merge sort, quicksort, los recorridos de árboles.
 
@@ -801,17 +824,25 @@ A veces, para probar $P(k+1)$, no basta con $P(k)$: necesitas $P$ de un valor **
 
 **Afirmación:** todo entero $n\ge2$ es producto de primos.
 - *Base:* $n=2$ es primo; es un producto de un solo primo ✓.
-- *HI fuerte:* todo $j$ con $2\le j\le k$ es producto de primos.
+- *HI fuerte:* para un $k\ge2$ cualquiera, todo $j$ con $2\le j\le k$ es producto de primos.
 - *Paso.* Meta, $P(k+1)$: $k+1$ es producto de primos. Hay dos casos.
   - Si $k+1$ es primo, es un producto de un solo primo ✓.
-  - Si no es primo, tiene un divisor $a$ con $2\le a<k+1$. Sea $b=\frac{k+1}{a}$, de modo que $k+1=a\cdot b$. Necesito que $a$ y $b$ estén en el rango de la HI, $2\le\,\cdot\,\le k$:
-    - $a\le k$ porque $a<k+1$ y es entero.
-    - $b\ge2$: como $a<k+1$, $b=\frac{k+1}{a}>1$, y $b$ es entero.
-    - $b\le k$: como $a\ge2$, $b=\frac{k+1}{a}\le\frac{k+1}{2}$, y $\frac{k+1}{2}\le k$ equivale (multiplicando por 2) a $k+1\le 2k$, es decir, a $1\le k$, que es cierto.
+  - Si no es primo, tiene un divisor $a$ con $2\le a<k+1$. Sea $b=\frac{k+1}{a}$, de modo que $k+1=a\cdot b$.
 
-    Por la HI fuerte, $a$ y $b$ son productos de primos. Juntando las dos listas de primos, $a\cdot b=k+1$ también lo es ✓. $\square$
+**Quiero** usar la HI fuerte con $a$ y con $b$, y para eso necesito que los dos estén en su rango: $2\le a\le k$ y $2\le b\le k$. Lo reviso una desigualdad por renglón, con $k+1=12$, $a=3$, $b=4$ como ejemplo:
 
-  *Con números:* $k+1=12$ no es primo; $12=3\cdot4$, la HI da $3=3$ y $4=2\cdot2$, y juntando, $12=3\cdot2\cdot2$.
+| # | Desigualdad | Con $k=11$, $a=3$, $b=4$ | Qué hago · por qué se vale |
+|---|---|---|---|
+| 1 | $2\le a$ | $2\le3$ | **Lo dice la elección de $a$:** es un divisor distinto de 1. |
+| 2 | $a\le k$ | $3\le11$ | **Bajo al entero anterior:** $a<k+1$ y $a$ es entero, así que $a$ es a lo más $k$. |
+| 3 | $b>1$ | $4>1$ | **Comparo numerador y denominador:** $b=\frac{k+1}{a}$ y $a<k+1$; dividir un número entre algo positivo más chico que él da más que 1. |
+| 4 | $2\le b$ | $2\le4$ | **Uso que $b$ es entero:** el primer entero mayor que 1 es 2. |
+| 5 | $b\le\frac{k+1}{2}$ | $4\le6$ | **Agrando el denominador:** $a\ge2$, y dividir entre algo más grande da algo más chico. |
+| 6 | $b\le k$ | $4\le11$ | **Cierro la distancia:** $\frac{k+1}{2}\le k$ equivale (multiplicando por $2>0$) a $k+1\le2k$, es decir, a $1\le k$, que es cierto porque $k\ge2$. Por transitividad con el renglón 5, $b\le k$. |
+
+Por la HI fuerte, $a$ y $b$ son productos de primos. Juntando las dos listas de primos, $a\cdot b=k+1$ también lo es ✓. $\square$
+
+*Con números:* $k+1=12$ no es primo; $12=3\cdot4$, la HI da $3=3$ y $4=2\cdot2$, y juntando, $12=3\cdot2\cdot2$.
 
 Fíjate en que $a$ y $b$ **no** son $k$: pueden ser cualquier valor más chico. Por eso hace falta la versión fuerte. Es lo que pasa en divide y vencerás: los subproblemas son "más chicos", pero no "uno menos". El programa sigue exactamente la demostración:
 
@@ -953,7 +984,17 @@ Seguimos el ciclo a mano con `a = [4, 2, 7, 1]`:
 | salida | 4 | 14 | $4+2+7+1$ ✓ |
 
 - **Inicialización:** antes de la primera vuelta $i=0$ y $s=0$, la suma de cero elementos ✓.
-- **Mantenimiento** (el paso de la inducción). Supongo el invariante al inicio de la vuelta con índice $i$: $s=a[0]+\dots+a[i-1]$. Meta: el invariante al inicio de la **siguiente** vuelta, que tiene índice $i+1$; sustituyendo $i$ por $i+1$ en el invariante, eso es $s=a[0]+\dots+a[(i+1)-1]=a[0]+\dots+a[i]$. La vuelta hace $s\gets s+a[i]$, así que el nuevo $s$ es $\big(a[0]+\dots+a[i-1]\big)+a[i]=a[0]+\dots+a[i]$: justo la meta ✓.
+- **Mantenimiento** (el paso de la inducción), con el ejemplo `a = [4, 2, 7, 1]` en la vuelta $i=2$:
+  - **Tengo (el invariante, que hace de HI):** al inicio de la vuelta $i$, $s=a[0]+\dots+a[i-1]$.
+  - **Quiero:** el invariante al inicio de la vuelta siguiente. Sustituyo $i$ por $(i+1)$: $s_{\text{nueva}}\overset{?}{=}a[0]+\dots+a[(i+1)-1]=a[0]+\dots+a[i]$.
+  - **Plan:** seguir lo que hace la vuelta, $s\gets s+a[i]$, y usar el invariante para el $s$ de antes.
+
+| # | Expresión | Con $i=2$ | Qué hago · por qué se vale |
+|---|---|---|---|
+| 1 | $s_{\text{nueva}}=s+a[i]$ | $6+7=13$ | **Ejecuto la vuelta:** el código hace `s += a[i]`. |
+| 2 | $s_{\text{nueva}}=\big(a[0]+\dots+a[i-1]\big)+a[i]$ | $(4+2)+7=13$ | **Uso el invariante ← aquí:** al inicio de la vuelta, $s$ valía eso. |
+| 3 | $s_{\text{nueva}}=a[0]+\dots+a[i]$ | $4+2+7=13$ | **Quito los paréntesis.** Es la suma de los primeros $i+1$ elementos: la meta ✓ |
+
 - **Terminación:** $i$ sube de 1 en 1 y el ciclo para en $i=n$. El invariante con $i=n$ dice $s=a[0]+\dots+a[n-1]$, que es lo que queríamos ✓.
 
 Un invariante también se puede **comprobar en el código** con `assert`. Es una gran herramienta de depuración: si el invariante se rompe, el programa se detiene justo ahí.
@@ -1132,7 +1173,7 @@ lower_bound(20) = 6
 **Demostración de correctitud:**
 - **Inicialización:** `lo = 0` y `hi = n`, así que `a[0..0)` y `a[n..n)` están vacíos y el invariante se cumple sin nada que revisar ✓.
 - **Mantenimiento:** supongo el invariante al inicio de una vuelta; dentro del ciclo `lo < hi`.
-  - *Primero, `lo <= mid < hi`.* El código calcula `mid = lo + (hi - lo) / 2`. Como `hi - lo` $\ge1$, la división entera `(hi - lo) / 2` está entre $0$ y `hi - lo - 1`: es $\ge0$ y es menor que `hi - lo` (la mitad de un número $\ge1$, redondeada hacia abajo, es menor que el número). Sumando `lo`: `lo <= mid < hi`.
+  - *Primero, `lo <= mid < hi`.* El código calcula `mid = lo + (hi - lo) / 2`. Como `hi - lo` $\ge1$, la división entera `(hi - lo) / 2` está entre $0$ y `hi - lo - 1`: es $\ge0$ y es menor que `hi - lo` (la mitad de un número $\ge1$, redondeada hacia abajo, es menor que el número). Sumando `lo`: `lo <= mid < hi`. *Con números* (la vuelta 1 de la traza): `lo = 0`, `hi = 6`; `(6 - 0) / 2 = 3`, así que `mid = 3`, y $0\le3<6$ ✓.
   - *Si `a[mid] < x`:* como el arreglo está ordenado, todo `a[j]` con `lo <= j <= mid` cumple `a[j] <= a[mid] < x`. Junto con `a[0..lo) < x` (el invariante), queda `a[0..mid+1) < x`. El código hace `lo = mid + 1`; sustituyendo el nuevo `lo`, la primera mitad del invariante dice `a[0..mid+1) < x`, que acabo de probar. `hi` no cambió, así que la segunda mitad sigue igual ✓.
   - *Si `a[mid] >= x`:* por el orden, todo `a[j]` con `j >= mid` cumple `a[j] >= a[mid] >= x`, así que `a[mid..n) >= x`. El código hace `hi = mid`, y eso es exactamente la segunda mitad del invariante con el nuevo `hi`. `lo` no cambió ✓.
 - **Terminación:** en cada vuelta `hi - lo` **decrece estrictamente**: o `lo` sube a `mid + 1 > lo`, o `hi` baja a `mid < hi` (por el primer punto del mantenimiento). Un entero que no es negativo y baja al menos 1 en cada vuelta no puede bajar para siempre, así que el ciclo termina. Al salir, `lo == hi`, y el invariante dice que todo lo anterior a `lo` es $<x$ y todo desde `lo` es $\ge x$: `lo` es la frontera que buscábamos ✓. $\square$
@@ -1313,9 +1354,9 @@ n = 1000000  ->  19 mitades
 |---|---|---|
 | $\lg(xy)=\lg x+\lg y$ | $\lg(8\cdot4)=\lg32=5=3+2$ | $2^a\cdot2^b=2^{a+b}$: multiplicar suma exponentes |
 | $\lg(x/y)=\lg x-\lg y$ | $\lg(32/4)=\lg 8=3=5-2$ | $2^a/2^b=2^{a-b}$ |
-| $\lg(x^k)=k\lg x$ | $\lg(8^2)=\lg64=6=2\cdot3$ | $x^k$ es multiplicar $x$ por sí mismo $k$ veces |
+| $\lg(x^k)=k\lg x$ | $\lg(8^2)=\lg64=6=2\cdot3$ | $x^k$ es multiplicar $x$ por sí mismo $k$ veces; por la primera regla, el $\lg$ de ese producto es $\lg x+\dots+\lg x$ ($k$ veces) $=k\lg x$ |
 | $\log_b x=\dfrac{\lg x}{\lg b}$ (cambio de base) | $\log_4 64=\dfrac{\lg64}{\lg4}=\dfrac62=3$ ✓ ($4^3=64$) | si $b^y=x$, aplicar $\lg$: $y\lg b=\lg x$ |
-| $a^{\lg n}=n^{\lg a}$ | $4^{\lg n}=n^{\lg4}=n^2$ | aplicar $\lg$ a ambos lados: $\lg n\cdot\lg a$ en los dos |
+| $a^{\lg n}=n^{\lg a}$ | $4^{\lg n}=n^{\lg4}=n^2$ | aplico $\lg$ a cada lado con la regla $\lg(x^k)=k\lg x$: $\lg(a^{\lg n})=\lg n\cdot\lg a$ y $\lg(n^{\lg a})=\lg a\cdot\lg n$, que son el mismo producto; dos números con el mismo $\lg$ son iguales |
 
 **Consecuencia importante del cambio de base:** $\log_{10}n$, $\ln n$ y $\lg n$ difieren solo en una **constante multiplicativa** ($\log_b n=\lg n/\lg b$). Como $O(\cdot)$ ignora constantes, se escribe $O(\log n)$ **sin base**.
 
@@ -1340,32 +1381,41 @@ Pasar de un algoritmo $O(n^2)$ a uno $O(n\lg n)$ convierte 17 minutos en 0.02 se
 
 **Meta, traducida.** $\Theta$ pide dos cotas (§1): una superior, $\lg(n!)\le c_2\,n\lg n$, y una inferior, $\lg(n!)\ge c_1\,n\lg n$, ambas a partir de algún $n_0$. Las busco por separado.
 
-**Cota superior.** Cada uno de los $n$ factores de $n!$ es $\le n$, así que cambiar cada factor por $n$ no hace más chico el producto:
-$$n!=1\cdot2\cdots n\ \le\ \underbrace{n\cdot n\cdots n}_{n\text{ veces}}=n^n.$$
-$\lg$ es creciente (si $u\le v$, entonces $\lg u\le\lg v$), así que puedo aplicarlo a ambos lados sin voltear el signo, y con la regla $\lg(x^k)=k\lg x$ (§5.3):
-$$\lg(n!)\le\lg(n^n)=n\lg n.\qquad(c_2=1.)$$
+Las dos tablas usan $n=8$ como comprobación: $8!=40\,320$ y $\lg 40\,320\approx15.3$.
 
-**Cota inferior.** Nos quedamos solo con la **mitad superior** de los factores (los que van de $n/2$ a $n$). Hay al menos $n/2$ de ellos y cada uno es $\ge n/2$; los factores que tiramos son $\ge1$, así que tirarlos no aumenta el producto:
-$$n!\ \ge\ \underbrace{\tfrac n2\cdot\tfrac n2\cdots\tfrac n2}_{n/2\text{ veces}}=\Big(\frac n2\Big)^{n/2}.$$
-Aplico $\lg$ (creciente) y las reglas de §5.3, una por renglón:
+**Cota superior.** **Quiero** $\lg(n!)\le c_2\,n\lg n$. **Plan:** agrandar cada factor de $n!$ hasta $n$, y luego aplicar $\lg$.
 
-| Renglón | Expresión | Justificación |
-|---|---|---|
-| 1 | $\lg(n!)\ge\lg\big((\tfrac n2)^{n/2}\big)$ | $\lg$ creciente |
-| 2 | $=\frac n2\,\lg\frac n2$ | $\lg(x^k)=k\lg x$, con $x=\frac n2$, $k=\frac n2$ |
-| 3 | $=\frac n2\,(\lg n-1)$ | $\lg\frac n2=\lg n-\lg2=\lg n-1$ |
-| 4 | $\ge\frac n2\cdot\frac12\lg n=\frac n4\lg n$ | si $n\ge4$ (abajo) |
+| # | Expresión | Con $n=8$ | Qué hago · por qué se vale |
+|---|---|---|---|
+| 1 | $n!=1\cdot2\cdots n$ | $40\,320$ | **Escribo la definición** de $n!$. |
+| 2 | $n!\le\underbrace{n\cdot n\cdots n}_{n\text{ veces}}$ | $40\,320\le8^8$ | **Agrando cada factor hasta $n$.** Cada uno de los $n$ factores es $\le n$, y en un producto de positivos, agrandar un factor no achica el resultado. |
+| 3 | $n!\le n^n$ | $40\,320\le16\,777\,216$ | **Escribo el producto repetido como potencia.** |
+| 4 | $\lg(n!)\le\lg(n^n)$ | $15.3\le24$ | **Aplico $\lg$ a los dos lados.** $\lg$ es creciente (si $u\le v$, entonces $\lg u\le\lg v$), así que el signo no se voltea. |
+| 5 | $\lg(n!)\le n\lg n$ | $15.3\le8\cdot3=24$ | **Bajo el exponente:** $\lg(x^k)=k\lg x$ (§5.3). Testigo $c_2=1$ ✓ |
 
-*Por qué el renglón 4 pide $n\ge4$:* quiero $\lg n-1\ge\frac12\lg n$. Paso $\frac12\lg n$ a la izquierda y el $1$ a la derecha: $\frac12\lg n\ge1$, es decir, $\lg n\ge2$, es decir, $n\ge2^2=4$. Así que la desigualdad vale exactamente desde $n_0=4$.
+**Cota inferior.** **Quiero** $\lg(n!)\ge c_1\,n\lg n$. **Plan:** quedarme solo con la **mitad superior** de los factores (los que van de $n/2$ a $n$), achicarlos a $n/2$, y aplicar $\lg$. Para $n=8$ esos factores son $4,5,6,7,8$: cinco factores, y $\lfloor\frac82\rfloor+1=5$.
 
-Con las dos cotas, $\frac14\,n\lg n\le\lg(n!)\le 1\cdot n\lg n$ para todo $n\ge4$: testigos $c_1=\frac14$, $c_2=1$, $n_0=4$. Por lo tanto $\lg(n!)=\Theta(n\lg n)$. $\square$
+| # | Expresión | Con $n=8$ | Qué hago · por qué se vale |
+|---|---|---|---|
+| 1a | $n!\ge\lceil\frac n2\rceil\cdots n$ | $40\,320\ge4\cdot5\cdot6\cdot7\cdot8=6720$ | **Tiro los factores de abajo** (los menores que $\frac n2$). Cada uno es $\ge1$, así que tirarlos no aumenta el producto. |
+| 1b | $n!\ge\big(\frac n2\big)^{\lfloor n/2\rfloor+1}$ | $6720\ge4^5=1024$ | **Achico cada factor que quedó a $\frac n2$.** Todos son $\ge\frac n2$, y de $\lceil\frac n2\rceil$ a $n$ hay $\lfloor\frac n2\rfloor+1$ factores (de $a$ a $b$ hay $b-a+1$ enteros). |
+| 1c | $n!\ge\big(\frac n2\big)^{n/2}$ | $1024\ge4^4=256$ | **Bajo el exponente a $\frac n2$.** Se vale porque la base $\frac n2\ge1$ (si $n\ge2$) y $\lfloor\frac n2\rfloor+1\ge\frac n2$: con base $\ge1$, menos factores dan un producto más chico o igual. |
+| 2 | $\lg(n!)\ge\lg\Big(\big(\tfrac n2\big)^{n/2}\Big)$ | $15.3\ge\lg256=8$ | **Aplico $\lg$**, que es creciente: el signo no se voltea. |
+| 3 | $\lg(n!)\ge\frac n2\,\lg\frac n2$ | $15.3\ge4\cdot2=8$ | **Bajo el exponente:** $\lg(x^k)=k\lg x$, con $x=k=\frac n2$. |
+| 4 | $\lg(n!)\ge\frac n2\,(\lg n-1)$ | $15.3\ge4\cdot(3-1)=8$ | **Separo la división:** $\lg\frac n2=\lg n-\lg2=\lg n-1$ (§5.3). |
+| 5 | $\lg(n!)\ge\frac n2\cdot\frac12\lg n$ | $15.3\ge4\cdot1.5=6$ | **Achico $\lg n-1$ a $\frac12\lg n$**, que vale si $n\ge4$ (abajo). Achico un factor que multiplica a $\frac n2>0$, así que el lado derecho se achica y el $\ge$ se conserva. |
+| 6 | $\lg(n!)\ge\frac n4\lg n$ | $15.3\ge6$ | **Multiplico** $\frac n2\cdot\frac12=\frac n4$. Testigo $c_1=\frac14$ ✓ |
 
-*Con números* ($n=8$): $8!=40320$ y $\lg 40320\approx15.3$; las cotas dan $\frac14\cdot8\cdot3=6\le15.3\le8\cdot3=24$ ✓.
+*Por qué el renglón 5 pide $n\ge4$*, escrito hacia adelante: si $n\ge4$, entonces $\lg n\ge\lg4=2$ ($\lg$ es creciente). Multiplico por $\frac12>0$: $\frac12\lg n\ge1$. Entonces $\lg n-1\ge\lg n-\frac12\lg n=\frac12\lg n$, porque restar algo más chico deja más. Así que basta $n_0=4$. (Con $n=8$: $\lg8-1=2\ge1.5=\frac12\lg8$ ✓.)
+
+**Conclusión.** Con las dos cotas, $\frac14\,n\lg n\le\lg(n!)\le 1\cdot n\lg n$ para todo $n\ge4$: testigos $c_1=\frac14$, $c_2=1$, $n_0=4$. Por lo tanto $\lg(n!)=\Theta(n\lg n)$. $\square$
 
 ✏️ **Ejercicio 0.4.** Ordena de menor a mayor crecimiento: $n^{1/2}$, $\lg^3 n$, $2^{\lg n}$, $n\lg n$, $1.01^n$, $\lg\lg n$, $n!$, $4^{\lg n}$.
 <details><summary>Solución</summary>
 
 Primero simplifica con las reglas de §5.3: $2^{\lg n}=n$ y $4^{\lg n}=n^2$. Orden:
+(Dos hechos que se demuestran en la L01, §3.3.10: cualquier potencia de $\lg n$ crece más lento que cualquier $n^\varepsilon$ con $\varepsilon>0$, y todo polinomio crece más lento que $r^n$ con $r>1$.)
+
 $\lg\lg n\ \prec\ \lg^3 n\ \prec\ n^{1/2}\ \prec\ 2^{\lg n}=n\ \prec\ n\lg n\ \prec\ 4^{\lg n}=n^2\ \prec\ 1.01^n\ \prec\ n!$.
 </details>
 
@@ -1453,7 +1503,12 @@ piso(-7 / 2) = -4
 techo(7 / 2) = 4
 ```
 
-**Por qué funciona `(a + b - 1) / b`:** si $b$ divide a $a$, sumar $b-1$ no alcanza para llegar al siguiente múltiplo y el resultado es $a/b$; si no lo divide, el $b-1$ extra "empuja" el resultado al siguiente entero. Es el techo.
+**Por qué funciona `(a + b - 1) / b`** (con $a\ge0$ y $b>0$). Escribe $a=q\,b+r$, con cociente $q$ y residuo $0\le r<b$.
+
+- Si $r=0$ ($b$ divide a $a$): $a+b-1=q\,b+(b-1)$, y como $b-1<b$, la división entera da $q=\lceil a/b\rceil$.
+- Si $r\ge1$: $a+b-1=(q+1)\,b+(r-1)$, con $0\le r-1<b$, y la división da $q+1=\lceil a/b\rceil$.
+
+En los dos casos sale el techo. *Con números:* $a=8$, $b=2$: $9/2=4=\lceil4\rceil$; $a=7$, $b=2$: $8/2=4=\lceil3.5\rceil$.
 
 ---
 
@@ -1507,7 +1562,7 @@ ciclo:   385
 formula: 385
 ```
 
-La gracia de una **forma cerrada** (la fórmula de la derecha) es que cuesta $O(1)$ evaluarla, en lugar de $O(n)$, y sobre todo que nos dice **cómo crece**: $\sum i^2=\Theta(n^3)$.
+La forma cerrada que usa el programa es $\sum_{i=1}^{n}i^2=\frac{n(n+1)(2n+1)}{6}$ (con $n=10$: $\frac{10\cdot11\cdot21}{6}=385$, como en la salida). La gracia de una **forma cerrada** es que cuesta $O(1)$ evaluarla, en lugar de $O(n)$, y sobre todo que nos dice **cómo crece**: $\sum i^2=\Theta(n^3)$.
 
 ### 7.2 Suma aritmética: el truco de Gauss
 
@@ -1535,13 +1590,24 @@ rS-S &=& r^{k+1}-1\qquad(\text{todo lo de en medio se cancela})
 $$
 *Por qué se cancela lo de en medio:* los términos $r, r^2,\dots,r^k$ aparecen en **los dos** renglones, así que al restar se van. Solo sobreviven $r^{k+1}$ (que solo está arriba) y $1$ (que solo está abajo, y por eso entra con signo menos).
 
-*Despejar:* a la izquierda saco $S$ de factor común, $rS-S=S(r-1)$, así que $S(r-1)=r^{k+1}-1$. Divido entre $r-1$, cosa que puedo hacer porque $r\ne1$ (para eso estaba esa condición):
-$$S=\frac{r^{k+1}-1}{r-1}.$$
-*Con números* ($r=2$, $k=3$): $1+2+4+8=15$ y $\frac{2^4-1}{2-1}=15$ ✓.
+*Despejar.* **Tengo** $rS-S=r^{k+1}-1$. **Quiero** $S$ solo. **Plan:** sacar $S$ de factor común y dividir.
+
+| # | Expresión | Con $r=2$, $k=3$ | Qué hago · por qué se vale |
+|---|---|---|---|
+| 1 | $rS-S=r^{k+1}-1$ | $30-15=15$ | **Parto de la resta** de arriba. |
+| 2 | $S\,(r-1)=r^{k+1}-1$ | $15\cdot1=15$ | **Saco $S$ de factor común:** $rS-S=S\,(r-1)$, por la distributiva al revés. |
+| 3 | $S=\dfrac{r^{k+1}-1}{r-1}$ | $\dfrac{16-1}{1}=15$ | **Divido entre $r-1$.** Se puede porque $r\ne1$, así que $r-1\ne0$ (para eso estaba esa condición). |
 
 **Los dos casos que importan:**
 - **$r=2$:** $1+2+4+\dots+2^k=2^{k+1}-1$. En binario se ve: $1+2+4+8=1111_2$, y sumarle 1 da $10000_2=16$. **La suma es menor que el doble del último término.**
-- **$r=\frac12$:** $1+\frac12+\frac14+\dots<2$, por muchos términos que sumes. Con la fórmula: $S=\frac{(1/2)^{k+1}-1}{\frac12-1}=\frac{1-(1/2)^{k+1}}{1/2}=2-\big(\tfrac12\big)^{k}$, que es $2$ menos algo positivo. Es como caminar hacia una pared avanzando cada vez la mitad de lo que falta: nunca la alcanzas. **La suma es menor que el doble del primer término.**
+- **$r=\frac12$:** $1+\frac12+\frac14+\dots<2$, por muchos términos que sumes. Es como caminar hacia una pared avanzando cada vez la mitad de lo que falta: nunca la alcanzas. **La suma es menor que el doble del primer término.** La cuenta, con $k=2$ como comprobación ($1+\frac12+\frac14=1.75$):
+
+| # | Expresión | Con $k=2$ | Qué hago · por qué se vale |
+|---|---|---|---|
+| 1 | $S=\dfrac{(1/2)^{k+1}-1}{\frac12-1}$ | $\dfrac{0.125-1}{-0.5}=1.75$ | **Sustituyo $r=\frac12$** en la fórmula. |
+| 2 | $S=\dfrac{1-(1/2)^{k+1}}{1/2}$ | $\dfrac{0.875}{0.5}=1.75$ | **Cambio el signo arriba y abajo**, que es multiplicar por $\frac{-1}{-1}=1$. |
+| 3 | $S=2-2\cdot\big(\tfrac12\big)^{k+1}$ | $2-0.25=1.75$ | **Divido entre $\frac12$**, que es multiplicar por 2, y reparto el 2 (distributiva). |
+| 4 | $S=2-\big(\tfrac12\big)^{k}$ | $2-0.25=1.75$ | **Simplifico** $2\cdot\big(\tfrac12\big)^{k+1}=\big(\tfrac12\big)^{k}$: un factor $\frac12$ se cancela con el 2. Es $2$ menos algo positivo: menor que 2 ✓ |
 
 > **Regla de oro:** en una suma geométrica, **el término más grande domina**. Si la razón es $>1$, la suma es $\Theta(\text{último término})$; si es $<1$, es $\Theta(\text{primer término})$. Es *la* idea detrás del análisis del arreglo dinámico (L01).
 
@@ -1561,9 +1627,15 @@ $$
 Paso por paso:
 
 1. **Restar columna por columna.** Cada potencia $x^j$ aparece arriba con coeficiente $j$ y abajo con coeficiente $j-1$ (el renglón de abajo es el de arriba corrido un lugar). Restando: $j\,x^j-(j-1)\,x^j=x^j$. Por eso queda un $1$ delante de cada potencia.
-2. **Sumar lo que quedó.** $x+x^2+x^3+\cdots$ es una geométrica (§7.3) que empieza en $x$: saco $x$ de factor común, $x(1+x+x^2+\cdots)$. Con $0<x<1$, la fórmula de §7.3 da $1+x+\dots+x^k=\frac{1-x^{k+1}}{1-x}$, y $x^{k+1}$ se hace tan chico como quieras al crecer $k$, así que la suma infinita vale $\frac{1}{1-x}$. Entonces $x+x^2+\cdots=\frac{x}{1-x}$.
-3. **Despejar $S$.** A la izquierda, $S-xS=S(1-x)$ (factor común). Queda $S(1-x)=\frac{x}{1-x}$, y divido entre $1-x\ne0$: $S=\frac{x}{(1-x)^2}$.
-4. **Sustituir $x=\frac12$:** $1-x=\frac12$ y $(1-x)^2=\frac14$, así que $S=\frac{1/2}{1/4}=\frac12\cdot4=2$. $\square$
+2. **Sumar lo que quedó.** $x+x^2+x^3+\cdots$ es una geométrica (§7.3) que empieza en $x$: saco $x$ de factor común, $x(1+x+x^2+\cdots)$. Con $0<x<1$, la fórmula de §7.3 da $1+x+\dots+x^N=\frac{1-x^{N+1}}{1-x}$ (llamo $N$ al último exponente, para no confundirlo con el $k$ de la suma), y $x^{N+1}$ se hace tan chico como quieras al crecer $N$, así que la suma infinita vale $\frac{1}{1-x}$. Entonces $x+x^2+\cdots=\frac{x}{1-x}$.
+Ahora, en formato de cuaderno. La columna de números usa $x=\frac12$ y el valor final $S=2$ **solo para comprobar** que cada renglón es coherente; la demostración no lo usa.
+
+| # | Expresión | Con $x=\frac12$ | Qué hago · por qué se vale |
+|---|---|---|---|
+| 1 | $S-xS=\dfrac{x}{1-x}$ | $2-1=\dfrac{1/2}{1/2}=1$ | **Parto de los pasos 1 y 2.** |
+| 2 | $S\,(1-x)=\dfrac{x}{1-x}$ | $2\cdot\tfrac12=1$ | **Saco $S$ de factor común:** $S-xS=S\,(1-x)$. |
+| 3 | $S=\dfrac{x}{(1-x)^2}$ | $\dfrac{1/2}{1/4}=2$ | **Divido entre $1-x$**, que no es 0 porque $x<1$. |
+| 4 | $S=2$ | $2$ | **Sustituyo $x=\frac12$:** $(1-x)^2=\frac14$, y $\frac{1/2}{1/4}=\frac12\cdot4=2$ ✓ $\square$ |
 
 (Restar sumas infinitas término a término se vale aquí porque, con $0<x<1$, las dos sumas convergen; el programa de abajo lo confirma con números.)
 
@@ -1628,7 +1700,9 @@ $H_n=1+\frac12+\frac13+\dots+\frac1n$. Aparece en el costo esperado de quicksort
 $$H_n\le\underbrace{1}_{1}+\underbrace{\tfrac12+\tfrac13}_{\le\frac12+\frac12=1}+\underbrace{\tfrac14+\tfrac15+\tfrac16+\tfrac17}_{\le4\cdot\frac14=1}+\underbrace{\tfrac18+\dots+\tfrac1{15}}_{\le8\cdot\frac18=1}+\cdots$$
 Cada bloque aporta a lo más 1: el bloque que empieza en $2^j$ tiene $2^j$ términos ($\frac1{2^j},\dots,\frac1{2^{j+1}-1}$), cada uno $\le\frac1{2^j}$, así que suma $\le2^j\cdot\frac1{2^j}=1$. ¿Cuántos bloques hay? Uno por cada $j$ con $2^j\le n$ (si $2^j>n$, el bloque ya no tiene términos de $H_n$), es decir, $j=0,1,\dots,\lfloor\lg n\rfloor$: son $\lfloor\lg n\rfloor+1$ bloques (§5.2). Por lo tanto $H_n\le\lfloor\lg n\rfloor+1\le\lg n+1$.
 
-**Cota inferior, igual pero con el último término de cada bloque:** $\frac12\ge\frac12$, $\frac13+\frac14\ge2\cdot\frac14=\frac12$, $\frac15+\dots+\frac18\ge4\cdot\frac18=\frac12$, … Cada bloque aporta al menos $\frac12$, así que $H_n\ge1+\frac12\lfloor\lg n\rfloor$.
+**Cota inferior, igual pero con el último término de cada bloque:** $\frac12\ge\frac12$, $\frac13+\frac14\ge2\cdot\frac14=\frac12$, $\frac15+\dots+\frac18\ge4\cdot\frac18=\frac12$, … Cada bloque aporta al menos $\frac12$: el bloque $j$ va de $\frac1{2^{j-1}+1}$ a $\frac1{2^j}$, tiene $2^{j-1}$ términos y cada uno es $\ge\frac1{2^j}$, así que suma $\ge2^{j-1}\cdot\frac1{2^j}=\frac12$. El bloque $j$ está completo dentro de $H_n$ si $2^j\le n$, o sea para $j=1,\dots,\lfloor\lg n\rfloor$. Contando además el primer término, $1$: $H_n\ge1+\frac12\lfloor\lg n\rfloor$.
+
+*Con números* ($n=8$, donde $\lg 8=3$): $H_8\approx2.72$; la cota superior da $3+1=4\ge2.72$ y la inferior $1+\frac12\cdot3=2.5\le2.72$ ✓.
 
 Por lo tanto $H_n=\Theta(\lg n)$. (Con cálculo se obtiene algo más fino: $H_n\approx\ln n+0.5772$.)
 
@@ -1696,7 +1770,7 @@ Esta es la herramienta del **método del potencial** en la L01.
 ✏️ **Ejercicio 0.5.** Demuestra que $\sum_{i=1}^{n}\lg i=\Theta(n\lg n)$.
 <details><summary>Solución</summary>
 
-La regla $\lg(xy)=\lg x+\lg y$ de §5.3, leída de derecha a izquierda, convierte una suma de logaritmos en el logaritmo de un producto. Aplicada una vez por cada término: $\lg1+\lg2+\dots+\lg n=\lg(1\cdot2\cdots n)=\lg(n!)$, que es $\Theta(n\lg n)$ por §5.5.
+La regla $\lg(xy)=\lg x+\lg y$ de §5.3, leída de derecha a izquierda, convierte una suma de logaritmos en el logaritmo de un producto. Aplicada una vez por cada término: $\lg1+\lg2+\dots+\lg n=\lg(1\cdot2\cdots n)=\lg(n!)$, que es $\Theta(n\lg n)$ por §5.5. *Con números* ($n=4$): $\lg1+\lg2+\lg3+\lg4\approx0+1+1.585+2=4.585$, y $\lg(4!)=\lg24\approx4.585$ ✓.
 </details>
 
 ---
@@ -1839,18 +1913,18 @@ El árbol sirve para **adivinar**; para **demostrar** se usa inducción (§3). D
 - *Base* $n=1$: $T(1)=1$ y $1\cdot(\lg1+1)=1\cdot(0+1)=1$ ✓.
 - *Cómo avanza esta inducción:* sobre las potencias de 2, $1,2,4,8,\dots$ El "dominó anterior" de $n$ no es $n-1$ sino $n/2$, porque la recurrencia relaciona $T(n)$ con $T(n/2)$. La afirmación es $P(m)$: $T(m)=m(\lg m+1)$.
 - *HI:* para una potencia de 2 $n\ge2$ cualquiera, $P(n/2)$ es verdadera: sustituyendo $m$ por $n/2$, $T(n/2)=\frac n2\big(\lg\frac n2+1\big)$.
-- *Paso.* Meta, $P(n)$: $T(n)=n(\lg n+1)$.
+- *Paso.* **Tengo** la HI, sobre $T(n/2)$. **Quiero** $T(n)\overset{?}{=}n(\lg n+1)$. **Plan:** la recurrencia escribe $T(n)$ en términos de $T(n/2)$; sustituyo ese pedazo con la HI y simplifico. La columna con números usa $n=8$, donde la HI da $T(4)=4\cdot(2+1)=12$.
 
-| Renglón | Expresión | Justificación |
-|---|---|---|
-| 1 | $T(n)=2\,T(n/2)+n$ | la recurrencia ($n\ge2$) |
-| 2 | $=2\cdot\frac n2\big(\lg\frac n2+1\big)+n$ | **aquí uso la HI** |
-| 3 | $=n\big(\lg\frac n2+1\big)+n$ | $2\cdot\frac n2=n$ |
-| 4 | $=n\big(\lg n-1+1\big)+n$ | $\lg\frac n2=\lg n-\lg2=\lg n-1$ (§5.3) |
-| 5 | $=n\lg n+n$ | $-1+1=0$ |
-| 6 | $=n(\lg n+1)$ | factor común $n$ |
+| # | Expresión | Con $n=8$ | Qué hago · por qué se vale |
+|---|---|---|---|
+| 1 | $T(n)=2\,T(n/2)+n$ | $2\cdot12+8=32$ | **Escribo la recurrencia** (vale para $n\ge2$). |
+| 2 | $T(n)=2\cdot\frac n2\big(\lg\frac n2+1\big)+n$ | $2\cdot4\cdot3+8=32$ | **Uso la HI ← aquí:** cambio $T(n/2)$ por lo que la HI dice que vale. |
+| 3 | $T(n)=n\big(\lg\frac n2+1\big)+n$ | $8\cdot3+8=32$ | **Multiplico** $2\cdot\frac n2=n$. |
+| 4 | $T(n)=n\big(\lg n-1+1\big)+n$ | $8\cdot(3-1+1)+8=32$ | **Separo la división:** $\lg\frac n2=\lg n-\lg2=\lg n-1$ (§5.3). |
+| 5 | $T(n)=n\lg n+n$ | $24+8=32$ | **Cancelo** $-1+1=0$. |
+| 6 | $T(n)=n\,(\lg n+1)$ | $8\cdot4=32$ | **Saco $n$ de factor común.** Es la meta, $P(n)$ ✓ |
 
-El renglón 6 es $P(n)$ ✓. $\square$ *Con números* ($n=8$): la HI da $T(4)=4\cdot3=12$; renglón 1, $2\cdot12+8=32$; renglón 6, $8\cdot(3+1)=32$ ✓, como en el árbol de §8.2.
+**Conclusión.** La base demostró $P(1)$, y el paso demostró que cada potencia de 2 hereda la fórmula de su mitad. Por inducción sobre las potencias de 2, $T(n)=n(\lg n+1)$. $\square$ El valor $32$ coincide con el árbol de §8.2.
 
 ### 8.4 El Teorema Maestro: la receta rápida
 
@@ -1858,7 +1932,7 @@ Para recurrencias de la forma
 $$T(n)=a\,T(n/b)+f(n)\qquad(a\ge1\ \text{subproblemas, cada uno de tamaño }n/b;\ f(n)=\text{trabajo propio}),$$
 la receta tiene tres pasos:
 
-1. Calcula $n^{\log_b a}$. Es el trabajo total de las **hojas** del árbol (hay $a^{\log_b n}=n^{\log_b a}$ hojas, por §5.3).
+1. Calcula $n^{\log_b a}$. Es el trabajo total de las **hojas** del árbol (el árbol tiene $\log_b n$ niveles bajo la raíz, porque cada nivel divide el tamaño entre $b$, y cada nivel multiplica los nodos por $a$: hay $a^{\log_b n}$ hojas. Eso es igual a $n^{\log_b a}$ por la regla $a^{\lg n}=n^{\lg a}$ de §5.3, que vale igual en base $b$: aplica $\log_b$ a los dos lados y los dos dan $\log_b n\cdot\log_b a$).
 2. Compara $f(n)$ con $n^{\log_b a}$.
 3. Elige el caso:
 
@@ -2031,11 +2105,11 @@ E[un dado] = 3.500
 E[suma de dos dados] = 7.000
 ```
 
-**Idea 3: variables indicadoras.** Para **contar** cuántas veces ocurre algo, se usa una indicadora por cada cosa que podría ocurrir ($I=1$ si ocurre, $0$ si no), y se cumple $E[I]=\Pr[\text{ocurre}]$. El total es la suma de las indicadoras, y por linealidad su esperanza es la suma de las probabilidades.
+**Idea 3: variables indicadoras.** Para **contar** cuántas veces ocurre algo, se usa una indicadora por cada cosa que podría ocurrir ($I=1$ si ocurre, $0$ si no), y se cumple $E[I]=\Pr[\text{ocurre}]$, porque $E[I]=1\cdot\Pr[\text{ocurre}]+0\cdot\Pr[\text{no ocurre}]$. El total es la suma de las indicadoras, y por linealidad su esperanza es la suma de las probabilidades.
 
 **Ejemplo resuelto (el corazón del hashing, L04).** Se meten $n$ claves al azar en $m$ cubetas. ¿Cuántos **pares de claves chocan** (caen en la misma cubeta), en promedio?
 1. Para cada par $\{i,j\}$ defino $I_{ij}=1$ si las claves $i$ y $j$ caen en la misma cubeta.
-2. $\Pr[I_{ij}=1]=\frac1m$: la clave $j$ cae en la cubeta de $i$ con probabilidad $1/m$.
+2. $\Pr[I_{ij}=1]=\frac1m$: cada clave cae en cualquiera de las $m$ cubetas con probabilidad $\frac1m$, independientemente de las demás. Esté donde esté la clave $i$, la clave $j$ cae en esa misma cubeta con probabilidad $\frac1m$.
 3. Hay $\binom n2$ pares, así que $E[\text{choques}]=\sum_{\{i,j\}}E[I_{ij}]=\binom n2\cdot\frac1m$.
 
 Con $n=m=100$: $\frac{4950}{100}=49.5$ choques. Una simulación lo confirma. Usa un generador pseudoaleatorio propio (*xorshift*) para que los tres lenguajes produzcan **exactamente** los mismos números:
@@ -2127,7 +2201,7 @@ formula:    49.50
 simulacion: 49.51
 ```
 
-**Desigualdad de Markov** (la usaremos poco): si $X\ge0$, entonces $\Pr[X\ge t]\le\frac{E[X]}{t}$. Por ejemplo, la probabilidad de que haya el doble de choques que el promedio es a lo más $\frac12$: con $t=2E[X]$, la cota es $\frac{E[X]}{2E[X]}=\frac12$.
+**Desigualdad de Markov** (la usaremos poco): si $X\ge0$, entonces $\Pr[X\ge t]\le\frac{E[X]}{t}$. Por ejemplo, la probabilidad de que haya **al menos** el doble de choques que el promedio es a lo más $\frac12$: con $t=2E[X]$, la cota es $\frac{E[X]}{2E[X]}=\frac12$.
 
 ✏️ **Ejercicio 0.7.** En una permutación al azar de $n$ elementos, ¿cuántos elementos quedan en su lugar original ($\pi(i)=i$), en promedio?
 <details><summary>Solución</summary>
@@ -2708,9 +2782,16 @@ Si puedes responder esto sin mirar las notas, estás listo para la L01.
 <details><summary>Respuestas</summary>
 
 1. "Existe un alumno que no aprobó ningún examen" ($\neg\forall\exists=\exists\forall\neg$).
-2. *Base* $n=1$: la suma tiene un solo término, $2\cdot1-1=1$, y $1^2=1$ ✓. *HI:* $1+3+\dots+(2k-1)=k^2$ para un $k\ge1$. *Meta,* $P(k+1)$: sustituyo $n$ por $k+1$; el último término es $2(k+1)-1=2k+1$, así que la meta es $1+3+\dots+(2k-1)+(2k+1)=(k+1)^2$. *Paso:* $\big(1+\dots+(2k-1)\big)+(2k+1)\overset{\text{HI}}{=}k^2+2k+1=(k+1)^2$, donde el último $=$ es el cuadrado de un binomio, $(k+1)^2=k^2+2\cdot k\cdot1+1^2$ ✓.
+2. *Base* $n=1$: la suma tiene un solo término, $2\cdot1-1=1$, y $1^2=1$ ✓. *Tengo (HI):* $1+3+\dots+(2k-1)=k^2$ para un $k\ge1$. *Quiero (meta):* sustituyo $n$ por $(k+1)$; el último término es $2(k+1)-1=2k+1$, así que la meta es $1+3+\dots+(2k-1)+(2k+1)\overset{?}{=}(k+1)^2$. *Plan:* separar el último término y usar la HI con el resto. Llamo $S$ al lado izquierdo y $A=1+3+\dots+(2k-1)$ a la suma de la HI; con $k=3$, $S=1+3+5+7=16$ y $A=9$.
+
+   | # | Expresión | Con $k=3$ | Qué hago · por qué se vale |
+   |---|---|---|---|
+   | 1 | $S=A+(2k+1)$ | $9+7=16$ | **Separo el último término.** Lo que queda antes es $A$. |
+   | 2 | $S=k^2+(2k+1)$ | $9+7=16$ | **Uso la HI ← aquí:** $A=k^2$. |
+   | 3 | $S=k^2+2k+1$ | $9+6+1=16$ | **Quito el paréntesis.** |
+   | 4 | $S=(k+1)^2$ | $4^2=16$ | **Reconozco un binomio al cuadrado:** $(k+1)^2$ es $k^2+2k+1$. Es la meta ✓ |
 3. $i=1,2,4,\dots,512$: **10** veces. En general, $\lceil\lg n\rceil$ veces para $n\ge1$.
-4. $n^{\log_2 2}=n$; $f=n^2=\Omega(n^{1+\varepsilon})$ y $2\cdot(n/2)^2=\frac12n^2\le c\,n^2$ con $c=\frac12$: caso 3, $\Theta(n^2)$.
+4. $n^{\log_2 2}=n$; $f=n^2=\Omega(n^{1+\varepsilon})$ y $2\cdot(n/2)^2=\frac12n^2\le c\,n^2$ con $c=\frac12$: caso 3, $\Theta(n^2)$. (Aquí $\varepsilon=1$: $n^2=n^{1+1}$.)
 5. `-2` (trunca hacia cero). $\lfloor-2.25\rfloor=-3$.
 6. `push_back` puede mudar el arreglo y dejar `r` colgando (UB). En Rust **no compila**: el préstamo `r` impide modificar `v` mientras siga vivo.
 7. Indicadora $I_k$ de "la moneda $k$ cae cara", con $E[I_k]=\frac12$. Por linealidad, $E=10\cdot\frac12=5$.
