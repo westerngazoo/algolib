@@ -529,19 +529,23 @@ Eso es todo lo que hace la inducción: **convierte un problema sobre $k+1$ cosas
 
 **Forma A: la cadena (la que se entrega).** Empiezas en un lado de la meta y, renglón por renglón, llegas al otro. Cada renglón es igual al anterior por una razón que escribes. Así está redactado §3.2.
 
-**Forma B: encontrarse en medio.** Si no ves cómo llegar de un lado al otro, trabaja **cada lado en su propia columna** hasta que los dos sean la misma expresión:
+**Forma B: encontrarse en medio.** Si no ves cómo llegar de un lado al otro, trabaja **cada lado por su cuenta** hasta que los dos sean la misma expresión. Se escribe como en un cuaderno con tres columnas: lo que pasa con el lado izquierdo, lo que pasa con el derecho, y **por qué ese renglón es válido**. En cada renglón cambia **un solo lado**; la casilla del otro queda vacía, porque ese lado no se tocó.
 
-| | Columna izquierda | Columna derecha |
-|---|---|---|
-| Empiezo en | $1+\dots+k+(k+1)$ | $\dfrac{(k+1)(k+2)}{2}$ |
-| Primer paso | $=\dfrac{k(k+1)}{2}+(k+1)$ | $=\dfrac{k^2+2k+k+2}{2}$ |
-| Por qué | **HI** | distributiva: cada término de $(k+1)$ por cada término de $(k+2)$ |
-| Segundo paso | $=\dfrac{k^2+k}{2}+\dfrac{2k+2}{2}$ | $=\dfrac{k^2+3k+2}{2}$ |
-| Por qué | distributiva arriba; y $(k+1)=\frac{2(k+1)}{2}$ | junto $2k+k=3k$ |
-| Tercer paso | $=\dfrac{k^2+3k+2}{2}$ | (ya terminó) |
-| Por qué | sumo fracciones; $k+2k=3k$ | |
+| # | Lado izquierdo de $P(k+1)$ | Lado derecho de $P(k+1)$ | Por qué es válido |
+|---|---|---|---|
+| 0 | $1+\dots+k+(k+1)$ | $\dfrac{(k+1)(k+2)}{2}$ | Son los dos lados de la meta, copiados tal cual. **No** escribo $=$ entre ellos: que sean iguales es justo lo que falta demostrar. |
+| 1 | $=\dfrac{k(k+1)}{2}+(k+1)$ | | **HI:** los primeros $k$ sumandos, $1+\dots+k$, son el lado izquierdo de $P(k)$, y la HI dice que valen $\frac{k(k+1)}{2}$. Cambio un pedazo por algo que vale lo mismo. |
+| 2 | $=\dfrac{k^2+k}{2}+\dfrac{2k+2}{2}$ | | **Distributiva** en el primer numerador: $k(k+1)=k^2+k$. **Multiplicar por uno** en el segundo término: $(k+1)=\frac{2}{2}(k+1)=\frac{2k+2}{2}$. |
+| 3 | $=\dfrac{k^2+3k+2}{2}$ | | **Sumo fracciones** con el mismo denominador: se suman los numeradores, $k^2+k+2k+2$, y junto términos semejantes, $k+2k=3k$. |
+| 4 | | $=\dfrac{k^2+2k+k+2}{2}$ | **Distributiva** en el numerador: cada término de $(k+1)$ por cada término de $(k+2)$: $k\cdot k+k\cdot2+1\cdot k+1\cdot2$. |
+| 5 | | $=\dfrac{k^2+3k+2}{2}$ | Junto términos semejantes: $2k+k=3k$. |
+| ✓ | $\dfrac{k^2+3k+2}{2}$ | $\dfrac{k^2+3k+2}{2}$ | Las dos columnas terminaron en **la misma expresión**. |
 
-Las dos columnas llegaron a $\frac{k^2+3k+2}{2}$. Entonces *izquierdo $=\frac{k^2+3k+2}{2}=$ derecho*, y la meta queda demostrada. Es válido porque dentro de cada columna solo hay igualdades justificadas, y **nada cruza de una columna a la otra**: nunca usé la meta, solo tomé cada uno de sus lados como punto de partida.
+**Por qué el renglón ✓ demuestra la meta.** La columna izquierda es una cadena de igualdades: *izquierdo $=\frac{k^2+3k+2}{2}$*. La columna derecha también: *derecho $=\frac{k^2+3k+2}{2}$*. Dos cosas iguales a una tercera son iguales entre sí (si $A=C$ y $B=C$, entonces $A=B$), así que *izquierdo $=$ derecho*, que es $P(k+1)$.
+
+**Por qué no es circular.** Fíjate en la columna de justificaciones: ningún renglón dice "por la meta". Solo aparecen la HI y reglas de álgebra. Cada columna se transforma **por separado**, y nada cruza de una a la otra; los dos lados de la meta solo sirven como **puntos de partida**. Es como verificar que dos recetas producen el mismo pastel cocinando cada una por su lado y comparando al final, no mezclando los ingredientes de las dos en un tazón.
+
+*Con números* ($k=3$): columna izquierda, $1+2+3+4=10$, $\frac{3\cdot4}{2}+4=10$, $\frac{9+9+2}{2}=10$; columna derecha, $\frac{4\cdot5}{2}=10$, $\frac{9+6+3+2}{2}=10$. Todo vale 10 ✓.
 
 **Forma C: hacia atrás, solo en borrador.** Partir de la meta y simplificarla para descubrir qué álgebra hace falta. Sirve para **encontrar** el camino; no es la demostración. En limpio se escribe con la forma A o la B.
 
